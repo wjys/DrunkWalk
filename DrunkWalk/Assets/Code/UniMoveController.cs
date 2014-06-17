@@ -64,6 +64,7 @@ using System.Runtime.InteropServices;
 /// <summary>
 /// The Move controller can be connected by USB and/or Bluetooth.
 /// </summary>
+
 public enum PSMoveConnectionType 
 {
 	Bluetooth,
@@ -151,6 +152,11 @@ public class UniMoveController : MonoBehaviour
 	private Vector3 magnet = Vector3.zero;
 	private Vector3 rawGyro = Vector3.zero;
 	private Vector3 gyro = Vector3.zero;
+
+	// public float accelx; 
+	// public float accelz;
+
+	public float ax = 0, ay = 0, az = 0;
 	
 	// TODO: These values still need to be implemented, so we don't expose them publicly
 	private PSMove_Battery_Level battery = PSMove_Battery_Level.Batt_20Percent;
@@ -446,12 +452,14 @@ public class UniMoveController : MonoBehaviour
 		rawAccel.z = z;
 		
 		
-		float ax = 0, ay = 0, az = 0;
 		psmove_get_accelerometer_frame(handle, PSMove_Frame.Frame_SecondHalf, ref ax, ref ay, ref az);
 		
 		accel.x = ax;
 		accel.y = ay;
 		accel.z = az;
+
+		// ax = accelx;
+		// az = accelz;
 		
 		psmove_get_gyroscope(handle, ref x, ref y, ref z );
 		
@@ -481,6 +489,8 @@ public class UniMoveController : MonoBehaviour
 		temperature = psmove_get_temperature(handle);
 		
     }
+
+
 	#endregion
 	
 	
