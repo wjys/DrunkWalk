@@ -37,7 +37,7 @@ public class TopplingForce : MonoBehaviour {
 		// !!!! *** **** read the direction currently leaning towards 
 
 		// if leaning in a different direction = reset the direction and the increment amount 
-		if (!compareVectors (toppleDir, detectDir, 0.05)){
+		if (!compareVectors (toppleDir, detectDir, 0.05f)){
 			inc = initInc; 
 			toppleDir = detectDir; 
 		}
