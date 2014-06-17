@@ -12,8 +12,8 @@ public class PlayerMovement : MonoBehaviour {
 
 	public Rigidbody rhead;		// rigidbody at the head of the player
 	public Rigidbody rfeet;		// rigidbody at the feet of the player
-	private ConstantForce fhead; // constant force acting on head of the player 
-	private ConstantForce ffeet;	// cst force on feet of player 
+	public ConstantForce fhead; // constant force acting on head of the player 
+	public ConstantForce ffeet;	// cst force on feet of player 
 
 	private int halfWidth; 		// half the width of screen
 	private int halfHeight; 	// half the height of screen
@@ -28,8 +28,8 @@ public class PlayerMovement : MonoBehaviour {
 
 		//rhead = GetComponent<Rigidbody> ();
 		//rfeet = GetComponent<Rigidbody> ();
-		fhead = GetComponentInChildren<ConstantForce> ();
-		ffeet = GetComponent<ConstantForce> ();
+		//fhead = GetComponentInChildren<ConstantForce> ();
+		//ffeet = GetComponentInChildren<ConstantForce> ();
 
 		fallen = false;
 	}
@@ -47,12 +47,12 @@ public class PlayerMovement : MonoBehaviour {
 			StartCoroutine(delayFeet ()); 
 			moveFeet (direction); 
 		//}
-		ffeet = GetComponent<ConstantForce> ();
 	}
 
 	private int getLeanDirection(Vector2 mouse){
 		// if leaning right 
 		if (mouse.x >= halfWidth) {
+			Debug.Log("MOUSE????");
 			// check if lean forward
 			if (mouse.y >= halfHeight){
 				// check if right lean is more 'important' than lean forward
