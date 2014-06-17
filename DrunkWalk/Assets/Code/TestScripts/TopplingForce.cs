@@ -1,67 +1,97 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-// ADDITIONAL DRUNK FORCE (NOT PLAYER MOVEMENT) 
+// ADDITIONAL DRUNK FORCE (NOT PLAYER MOVEMENT) - ALSO CONTAINS CAM WOBBLE SCRIPT!
 
 public class TopplingForce : MonoBehaviour {
 
-	public Vector3 toppleDir;	// currently toppling in this direction
-	public Vector3 detectDir;	// constantly update to find current direction of lean
+	public int toppleDir;	// currently toppling in this direction
+	public int leanDir;		// constantly update to find current direction of lean
+	public int drunkDir; 	// randomly changing after coroutine delays (random delays?)
 	public bool isToppling;		// true if currently toppling in direction
 
-	public float initInc; 		// base amount to increment 
-	public float inc;			// amount by which we increment/multiple the toppling force
+	private enum Dir { forward, right, left, back }; // to modify drunkDir
 
-	public Rigidbody rbody; 	// object's rigidbody
-	public ConstantForce constantForce;	// force on object's rigidbody
-	
+	public float initInc; 		// base amount to increment 
+	public float drunkInc;			// amount by which we increment/multiply the toppling force
+	public float camInc; 
+
+	// TO DRAG INTO COMPONENT
+	public Rigidbody rhead; 	// object's head rigidbody
+	public PlayerMovement playerMovement; 	// script from the player  
+	public Camera cam; 
+
+	// COROUTINE DELAYS
+	public float drunkDelay;
+
 	void Start () {
-		rbody = GetComponent <Rigidbody> ();
-		constantForce = GetComponent <ConstantForce> (); 
 		isToppling = false; 
 	}
 
 	void Update () {
+		leanDir = playerMovement.direction;
+		camWobble (leanDir); 
 
-		/* ---------------------------------------------------------------------------------------
-		 * PSEUDOCODE
-		 * 
-		 * if leaning in different direction 
-		 * 		not toppling anymore: stop constant force in that direction
-		 * 	
-		 * else (leaning in same direction) 
-		 * 		increment constant force in current direction
-		 * 
-		 * --------------------------------------------------------------------------------------- */
+		StartCoroutine(newDrunkDirection ());
+		drunkForce (drunkDir); 
 
-		// !!!! *** **** read the direction currently leaning towards 
 
-		// if leaning in a different direction = reset the direction and the increment amount 
-		if (!compareVectors (toppleDir, detectDir, 1.0f)){
-			inc = initInc; 
-			toppleDir = detectDir; 
-		}
-		else {
-			constantForce.force.Set(toppleDir.x * inc, toppleDir.y, toppleDir.z * inc);
-			inc += 0.5f; 
+
+	}
+
+	// get the direction variable from the PlayerMovement script 
+	private int getLeanDirection(){
+		return playerMovement.direction; 
+	}
+
+	// depending on the direction of the lean, set a constantforce on the rigidbody of the head 
+	private void drunkForce (int direction){	//print ("moving head ");
+		
+		switch (direction) {
+			
+		case (int) Dir.forward:				//print ("moving head forward");
+			rhead.AddForce (0, 0, drunkInc);  
+			break;
+			
+		case (int) Dir.right:				//print ("moving head to the right");
+			rhead.AddForce (drunkInc, 0, 0); 
+			break;
+			
+		case (int) Dir.left:				//print ("moving head to the left");
+			rhead.AddForce (-drunkInc, 0, 0); 
+			break;
+			
+		case (int) Dir.back:				//print ("stopping head movement");
+			rhead.AddForce (0, 0, 0); 
+			break; 
+			
+		default:
+			break; 
 		}
 	}
 
-	private bool compareVectors (Vector3 vecA, Vector3 vecB, float err){
+	// FOR NOW camera wobbles as lean changes 
+	private void camWobble(int lean){
+		switch (lean) {
+		case (int) Dir.forward:
+			cam.transform.rotation = new Quaternion (cam.transform.rotation.x - camInc, cam.transform.rotation.y, cam.transform.rotation.z, cam.transform.rotation.w); 
+			break;
+		case (int) Dir.right:
+			cam.transform.rotation = new Quaternion (cam.transform.rotation.x, cam.transform.rotation.y, cam.transform.rotation.z + camInc, cam.transform.rotation.w); 
+			break;
+		case (int) Dir.left:
+			cam.transform.rotation = new Quaternion (cam.transform.rotation.x, cam.transform.rotation.y, cam.transform.rotation.z - camInc, cam.transform.rotation.w); 
+			break;
+		case (int) Dir.back:
+			cam.transform.rotation = new Quaternion (cam.transform.rotation.x + camInc, cam.transform.rotation.y, cam.transform.rotation.z, cam.transform.rotation.w); 
+			break;
+		default:
+			break; 
+		}
+	}
 
-			// if same length then false
-			if (!Mathf.Approximately (vecA.magnitude, vecB.magnitude))
-						return false; 
-
-			// value in [-1, 1] which is the angle
-			float cosError = Mathf.Cos (err * Mathf.Deg2Rad); 
-
-			// dot product of normalized vectors
-			float cosAngle = Vector3.Dot (vecA.normalized, vecB.normalized); 
-
-			if (cosAngle >= cosError) {
-						return true; 
-				} else
-						return false; 
+	IEnumerator newDrunkDirection(){
+		yield return new WaitForSeconds(drunkDelay);
+		drunkDir = Random.Range (Dir.forward, Dir.back);
 	}
 }
