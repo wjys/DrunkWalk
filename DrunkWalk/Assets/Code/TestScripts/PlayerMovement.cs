@@ -7,8 +7,8 @@ public class PlayerMovement : MonoBehaviour {
 	
 	public Vector3 mouse;		// current mouse position on screen
 	public float delay; 		// time delay between feet movement and head movement 
-	public float hinc;			// force increment for head
-	public float finc; 			// force increment for feet
+	public float hinc = 0.5f;			// force increment for head
+	public float finc = 0.5f; 			// force increment for feet
 
 	public Rigidbody rhead;		// rigidbody at the head of the player
 	public Rigidbody rfeet;		// rigidbody at the feet of the player
