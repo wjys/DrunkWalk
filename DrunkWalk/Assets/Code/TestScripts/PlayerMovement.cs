@@ -23,7 +23,7 @@ public class PlayerMovement : MonoBehaviour {
 	private bool fallen;
 
 	void Start () {
-		gameObject.AddComponent<UniMoveController> ();
+		//gameObject.AddComponent<UniMoveController> ();
 
 		halfWidth = Screen.width / 2; 
 		halfHeight = Screen.height / 2; 

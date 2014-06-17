@@ -12,8 +12,9 @@ public class TopplingForce : MonoBehaviour {
 
 	private enum Dir { forward, right, left, back }; // to modify drunkDir
 
-	public float initInc; 		// base amount to increment 
-	public float drunkInc;			// amount by which we increment/multiply the toppling force
+	public float inc; 		// INC to add to BASE below
+	public float accelbase;	// BASE accelerate in lean direction
+	public float drunkInc;	// amount by which we increment/multiply the toppling force
 	public float camInc; 
 
 	// TO DRAG INTO COMPONENT
@@ -30,18 +31,42 @@ public class TopplingForce : MonoBehaviour {
 
 	void Update () {
 		leanDir = playerMovement.direction;
+
+		// camera wobble
 		camWobble (leanDir); 
 
+		// drunk force
 		StartCoroutine(newDrunkDirection ());
 		drunkForce (drunkDir); 
 
-
+		// accelerate in current lean direction
 
 	}
 
 	// get the direction variable from the PlayerMovement script 
 	private int getLeanDirection(){
 		return playerMovement.direction; 
+	}
+
+	private void accelForce (int direction){
+		
+		switch (direction) {
+			
+		case (int) Dir.forward:				//print ("moving head forward");
+			rhead.AddForce (0, 0, accelbase + inc);  
+			break;
+			
+		case (int) Dir.right:				//print ("moving head to the right");
+			rhead.AddForce (accelbase + inc, 0, 0); 
+			break;
+			
+		case (int) Dir.left:				//print ("moving head to the left");
+			rhead.AddForce (accelbase + inc, 0, 0); 
+			break;
+			
+		default:
+			break; 
+		}
 	}
 
 	// depending on the direction of the lean, set a constantforce on the rigidbody of the head 
