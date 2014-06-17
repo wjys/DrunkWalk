@@ -46,7 +46,7 @@ public class TopplingForce : MonoBehaviour {
 		drunkForce (drunkDir); 
 
 		// accelerate in current lean direction
-		accelForce (toppleDir); 
+		//accelForce (toppleDir); 
 	}
 
 	// get the direction variable from the PlayerMovement script 

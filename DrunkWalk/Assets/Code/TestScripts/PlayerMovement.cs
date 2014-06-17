@@ -106,7 +106,7 @@ public class PlayerMovement : MonoBehaviour {
 		//if (mouse.y < halfHeight) {	// if mouse in lower half of screen, leaning back 
 		if (UniMove.az <= -0.4f) {
 
-			if (UniMove.ax > -0.3f && UniMove.ax < 0.3) {
+			if (UniMove.ax > -0.3f && UniMove.ax < 0.3f) {
 			//if (Mathf.Abs(mouse.x - halfWidth) < Mathf.Abs(mouse.y - halfHeight)){ 
 				return (int) Dir.back; 
 			}
@@ -122,7 +122,7 @@ public class PlayerMovement : MonoBehaviour {
 			}
 		}
 		else {	// if mouse is in top half, check right/left lean as well
-			if (UniMove.ax > -0.3f && UniMove.ax< 0.3) {
+			if (UniMove.ax > -0.3f && UniMove.ax< 0.3f) {
 			//if (Mathf.Abs(mouse.x - halfWidth) < Mathf.Abs(mouse.y - halfHeight)){	// print ("leaning forward");
 				return (int) Dir.forward; 
 			}
@@ -171,7 +171,7 @@ public class PlayerMovement : MonoBehaviour {
 			break;
 			
 		case (int) Dir.back:				//print ("stopping head movement");
-			rhead.AddForce (0, 0, 0); 
+			rhead.AddForce (0, 0, -hinc); 
 			break; 
 			
 		default:
