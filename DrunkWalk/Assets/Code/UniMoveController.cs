@@ -347,7 +347,7 @@ public class UniMoveController : MonoBehaviour
 	
 	/// <summary>
     /// Value of the analog trigger button (between 0 and 1)
-    /// </summary
+    /// </summary>
 	public float Trigger
     {
 		get { return trigger; }
