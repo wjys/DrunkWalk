@@ -5,10 +5,10 @@ using System.Collections;
 
 public class PlayerMovement : MonoBehaviour {
 	
-	public Vector2 mouse;	// current mouse position on screen
-	public float delay; 	// time delay between feet movement and head movement 
-	public float hinc;		// force increment for head
-	public float finc; 		// force increment for feet
+	public Vector3 mouse;		// current mouse position on screen
+	public float delay; 		// time delay between feet movement and head movement 
+	public float hinc;			// force increment for head
+	public float finc; 			// force increment for feet
 
 	public Rigidbody rhead;		// rigidbody at the head of the player
 	public Rigidbody rfeet;		// rigidbody at the feet of the player
@@ -31,7 +31,7 @@ public class PlayerMovement : MonoBehaviour {
 		fhead = GetComponent<ConstantForce> ();
 		ffeet = GetComponent<ConstantForce> ();
 
-		fallen = false; 
+		fallen = false;
 	}
 	
 	void Update () {
@@ -41,12 +41,12 @@ public class PlayerMovement : MonoBehaviour {
 		if (isLeaningTooMuch()) {
 			// FALL 
 		}
-		else {
+		//else {
 			direction = getLeanDirection (mouse); 
 			moveHead (direction);
 			delayFeet (); 
 			moveFeet (direction); 
-		}
+		//}
 	}
 
 	private int getLeanDirection(Vector2 mouse){
@@ -144,7 +144,7 @@ public class PlayerMovement : MonoBehaviour {
 		// if player leans back, the feet will match the feet 
 		case (int) Dir.back:
 			ffeet.force.Set (0, 0, 0); 
-			rfeet.position = new Vector2 (rhead.position.x, rfeet.position.y, rhead.position.z); 
+			rfeet.position = new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z); 
 			break; 
 			
 		default:
