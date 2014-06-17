@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+// ONLY AFFECTS HEAD RIGIDBODY AND CAMERA
 // ADDITIONAL DRUNK FORCE (NOT PLAYER MOVEMENT) - ALSO CONTAINS CAM WOBBLE SCRIPT!
 
 public class TopplingForce : MonoBehaviour {
@@ -32,6 +33,11 @@ public class TopplingForce : MonoBehaviour {
 	void Update () {
 		leanDir = playerMovement.direction;
 
+		if (toppleDir != leanDir) {
+			isToppling = false; 
+			toppleDir = leanDir; 
+		}
+
 		// camera wobble
 		camWobble (leanDir); 
 
@@ -40,7 +46,7 @@ public class TopplingForce : MonoBehaviour {
 		drunkForce (drunkDir); 
 
 		// accelerate in current lean direction
-
+		accelForce (toppleDir); 
 	}
 
 	// get the direction variable from the PlayerMovement script 
@@ -49,7 +55,12 @@ public class TopplingForce : MonoBehaviour {
 	}
 
 	private void accelForce (int direction){
-		
+
+		if (!isToppling) {
+			inc = 0.0f; 
+			isToppling = true; 
+		}
+
 		switch (direction) {
 			
 		case (int) Dir.forward:				//print ("moving head forward");
@@ -61,12 +72,13 @@ public class TopplingForce : MonoBehaviour {
 			break;
 			
 		case (int) Dir.left:				//print ("moving head to the left");
-			rhead.AddForce (accelbase + inc, 0, 0); 
+			rhead.AddForce (-(accelbase + inc), 0, 0); 
 			break;
 			
 		default:
 			break; 
 		}
+		inc += 0.05f; 
 	}
 
 	// depending on the direction of the lean, set a constantforce on the rigidbody of the head 
