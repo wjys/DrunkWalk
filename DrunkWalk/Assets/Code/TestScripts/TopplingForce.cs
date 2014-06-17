@@ -60,11 +60,7 @@ public class TopplingForce : MonoBehaviour {
 		case (int) Dir.left:				//print ("moving head to the left");
 			rhead.AddForce (-drunkInc, 0, 0); 
 			break;
-			
-		case (int) Dir.back:				//print ("stopping head movement");
-			rhead.AddForce (0, 0, 0); 
-			break; 
-			
+
 		default:
 			break; 
 		}
@@ -92,6 +88,6 @@ public class TopplingForce : MonoBehaviour {
 
 	IEnumerator newDrunkDirection(){
 		yield return new WaitForSeconds(drunkDelay);
-		drunkDir = Random.Range (Dir.forward, Dir.back);
+		drunkDir = Random.Range ((int) Dir.forward, (int) Dir.back);
 	}
 }

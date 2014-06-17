@@ -23,6 +23,8 @@ public class PlayerMovement : MonoBehaviour {
 	private bool fallen;
 
 	void Start () {
+		gameObject.AddComponent<UniMoveController> ();
+
 		halfWidth = Screen.width / 2; 
 		halfHeight = Screen.height / 2; 
 
@@ -32,6 +34,7 @@ public class PlayerMovement : MonoBehaviour {
 	void Update () {
 		// get the current mouse position
 		mouse = Input.mousePosition; 
+
 
 		if (isLeaningTooMuch()) {
 			// FALL = rotate camera down
@@ -47,27 +50,34 @@ public class PlayerMovement : MonoBehaviour {
 	private int getLeanDirection(){	//Vector3 mouse){	//print("entered get direction");
 		
 		if (mouse.y < halfHeight) {	// if mouse in lower half of screen, leaning back 
+		// if (UniMoveController.az <= -0.4f) {
 
-			if (Mathf.Abs(mouse.x - halfWidth) < Mathf.Abs(mouse.y - halfHeight)){ 		// print ("leaning forward");
+			// if (UniMoveController.ax > -0.3f && UniMoveController.ax < 0.3) {
+			if (Mathf.Abs(mouse.x - halfWidth) < Mathf.Abs(mouse.y - halfHeight)){ 
 				return (int) Dir.back; 
 			}
 			else {
+				// if (UniMoveController.ax > 0.3f) {
 				if (mouse.x >= halfWidth){		// print ("leaning right");
 					return (int) Dir.right; 
 				}
+				// if (UniMoveController.ax < -0.3f){
 				else {							// print ("leaning left");
 					return (int) Dir.left; 
 				}
 			}
 		}
 		else {	// if mouse is in top half, check right/left lean as well
+			// if (UniMoveController.ax > -0.3f && UniMoveController.ax < 0.3) {
 			if (Mathf.Abs(mouse.x - halfWidth) < Mathf.Abs(mouse.y - halfHeight)){	// print ("leaning forward");
 				return (int) Dir.forward; 
 			}
 			else {
+				// if (UniMoveController.ax > 0.3f) {
 				if (mouse.x >= halfWidth){ 	// print ("leaning right");
 					return (int) Dir.right; 
 				}
+				// if (UniMoveController.ax < -0.3f){
 				else {						// print ("leaning left");
 					return (int) Dir.left; 
 				}
