@@ -21,6 +21,10 @@ public class PlayerMovement : MonoBehaviour {
 	private enum Dir { up, right, left, back }; 
 	private int direction; 
 	private bool fallen;
+	private bool walkfwd;
+	private bool walkr;
+	private bool walkl;
+	private bool walkbk;
 
 	void Start () {
 		halfWidth = Screen.width / 2; 
@@ -39,7 +43,7 @@ public class PlayerMovement : MonoBehaviour {
 		mouse = Input.mousePosition; 
 
 		if (isLeaningTooMuch()) {
-			// FALL 
+			// FALL = rotate camera down
 		}
 		//else {
 		print ("0. got mouse position ");
@@ -100,26 +104,27 @@ public class PlayerMovement : MonoBehaviour {
 	// depending on the direction of the lean, set a constantforce on the rigidbody of the head 
 	private void moveHead (int direction){
 		print ("moving head ");
+
 		switch (direction) {
 			
 		case (int) Dir.up:
 			print ("moving head forward");
-			fhead.force.Set (0, 0, hinc);  
+			rhead.AddForce (0, 0, hinc);  
 			break;
 			
 		case (int) Dir.right:
 			print ("moving head to the right");
-			fhead.force.Set (hinc, 0, 0); 
+			rhead.AddForce (hinc, 0, 0); 
 			break;
 			
 		case (int) Dir.left:
 			print ("moving head to the left");
-			fhead.force.Set (-hinc, 0, 0); 
+			rhead.AddForce (-hinc, 0, 0); 
 			break;
 			
 		case (int) Dir.back:
 			print ("stopping head movement");
-			fhead.force.Set (0, 0, 0); 
+			rhead.AddForce (0, 0, 0); 
 			break; 
 			
 		default:
@@ -135,17 +140,17 @@ public class PlayerMovement : MonoBehaviour {
 			
 		case (int) Dir.up:
 			print ("moving feet forward");
-			ffeet.force.Set (0, 0, finc); 
+			rfeet.AddForce (0, 0, finc); 
 			break;
 			
 		case (int) Dir.right:
 			print ("moving feet right");
-			ffeet.force.Set (finc, 0, 0); 
+			rfeet.AddForce (finc, 0, 0); 
 			break;
 			
 		case (int) Dir.left:
 			print ("moving feet left");
-			ffeet.force.Set (-finc, 0, 0);  
+			rfeet.AddForce (-finc, 0, 0);  
 			break;
 
 		// if player leans back, the feet will match the feet 
