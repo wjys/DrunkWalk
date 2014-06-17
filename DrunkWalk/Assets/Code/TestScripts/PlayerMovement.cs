@@ -12,8 +12,8 @@ public class PlayerMovement : MonoBehaviour {
 
 	public Rigidbody rhead;		// rigidbody at the head of the player
 	public Rigidbody rfeet;		// rigidbody at the feet of the player
-	public ConstantForce fhead; // constant force acting on head of the player 
-	public ConstantForce ffeet;	// cst force on feet of player 
+	private ConstantForce fhead; // constant force acting on head of the player 
+	private ConstantForce ffeet;	// cst force on feet of player 
 
 	private int halfWidth; 		// half the width of screen
 	private int halfHeight; 	// half the height of screen
@@ -26,9 +26,9 @@ public class PlayerMovement : MonoBehaviour {
 		halfWidth = Screen.width / 2; 
 		halfHeight = Screen.height / 2; 
 
-		rhead = GetComponent<Rigidbody> ();
-		rfeet = GetComponent<Rigidbody> ();
-		fhead = GetComponent<ConstantForce> ();
+		//rhead = GetComponent<Rigidbody> ();
+		//rfeet = GetComponent<Rigidbody> ();
+		fhead = GetComponentInChildren<ConstantForce> ();
 		ffeet = GetComponent<ConstantForce> ();
 
 		fallen = false;
@@ -36,7 +36,7 @@ public class PlayerMovement : MonoBehaviour {
 	
 	void Update () {
 		// get the current mouse position
-		mouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+		mouse = Input.mousePosition; 
 
 		if (isLeaningTooMuch()) {
 			// FALL 
@@ -44,9 +44,10 @@ public class PlayerMovement : MonoBehaviour {
 		//else {
 			direction = getLeanDirection (mouse); 
 			moveHead (direction);
-			delayFeet (); 
+			StartCoroutine(delayFeet ()); 
 			moveFeet (direction); 
 		//}
+		ffeet = GetComponent<ConstantForce> ();
 	}
 
 	private int getLeanDirection(Vector2 mouse){
