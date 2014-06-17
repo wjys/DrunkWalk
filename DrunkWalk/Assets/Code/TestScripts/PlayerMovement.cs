@@ -83,6 +83,7 @@ public class PlayerMovement : MonoBehaviour {
 				}
 			}
 		}
+		return 0; 
 	}
 
 	// !! NB: FOR NOW IF LEAN BACK, STOP PLAYER
