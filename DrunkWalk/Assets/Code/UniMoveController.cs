@@ -153,9 +153,6 @@ public class UniMoveController : MonoBehaviour
 	private Vector3 rawGyro = Vector3.zero;
 	private Vector3 gyro = Vector3.zero;
 
-	// public float accelx; 
-	// public float accelz;
-
 	public float ax = 0, ay = 0, az = 0;
 	
 	// TODO: These values still need to be implemented, so we don't expose them publicly
@@ -457,9 +454,6 @@ public class UniMoveController : MonoBehaviour
 		accel.x = ax;
 		accel.y = ay;
 		accel.z = az;
-
-		// ax = accelx;
-		// az = accelz;
 		
 		psmove_get_gyroscope(handle, ref x, ref y, ref z );
 		
@@ -474,8 +468,6 @@ public class UniMoveController : MonoBehaviour
 		gyro.x = gx;
 		gyro.y = gy;
 		gyro.z = gz;
-		
-		
 		
 		psmove_get_magnetometer(handle, ref x, ref y, ref z );
 		
