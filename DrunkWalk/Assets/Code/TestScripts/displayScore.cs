@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class displayScore : MonoBehaviour {
+/*public class displayScore : MonoBehaviour {
 
 	public Collision collScript;
 	public GUIText scoreDisplay; 
@@ -20,3 +20,4 @@ public class displayScore : MonoBehaviour {
 		//scoreDisplay.text = "Score: " + collScript.score; 
 	}
 }
+*/
