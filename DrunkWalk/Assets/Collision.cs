@@ -4,7 +4,7 @@ using System.Collections;
 public class Collision : MonoBehaviour {
 
 	//Overall Score
-	public static int score;
+	public /*static*/ int score;
 
 	//Hurt Sound
 	public GameObject ouch;
