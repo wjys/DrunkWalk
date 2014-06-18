@@ -59,26 +59,39 @@ public class MouseMovement : MonoBehaviour {
 				print ("SWITCHED CAMS"); 
 				// play progressive falling sounds on this line 
 				StartCoroutine (isFalling()); 
-			}
-			// not falling anymore  
-			else { 
-				// player pressed button = get back up
+				// if the player reacts (taps button) = get back up
+				if (Input.GetMouseButtonDown(0)){
+					print ("BUTTON TAPPED"); 
+					//StartCoroutine (isGettingUp ());	// delay to play animation
+					fallen = false; 
+				}			
+				else {
+					fallen = true; 
+				}
 				if (!fallen) {
+					rfeet.position = new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z); 
+					angleBetween = 0.0f; 
+					print ("GET UP");
 					fallCam.enabled = false; 
 					cam.enabled = true;
 					// play getting back up sounds 
-					rfeet.position = new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z); 
-					angleBetween = 0.0f; 
 				}
 				// player did not react in time 
 				else {
+					rfeet.position = new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z); 
+					angleBetween = 0.0f; 
 					//collScript.score -= 500; 
 					//Debug.Log("Floor Collision - " + collScript.score);
 					// blackout
 					// play fallen sound 
-					// press R to restart? 
+					// press R to restart?  
+					fallCam.enabled = false; 
+					cam.enabled = true;
 					print ("FALLEN!");
 				}
+				print ("FALLING BEFORE SET" + falling);
+				falling = false; 
+				print ("FALLING AFTER SET" + falling); 
 			}
 		}
 		else { //print ("0. got mouse position ");
@@ -195,14 +208,7 @@ public class MouseMovement : MonoBehaviour {
 
 	private IEnumerator isFalling(){
 		yield return new WaitForSeconds(fallDelay);
-		fallen = true; 
-		// if the player reacts (taps button) = get back up
-		if (Input.GetMouseButtonDown(0)){
-			print ("BUTTON TAPPED"); 
-			StartCoroutine (isGettingUp ());	// delay to play animation
-			fallen = false; 
-		}
-		falling = false; 
+
 	}
 
 	private IEnumerator isGettingUp(){
