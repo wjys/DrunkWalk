@@ -9,6 +9,7 @@ public class MouseMovement : MonoBehaviour {
 	public Vector3 mouse;		// current mouse position on screen
 	public float delay; 		// time delay between feet movement and head movement 
 	public float fallDelay; 	// the amount of time the player gets as falling to get back up (without losing points)
+	public float getupDelay; 
 	public float hinc = 0.5f;	// force increment for head
 	public float finc = 0.5f; 	// force increment for feet
 	public float camInc = 0.5f; 
@@ -75,7 +76,6 @@ public class MouseMovement : MonoBehaviour {
 					// play fallen sound 
 					// press R to restart? 
 					print ("FALLEN!");
-
 				}
 			}
 		}
@@ -195,8 +195,14 @@ public class MouseMovement : MonoBehaviour {
 		fallen = true; 
 		// if the player reacts (taps button) = get back up
 		if (Input.GetMouseButtonDown(0)){
+			StartCoroutine (isGettingUp ());	// delay to play animation
 			fallen = false; 
 		}
 		falling = false; 
+	}
+
+	private IEnumerator isGettingUp(){
+		yield return new WaitForSeconds(getupDelay);
+		// PLAY ANIMATION
 	}
 }
