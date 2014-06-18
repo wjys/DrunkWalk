@@ -38,23 +38,12 @@ public class MouseMovement : MonoBehaviour {
 		// get the current mouse position
 		mouse = Input.mousePosition; 
 		
-<<<<<<< HEAD
-		/*
-		if (isLeaningTooMuch()) {
-			print ("LEANING TOO MUCH");
-=======
 		
 		/*if (isLeaningTooMuch()) {
->>>>>>> origin/master
 			// FALL = rotate camera down
 			cam.transform.rotation = new Quaternion (cam.transform.rotation.x - camInc, cam.transform.rotation.y, cam.transform.rotation.z, cam.transform.rotation.w); 
 		}
-<<<<<<< HEAD
-		else { *///print ("0. got mouse position ");
-			falling = isLeaningTooMuch ();
-=======
 		else { //print ("0. got mouse position ");*/
->>>>>>> origin/master
 			direction = getLeanDirection (mouse); 	//print ("1. got direction");
 			moveHead (direction); 					//print ("2. moved head"); 
 			StartCoroutine(delayFeet ()); 			//print ("3. delayed feet");
@@ -96,16 +85,9 @@ public class MouseMovement : MonoBehaviour {
 	
 	private bool isLeaningTooMuch(){ //print ("checking lean");
 		Vector3 vertVec = new Vector3 (rfeet.position.x, rhead.position.y, rfeet.position.z); 
-<<<<<<< HEAD
-		angleBetween = Vector3.Angle (vertVec, rhead.position); 
-		if (angleBetween >= 30.0f) { 	// print ("FALLEN!");
-			falling = true; 
-			//print ("SWEET SPOT"); 
-=======
 		float angle = Vector3.Angle (vertVec, rhead.position); 
 		if (angle >= 30.0f) { 	// print ("FALLEN!");
 			fallen = true; 
->>>>>>> origin/master
 			return true;
 		} 						// print ("STILL STANDING");
 		return false; 
