@@ -69,11 +69,12 @@ public class MouseMovement : MonoBehaviour {
 				}
 				// player did not react in time 
 				else {
-					collScript.score -= 500; 
-					Debug.Log("Floor Collision - " + collScript.score);
+					//collScript.score -= 500; 
+					//Debug.Log("Floor Collision - " + collScript.score);
 					// blackout
 					// play fallen sound 
 					// press R to restart? 
+					print ("FALLEN!");
 
 				}
 			}
@@ -113,7 +114,6 @@ public class MouseMovement : MonoBehaviour {
 				}
 			}
 		}
-		return (0);
 	}
 	
 	// !! NB: FOR NOW IF LEAN BACK, STOP PLAYER
@@ -194,7 +194,7 @@ public class MouseMovement : MonoBehaviour {
 		yield return new WaitForSeconds(fallDelay);
 		fallen = true; 
 		// if the player reacts (taps button) = get back up
-		if (Input.GetButtonDown(0)){
+		if (Input.GetMouseButtonDown(0)){
 			fallen = false; 
 		}
 		falling = false; 
