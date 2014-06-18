@@ -40,59 +40,52 @@ public class MouseMovement : MonoBehaviour {
 		
 		fallen = false;
 		falling = false;
+		fallCt = 0; 
 	}
 	
 	void Update () {
 		// get the current mouse position
 		mouse = Input.mousePosition; 
-		
-		
-		if (isLeaningTooMuch()) {
-			print ("LEANING TOO MUCH");
-			// FALL = rotate camera down
-			// SWAP from cam (main) to fallCam 
 
-			// angle hit sweet spot = player is falling (not fallen) 
-			if (falling){
-				cam.enabled = false;
-				fallCam.enabled = true; 
-				print ("SWITCHED CAMS"); 
-				// play progressive falling sounds on this line 
-				StartCoroutine (isFalling()); 
-				// if the player reacts (taps button) = get back up
-				if (Input.GetMouseButtonDown(0)){
-					print ("BUTTON TAPPED"); 
-					//StartCoroutine (isGettingUp ());	// delay to play animation
-					fallen = false; 
-				}			
-				else {
-					fallen = true; 
-				}
-				if (!fallen) {
-					rfeet.position = new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z); 
-					angleBetween = 0.0f; 
-					print ("GET UP");
-					fallCam.enabled = false; 
-					cam.enabled = true;
-					// play getting back up sounds 
-				}
-				// player did not react in time 
-				else {
-					rfeet.position = new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z); 
-					angleBetween = 0.0f; 
-					//collScript.score -= 500; 
-					//Debug.Log("Floor Collision - " + collScript.score);
-					// blackout
-					// play fallen sound 
-					// press R to restart?  
-					fallCam.enabled = false; 
-					cam.enabled = true;
-					print ("FALLEN!");
-				}
+		if (falling) {
+			print ("LOSER");
+			// (1) switch cameras
+			cam.enabled = false;
+			fallCam.enabled = true; 
+
+			/*
+			// (2) play falling sounds
+
+			// (3) hit ground
+			//collScript.score -= 500;
+			//print ("Floor Collision " + collScript.score); 
+
+			// (4) check button
+			if (Input.GetMouseButtonDown(0)){
+				rhead.MovePosition (new Vector3 (rfeet.position.x, rhead.position.y, rfeet.position.z)); 
+				fallCam.enabled = false;
+				cam.enabled = true; 
+				// play get back up sounds
 				falling = false; 
 			}
+			else {
+				if (fallCt < 100) {
+					fallCt++; 
+				}
+				else {
+					// BLACK OUT
+					// LOSE THE GAME
+					// PLAY LOSER SOUNDS
+					rhead.MovePosition (new Vector3 (rfeet.position.x, rhead.position.y, rfeet.position.z)); 
+					print ("LOSER"); 
+					//Application.LoadLevel(Application.loadedLevel); 
+					falling = false; 
+				}
+			}
+			*/
 		}
 		else { //print ("0. got mouse position ");
+			//falling = isLeaningTooMuch(); 
 			direction = getLeanDirection (mouse); 	//print ("1. got direction");
 			moveHead (direction); 					//print ("2. moved head"); 
 			StartCoroutine(delayFeet ()); 			//print ("3. delayed feet");
@@ -137,8 +130,10 @@ public class MouseMovement : MonoBehaviour {
 		if (angleBetween >= 30.0f) { 	// print ("FALLEN!");
 			falling = true; 
 			print ("SWEET SPOT"); 
+			falling = true; 
 			return true;
 		} 						// print ("STILL STANDING");
+		falling = false; 
 		return false; 
 	}
 	
@@ -162,6 +157,7 @@ public class MouseMovement : MonoBehaviour {
 			
 		case (int) Dir.back:				//print ("stopping head movement");
 			rhead.AddForce (0, 0, -hinc); 
+			rhead.MovePosition(new Vector3 (rfeet.position.x, rhead.position.y, rfeet.position.z)); 
 			break; 
 			
 		default:
@@ -188,8 +184,8 @@ public class MouseMovement : MonoBehaviour {
 			
 			// if player leans back, the feet will match the feet 
 		case (int) Dir.back:						//print ("stopping feet under head");
-			rhead.AddForce (0, 0, -finc); 
-			rfeet.position = new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z); 
+			rfeet.AddForce (0, 0, -finc); 
+			rfeet.MovePosition (new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z)); 
 			break; 
 			
 		default:
