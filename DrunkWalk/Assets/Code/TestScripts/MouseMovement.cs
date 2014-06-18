@@ -48,6 +48,7 @@ public class MouseMovement : MonoBehaviour {
 		
 		
 		if (isLeaningTooMuch()) {
+			print ("LEANING TOO MUCH");
 			// FALL = rotate camera down
 			// SWAP from cam (main) to fallCam 
 
@@ -55,6 +56,7 @@ public class MouseMovement : MonoBehaviour {
 			if (falling){
 				cam.enabled = false;
 				fallCam.enabled = true; 
+				print ("SWITCHED CAMS"); 
 				// play progressive falling sounds on this line 
 				StartCoroutine (isFalling()); 
 			}
@@ -118,11 +120,12 @@ public class MouseMovement : MonoBehaviour {
 	
 	// !! NB: FOR NOW IF LEAN BACK, STOP PLAYER
 	
-	private bool isLeaningTooMuch(){ //print ("checking lean");
+	private bool isLeaningTooMuch(){ print ("checking lean");
 		Vector3 vertVec = new Vector3 (rfeet.position.x, rhead.position.y, rfeet.position.z); 
 		angleBetween = Vector3.Angle (vertVec, rhead.position); 
 		if (angleBetween >= 30.0f) { 	// print ("FALLEN!");
 			falling = true; 
+			print ("SWEET SPOT"); 
 			return true;
 		} 						// print ("STILL STANDING");
 		return false; 
@@ -195,6 +198,7 @@ public class MouseMovement : MonoBehaviour {
 		fallen = true; 
 		// if the player reacts (taps button) = get back up
 		if (Input.GetMouseButtonDown(0)){
+			print ("BUTTON TAPPED"); 
 			StartCoroutine (isGettingUp ());	// delay to play animation
 			fallen = false; 
 		}
