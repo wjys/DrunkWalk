@@ -33,6 +33,29 @@ public class Collision : MonoBehaviour {
 			score -= 100;
 			Debug.Log("Wall Collision - " + score);
 		}
+		else if (col.tag == "Box"){
+			score -= 200;
+			Debug.Log("Box Collision - " + score);
+		}
+		else if (col.tag == "Cabinet"){
+			score -= 200;
+			Debug.Log("Cabinet Collision - " + score);
+		}
+		else if (col.tag == "Cat"){
+			score -= 250;
+			Debug.Log("Cat Collision - " + score);
+		}
+		else if (col.tag == "Table"){
+			score -= 300;
+			Debug.Log("Table Collision - " + score);
+		}
+		else if (col.tag == "Bed"){
+			Application.LoadLevel (Application.loadedLevel); 
+		}
+		else if (col.tag == "Floor"){
+			score -= 500;
+			Debug.Log("Floor Collision - " + score);
+		}
 
 		//If not currently yelling:
 		if (yelling == false){
