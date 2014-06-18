@@ -10,11 +10,12 @@ public class MouseMovement : MonoBehaviour {
 	public float delay; 		// time delay between feet movement and head movement 
 	public float hinc = 0.5f;	// force increment for head
 	public float finc = 0.5f; 	// force increment for feet
-	
+	public float camInc = 0.5f; 
+
+	// OBJECTS TO DRAG INTO COMPONENT
 	public Rigidbody rhead;		// rigidbody at the head of the player
 	public Rigidbody rfeet;		// rigidbody at the feet of the player
-	public ConstantForce fhead; // constant force acting on head of the player 
-	public ConstantForce ffeet;	// cst force on feet of player
+	public Camera cam; 			// to force the camera to just fall over if leaning too much
 	//public UniMoveController UniMove; // get UniMove
 	
 	private int halfWidth; 		// half the width of screen
@@ -24,7 +25,7 @@ public class MouseMovement : MonoBehaviour {
 	public int direction; 
 	private bool fallen;
 	
-	//List<UniMoveController> moves = new List<UniMoveController>();
+	// List<UniMoveController> moves = new List<UniMoveController>();
 	
 	void Start () {
 		halfWidth = Screen.width / 2; 
@@ -38,14 +39,14 @@ public class MouseMovement : MonoBehaviour {
 		mouse = Input.mousePosition; 
 		
 		
-		if (isLeaningTooMuch()) {
+		/*if (isLeaningTooMuch()) {
 			// FALL = rotate camera down
+			cam.transform.rotation = new Quaternion (cam.transform.rotation.x - camInc, cam.transform.rotation.y, cam.transform.rotation.z, cam.transform.rotation.w); 
 		}
-		//else { //print ("0. got mouse position ");
-		direction = getLeanDirection (mouse); 	//print ("1. got direction");
-		moveHead (direction); 					//print ("2. moved head"); 
-		StartCoroutine(delayFeet ()); 			//print ("3. delayed feet");
-		moveFeet (direction); 					//print ("4. moved feet"); 
+		else { //print ("0. got mouse position ");*/
+			direction = getLeanDirection (mouse); 	//print ("1. got direction");
+			moveHead (direction); 					//print ("2. moved head"); 
+			StartCoroutine(delayFeet ()); 			//print ("3. delayed feet");
 		//}
 	}
 	
@@ -138,8 +139,7 @@ public class MouseMovement : MonoBehaviour {
 			
 			// if player leans back, the feet will match the feet 
 		case (int) Dir.back:						//print ("stopping feet under head");
-			ffeet.force.Set (0, 0, 0); 
-			
+			rhead.AddForce (0, 0, -finc); 
 			rfeet.position = new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z); 
 			break; 
 			
@@ -151,6 +151,7 @@ public class MouseMovement : MonoBehaviour {
 	// delay the movement of the feet after the movement of the head 
 	private IEnumerator delayFeet (){				//print ("delaying");
 		yield return new WaitForSeconds(delay);
+		moveFeet (direction); 					//print ("4. moved feet"); 
 		//yield break; 
 	}
 }

@@ -13,8 +13,6 @@ public class PlayerMovement : MonoBehaviour {
 
 	public Rigidbody rhead;		// rigidbody at the head of the player
 	public Rigidbody rfeet;		// rigidbody at the feet of the player
-	public ConstantForce fhead; // constant force acting on head of the player 
-	public ConstantForce ffeet;	// cst force on feet of player
 	public UniMoveController UniMove; // get UniMove
 
 	private int halfWidth; 		// half the width of screen
@@ -198,8 +196,7 @@ public class PlayerMovement : MonoBehaviour {
 
 		// if player leans back, the feet will match the feet 
 		case (int) Dir.back:						//print ("stopping feet under head");
-			ffeet.force.Set (0, 0, 0); 
-
+			rhead.AddForce (0, 0, -finc); 
 			rfeet.position = new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z); 
 			break; 
 			
