@@ -8,11 +8,17 @@ public class PlayerMovement : MonoBehaviour {
 	
 	public Vector3 mouse;		// current mouse position on screen
 	public float delay; 		// time delay between feet movement and head movement 
+	public float fallDelay; 	
+	public float getupDelay; 
 	public float hinc = 0.5f;	// force increment for head
 	public float finc = 0.5f; 	// force increment for feet
+	public float camInc = 0.5f; 
 
 	public Rigidbody rhead;		// rigidbody at the head of the player
 	public Rigidbody rfeet;		// rigidbody at the feet of the player
+	public Camera cam; 			// to force the camera to just fall over if leaning too much
+	public Camera fallCam; 
+	public Collision collScript; 
 	public UniMoveController UniMove; // get UniMove
 
 	private int halfWidth; 		// half the width of screen
@@ -20,7 +26,10 @@ public class PlayerMovement : MonoBehaviour {
 
 	private enum Dir { forward, right, left, back }; 
 	public int direction; 
+	private float angleBetween;
+	private bool falling; 
 	private bool fallen;
+	private int fallCt;
 
 	List<UniMoveController> moves = new List<UniMoveController>();
 
@@ -55,6 +64,7 @@ public class PlayerMovement : MonoBehaviour {
 		halfHeight = Screen.height / 2; 
 
 		fallen = false;
+		falling = false;
 	}
 	
 	void Update () {
