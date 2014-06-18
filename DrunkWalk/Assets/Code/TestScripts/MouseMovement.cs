@@ -113,7 +113,7 @@ public class MouseMovement : MonoBehaviour {
 			
 		case (int) Dir.back:				//print ("stopping head movement");
 			rhead.AddForce (0, 0, -hinc); 
-			rhead.position = new Vector3 (rfeet.position.x, rhead.position.y, rfeet.position.z); 
+			//rhead.position = new Vector3 (rfeet.position.x, rhead.position.y, rfeet.position.z); 
 			break; 
 			
 		default:
@@ -127,15 +127,18 @@ public class MouseMovement : MonoBehaviour {
 		switch (direction) {
 			
 		case (int) Dir.forward:						//print ("moving feet forward");
-			rfeet.AddForce (0, 0, finc); 
+			rfeet.AddForce (0, 0, finc);
+			rfeet.position = new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z);  
 			break;
 			
 		case (int) Dir.right:						//print ("moving feet right");
-			rfeet.AddForce (finc, 0, 0); 
+			rfeet.AddForce (finc, 0, 0);
+			rfeet.position = new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z);  
 			break;
 			
 		case (int) Dir.left:						//print ("moving feet left");
-			rfeet.AddForce (-finc, 0, 0);  
+			rfeet.AddForce (-finc, 0, 0);
+			rfeet.position = new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z);   
 			break;
 			
 			// if player leans back, the feet will match the feet 
