@@ -8,14 +8,18 @@ public class MouseMovement : MonoBehaviour {
 	
 	public Vector3 mouse;		// current mouse position on screen
 	public float delay; 		// time delay between feet movement and head movement 
+	public float fallDelay; 	
+	public float getupDelay; 
 	public float hinc = 0.5f;	// force increment for head
 	public float finc = 0.5f; 	// force increment for feet
 	public float camInc = 0.5f; 
-
+	
 	// OBJECTS TO DRAG INTO COMPONENT
 	public Rigidbody rhead;		// rigidbody at the head of the player
 	public Rigidbody rfeet;		// rigidbody at the feet of the player
 	public Camera cam; 			// to force the camera to just fall over if leaning too much
+	public Camera fallCam; 
+	public Collision collScript; 
 	//public UniMoveController UniMove; // get UniMove
 	
 	private int halfWidth; 		// half the width of screen
@@ -23,7 +27,10 @@ public class MouseMovement : MonoBehaviour {
 	
 	private enum Dir { forward, right, left, back }; 
 	public int direction; 
+	private float angleBetween;
+	private bool falling; 
 	private bool fallen;
+	private int fallCt; 		// NOT IMPLEMENTED YET - FALL 3 TIMES TO LOSE. FOR NOW, FALL ONCE = LOSE
 	
 	// List<UniMoveController> moves = new List<UniMoveController>();
 	
@@ -32,33 +39,16 @@ public class MouseMovement : MonoBehaviour {
 		halfHeight = Screen.height / 2; 
 		
 		fallen = false;
+		falling = false;
 	}
 	
 	void Update () {
 		// get the current mouse position
 		mouse = Input.mousePosition; 
 		
-<<<<<<< HEAD
-		/*
-		if (isLeaningTooMuch()) {
-			print ("LEANING TOO MUCH");
-=======
-		
-		/*if (isLeaningTooMuch()) {
->>>>>>> origin/master
-			// FALL = rotate camera down
-			cam.transform.rotation = new Quaternion (cam.transform.rotation.x - camInc, cam.transform.rotation.y, cam.transform.rotation.z, cam.transform.rotation.w); 
-		}
-<<<<<<< HEAD
-		else { *///print ("0. got mouse position ");
-			falling = isLeaningTooMuch ();
-=======
-		else { //print ("0. got mouse position ");*/
->>>>>>> origin/master
-			direction = getLeanDirection (mouse); 	//print ("1. got direction");
-			moveHead (direction); 					//print ("2. moved head"); 
-			StartCoroutine(delayFeet ()); 			//print ("3. delayed feet");
-		//}
+		direction = getLeanDirection (mouse); 	//print ("1. got direction");
+		moveHead (direction); 					//print ("2. moved head"); 
+		StartCoroutine(delayFeet ()); 			//print ("3. delayed feet");
 	}
 	
 	private int getLeanDirection(Vector3 mouse){	//print("entered get direction");
@@ -89,23 +79,16 @@ public class MouseMovement : MonoBehaviour {
 				}
 			}
 		}
-		return (0);
 	}
 	
 	// !! NB: FOR NOW IF LEAN BACK, STOP PLAYER
 	
-	private bool isLeaningTooMuch(){ //print ("checking lean");
+	private bool isLeaningTooMuch(){ print ("checking lean");
 		Vector3 vertVec = new Vector3 (rfeet.position.x, rhead.position.y, rfeet.position.z); 
-<<<<<<< HEAD
 		angleBetween = Vector3.Angle (vertVec, rhead.position); 
 		if (angleBetween >= 30.0f) { 	// print ("FALLEN!");
 			falling = true; 
-			//print ("SWEET SPOT"); 
-=======
-		float angle = Vector3.Angle (vertVec, rhead.position); 
-		if (angle >= 30.0f) { 	// print ("FALLEN!");
-			fallen = true; 
->>>>>>> origin/master
+			print ("SWEET SPOT"); 
 			return true;
 		} 						// print ("STILL STANDING");
 		return false; 
@@ -172,5 +155,15 @@ public class MouseMovement : MonoBehaviour {
 		yield return new WaitForSeconds(delay);
 		moveFeet (direction); 					//print ("4. moved feet"); 
 		//yield break; 
+	}
+	
+	private IEnumerator isFalling(){
+		yield return new WaitForSeconds(fallDelay);
+		
+	}
+	
+	private IEnumerator isGettingUp(){
+		yield return new WaitForSeconds(getupDelay);
+		// PLAY ANIMATION
 	}
 }
