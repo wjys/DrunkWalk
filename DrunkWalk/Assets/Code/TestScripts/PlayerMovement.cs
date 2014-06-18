@@ -76,12 +76,12 @@ public class PlayerMovement : MonoBehaviour {
 			if (UniMove.Disconnected) continue;
 			
 			// Button events. Works like Unity's Input.GetButton
-			if (UniMove.GetButtonDown(PSMoveButton.Circle)){
-				Debug.Log("Circle Down");
-			}
-			if (UniMove.GetButtonUp(PSMoveButton.Circle)){
-				Debug.Log("Circle UP");
-			}
+			// if (UniMove.GetButtonDown(PSMoveButton.Circle)){
+			// 	Debug.Log("Circle Down");
+			// }
+			// if (UniMove.GetButtonUp(PSMoveButton.Circle)){
+			// 	Debug.Log("Circle UP");
+			// }
 			
 			// Change the colors of the LEDs based on which button has just been pressed:
 			if (UniMove.GetButtonDown(PSMoveButton.Circle)) 		UniMove.SetLED(Color.cyan);
@@ -99,14 +99,56 @@ public class PlayerMovement : MonoBehaviour {
 
 
 		if (isLeaningTooMuch()) {
+			print ("LEANING TOO MUCH");
 			// FALL = rotate camera down
+			// SWAP from cam (main) to fallCam 
+
+			// angle hit sweet spot = player is falling (not fallen) 
+			if (falling){
+				cam.enabled = false;
+				fallCam.enabled = true; 
+				print ("SWITCHED CAMS"); 
+				// play progressive falling sounds on this line 
+				StartCoroutine (isFalling()); 
+				// if the player reacts (taps button) = get back up
+				
+				if (UniMove.GetButtonDown(PSMoveButton.Circle)){
+					print ("BUTTON TAPPED"); 
+					//StartCoroutine (isGettingUp ());	// delay to play animation
+					fallen = false; 
+				}			
+				else {
+					fallen = true; 
+				}
+				if (!fallen) {
+					rfeet.position = new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z); 
+					angleBetween = 0.0f; 
+					print ("GET UP");
+					fallCam.enabled = false; 
+					cam.enabled = true;
+					// play getting back up sounds 
+				}
+				// player did not react in time 
+				else {
+					rfeet.position = new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z); 
+					angleBetween = 0.0f; 
+					//collScript.score -= 500; 
+					//Debug.Log("Floor Collision - " + collScript.score);
+					// blackout
+					// play fallen sound 
+					// press R to restart?  
+					fallCam.enabled = false; 
+					cam.enabled = true;
+					print ("FALLEN!");
+				}
+				falling = false; 
+			}
 		}
-		//else { //print ("0. got mouse position ");
-			direction = getLeanDirection (); 	//print ("1. got direction");
+		else { //print ("0. got mouse position ");
+			direction = getLeanDirection(); 	//print ("1. got direction");
 			moveHead (direction); 					//print ("2. moved head"); 
 			StartCoroutine(delayFeet ()); 			//print ("3. delayed feet");
-			moveFeet (direction); 					//print ("4. moved feet"); 
-		//}
+		}
 	}
 
 	private int getLeanDirection(){	//Vector3 mouse){	//print("entered get direction");
@@ -151,10 +193,11 @@ public class PlayerMovement : MonoBehaviour {
 	// !! NB: FOR NOW IF LEAN BACK, STOP PLAYER
 
 	private bool isLeaningTooMuch(){ //print ("checking lean");
-		Vector3 vertVec = new Vector3 (rfeet.position.x, rhead.position.y, rfeet.position.z); 
-		float angle = Vector3.Angle (vertVec, rhead.position); 
-		if (angle >= 30.0f) { 	// print ("FALLEN!");
-			fallen = true; 
+		Vector3 vertVec = new Vector3 (rfeet.position.x, rhead.position.y, rfeet.position.z);
+		angleBetween = Vector3.Angle (vertVec, rhead.position); 
+		if (angleBetween >= 30.0f) { 	// print ("FALLEN!");
+			falling = true; 
+			print ("SWEET SPOT"); 
 			return true;
 		} 						// print ("STILL STANDING");
 		return false; 
@@ -180,6 +223,7 @@ public class PlayerMovement : MonoBehaviour {
 			
 		case (int) Dir.back:				//print ("stopping head movement");
 			rhead.AddForce (0, 0, -hinc); 
+			rhead.position = new Vector3 (rfeet.position.x, rhead.position.y, rfeet.position.z); 
 			break; 
 			
 		default:
@@ -206,7 +250,7 @@ public class PlayerMovement : MonoBehaviour {
 
 		// if player leans back, the feet will match the feet 
 		case (int) Dir.back:						//print ("stopping feet under head");
-			rhead.AddForce (0, 0, -finc); 
+			rfeet.AddForce (0, 0, -finc); 
 			rfeet.position = new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z); 
 			break; 
 			
@@ -218,6 +262,17 @@ public class PlayerMovement : MonoBehaviour {
 	// delay the movement of the feet after the movement of the head 
 	private IEnumerator delayFeet (){				//print ("delaying");
 		yield return new WaitForSeconds(delay);
+		moveFeet (direction); 					//print ("4. moved feet"); 
 		//yield break; 
+	}
+
+	private IEnumerator isFalling(){
+		yield return new WaitForSeconds(fallDelay);
+
+	}
+
+	private IEnumerator isGettingUp(){
+		yield return new WaitForSeconds(getupDelay);
+		// PLAY ANIMATION
 	}
 }

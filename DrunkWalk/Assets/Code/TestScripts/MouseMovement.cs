@@ -8,7 +8,7 @@ public class MouseMovement : MonoBehaviour {
 	
 	public Vector3 mouse;		// current mouse position on screen
 	public float delay; 		// time delay between feet movement and head movement 
-	public float fallDelay; 	
+	public float fallDelay; 	// the amount of time the player gets as falling to get back up (without losing points)
 	public float getupDelay; 
 	public float hinc = 0.5f;	// force increment for head
 	public float finc = 0.5f; 	// force increment for feet
@@ -162,7 +162,6 @@ public class MouseMovement : MonoBehaviour {
 			
 		case (int) Dir.back:				//print ("stopping head movement");
 			rhead.AddForce (0, 0, -hinc); 
-			rhead.position = new Vector3 (rfeet.position.x, rhead.position.y, rfeet.position.z); 
 			break; 
 			
 		default:
@@ -189,7 +188,7 @@ public class MouseMovement : MonoBehaviour {
 			
 			// if player leans back, the feet will match the feet 
 		case (int) Dir.back:						//print ("stopping feet under head");
-			rfeet.AddForce (0, 0, -finc); 
+			rhead.AddForce (0, 0, -finc); 
 			rfeet.position = new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z); 
 			break; 
 			
