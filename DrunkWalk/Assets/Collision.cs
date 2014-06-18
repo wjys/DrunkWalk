@@ -23,6 +23,16 @@ public class Collision : MonoBehaviour {
 	
 	}
 
+	void OnGUI () {
+		GUI.Box(new Rect(10,10,100,23), "Score: " + score);
+		// if (GameOver){
+		// 	GUI.Box(new Rect(670,300,100,25), "GAME OVER");
+		// 	if (Input.GetKeyDown ("space")) {  
+  //   			Application.LoadLevel (0);  
+  // 			}  
+		// }
+	}
+
 	//When colliding with something:
 	void OnTriggerEnter(Collider col) {
 		Debug.Log("Collision");
