@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: 30526d17cc360df4a8287676fdd53735
 ModelImporter:
-  serializedVersion: 16
+  serializedVersion: 15
   fileIDToRecycleName:
     100000: //RootNode
     100002: Group_9
@@ -177,6 +177,40 @@ ModelImporter:
     4300062: ID204
     4300064: ID210
     4300066: ID216
+    6400000: Group_9
+    6400002: ID102
+    6400004: ID108
+    6400006: ID114
+    6400008: ID12
+    6400010: ID122
+    6400012: ID128
+    6400014: ID134
+    6400016: ID142
+    6400018: ID148
+    6400020: ID154
+    6400022: ID160
+    6400024: ID168
+    6400026: ID174
+    6400028: ID18
+    6400030: ID180
+    6400032: ID186
+    6400034: ID192
+    6400036: ID198
+    6400038: ID204
+    6400040: ID210
+    6400042: ID216
+    6400044: ID26
+    6400046: ID34
+    6400048: ID40
+    6400050: ID46
+    6400052: ID52
+    6400054: ID60
+    6400056: ID66
+    6400058: ID72
+    6400060: ID78
+    6400062: ID84
+    6400064: ID90
+    6400066: ID96
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -186,7 +220,6 @@ ModelImporter:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
     optimizeGameObjects: 0
-    motionNodeName: 
     animationCompression: 1
     animationRotationError: .5
     animationPositionError: .5
@@ -197,9 +230,9 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 1
+    globalScale: .0500000007
     meshCompression: 0
-    addColliders: 0
+    addColliders: 1
     importBlendShapes: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
@@ -230,5 +263,4 @@ ModelImporter:
     rootMotionBoneName: 
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 2
-  additionalBone: 0
   userData: 

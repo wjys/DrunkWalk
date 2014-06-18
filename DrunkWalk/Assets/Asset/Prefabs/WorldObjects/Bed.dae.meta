@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: 1c1e03f4e6aa5e1478f2a8cf99142768
 ModelImporter:
-  serializedVersion: 16
+  serializedVersion: 15
   fileIDToRecycleName:
     100000: Bed
     100002: //RootNode
@@ -94,6 +94,21 @@ ModelImporter:
     4300024: ID89
     4300026: ID95
     4300028: ID101
+    6400000: Bed
+    6400002: group_1
+    6400004: group_2
+    6400006: ID101
+    6400008: ID12
+    6400010: ID20
+    6400012: ID26
+    6400014: ID39
+    6400016: ID45
+    6400018: ID51
+    6400020: ID67
+    6400022: ID75
+    6400024: ID83
+    6400026: ID89
+    6400028: ID95
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -103,7 +118,6 @@ ModelImporter:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
     optimizeGameObjects: 0
-    motionNodeName: 
     animationCompression: 1
     animationRotationError: .5
     animationPositionError: .5
@@ -114,9 +128,9 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 1
+    globalScale: .0500000007
     meshCompression: 0
-    addColliders: 0
+    addColliders: 1
     importBlendShapes: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
@@ -131,7 +145,7 @@ ModelImporter:
     normalSmoothAngle: 60
     splitTangentsAcrossUV: 1
     normalImportMode: 0
-    tangentImportMode: 1
+    tangentImportMode: 0
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
@@ -147,5 +161,4 @@ ModelImporter:
     rootMotionBoneName: 
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 2
-  additionalBone: 0
   userData: 
