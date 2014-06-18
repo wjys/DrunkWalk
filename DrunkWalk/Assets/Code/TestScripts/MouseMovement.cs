@@ -89,9 +89,7 @@ public class MouseMovement : MonoBehaviour {
 					cam.enabled = true;
 					print ("FALLEN!");
 				}
-				print ("FALLING BEFORE SET" + falling);
 				falling = false; 
-				print ("FALLING AFTER SET" + falling); 
 			}
 		}
 		else { //print ("0. got mouse position ");
