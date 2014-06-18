@@ -17,6 +17,6 @@ public class displayScore : MonoBehaviour {
 	}
 
 	private void showScore(){
-		//scoreDisplay.text = "Score: " + collScript.score; 
+	//	scoreDisplay.text = "Score: " + collScript.score; 
 	}
 }
