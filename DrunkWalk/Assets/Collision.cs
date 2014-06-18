@@ -52,10 +52,10 @@ public class Collision : MonoBehaviour {
 		else if (col.tag == "Bed"){
 			Application.LoadLevel (Application.loadedLevel); 
 		}
-		else if (col.tag == "Floor"){
+/*		else if (col.tag == "Floor"){
 			score -= 500;
 			Debug.Log("Floor Collision - " + score);
-		}
+		}*/
 
 		//If not currently yelling:
 		if (yelling == false){

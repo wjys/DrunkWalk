@@ -8,6 +8,7 @@ public class MouseMovement : MonoBehaviour {
 	
 	public Vector3 mouse;		// current mouse position on screen
 	public float delay; 		// time delay between feet movement and head movement 
+	public float fallDelay; 	// the amount of time the player gets as falling to get back up (without losing points)
 	public float hinc = 0.5f;	// force increment for head
 	public float finc = 0.5f; 	// force increment for feet
 	public float camInc = 0.5f; 
@@ -16,6 +17,8 @@ public class MouseMovement : MonoBehaviour {
 	public Rigidbody rhead;		// rigidbody at the head of the player
 	public Rigidbody rfeet;		// rigidbody at the feet of the player
 	public Camera cam; 			// to force the camera to just fall over if leaning too much
+	public Camera fallCam; 
+	public Collision collScript; 
 	//public UniMoveController UniMove; // get UniMove
 	
 	private int halfWidth; 		// half the width of screen
@@ -23,7 +26,10 @@ public class MouseMovement : MonoBehaviour {
 	
 	private enum Dir { forward, right, left, back }; 
 	public int direction; 
+	private float angleBetween;
+	private bool falling; 
 	private bool fallen;
+	private int fallCt; 		// NOT IMPLEMENTED YET - FALL 3 TIMES TO LOSE. FOR NOW, FALL ONCE = LOSE
 	
 	// List<UniMoveController> moves = new List<UniMoveController>();
 	
@@ -32,6 +38,7 @@ public class MouseMovement : MonoBehaviour {
 		halfHeight = Screen.height / 2; 
 		
 		fallen = false;
+		falling = false;
 	}
 	
 	void Update () {
@@ -39,15 +46,43 @@ public class MouseMovement : MonoBehaviour {
 		mouse = Input.mousePosition; 
 		
 		
-		/*if (isLeaningTooMuch()) {
+		if (isLeaningTooMuch()) {
 			// FALL = rotate camera down
-			cam.transform.rotation = new Quaternion (cam.transform.rotation.x - camInc, cam.transform.rotation.y, cam.transform.rotation.z, cam.transform.rotation.w); 
+			// SWAP from cam (main) to fallCam 
+
+			// angle hit sweet spot = player is falling (not fallen) 
+			if (falling){
+				cam.enabled = false;
+				fallCam.enabled = true; 
+				// play progressive falling sounds on this line 
+				StartCoroutine (isFalling()); 
+			}
+			// not falling anymore  
+			else { 
+				// player pressed button = get back up
+				if (!fallen) {
+					fallCam.enabled = false; 
+					cam.enabled = true;
+					// play getting back up sounds 
+					rfeet.position = new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z); 
+					angleBetween = 0.0f; 
+				}
+				// player did not react in time 
+				else {
+					collScript.score -= 500; 
+					Debug.Log("Floor Collision - " + collScript.score);
+					// blackout
+					// play fallen sound 
+					// press R to restart? 
+
+				}
+			}
 		}
-		else { //print ("0. got mouse position ");*/
+		else { //print ("0. got mouse position ");
 			direction = getLeanDirection (mouse); 	//print ("1. got direction");
 			moveHead (direction); 					//print ("2. moved head"); 
 			StartCoroutine(delayFeet ()); 			//print ("3. delayed feet");
-		//}
+		}
 	}
 	
 	private int getLeanDirection(Vector3 mouse){	//print("entered get direction");
@@ -85,9 +120,9 @@ public class MouseMovement : MonoBehaviour {
 	
 	private bool isLeaningTooMuch(){ //print ("checking lean");
 		Vector3 vertVec = new Vector3 (rfeet.position.x, rhead.position.y, rfeet.position.z); 
-		float angle = Vector3.Angle (vertVec, rhead.position); 
-		if (angle >= 30.0f) { 	// print ("FALLEN!");
-			fallen = true; 
+		angleBetween = Vector3.Angle (vertVec, rhead.position); 
+		if (angleBetween >= 30.0f) { 	// print ("FALLEN!");
+			falling = true; 
 			return true;
 		} 						// print ("STILL STANDING");
 		return false; 
@@ -153,5 +188,15 @@ public class MouseMovement : MonoBehaviour {
 		yield return new WaitForSeconds(delay);
 		moveFeet (direction); 					//print ("4. moved feet"); 
 		//yield break; 
+	}
+
+	private IEnumerator isFalling(){
+		yield return new WaitForSeconds(fallDelay);
+		fallen = true; 
+		// if the player reacts (taps button) = get back up
+		if (Input.GetButtonDown(0)){
+			fallen = false; 
+		}
+		falling = false; 
 	}
 }
