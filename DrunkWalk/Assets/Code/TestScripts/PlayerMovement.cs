@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-// MOUSE POSITION TO READ WHERE PLAYER LEANS AND RESULTING MOVEMENT 
+// MOVE CONTROLLER TILT TO READ WHERE PLAYER LEANS AND RESULTING MOVEMENT 
 
 public class PlayerMovement : MonoBehaviour {
 	
@@ -18,7 +18,6 @@ public class PlayerMovement : MonoBehaviour {
 	public Rigidbody rfeet;		// rigidbody at the feet of the player
 	public Camera cam; 			// to force the camera to just fall over if leaning too much
 	public Camera fallCam; 
-	public Collision collScript; 
 	public UniMoveController UniMove; // get UniMove
 
 	private int halfWidth; 		// half the width of screen
@@ -26,10 +25,7 @@ public class PlayerMovement : MonoBehaviour {
 
 	private enum Dir { forward, right, left, back }; 
 	public int direction; 
-	private float angleBetween;
-	private bool falling; 
 	private bool fallen;
-	private int fallCt;
 
 	List<UniMoveController> moves = new List<UniMoveController>();
 
@@ -64,11 +60,14 @@ public class PlayerMovement : MonoBehaviour {
 		halfHeight = Screen.height / 2; 
 
 		fallen = false;
-		falling = false;
 	}
 	
 	void Update () {
 
+		/* --------------------------------------------------------------------------------------------------------------------------
+		 * (1) MAKE THE KNOB GLOW A COLOUR DEPENDING ON WHICH BUTTON IS PRESSED
+		 * (2) SET THE RUMBLE BASED ON TRIGGER
+		 * -------------------------------------------------------------------------------------------------------------------------- */
 		foreach (UniMoveController UniMove in moves) 
 		{
 			// Instead of this somewhat kludge-y check, we'd probably want to remove/destroy
@@ -85,7 +84,7 @@ public class PlayerMovement : MonoBehaviour {
 			
 			// Change the colors of the LEDs based on which button has just been pressed:
 			if (UniMove.GetButtonDown(PSMoveButton.Circle)) 		UniMove.SetLED(Color.cyan);
-			else if(UniMove.GetButtonDown(PSMoveButton.Cross)) 	UniMove.SetLED(Color.red);
+			else if(UniMove.GetButtonDown(PSMoveButton.Cross)) 		UniMove.SetLED(Color.red);
 			else if(UniMove.GetButtonDown(PSMoveButton.Square)) 	UniMove.SetLED(Color.yellow);
 			else if(UniMove.GetButtonDown(PSMoveButton.Triangle)) 	UniMove.SetLED(Color.magenta);
 			else if(UniMove.GetButtonDown(PSMoveButton.Move)) 		UniMove.SetLED(Color.black);
@@ -93,21 +92,19 @@ public class PlayerMovement : MonoBehaviour {
 			// Set the rumble based on how much the trigger is down
 			UniMove.SetRumble(UniMove.Trigger);
 		}
-
-		// get the current mouse position
-		//mouse = Input.mousePosition; 
-
-
-		if (isLeaningTooMuch()) {
-
+		
+		// if the player has leaned too much, FALL AND LOSE
+		if (fallen) {
+			fallToLose();
 		}
 		else { //print ("0. got mouse position ");
-			direction = getLeanDirection(); 	//print ("1. got direction");
+			direction = getLeanDirection(); 		//print ("1. got direction");
+			fallen = isLeaningTooMuch (); 			
 			moveHead (direction); 					//print ("2. moved head"); 
 			StartCoroutine(delayFeet ()); 			//print ("3. delayed feet");
 		}
 	}
-
+	
 	private int getLeanDirection(){	//print("entered get direction");
 		
 		if (UniMove.az <= -0.4f) {
