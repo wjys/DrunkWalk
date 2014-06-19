@@ -19,6 +19,7 @@ public class PlayerMovement : MonoBehaviour {
 	public Camera cam; 			// to force the camera to just fall over if leaning too much
 	public Camera fallCam; 
 	public UniMoveController UniMove; // get UniMove
+	public DepthOfFieldScatter dof; // depth of field component on cam
 
 	private int halfWidth; 		// half the width of screen
 	private int halfHeight; 	// half the height of screen
@@ -127,8 +128,11 @@ public class PlayerMovement : MonoBehaviour {
 			direction = getLeanDirection(); 		//print ("1. got direction");
 			fallen = isLeaningTooMuch (); 			
 			moveHead (direction); 					//print ("2. moved head"); 
-			StartCoroutine(delayFeet ()); 			//print ("3. delayed feet");
 		}
+	}
+
+	void FixedUpdate() {
+		StartCoroutine(delayFeet ()); 			//print ("3. delayed feet");
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -137,7 +141,14 @@ public class PlayerMovement : MonoBehaviour {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 
 	private void angleBlur (float angle){
-
+		
+		//print ("ap = " + dof.aperture); 
+		
+		if (angle >= 0.3f && angle <= maxAngle){
+			dof.aperture += 0.5f;
+		} else if (angle < 0.3f){
+			dof.aperture -= 0.8f;
+		}
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -265,7 +276,7 @@ public class PlayerMovement : MonoBehaviour {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	private void moveFeet (int direction){			//print ("moving feet");
-		switch (direction) {
+		/*		switch (direction) {
 			
 		case (int) Dir.forward:						//print ("moving feet forward");
 			rfeet.AddForce (0, 0, finc);
@@ -286,36 +297,16 @@ public class PlayerMovement : MonoBehaviour {
 			
 		default:
 			break; 
-		}
+		}*/
 	}
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * AFTER DELAY, PLACE THE FEET DIRECTLY UNDER THE HEAD 
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	private void placeFeet (int direction){			//print ("moving feet");
-		switch (direction) {
-			
-		case (int) Dir.forward:						//print ("moving feet forward");
-			rfeet.MovePosition(new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z));  
-			break;
-			
-		case (int) Dir.right:						//print ("moving feet right");
-			rfeet.MovePosition(new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z));  
-			break;
-			
-		case (int) Dir.left:						//print ("moving feet left");
-			rfeet.MovePosition(new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z));   
-			break;
-			
-			// if player leans back, the feet will match the feet 
-		case (int) Dir.back:						//print ("stopping feet under head");
-			rfeet.MovePosition(new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z)); 
-			break; 
-			
-		default:
-			break; 
-		}
+		rfeet.MovePosition(new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z)); 
 	}
+
 
 	private void playGrunt(){
 		/*
