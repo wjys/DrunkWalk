@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b10e595473a080d44a03e9f5043f8477
+guid: 482d55e4a757922439840e4791805fc7
 ModelImporter:
   serializedVersion: 16
   fileIDToRecycleName:
@@ -7,33 +7,38 @@ ModelImporter:
     100002: ID13
     100004: ID21
     100006: ID27
-    100008: ID33
-    100010: instance_0
-    100012: Table
-    100014: //RootNode
+    100008: ID35
+    100010: ID41
+    100012: instance_0
+    100014: Shelf
+    100016: //RootNode
     400000: group_0
     400002: ID13
     400004: ID21
     400006: ID27
-    400008: ID33
-    400010: instance_0
-    400012: Table
-    400014: //RootNode
+    400008: ID35
+    400010: ID41
+    400012: instance_0
+    400014: Shelf
+    400016: //RootNode
     2300000: ID13
     2300002: ID21
     2300004: ID27
-    2300006: ID33
-    2300008: Table
+    2300006: ID35
+    2300008: ID41
+    2300010: Shelf
     3300000: ID13
     3300002: ID21
     3300004: ID27
-    3300006: ID33
-    3300008: Table
-    4300000: Table
+    3300006: ID35
+    3300008: ID41
+    3300010: Shelf
+    4300000: Shelf
     4300002: ID13
     4300004: ID21
     4300006: ID27
-    4300008: ID33
+    4300008: ID35
+    4300010: ID41
     9500000: //RootNode
   materials:
     importMaterials: 1
