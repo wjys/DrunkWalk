@@ -309,7 +309,7 @@ public class PlayerMovement : MonoBehaviour {
 		// (4) play FALLEN TO FLOOR sound
 		
 		// (5) SWITCH TO LOSE SCREEN
-		// Application.LoadLevel("nameofthescene"); 
+		Application.LoadLevel("Lost"); 
 	}
 	
 	
