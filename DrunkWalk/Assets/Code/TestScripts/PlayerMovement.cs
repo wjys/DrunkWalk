@@ -73,6 +73,17 @@ public class PlayerMovement : MonoBehaviour {
 
 		fallen = false;
 		angleBetween = 0.0f; 
+
+		/*
+		source = GetComponent<AudioSource>(); 
+		
+		clips = new AudioClip[numClips];
+		for (int i = 0; i < numClips; i++) {
+			clips [i] = (AudioClip)Resources.Load ("Sounds/" + sound [i]); 
+		}
+		source.volume = soundVolume;
+		source.loop = false; 
+		soundPlayed = false; */
 	}
 	
 	void Update () {
@@ -111,6 +122,7 @@ public class PlayerMovement : MonoBehaviour {
 			fallToLose();
 		}
 		else { //print ("0. got mouse position ");
+			//playGrunt (); 
 			angleBlur (angleBetween);
 			direction = getLeanDirection(); 		//print ("1. got direction");
 			fallen = isLeaningTooMuch (); 			
@@ -305,6 +317,18 @@ public class PlayerMovement : MonoBehaviour {
 		}
 	}
 
+	private void playGrunt(){
+		/*
+		// play pain sound
+		switchGrunt ();
+		if (!soundPlayed){
+			source.Play (); 
+			soundPlayed = true; 
+		}
+		StartCoroutine (stopSound ()); 
+	*/
+	}
+	
 	private void switchGrunt(){
 		int index = Random.Range (0, numClips); 
 		source.clip = clips [index];
@@ -318,7 +342,6 @@ public class PlayerMovement : MonoBehaviour {
 		yield return new WaitForSeconds(soundDelay);
 		soundPlayed = false; 
 	}
-
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * DELAY THE MOVEMENT OF THE FEET AFTER THE MOVEMENT OF THE HEAD
