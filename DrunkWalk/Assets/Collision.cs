@@ -26,16 +26,16 @@ public class Collision : MonoBehaviour {
 	void Start () {
 		score = 10000;
 
-		/*
+
 		source = GetComponent<AudioSource>(); 
 		
 		clips = new AudioClip[numClips];
 		for (int i = 0; i < numClips; i++) {
-			clips [i] = (AudioClip)Resources.Load ("Sounds/" + sound [i]); 
+			clips [i] = (AudioClip)Resources.Load ("Sounds/SFX/Insults" + sound [i]); 
 		}
 		source.volume = soundVolume;
 		source.loop = false; 
-		soundPlayed = false; */
+		soundPlayed = false; 
 	}
 	
 	// Update is called once per frame
@@ -57,7 +57,7 @@ public class Collision : MonoBehaviour {
 
 	//When colliding with something:
 	void OnTriggerEnter(Collider col) {
-		/*
+
 		// play pain sound
 		switchGrunt ();
 		if (!soundPlayed){
@@ -65,7 +65,7 @@ public class Collision : MonoBehaviour {
 			soundPlayed = true; 
 		}
 		StartCoroutine (stopSound ()); 
-	*/
+	
 		Debug.Log("Collision");
 		ouchAnim.SetTrigger("Ouch");
 		
@@ -114,12 +114,12 @@ public class Collision : MonoBehaviour {
 	void OnTriggerExit(Collider col) {
 		Debug.Log("No Longer Colliding");
 	}
-	/*
+
 	private void switchGrunt(){
 		int index = Random.Range (0, numClips); 
 		source.clip = clips [index];
 	}
-	*/
+
 	//Instantiate a hurt sound
 	public void Yell () {
 		GameObject newOuch = Instantiate(ouch, transform.position + (0.8f * Vector3.up) + (2.5f * Vector3.forward) + (0.5f * Vector3.right), Quaternion.identity) as GameObject;
