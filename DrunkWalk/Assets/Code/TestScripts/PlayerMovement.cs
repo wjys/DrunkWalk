@@ -82,7 +82,7 @@ public class PlayerMovement : MonoBehaviour {
 		fallen = false;
 		angleBetween = 0.0f; 
 
-		/*
+
 		source = GetComponent<AudioSource>(); 
 		
 		clips = new AudioClip[numClips];
@@ -91,7 +91,7 @@ public class PlayerMovement : MonoBehaviour {
 		}
 		source.volume = soundVolume;
 		source.loop = false; 
-		soundPlayed = false; */
+		soundPlayed = false; 
 
 		initX = UniMove.ax;
 		//initX = 0;
@@ -388,7 +388,7 @@ public class PlayerMovement : MonoBehaviour {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	private void playGrunt(){
-		/*
+
 		// play pain sound
 		switchGrunt ();
 		if (!soundPlayed){
@@ -396,7 +396,6 @@ public class PlayerMovement : MonoBehaviour {
 			soundPlayed = true; 
 		}
 		StartCoroutine (stopSound ()); 
-	*/
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -415,6 +414,7 @@ public class PlayerMovement : MonoBehaviour {
 	IEnumerator stopSound(){
 		yield return new WaitForSeconds(soundDelay);
 		soundPlayed = false; 
+		soundDelay = Random.Range (3, 6); 
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
