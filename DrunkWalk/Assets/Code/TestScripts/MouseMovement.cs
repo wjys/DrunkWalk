@@ -208,7 +208,7 @@ public class MouseMovement : MonoBehaviour {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 
 	private void moveFeet (int direction){			//print ("moving feet");
-		switch (direction) {
+/*		switch (direction) {
 			
 		case (int) Dir.forward:						//print ("moving feet forward");
 			rfeet.AddForce (0, 0, finc);
@@ -229,7 +229,7 @@ public class MouseMovement : MonoBehaviour {
 			
 		default:
 			break; 
-		}
+		}*/
 	}
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * AFTER DELAY, PLACE THE FEET DIRECTLY UNDER THE HEAD 
