@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: b10e595473a080d44a03e9f5043f8477
 ModelImporter:
-  serializedVersion: 16
+  serializedVersion: 15
   fileIDToRecycleName:
     100000: group_0
     100002: ID13
@@ -34,6 +34,11 @@ ModelImporter:
     4300004: ID21
     4300006: ID27
     4300008: ID33
+    6400000: ID13
+    6400002: ID21
+    6400004: ID27
+    6400006: ID33
+    6400008: Table
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -43,7 +48,6 @@ ModelImporter:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
     optimizeGameObjects: 0
-    motionNodeName: 
     animationCompression: 1
     animationRotationError: .5
     animationPositionError: .5
@@ -54,9 +58,9 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 1
+    globalScale: .0500000007
     meshCompression: 0
-    addColliders: 0
+    addColliders: 1
     importBlendShapes: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
@@ -87,5 +91,4 @@ ModelImporter:
     rootMotionBoneName: 
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 2
-  additionalBone: 0
   userData: 

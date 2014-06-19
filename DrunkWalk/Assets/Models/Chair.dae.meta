@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: 008418020fd360c40aa730b64e8c6de3
 ModelImporter:
-  serializedVersion: 16
+  serializedVersion: 15
   fileIDToRecycleName:
     100000: //RootNode
     100002: Chair
@@ -54,6 +54,15 @@ ModelImporter:
     4300012: ID45
     4300014: ID51
     4300016: ID57
+    6400000: Chair
+    6400002: ID13
+    6400004: ID19
+    6400006: ID25
+    6400008: ID31
+    6400010: ID37
+    6400012: ID45
+    6400014: ID51
+    6400016: ID57
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -63,7 +72,6 @@ ModelImporter:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
     optimizeGameObjects: 0
-    motionNodeName: 
     animationCompression: 1
     animationRotationError: .5
     animationPositionError: .5
@@ -74,9 +82,9 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 1
+    globalScale: .0500000007
     meshCompression: 0
-    addColliders: 0
+    addColliders: 1
     importBlendShapes: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
@@ -107,5 +115,4 @@ ModelImporter:
     rootMotionBoneName: 
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 2
-  additionalBone: 0
   userData: 

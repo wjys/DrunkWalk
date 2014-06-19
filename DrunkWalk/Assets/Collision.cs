@@ -90,6 +90,10 @@ public class Collision : MonoBehaviour {
 			score -= 300;
 			Debug.Log("Table Collision - " + score);
 		}
+		else if (col.tag == "Chair"){
+			score -= 100;
+			Debug.Log("Chair Collision - " + score);
+		}
 		else if (col.tag == "Bed"){
 			Application.LoadLevel (Application.loadedLevel); 
 		}

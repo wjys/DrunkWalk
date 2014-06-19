@@ -29,6 +29,7 @@ public class PlayerMovement : MonoBehaviour {
 	private bool fallen;
 	private float angleBetween; 
 	public float maxAngle = 1.0f; 
+	public float maxAngleSides;
 
 	//TIME STUFF
 	public float currentTime = 0.0f;
@@ -92,15 +93,15 @@ public class PlayerMovement : MonoBehaviour {
 		source.loop = false; 
 		soundPlayed = false; */
 
-		//initX = UniMove.ax;
-		initX = 0;
+		initX = UniMove.ax;
+		//initX = 0;
 		initZ = UniMove.az;
 
 	}
 	
 	void Update () {
 
-		print (direction);
+		//print (direction);
 
 		/* --------------------------------------------------------------------------------------------------------------------------
 		 * (1) MAKE THE KNOB GLOW A COLOUR DEPENDING ON WHICH BUTTON IS PRESSED
@@ -177,7 +178,8 @@ public class PlayerMovement : MonoBehaviour {
 
 	private int getLeanDirection(){	//print("entered get direction");
 
-		
+		// ----------------- CHECK FRONT/BACK FIRST
+		/*
 		if (UniMove.az <= -0.2f + initZ) {
 
 			if (UniMove.ax > -0.2f + initX && UniMove.ax < 0.2f + initX) {
@@ -206,6 +208,52 @@ public class PlayerMovement : MonoBehaviour {
 				}
 			}
 		}
+		*/
+		// CHECK RIGHT/LEFT FIRST
+		/*
+		// ----------------- LEFT
+		if (UniMove.ax > 0.2f + initX) {
+			if (UniMove.az > -0.2f + initZ && UniMove.az < 0.7f +initZ){
+				return (int) Dir.left; 
+			}
+			else {
+				if (UniMove.az <= -0.2f + initZ){
+					return (int) Dir.back;
+				}
+				if (UniMove.az >= 0.7f + initZ){
+					return (int) Dir.forward; 
+				}
+			}
+		}
+		else if (UniMove.ax < -0.2f + initX){
+			if (UniMove.az > -0.2f + initZ && UniMove.az < 0.7f +initZ){
+				return (int) Dir.left; 
+			}
+			else {
+				if (UniMove.az <= -0.2f + initZ){
+					return (int) Dir.back;
+				}
+				if (UniMove.az >= 0.7f + initZ){
+					return (int) Dir.forward; 
+				}
+			}
+		}
+		*/
+		// ----------------- CHECK ALL DIRECTIONS NO PRIORITY
+
+		if (UniMove.az <= 0.1f + initZ) {
+			return (int) Dir.back;
+		}
+		if (UniMove.az >= 0.8f + initZ) {
+			return (int) Dir.forward; 
+		}
+		if (UniMove.ax < -0.2f + initX) {
+			return (int) Dir.right; 
+		}
+		if (UniMove.ax > 0.2f + initX) {
+			return (int) Dir.left; 
+		}
+
 		return (0);
 	}
 
@@ -221,13 +269,21 @@ public class PlayerMovement : MonoBehaviour {
 		// (1) check angle between vectors
 		float angle = Vector3.Angle (vertVec, rhead.position);
 		angleBetween = angle;
-		print ("angle = " + angle); 
+		//print ("angle = " + angle); 
 		
 		// (2) if angle is at least 30
-		if (angle >= maxAngle) { 	// print ("FALLEN!");
-			return true;
-		} 						// print ("STILL STANDING");
-		return false; 
+		if (direction == (int) Dir.back || direction == (int) Dir.forward){
+			if (angle >= maxAngle) { 	// print ("FALLEN!");
+				return true;
+			} 						// print ("STILL STANDING");
+			return false; 
+		}
+		else {
+			if (angle >= maxAngleSides) { 	// print ("FALLEN!");
+				return true;
+			} 						// print ("STILL STANDING");
+			return false; 
+		}
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -273,15 +329,15 @@ public class PlayerMovement : MonoBehaviour {
 			break;
 			
 		case (int) Dir.right:				//print ("moving head to the right");
-			rhead.AddForce ((hinc + 1.0f), 0, 0); 
+			rhead.AddForce (hinc, 0, 0); 
 			break;
 			
 		case (int) Dir.left:				//print ("moving head to the left");
-			rhead.AddForce ((-hinc - 1.0f), 0, 0); 
+			rhead.AddForce (-hinc, 0, 0); 
 			break;
 			
 		case (int) Dir.back:				//print ("stopping head movement");
-			rhead.AddForce (0, 0, -hinc); 
+			rhead.AddForce (0, 0, (-hinc - 0.3f)); 
 			//rhead.position = new Vector3 (rfeet.position.x, rhead.position.y, rfeet.position.z); 
 			break; 
 			
