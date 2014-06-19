@@ -27,12 +27,33 @@ public class MouseMovement : MonoBehaviour {
 	private bool fallen;
 	private float angleBetween;
 	private float maxAngle = 1.0f; 
+	
+	// sound stuff
+	private AudioSource source; 
+	private AudioClip[] clips; 
+	public int numClips = 1; 
+	public string[] sound; 
+	public float soundDelay; 
+	public float soundVolume = 1.0f;
+	private bool soundPlayed; 
+
 
 	void Start () {
 		halfWidth = Screen.width / 2; 
 		halfHeight = Screen.height / 2; 
 		
 		fallen = false;
+		
+		/*
+		source = GetComponent<AudioSource>(); 
+		
+		clips = new AudioClip[numClips];
+		for (int i = 0; i < numClips; i++) {
+			clips [i] = (AudioClip)Resources.Load ("Sounds/" + sound [i]); 
+		}
+		source.volume = soundVolume;
+		source.loop = false; 
+		soundPlayed = false; */
 	}
 	
 	void Update () {
@@ -240,6 +261,40 @@ public class MouseMovement : MonoBehaviour {
 
 	private void placeFeet (int direction){			//print ("moving feet");
 		rfeet.MovePosition(new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z)); 
+	}
+
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * PLAY SELECTED GRUNT SOUND
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+		
+	private void playGrunt(){
+		/*
+		// play pain sound
+		switchGrunt ();
+		if (!soundPlayed){
+			source.Play (); 
+			soundPlayed = true; 
+		}
+		StartCoroutine (stopSound ()); 
+	*/
+	}
+
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * RANDOM SWITCHING GRUNT SOUND
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+		
+	private void switchGrunt(){
+		int index = Random.Range (0, numClips); 
+		source.clip = clips [index];
+	}
+	
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * DELAY BEING ABLE TO PLAY ANOTHER SOUND
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+	
+	IEnumerator stopSound(){
+		yield return new WaitForSeconds(soundDelay);
+		soundPlayed = false; 
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------

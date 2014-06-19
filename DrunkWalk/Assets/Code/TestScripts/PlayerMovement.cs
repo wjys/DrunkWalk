@@ -306,8 +306,11 @@ public class PlayerMovement : MonoBehaviour {
 	private void placeFeet (int direction){			//print ("moving feet");
 		rfeet.MovePosition(new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z)); 
 	}
-
-
+	
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * PLAY SELECTED GRUNT SOUND
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+	
 	private void playGrunt(){
 		/*
 		// play pain sound
@@ -320,13 +323,17 @@ public class PlayerMovement : MonoBehaviour {
 	*/
 	}
 	
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * RANDOM SWITCHING GRUNT SOUND
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+	
 	private void switchGrunt(){
 		int index = Random.Range (0, numClips); 
 		source.clip = clips [index];
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
-	 * DELAY THE MOVEMENT OF THE FEET AFTER THE MOVEMENT OF THE HEAD
+	 * DELAY BEING ABLE TO PLAY ANOTHER SOUND
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	IEnumerator stopSound(){
