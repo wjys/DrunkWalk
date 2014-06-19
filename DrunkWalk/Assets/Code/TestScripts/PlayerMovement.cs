@@ -28,7 +28,7 @@ public class PlayerMovement : MonoBehaviour {
 	public int direction; 
 	private bool fallen;
 	private float angleBetween; 
-	private float maxAngle = 1.0f; 
+	public float maxAngle = 1.0f; 
 
 	//TIME STUFF
 	public float currentTime = 0.0f;
@@ -168,7 +168,7 @@ public class PlayerMovement : MonoBehaviour {
 
 	private int getLeanDirection(){	//print("entered get direction");
 		
-		if (UniMove.az <= -0.4f) {
+		if (UniMove.az <= 0.7f) {
 
 			if (UniMove.ax > -0.3f && UniMove.ax < 0.3f) {
 				return (int) Dir.back; 
@@ -182,7 +182,7 @@ public class PlayerMovement : MonoBehaviour {
 				}
 			}
 		}
-		else {	
+		else if (UniMove.az >= 1.8f){	
 			if (UniMove.ax > -0.3f && UniMove.ax< 0.3f) {
 				return (int) Dir.forward; 
 			}
@@ -210,7 +210,7 @@ public class PlayerMovement : MonoBehaviour {
 		// (1) check angle between vectors
 		float angle = Vector3.Angle (vertVec, rhead.position);
 		angleBetween = angle;
-		// print ("angle = " + angle); 
+		print ("angle = " + angle); 
 		
 		// (2) if angle is at least 30
 		if (angle >= maxAngle) { 	// print ("FALLEN!");
