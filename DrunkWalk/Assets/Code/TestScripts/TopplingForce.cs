@@ -49,18 +49,17 @@ public class TopplingForce : MonoBehaviour {
 		//accelForce (toppleDir); 
 	}
 
-	// get the direction variable from the PlayerMovement script 
-	private int getLeanDirection(){
-		return playerMovement.direction; 
-	}
-
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * !! NOT USED - ACCELERATE IN LEAN DIRECTION 
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+	
 	private void accelForce (int direction){
-
+		
 		if (!isToppling) {
 			inc = 0.0f; 
 			isToppling = true; 
 		}
-
+		
 		switch (direction) {
 			
 		case (int) Dir.forward:				//print ("moving head forward");
@@ -80,7 +79,12 @@ public class TopplingForce : MonoBehaviour {
 		}
 		inc += 0.05f; 
 	}
-
+	
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * DRUNKFORCE 
+	 * Depending on the (random) inputted direction, add a drunk force in the corresponding direction
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+	
 	// depending on the direction of the lean, set a constantforce on the rigidbody of the head 
 	private void drunkForce (int direction){	//print ("moving head ");
 		
@@ -97,12 +101,19 @@ public class TopplingForce : MonoBehaviour {
 		case (int) Dir.left:				//print ("moving head to the left");
 			rhead.AddForce (-drunkInc, 0, 0); 
 			break;
-
+			
 		default:
 			break; 
 		}
 	}
-
+	
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * CAMERA WOBBLE
+	 * Given inputted LEAN DIRECTION, the camera will wobble correspondingly
+	 * (1) If leaning forward of backward, progressively rotate on the x-axis 
+	 * (2) If leaning right/left, progressively rotate on the z-axis
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+	
 	// FOR NOW camera wobbles as lean changes 
 	private void camWobble(int lean){
 		switch (lean) {
@@ -122,7 +133,10 @@ public class TopplingForce : MonoBehaviour {
 			break; 
 		}
 	}
-
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * Delay changing the DRUNK DIRECTION to trigger DRUNK FORCE
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+	
 	IEnumerator newDrunkDirection(){
 		yield return new WaitForSeconds(drunkDelay);
 		drunkDir = Random.Range ((int) Dir.forward, (int) Dir.back);

@@ -20,7 +20,7 @@ public class Collision : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+		score--; 
 	}
 
 	void OnGUI () {

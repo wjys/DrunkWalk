@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-// MOUSE POSITION TO READ WHERE PLAYER LEANS AND RESULTING MOVEMENT 
+// MOVE CONTROLLER TILT TO READ WHERE PLAYER LEANS AND RESULTING MOVEMENT 
 
 public class PlayerMovement : MonoBehaviour {
 	
@@ -18,7 +18,6 @@ public class PlayerMovement : MonoBehaviour {
 	public Rigidbody rfeet;		// rigidbody at the feet of the player
 	public Camera cam; 			// to force the camera to just fall over if leaning too much
 	public Camera fallCam; 
-	public Collision collScript; 
 	public UniMoveController UniMove; // get UniMove
 
 	private int halfWidth; 		// half the width of screen
@@ -26,10 +25,7 @@ public class PlayerMovement : MonoBehaviour {
 
 	private enum Dir { forward, right, left, back }; 
 	public int direction; 
-	private float angleBetween;
-	private bool falling; 
 	private bool fallen;
-	private int fallCt;
 
 	List<UniMoveController> moves = new List<UniMoveController>();
 
@@ -64,11 +60,14 @@ public class PlayerMovement : MonoBehaviour {
 		halfHeight = Screen.height / 2; 
 
 		fallen = false;
-		falling = false;
 	}
 	
 	void Update () {
 
+		/* --------------------------------------------------------------------------------------------------------------------------
+		 * (1) MAKE THE KNOB GLOW A COLOUR DEPENDING ON WHICH BUTTON IS PRESSED
+		 * (2) SET THE RUMBLE BASED ON TRIGGER
+		 * -------------------------------------------------------------------------------------------------------------------------- */
 		foreach (UniMoveController UniMove in moves) 
 		{
 			// Instead of this somewhat kludge-y check, we'd probably want to remove/destroy
@@ -85,7 +84,7 @@ public class PlayerMovement : MonoBehaviour {
 			
 			// Change the colors of the LEDs based on which button has just been pressed:
 			if (UniMove.GetButtonDown(PSMoveButton.Circle)) 		UniMove.SetLED(Color.cyan);
-			else if(UniMove.GetButtonDown(PSMoveButton.Cross)) 	UniMove.SetLED(Color.red);
+			else if(UniMove.GetButtonDown(PSMoveButton.Cross)) 		UniMove.SetLED(Color.red);
 			else if(UniMove.GetButtonDown(PSMoveButton.Square)) 	UniMove.SetLED(Color.yellow);
 			else if(UniMove.GetButtonDown(PSMoveButton.Triangle)) 	UniMove.SetLED(Color.magenta);
 			else if(UniMove.GetButtonDown(PSMoveButton.Move)) 		UniMove.SetLED(Color.black);
@@ -93,96 +92,44 @@ public class PlayerMovement : MonoBehaviour {
 			// Set the rumble based on how much the trigger is down
 			UniMove.SetRumble(UniMove.Trigger);
 		}
-
-		// get the current mouse position
-		//mouse = Input.mousePosition; 
-
-
-		if (isLeaningTooMuch()) {
-			print ("LEANING TOO MUCH");
-			// FALL = rotate camera down
-			// SWAP from cam (main) to fallCam 
-
-			// angle hit sweet spot = player is falling (not fallen) 
-			if (falling){
-				cam.enabled = false;
-				fallCam.enabled = true; 
-				print ("SWITCHED CAMS"); 
-				// play progressive falling sounds on this line 
-				StartCoroutine (isFalling()); 
-				// if the player reacts (taps button) = get back up
-				
-				if (UniMove.GetButtonDown(PSMoveButton.Circle)){
-					print ("BUTTON TAPPED"); 
-					//StartCoroutine (isGettingUp ());	// delay to play animation
-					fallen = false; 
-				}			
-				else {
-					fallen = true; 
-				}
-				if (!fallen) {
-					rfeet.position = new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z); 
-					angleBetween = 0.0f; 
-					print ("GET UP");
-					fallCam.enabled = false; 
-					cam.enabled = true;
-					// play getting back up sounds 
-				}
-				// player did not react in time 
-				else {
-					rfeet.position = new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z); 
-					angleBetween = 0.0f; 
-					//collScript.score -= 500; 
-					//Debug.Log("Floor Collision - " + collScript.score);
-					// blackout
-					// play fallen sound 
-					// press R to restart?  
-					fallCam.enabled = false; 
-					cam.enabled = true;
-					print ("FALLEN!");
-				}
-				falling = false; 
-			}
+		
+		// if the player has leaned too much, FALL AND LOSE
+		if (fallen) {
+			fallToLose();
 		}
 		else { //print ("0. got mouse position ");
-			direction = getLeanDirection(); 	//print ("1. got direction");
+			direction = getLeanDirection(); 		//print ("1. got direction");
+			fallen = isLeaningTooMuch (); 			
 			moveHead (direction); 					//print ("2. moved head"); 
 			StartCoroutine(delayFeet ()); 			//print ("3. delayed feet");
 		}
 	}
-
-	private int getLeanDirection(){	//Vector3 mouse){	//print("entered get direction");
+	
+	private int getLeanDirection(){	//print("entered get direction");
 		
-		//if (mouse.y < halfHeight) {	// if mouse in lower half of screen, leaning back 
 		if (UniMove.az <= -0.4f) {
 
 			if (UniMove.ax > -0.3f && UniMove.ax < 0.3f) {
-			//if (Mathf.Abs(mouse.x - halfWidth) < Mathf.Abs(mouse.y - halfHeight)){ 
 				return (int) Dir.back; 
 			}
 			else {
 				if (UniMove.ax > 0.3f) {
-				//if (mouse.x >= halfWidth){		// print ("leaning right");
 					return (int) Dir.left; 
 				}
 				if (UniMove.ax < -0.3f){
-				//else {							// print ("leaning left");
 					return (int) Dir.right; 
 				}
 			}
 		}
-		else {	// if mouse is in top half, check right/left lean as well
+		else {	
 			if (UniMove.ax > -0.3f && UniMove.ax< 0.3f) {
-			//if (Mathf.Abs(mouse.x - halfWidth) < Mathf.Abs(mouse.y - halfHeight)){	// print ("leaning forward");
 				return (int) Dir.forward; 
 			}
 			else {
 				if (UniMove.ax > 0.3f) {
-				//if (mouse.x >= halfWidth){ 	// print ("leaning right");
 					return (int) Dir.left; 
 				}
 				if (UniMove.ax < -0.3f){
-				//else {						// print ("leaning left");
 					return (int) Dir.right; 
 				}
 			}
@@ -190,23 +137,61 @@ public class PlayerMovement : MonoBehaviour {
 		return (0);
 	}
 
-	// !! NB: FOR NOW IF LEAN BACK, STOP PLAYER
-
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * (1) Check the current angle between the vector between the head rigidbody and the feed rigidboy with the vertical vector
+	 * (2) If the angle is at least 30 degrees, then you are leaning too much! (return true)
+	 * (3) otherwise return false
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+	
 	private bool isLeaningTooMuch(){ //print ("checking lean");
-		Vector3 vertVec = new Vector3 (rfeet.position.x, rhead.position.y, rfeet.position.z);
-		angleBetween = Vector3.Angle (vertVec, rhead.position); 
-		if (angleBetween >= 30.0f) { 	// print ("FALLEN!");
-			falling = true; 
-			print ("SWEET SPOT"); 
+		Vector3 vertVec = new Vector3 (rfeet.position.x, rhead.position.y, rfeet.position.z); 
+		
+		// (1) check angle between vectors
+		float angle = Vector3.Angle (vertVec, rhead.position); 
+		
+		// (2) if angle is at least 30
+		if (angle >= 30.0f) { 	// print ("FALLEN!");
 			return true;
 		} 						// print ("STILL STANDING");
 		return false; 
 	}
-
-
-	// depending on the direction of the lean, set a constantforce on the rigidbody of the head 
+	
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * !! FOR NOW, IF LEAN TOO MUCH, FALL AND LOSE THE GAME
+	 * 
+	 * (1) switch from main camera view to the fall camera view (going down to the floor)
+	 * (2) play fallING sounds (progressively going down sounds)
+	 * (3) play some kind of blink or blackout animation (fade out to black)
+	 * (4) play fallEN to floor sound (random between many different fallen sounds)
+	 * (5) SWITCH TO LOSE SCREEN (different scene)
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+	
+	private void fallToLose(){	print ("YOU LOSE"); 
+		
+		// (1) switch cameras: from main to fallCam
+		cam.enabled = false;
+		fallCam.enabled = true; 
+		
+		// (2) play FALLING sounds
+		
+		// (3) animation? blink/blackout 
+		
+		// (4) play FALLEN TO FLOOR sound
+		
+		// (5) SWITCH TO LOSE SCREEN
+		// Application.LoadLevel("nameofthescene"); 
+	}
+	
+	
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * DEPENDING ON THE LEAN DIRECTION, ADD A FORCE TO THE RIGIDBODY OF THE HEAD
+	 * 
+	 * (1) switch/case to check which direction we're leaning
+	 * (2) add the force in the appropriate direction
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+	
 	private void moveHead (int direction){	//print ("moving head ");
-
+		
 		switch (direction) {
 			
 		case (int) Dir.forward:				//print ("moving head forward");
@@ -223,56 +208,85 @@ public class PlayerMovement : MonoBehaviour {
 			
 		case (int) Dir.back:				//print ("stopping head movement");
 			rhead.AddForce (0, 0, -hinc); 
-			rhead.position = new Vector3 (rfeet.position.x, rhead.position.y, rfeet.position.z); 
+			//rhead.position = new Vector3 (rfeet.position.x, rhead.position.y, rfeet.position.z); 
 			break; 
 			
 		default:
 			break; 
 		}
 	}
-
-
-	// depending on the direction of the lean, set a constantforce on the rigidbody of the feet 
+	
+	
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * DEPENDING ON DIRECTION OF THE LEAN, ADD A FORCE TO THE FEET RIGIDBODY 
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+	
 	private void moveFeet (int direction){			//print ("moving feet");
 		switch (direction) {
 			
 		case (int) Dir.forward:						//print ("moving feet forward");
-			rfeet.AddForce (0, 0, finc); 
+			rfeet.AddForce (0, 0, finc);
 			break;
 			
 		case (int) Dir.right:						//print ("moving feet right");
-			rfeet.AddForce (finc, 0, 0); 
+			rfeet.AddForce (finc, 0, 0);
 			break;
 			
 		case (int) Dir.left:						//print ("moving feet left");
-			rfeet.AddForce (-finc, 0, 0);  
+			rfeet.AddForce (-finc, 0, 0);
 			break;
-
-		// if player leans back, the feet will match the feet 
+			
+			// if player leans back, the feet will match the feet 
 		case (int) Dir.back:						//print ("stopping feet under head");
 			rfeet.AddForce (0, 0, -finc); 
-			rfeet.position = new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z); 
 			break; 
 			
 		default:
 			break; 
 		}
 	}
-
-	// delay the movement of the feet after the movement of the head 
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * AFTER DELAY, PLACE THE FEET DIRECTLY UNDER THE HEAD 
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+	
+	private void placeFeet (int direction){			//print ("moving feet");
+		switch (direction) {
+			
+		case (int) Dir.forward:						//print ("moving feet forward");
+			rfeet.MovePosition(new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z));  
+			break;
+			
+		case (int) Dir.right:						//print ("moving feet right");
+			rfeet.MovePosition(new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z));  
+			break;
+			
+		case (int) Dir.left:						//print ("moving feet left");
+			rfeet.MovePosition(new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z));   
+			break;
+			
+			// if player leans back, the feet will match the feet 
+		case (int) Dir.back:						//print ("stopping feet under head");
+			rfeet.MovePosition(new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z)); 
+			break; 
+			
+		default:
+			break; 
+		}
+	}
+	
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * DELAY THE MOVEMENT OF THE FEET AFTER THE MOVEMENT OF THE HEAD
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+	
 	private IEnumerator delayFeet (){				//print ("delaying");
 		yield return new WaitForSeconds(delay);
 		moveFeet (direction); 					//print ("4. moved feet"); 
+		StartCoroutine (delayPlaceFeet ());
 		//yield break; 
 	}
-
-	private IEnumerator isFalling(){
-		yield return new WaitForSeconds(fallDelay);
-
-	}
-
-	private IEnumerator isGettingUp(){
-		yield return new WaitForSeconds(getupDelay);
-		// PLAY ANIMATION
+	
+	private IEnumerator delayPlaceFeet (){
+		yield return new WaitForSeconds(delay);
+		placeFeet (direction);
 	}
 }
