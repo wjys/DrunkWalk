@@ -26,6 +26,7 @@ public class PlayerMovement : MonoBehaviour {
 	private enum Dir { forward, right, left, back }; 
 	public int direction; 
 	private bool fallen;
+	private float angleBetween; 
 
 	List<UniMoveController> moves = new List<UniMoveController>();
 
@@ -60,6 +61,7 @@ public class PlayerMovement : MonoBehaviour {
 		halfHeight = Screen.height / 2; 
 
 		fallen = false;
+		angleBetween = 0.0f; 
 	}
 	
 	void Update () {
@@ -98,13 +100,29 @@ public class PlayerMovement : MonoBehaviour {
 			fallToLose();
 		}
 		else { //print ("0. got mouse position ");
+			angleBlur (angleBetween);
 			direction = getLeanDirection(); 		//print ("1. got direction");
 			fallen = isLeaningTooMuch (); 			
 			moveHead (direction); 					//print ("2. moved head"); 
 			StartCoroutine(delayFeet ()); 			//print ("3. delayed feet");
 		}
 	}
-	
+
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * PARAM: angleBetween = the angle between the head/feet vector and the vertical vector
+	 * The closer angleBetween is to 30.0f, the blurrier things get!
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+
+	private void angleBlur (float angle){
+
+	}
+
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * (1) Check the current angle between the vector between the head rigidbody and the feed rigidboy with the vertical vector
+	 * (2) If the angle is at least 30 degrees, then you are leaning too much! (return true)
+	 * (3) otherwise return false
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+
 	private int getLeanDirection(){	//print("entered get direction");
 		
 		if (UniMove.az <= -0.4f) {
@@ -147,7 +165,8 @@ public class PlayerMovement : MonoBehaviour {
 		Vector3 vertVec = new Vector3 (rfeet.position.x, rhead.position.y, rfeet.position.z); 
 		
 		// (1) check angle between vectors
-		float angle = Vector3.Angle (vertVec, rhead.position); 
+		float angle = Vector3.Angle (vertVec, rhead.position);
+		angleBetween = angle;
 		
 		// (2) if angle is at least 30
 		if (angle >= 30.0f) { 	// print ("FALLEN!");
