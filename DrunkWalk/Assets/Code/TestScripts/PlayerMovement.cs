@@ -27,7 +27,7 @@ public class PlayerMovement : MonoBehaviour {
 	public int direction; 
 	private bool fallen;
 	private float angleBetween; 
-	private float maxAngle = 1.0; 
+	private float maxAngle = 1.0f; 
 
 	// sound stuff
 	private AudioSource source; 
