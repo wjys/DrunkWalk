@@ -10,7 +10,7 @@ class DepthOfFieldScatter extends PostEffectsBase
     public var visualizeFocus : boolean = false;
 	public var focalLength : float = 10.0f;
 	public var focalSize : float = 0.05f; 
-	public var aperture : float = 11.5f;
+	public var aperture : float = 0.0f;
 	public var focalTransform : Transform = null;
 	public var maxBlurSize : float = 2.0f;
 	public var highResolution : boolean = false;

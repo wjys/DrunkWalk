@@ -16,7 +16,8 @@ public class MouseMovement : MonoBehaviour {
 	public Rigidbody rhead;		// rigidbody at the head of the player
 	public Rigidbody rfeet;		// rigidbody at the feet of the player
 	public Camera cam; 			// to force the camera to just fall over if leaning too much
-	public Camera fallCam; 		// cam to switch to if lose the game 
+	public Camera fallCam; 		// cam to switch to if lose the game
+	public DepthOfFieldScatter dof; // depth of field component on cam
 
 	private int halfWidth; 		// half the width of screen
 	private int halfHeight; 	// half the height of screen
@@ -58,7 +59,14 @@ public class MouseMovement : MonoBehaviour {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	private void angleBlur (float angle){
+
+		print ("ap = " + dof.aperture); 
 		
+		if (angle >= 0.4f && angle <= maxAngle){
+			dof.aperture += 0.1f;
+		} else if (angle < 0.4f){
+			dof.aperture -= 0.8f;
+		}
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -126,7 +134,7 @@ public class MouseMovement : MonoBehaviour {
 		// (1) check angle between vectors
 		float angle = Vector3.Angle (vertVec, rhead.position); 
 		angleBetween = angle;
-		// print ("angle = " + angle); 
+		//print ("angle = " + angle); 
 
 		// (2) if angle is at least 30
 		if (angle >= maxAngle) { 	// print ("FALLEN!");
