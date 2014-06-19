@@ -27,6 +27,7 @@ public class PlayerMovement : MonoBehaviour {
 	public int direction; 
 	private bool fallen;
 	private float angleBetween; 
+	private float maxAngle = 1.0; 
 
 	// sound stuff
 	private AudioSource source; 
@@ -180,7 +181,7 @@ public class PlayerMovement : MonoBehaviour {
 		// print ("angle = " + angle); 
 		
 		// (2) if angle is at least 30
-		if (angle >= 1.0f) { 	// print ("FALLEN!");
+		if (angle >= maxAngle) { 	// print ("FALLEN!");
 			return true;
 		} 						// print ("STILL STANDING");
 		return false; 
