@@ -26,7 +26,11 @@ public class MouseMovement : MonoBehaviour {
 	public int direction; 
 	private bool fallen;
 	private float angleBetween;
-	private float maxAngle = 1.0f; 
+	public float maxAngle = 1.0f; 
+
+	//TIME STUFF
+	public float currentTime = 0.0f;
+	public float delayTime = 2.0f;
 	
 	// sound stuff
 	private AudioSource source; 
@@ -74,7 +78,12 @@ public class MouseMovement : MonoBehaviour {
 	}
 
 	void FixedUpdate() {
-		StartCoroutine(delayFeet ()); 			//print ("3. delayed feet");
+		//delayPlaceFeet();
+		currentTime += Time.deltaTime;
+		if (currentTime >= delayTime){
+			placeFeet (direction);
+			currentTime = 0.0f;
+		}
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -310,6 +319,6 @@ public class MouseMovement : MonoBehaviour {
 
 	private IEnumerator delayPlaceFeet (){
 		yield return new WaitForSeconds(delay);
-		placeFeet (direction);
+		//placeFeet (direction);
 	}
 }
