@@ -16,17 +16,15 @@ public class MouseMovement : MonoBehaviour {
 	public Rigidbody rhead;		// rigidbody at the head of the player
 	public Rigidbody rfeet;		// rigidbody at the feet of the player
 	public Camera cam; 			// to force the camera to just fall over if leaning too much
-	//public UniMoveController UniMove; // get UniMove
-	
+	public Camera fallCam; 		// cam to switch to if lose the game 
+
 	private int halfWidth; 		// half the width of screen
 	private int halfHeight; 	// half the height of screen
 	
 	private enum Dir { forward, right, left, back }; 
 	public int direction; 
 	private bool fallen;
-	
-	// List<UniMoveController> moves = new List<UniMoveController>();
-	
+
 	void Start () {
 		halfWidth = Screen.width / 2; 
 		halfHeight = Screen.height / 2; 
@@ -37,42 +35,66 @@ public class MouseMovement : MonoBehaviour {
 	void Update () {
 		// get the current mouse position
 		mouse = Input.mousePosition; 
-		
-		
-		/*if (isLeaningTooMuch()) {
-			// FALL = rotate camera down
-			cam.transform.rotation = new Quaternion (cam.transform.rotation.x - camInc, cam.transform.rotation.y, cam.transform.rotation.z, cam.transform.rotation.w); 
+
+		// if the player has leaned too much, FALL AND LOSE
+		if (fallen) {
+			fallToLose();
 		}
-		else { //print ("0. got mouse position ");*/
+
+		// else, lean and drunk walk
+		else {
 			direction = getLeanDirection (mouse); 	//print ("1. got direction");
+			fallen = isLeaningTooMuch (); 
 			moveHead (direction); 					//print ("2. moved head"); 
 			StartCoroutine(delayFeet ()); 			//print ("3. delayed feet");
-		//}
+		}
 	}
 	
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * PARAM: mouse vector3 (where it is) => return the direction in which the character should be leaning 
+	 * 
+	 * (a) the mouse is currently in the bottom half of the game screen
+	 * 		(a1) mouse is further down than in either L/R directions of the screen => lean BACK
+	 * 		(a2) mouse is further to the RIGHT => lean RIGHT
+	 * 		(a3) mouse is further to the LEFT => lean LEFT
+	 * 
+	 * (b) mouse currently in upper half of the game screen
+	 * 		(b1) mouse is further up than to the L/R sides => lean FORWARD
+	 * 		(b2) mouse is further to the RIGHT => lean RIGHT
+	 * 		(b3) mouse is further to the LEFT => lean LEFT
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+
 	private int getLeanDirection(Vector3 mouse){	//print("entered get direction");
-		
-		if (mouse.y < halfHeight) {	// if mouse in lower half of screen, leaning back 
+
+		// (a) 
+		if (mouse.y < halfHeight) {	
+			// (a1)
 			if (Mathf.Abs(mouse.x - halfWidth) < Mathf.Abs(mouse.y - halfHeight)){ 
 				return (int) Dir.back; 
 			}
 			else {
+				// (a2)
 				if (mouse.x >= halfWidth){		// print ("leaning right");
 					return (int) Dir.right; 
 				}
+				// (a3)
 				else {							// print ("leaning left");
 					return (int) Dir.left; 
 				}
 			}
 		}
-		else {	// if mouse is in top half, check right/left lean as well
+		// (b)
+		else {
+			// (b1)
 			if (Mathf.Abs(mouse.x - halfWidth) < Mathf.Abs(mouse.y - halfHeight)){	// print ("leaning forward");
 				return (int) Dir.forward; 
 			}
 			else {
+				// (b2)
 				if (mouse.x >= halfWidth){ 	// print ("leaning right");
 					return (int) Dir.right; 
 				}
+				// (b3)
 				else {						// print ("leaning left");
 					return (int) Dir.left; 
 				}
@@ -80,21 +102,59 @@ public class MouseMovement : MonoBehaviour {
 		}
 		return (0);
 	}
-	
-	// !! NB: FOR NOW IF LEAN BACK, STOP PLAYER
-	
+
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * (1) Check the current angle between the vector between the head rigidbody and the feed rigidboy with the vertical vector
+	 * (2) If the angle is at least 30 degrees, then you are leaning too much! (return true)
+	 * (3) otherwise return false
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+
 	private bool isLeaningTooMuch(){ //print ("checking lean");
 		Vector3 vertVec = new Vector3 (rfeet.position.x, rhead.position.y, rfeet.position.z); 
+
+		// (1) check angle between vectors
 		float angle = Vector3.Angle (vertVec, rhead.position); 
+
+		// (2) if angle is at least 30
 		if (angle >= 30.0f) { 	// print ("FALLEN!");
-			fallen = true; 
 			return true;
 		} 						// print ("STILL STANDING");
 		return false; 
 	}
+
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * !! FOR NOW, IF LEAN TOO MUCH, FALL AND LOSE THE GAME
+	 * 
+	 * (1) switch from main camera view to the fall camera view (going down to the floor)
+	 * (2) play fallING sounds (progressively going down sounds)
+	 * (3) play some kind of blink or blackout animation (fade out to black)
+	 * (4) play fallEN to floor sound (random between many different fallen sounds)
+	 * (5) display "YOU LOST/TRY AGAIN" 
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+
+	private void fallToLose(){	print ("YOU LOSE"); 
+
+		// (1) switch cameras: from main to fallCam
+		cam.enabled = false;
+		fallCam.enabled = true; 
+
+		// (2) play FALLING sounds
+
+		// (3) animation? blink/blackout 
+
+		// (4) play FALLEN TO FLOOR sound
+
+		// (5) display "YOU LOST. DO SOMETHING TO TRY AGAIN" or something
+	}
 	
-	
-	// depending on the direction of the lean, set a constantforce on the rigidbody of the head 
+
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * DEPENDING ON THE LEAN DIRECTION, ADD A FORCE TO THE RIGIDBODY OF THE HEAD
+	 * 
+	 * (1) switch/case to check which direction we're leaning
+	 * (2) add the force in the appropriate direction
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+
 	private void moveHead (int direction){	//print ("moving head ");
 		
 		switch (direction) {
@@ -121,41 +181,77 @@ public class MouseMovement : MonoBehaviour {
 		}
 	}
 	
-	
-	// depending on the direction of the lean, set a constantforce on the rigidbody of the feet 
+
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * DEPENDING ON DIRECTION OF THE LEAN, ADD A FORCE TO THE FEET RIGIDBODY 
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+
 	private void moveFeet (int direction){			//print ("moving feet");
 		switch (direction) {
 			
 		case (int) Dir.forward:						//print ("moving feet forward");
 			rfeet.AddForce (0, 0, finc);
-			rfeet.position = new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z);  
 			break;
 			
 		case (int) Dir.right:						//print ("moving feet right");
 			rfeet.AddForce (finc, 0, 0);
-			rfeet.position = new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z);  
 			break;
 			
 		case (int) Dir.left:						//print ("moving feet left");
 			rfeet.AddForce (-finc, 0, 0);
-			rfeet.position = new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z);   
 			break;
 			
 			// if player leans back, the feet will match the feet 
 		case (int) Dir.back:						//print ("stopping feet under head");
 			rfeet.AddForce (0, 0, -finc); 
-			rfeet.position = new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z); 
 			break; 
 			
 		default:
 			break; 
 		}
 	}
-	
-	// delay the movement of the feet after the movement of the head 
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * AFTER DELAY, PLACE THE FEET DIRECTLY UNDER THE HEAD 
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+
+	private void placeFeet (int direction){			//print ("moving feet");
+		switch (direction) {
+			
+		case (int) Dir.forward:						//print ("moving feet forward");
+			rfeet.MovePosition(new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z));  
+			break;
+			
+		case (int) Dir.right:						//print ("moving feet right");
+			rfeet.MovePosition(new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z));  
+			break;
+			
+		case (int) Dir.left:						//print ("moving feet left");
+			rfeet.MovePosition(new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z));   
+			break;
+			
+			// if player leans back, the feet will match the feet 
+		case (int) Dir.back:						//print ("stopping feet under head");
+			rfeet.MovePosition(new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z)); 
+			break; 
+			
+		default:
+			break; 
+		}
+	}
+
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * DELAY THE MOVEMENT OF THE FEET AFTER THE MOVEMENT OF THE HEAD
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+
 	private IEnumerator delayFeet (){				//print ("delaying");
 		yield return new WaitForSeconds(delay);
 		moveFeet (direction); 					//print ("4. moved feet"); 
+		StartCoroutine (delayPlaceFeet ());
 		//yield break; 
+	}
+
+	private IEnumerator delayPlaceFeet (){
+		yield return new WaitForSeconds(delay);
+		placeFeet (direction);
 	}
 }
