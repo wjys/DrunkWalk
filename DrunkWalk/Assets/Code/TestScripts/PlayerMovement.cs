@@ -43,6 +43,8 @@ public class PlayerMovement : MonoBehaviour {
 	public float soundVolume = 1.0f;
 	private bool soundPlayed; 
 
+	private float initX, initZ;
+
 
 	List<UniMoveController> moves = new List<UniMoveController>();
 
@@ -89,9 +91,16 @@ public class PlayerMovement : MonoBehaviour {
 		source.volume = soundVolume;
 		source.loop = false; 
 		soundPlayed = false; */
+
+		//initX = UniMove.ax;
+		initX = 0;
+		initZ = UniMove.az;
+
 	}
 	
 	void Update () {
+
+		print (direction);
 
 		/* --------------------------------------------------------------------------------------------------------------------------
 		 * (1) MAKE THE KNOB GLOW A COLOUR DEPENDING ON WHICH BUTTON IS PRESSED
@@ -153,9 +162,9 @@ public class PlayerMovement : MonoBehaviour {
 		
 		//print ("ap = " + dof.aperture); 
 		
-		if (angle >= 0.3f && angle <= maxAngle){
-			dof.aperture += 0.5f;
-		} else if (angle < 0.3f){
+		if (angle >= 0.5f && angle <= maxAngle){
+			dof.aperture += 0.2f;
+		} else if (angle < 0.5f){
 			dof.aperture -= 0.8f;
 		}
 	}
@@ -167,30 +176,32 @@ public class PlayerMovement : MonoBehaviour {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 
 	private int getLeanDirection(){	//print("entered get direction");
-		
-		if (UniMove.az <= 0.7f) {
 
-			if (UniMove.ax > -0.3f && UniMove.ax < 0.3f) {
+		
+		if (UniMove.az <= -0.2f + initZ) {
+
+			if (UniMove.ax > -0.2f + initX && UniMove.ax < 0.2f + initX) {
 				return (int) Dir.back; 
 			}
 			else {
-				if (UniMove.ax > 0.3f) {
+				if (UniMove.ax > 0.2f + initX) {
 					return (int) Dir.left; 
 				}
-				if (UniMove.ax < -0.3f){
+				if (UniMove.ax < -0.2f + initX){
 					return (int) Dir.right; 
 				}
 			}
 		}
-		else if (UniMove.az >= 1.8f){	
-			if (UniMove.ax > -0.3f && UniMove.ax< 0.3f) {
+		else if (UniMove.az >= 0.7f + initZ){	
+
+			if (UniMove.ax > -0.2f + initX && UniMove.ax< 0.2f + initX) {
 				return (int) Dir.forward; 
 			}
 			else {
-				if (UniMove.ax > 0.3f) {
+				if (UniMove.ax > 0.2f + initX) {
 					return (int) Dir.left; 
 				}
-				if (UniMove.ax < -0.3f){
+				if (UniMove.ax < -0.2f + initX){
 					return (int) Dir.right; 
 				}
 			}
@@ -262,11 +273,11 @@ public class PlayerMovement : MonoBehaviour {
 			break;
 			
 		case (int) Dir.right:				//print ("moving head to the right");
-			rhead.AddForce (hinc, 0, 0); 
+			rhead.AddForce ((hinc + 1.0f), 0, 0); 
 			break;
 			
 		case (int) Dir.left:				//print ("moving head to the left");
-			rhead.AddForce (-hinc, 0, 0); 
+			rhead.AddForce ((-hinc - 1.0f), 0, 0); 
 			break;
 			
 		case (int) Dir.back:				//print ("stopping head movement");
