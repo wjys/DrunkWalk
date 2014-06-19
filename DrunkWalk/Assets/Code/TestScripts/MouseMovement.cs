@@ -49,8 +49,11 @@ public class MouseMovement : MonoBehaviour {
 			direction = getLeanDirection (mouse); 	//print ("1. got direction");
 			fallen = isLeaningTooMuch (); 
 			moveHead (direction); 					//print ("2. moved head"); 
-			StartCoroutine(delayFeet ()); 			//print ("3. delayed feet");
 		}
+	}
+
+	void FixedUpdate() {
+		StartCoroutine(delayFeet ()); 			//print ("3. delayed feet");
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -60,11 +63,11 @@ public class MouseMovement : MonoBehaviour {
 	
 	private void angleBlur (float angle){
 
-		print ("ap = " + dof.aperture); 
+		//print ("ap = " + dof.aperture); 
 		
-		if (angle >= 0.4f && angle <= maxAngle){
-			dof.aperture += 0.1f;
-		} else if (angle < 0.4f){
+		if (angle >= 0.3f && angle <= maxAngle){
+			dof.aperture += 0.5f;
+		} else if (angle < 0.3f){
 			dof.aperture -= 0.8f;
 		}
 	}
@@ -134,7 +137,7 @@ public class MouseMovement : MonoBehaviour {
 		// (1) check angle between vectors
 		float angle = Vector3.Angle (vertVec, rhead.position); 
 		angleBetween = angle;
-		//print ("angle = " + angle); 
+		print ("angle = " + angle); 
 
 		// (2) if angle is at least 30
 		if (angle >= maxAngle) { 	// print ("FALLEN!");
@@ -236,28 +239,7 @@ public class MouseMovement : MonoBehaviour {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 
 	private void placeFeet (int direction){			//print ("moving feet");
-		switch (direction) {
-			
-		case (int) Dir.forward:						//print ("moving feet forward");
-			rfeet.MovePosition(new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z));  
-			break;
-			
-		case (int) Dir.right:						//print ("moving feet right");
-			rfeet.MovePosition(new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z));  
-			break;
-			
-		case (int) Dir.left:						//print ("moving feet left");
-			rfeet.MovePosition(new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z));   
-			break;
-			
-			// if player leans back, the feet will match the feet 
-		case (int) Dir.back:						//print ("stopping feet under head");
-			rfeet.MovePosition(new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z)); 
-			break; 
-			
-		default:
-			break; 
-		}
+		rfeet.MovePosition(new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z)); 
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
