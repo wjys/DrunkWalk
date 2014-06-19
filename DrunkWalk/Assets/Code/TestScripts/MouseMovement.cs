@@ -24,6 +24,7 @@ public class MouseMovement : MonoBehaviour {
 	private enum Dir { forward, right, left, back }; 
 	public int direction; 
 	private bool fallen;
+	private float angleBetween;
 
 	void Start () {
 		halfWidth = Screen.width / 2; 
@@ -33,9 +34,6 @@ public class MouseMovement : MonoBehaviour {
 	}
 	
 	void Update () {
-		// get the current mouse position
-		mouse = Input.mousePosition; 
-
 		// if the player has leaned too much, FALL AND LOSE
 		if (fallen) {
 			fallToLose();
@@ -43,6 +41,9 @@ public class MouseMovement : MonoBehaviour {
 
 		// else, lean and drunk walk
 		else {
+			// get the current mouse position
+			mouse = Input.mousePosition; 
+			angleBlur (angleBetween);
 			direction = getLeanDirection (mouse); 	//print ("1. got direction");
 			fallen = isLeaningTooMuch (); 
 			moveHead (direction); 					//print ("2. moved head"); 
@@ -50,6 +51,15 @@ public class MouseMovement : MonoBehaviour {
 		}
 	}
 	
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * PARAM: angleBetween = the angle between the head/feet vector and the vertical vector
+	 * The closer angleBetween is to 30.0f, the blurrier things get!
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+	
+	private void angleBlur (float angle){
+		
+	}
+
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * PARAM: mouse vector3 (where it is) => return the direction in which the character should be leaning 
 	 * 
@@ -114,9 +124,11 @@ public class MouseMovement : MonoBehaviour {
 
 		// (1) check angle between vectors
 		float angle = Vector3.Angle (vertVec, rhead.position); 
+		angleBetween = angle;
+		// print ("angle = " + angle); 
 
 		// (2) if angle is at least 30
-		if (angle >= 30.0f) { 	// print ("FALLEN!");
+		if (angle >= 1.0f) { 	// print ("FALLEN!");
 			return true;
 		} 						// print ("STILL STANDING");
 		return false; 

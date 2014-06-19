@@ -167,9 +167,10 @@ public class PlayerMovement : MonoBehaviour {
 		// (1) check angle between vectors
 		float angle = Vector3.Angle (vertVec, rhead.position);
 		angleBetween = angle;
+		// print ("angle = " + angle); 
 		
 		// (2) if angle is at least 30
-		if (angle >= 30.0f) { 	// print ("FALLEN!");
+		if (angle >= 1.0f) { 	// print ("FALLEN!");
 			return true;
 		} 						// print ("STILL STANDING");
 		return false; 
