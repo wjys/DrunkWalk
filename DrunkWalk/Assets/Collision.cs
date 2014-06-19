@@ -15,7 +15,7 @@ public class Collision : MonoBehaviour {
 	// sound stuff
 	private AudioSource source; 
 	private AudioClip[] clips; 
-	public int numClips; 
+	public int numClips = 1; 
 	public string[] sound; 
 	public float soundDelay; 
 	public float soundVolume = 1.0f;

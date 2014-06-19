@@ -28,6 +28,16 @@ public class PlayerMovement : MonoBehaviour {
 	private bool fallen;
 	private float angleBetween; 
 
+	// sound stuff
+	private AudioSource source; 
+	private AudioClip[] clips; 
+	public int numClips = 1; 
+	public string[] sound; 
+	public float soundDelay; 
+	public float soundVolume = 1.0f;
+	private bool soundPlayed; 
+
+
 	List<UniMoveController> moves = new List<UniMoveController>();
 
 	void Start () {
@@ -293,6 +303,21 @@ public class PlayerMovement : MonoBehaviour {
 			break; 
 		}
 	}
+
+	private void switchGrunt(){
+		int index = Random.Range (0, numClips); 
+		source.clip = clips [index];
+	}
+	
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * DELAY THE MOVEMENT OF THE FEET AFTER THE MOVEMENT OF THE HEAD
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+	
+	IEnumerator stopSound(){
+		yield return new WaitForSeconds(soundDelay);
+		soundPlayed = false; 
+	}
+
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * DELAY THE MOVEMENT OF THE FEET AFTER THE MOVEMENT OF THE HEAD
