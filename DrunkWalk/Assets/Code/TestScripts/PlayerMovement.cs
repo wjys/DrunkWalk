@@ -30,6 +30,10 @@ public class PlayerMovement : MonoBehaviour {
 	private float angleBetween; 
 	private float maxAngle = 1.0f; 
 
+	//TIME STUFF
+	public float currentTime = 0.0f;
+	public float delayTime = 2.0f;
+
 	// sound stuff
 	private AudioSource source; 
 	private AudioClip[] clips; 
@@ -132,7 +136,12 @@ public class PlayerMovement : MonoBehaviour {
 	}
 
 	void FixedUpdate() {
-		StartCoroutine(delayFeet ()); 			//print ("3. delayed feet");
+		//delayPlaceFeet();
+		currentTime += Time.deltaTime;
+		if (currentTime >= delayTime){
+			placeFeet (direction);
+			currentTime = 0.0f;
+		}
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
