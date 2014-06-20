@@ -14,6 +14,7 @@ public class Collision : MonoBehaviour {
 
 	// sound stuff 
 	public AudioClip[] clips; 
+	public AudioClip[] hitclips; 
 	private bool soundPlayed; 
 	private bool reachedBed; 
 
@@ -78,6 +79,8 @@ public class Collision : MonoBehaviour {
 	void OnTriggerEnter(Collider col) {
 
 		if (!collided){
+			audio.PlayOneShot (hitclips[0]);
+
 			Debug.Log("Collision");
 			ouchAnim.SetTrigger("Ouch");
 			
