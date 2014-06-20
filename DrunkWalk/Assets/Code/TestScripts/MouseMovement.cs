@@ -30,7 +30,9 @@ public class MouseMovement : MonoBehaviour {
 
 	//TIME STUFF
 	public float currentTime = 0.0f;
+	public float currentSoundTime = 0.0f; 
 	public float delayTime = 2.0f;
+	public float delaySound; 
 	
 	// sound stuff 
 	public AudioClip[] clips; 
@@ -43,15 +45,7 @@ public class MouseMovement : MonoBehaviour {
 		halfHeight = Screen.height / 2; 
 		
 		fallen = false;
-		
-		/*
-		clips = new AudioClip[5];
-		clips [0] = (AudioClip)Resources.Load ("Sounds/SFX/Walking/Ah_IllMakeIt"); 
-		clips [1] = (AudioClip)Resources.Load ("Sounds/SFX/Walking/Argh"); 
-		clips [2] = (AudioClip)Resources.Load ("Sounds/SFX/Walking/Hiccup"); 
-		clips [3] = (AudioClip)Resources.Load ("Sounds/SFX/Walking/M_Nope"); 
-		clips [4] = (AudioClip)Resources.Load ("Sounds/SFX/Walking/Oh_OhBoy"); 
-		*/
+
 		soundPlayed = false; 
 	}
 	
@@ -63,12 +57,7 @@ public class MouseMovement : MonoBehaviour {
 
 		// else, lean and drunk walk
 		else {
-			// get the current mouse position
-			if (!soundPlayed){
-				playGrunt (clips [Random.Range (0, 5)]);
-				soundPlayed = true; 
-			}
-			StartCoroutine(delaySound()); 
+					
 			mouse = Input.mousePosition; 
 			angleBlur (angleBetween);
 			direction = getLeanDirection (mouse); 	//print ("1. got direction");
@@ -80,11 +69,24 @@ public class MouseMovement : MonoBehaviour {
 	void FixedUpdate() {
 		//delayPlaceFeet();
 		currentTime += Time.deltaTime;
-		if (currentTime >= delayTime){
+		if (currentTime >= delayTime) {
 			placeFeet ();
 			currentTime = 0.0f;
 		}
+		if (!soundPlayed){
+			soundPlayed = true; 
+			playGrunt (clips [Random.Range (0, 5)]);
+			delaySound = Random.Range (3, 6); 
+		}
+		else {
+			currentSoundTime += Time.deltaTime;
+			if (currentSoundTime >= delaySound){
+				soundPlayed = false; 
+				currentSoundTime = 0.0f; 
+			}
+		}
 	}
+
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * PARAM: angleBetween = the angle between the head/feet vector and the vertical vector
@@ -282,15 +284,6 @@ public class MouseMovement : MonoBehaviour {
 		audio.volume = Random.value * 0.3f + 0.7f;
 		audio.PlayOneShot(clip); 
 	
-	}
-	
-	/* --------------------------------------------------------------------------------------------------------------------------
-	 * DELAY BEING ABLE TO PLAY ANOTHER SOUND
-	 * -------------------------------------------------------------------------------------------------------------------------- */
-	
-	IEnumerator delaySound(){
-		yield return new WaitForSeconds(soundDelay); 
-		soundPlayed = false; 
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------

@@ -34,15 +34,14 @@ public class PlayerMovement : MonoBehaviour {
 	//TIME STUFF
 	public float currentTime = 0.0f;
 	public float delayTime = 2.0f;
+	public float currentSoundTime = 0.0f; 
+	public float delaySound; 
 
-	// sound stuff
-	private AudioSource source; 
-	private AudioClip[] clips; 
-	public int numClips = 1; 
-	public string[] sound; 
+	// sound stuff 
+	public AudioClip[] clips; 
 	public float soundDelay; 
-	public float soundVolume = 1.0f;
 	private bool soundPlayed; 
+
 
 	private float initX, initZ;
 
@@ -81,16 +80,7 @@ public class PlayerMovement : MonoBehaviour {
 
 		fallen = false;
 		angleBetween = 0.0f; 
-
-
-		source = GetComponent<AudioSource>(); 
 		
-		clips = new AudioClip[numClips];
-		for (int i = 0; i < numClips; i++) {
-			clips [i] = (AudioClip)Resources.Load ("Sounds/" + sound [i]); 
-		}
-		source.volume = soundVolume;
-		source.loop = false; 
 		soundPlayed = false; 
 
 		initX = UniMove.ax;
@@ -151,6 +141,19 @@ public class PlayerMovement : MonoBehaviour {
 		if (currentTime >= delayTime){
 			placeFeet (direction);
 			currentTime = 0.0f;
+		}
+
+		if (!soundPlayed){
+			soundPlayed = true; 
+			playGrunt (clips [Random.Range (0, 5)]);
+			delaySound = Random.Range (3, 6); 
+		}
+		else {
+			currentSoundTime += Time.deltaTime;
+			if (currentSoundTime >= delaySound){
+				soundPlayed = false; 
+				currentSoundTime = 0.0f; 
+			}
 		}
 	}
 
@@ -387,36 +390,14 @@ public class PlayerMovement : MonoBehaviour {
 	 * PLAY SELECTED GRUNT SOUND
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
-	private void playGrunt(){
+	private void playGrunt(AudioClip clip){
+		
+		audio.pitch = Random.value * 0.1f + 0.95f;
+		audio.volume = Random.value * 0.3f + 0.7f;
+		audio.PlayOneShot(clip); 
+		
+	}
 
-		// play pain sound
-		switchGrunt ();
-		if (!soundPlayed){
-			source.Play (); 
-			soundPlayed = true; 
-		}
-		StartCoroutine (stopSound ()); 
-	}
-	
-	/* --------------------------------------------------------------------------------------------------------------------------
-	 * RANDOM SWITCHING GRUNT SOUND
-	 * -------------------------------------------------------------------------------------------------------------------------- */
-	
-	private void switchGrunt(){
-		int index = Random.Range (0, numClips); 
-		source.clip = clips [index];
-	}
-	
-	/* --------------------------------------------------------------------------------------------------------------------------
-	 * DELAY BEING ABLE TO PLAY ANOTHER SOUND
-	 * -------------------------------------------------------------------------------------------------------------------------- */
-	
-	IEnumerator stopSound(){
-		yield return new WaitForSeconds(soundDelay);
-		soundPlayed = false; 
-		soundDelay = Random.Range (3, 6); 
-	}
-	
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * DELAY THE MOVEMENT OF THE FEET AFTER THE MOVEMENT OF THE HEAD
 	 * -------------------------------------------------------------------------------------------------------------------------- */
