@@ -61,7 +61,7 @@ public class Collision : MonoBehaviour {
 		// play pain sound
 		switchGrunt ();
 		if (!soundPlayed){
-			source.Play (); 
+			//source.Play (); 
 			soundPlayed = true; 
 		}
 		StartCoroutine (stopSound ()); 
@@ -116,8 +116,8 @@ public class Collision : MonoBehaviour {
 	}
 
 	private void switchGrunt(){
-		int index = Random.Range (0, numClips); 
-		source.clip = clips [index];
+		//int index = Random.Range (0, numClips); 
+		//source.clip = clips [index];
 	}
 
 	//Instantiate a hurt sound
