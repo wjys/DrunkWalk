@@ -23,6 +23,9 @@ public class Collision : MonoBehaviour {
 	public float currentCollTime = 0.0f;
 	public float delayCollision = 1.0f; 
 
+	public float currentScoreTime = 0.0f;
+	public float delayScore = 1.0f; 
+
 	private bool collided;
 
 	// Use this for initialization
@@ -35,10 +38,9 @@ public class Collision : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		score--; 
-		
+	void Update () {		
 	}
+
 	void FixedUpdate(){
 		currentSoundTime += Time.deltaTime;
 		if (currentSoundTime >= delaySound){
@@ -50,6 +52,12 @@ public class Collision : MonoBehaviour {
 		if (currentCollTime >= delayCollision){
 			collided = false; 
 			currentCollTime = 0.0f; 
+		}
+
+		currentScoreTime += Time.deltaTime;
+		if (currentScoreTime >= delayScore){
+			score -= 5; 
+			currentScoreTime = 0.0f; 
 		}
 	}
 
