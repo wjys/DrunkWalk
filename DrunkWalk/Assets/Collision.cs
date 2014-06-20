@@ -15,6 +15,7 @@ public class Collision : MonoBehaviour {
 	// sound stuff 
 	public AudioClip[] clips; 
 	private bool soundPlayed; 
+	private bool reachedBed; 
 
 	public float currentSoundTime = 0.0f; 
 	public float delaySound = 1.0f; 
@@ -24,6 +25,7 @@ public class Collision : MonoBehaviour {
 		score = 10000;
 
 		soundPlayed = false; 
+		reachedBed = false; 
 	}
 	
 	// Update is called once per frame
@@ -51,11 +53,6 @@ public class Collision : MonoBehaviour {
 
 	//When colliding with something:
 	void OnTriggerEnter(Collider col) {
-		
-		if (!soundPlayed){
-			playGrunt (clips[Random.Range(0, 6)]); 
-			soundPlayed = true; 
-		}
 
 		Debug.Log("Collision");
 		ouchAnim.SetTrigger("Ouch");
@@ -85,7 +82,10 @@ public class Collision : MonoBehaviour {
 			score -= 100;
 			Debug.Log("Chair Collision - " + score);
 		}
-		else if (col.tag == "Bed"){
+		else if (col.tag == "Bed"){ // WIN STATE
+			reachedBed = true; 
+			audio.PlayOneShot (clips[Random.Range(5, 9)]); 
+			soundPlayed = true; 
 			Application.LoadLevel (Application.loadedLevel); 
 		}
 /*		else if (col.tag == "Floor"){
@@ -99,7 +99,11 @@ public class Collision : MonoBehaviour {
 		} else if (yelling == true){
 			StopAllCoroutines();
 		}
-
+		
+		if (!soundPlayed && !reachedBed){
+			playGrunt (clips[Random.Range(0, 5)]); 
+			soundPlayed = true; 
+		}
 	}
 	//When not:
 	void OnTriggerExit(Collider col) {
