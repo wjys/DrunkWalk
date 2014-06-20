@@ -272,7 +272,7 @@ public class PlayerMovement : MonoBehaviour {
 		// (1) check angle between vectors
 		float angle = Vector3.Angle (vertVec, rhead.position);
 		angleBetween = angle;
-		//print ("angle = " + angle); 
+		print ("angle = " + angle); 
 		
 		// (2) if angle is at least 30
 		if (direction == (int) Dir.back || direction == (int) Dir.forward){

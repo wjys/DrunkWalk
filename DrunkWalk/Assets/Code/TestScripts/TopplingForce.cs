@@ -118,13 +118,13 @@ public class TopplingForce : MonoBehaviour {
 	private void camWobble(int lean){
 		switch (lean) {
 		case (int) Dir.forward:
-			cam.transform.rotation = new Quaternion (cam.transform.rotation.x + (camInc - 0.0008f), cam.transform.rotation.y, cam.transform.rotation.z, cam.transform.rotation.w); 
+			cam.transform.rotation = new Quaternion (cam.transform.rotation.x + camInc, cam.transform.rotation.y, cam.transform.rotation.z, cam.transform.rotation.w); 
 			break;
 		case (int) Dir.right:
-			cam.transform.rotation = new Quaternion (cam.transform.rotation.x, cam.transform.rotation.y + (camInc-0.001f), cam.transform.rotation.z - (camInc-0.001f), cam.transform.rotation.w); 
+			cam.transform.rotation = new Quaternion (cam.transform.rotation.x, cam.transform.rotation.y + camInc, cam.transform.rotation.z - (camInc-0.001f), cam.transform.rotation.w); 
 			break;
 		case (int) Dir.left:
-			cam.transform.rotation = new Quaternion (cam.transform.rotation.x, cam.transform.rotation.y - (camInc-0.001f), cam.transform.rotation.z + (camInc-0.001f), cam.transform.rotation.w); 
+			cam.transform.rotation = new Quaternion (cam.transform.rotation.x, cam.transform.rotation.y - camInc, cam.transform.rotation.z + (camInc-0.001f), cam.transform.rotation.w); 
 			break;
 		case (int) Dir.back:
 			cam.transform.rotation = new Quaternion (cam.transform.rotation.x - camInc, cam.transform.rotation.y, cam.transform.rotation.z, cam.transform.rotation.w); 
