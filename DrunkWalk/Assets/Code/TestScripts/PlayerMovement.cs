@@ -146,7 +146,7 @@ public class PlayerMovement : MonoBehaviour {
 		if (!soundPlayed){
 			soundPlayed = true; 
 			playGrunt (clips [Random.Range (0, 5)]);
-			delaySound = Random.Range (3, 6); 
+			delaySound = Random.Range (5, 10); 
 		}
 		else {
 			currentSoundTime += Time.deltaTime;
