@@ -91,6 +91,9 @@ public class PlayerMovement : MonoBehaviour {
 	
 	void Update () {
 
+		if (Input.GetKey("r"))
+			Application.LoadLevel (Application.loadedLevel);
+
 		//print (direction);
 
 		/* --------------------------------------------------------------------------------------------------------------------------
