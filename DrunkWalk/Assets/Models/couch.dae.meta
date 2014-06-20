@@ -1,14 +1,50 @@
 fileFormatVersion: 2
-guid: 4950365135b744463a4aa7269116b784
+guid: 4be0fe3230453456b8cf341296737463
 ModelImporter:
   serializedVersion: 15
   fileIDToRecycleName:
-    100000: //RootNode
-    400000: //RootNode
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: box1
-    6400000: //RootNode
+    100000: Couch
+    100002: //RootNode
+    100004: cushion2
+    100006: group_0
+    100008: ID15
+    100010: ID23
+    100012: ID31
+    100014: instance_0
+    100016: instance_1
+    400000: Couch
+    400002: //RootNode
+    400004: cushion2
+    400006: group_0
+    400008: ID15
+    400010: ID23
+    400012: ID31
+    400014: instance_0
+    400016: instance_1
+    2300000: Couch
+    2300002: cushion2
+    2300004: group_0
+    2300006: ID15
+    2300008: ID23
+    2300010: ID31
+    3300000: Couch
+    3300002: cushion2
+    3300004: group_0
+    3300006: ID15
+    3300008: ID23
+    3300010: ID31
+    4300000: group_0
+    4300002: Couch
+    4300004: ID15
+    4300006: ID23
+    4300008: ID31
+    4300010: cushion2
+    6400000: Couch
+    6400002: cushion2
+    6400004: group_0
+    6400006: ID15
+    6400008: ID23
+    6400010: ID31
     9500000: //RootNode
   materials:
     importMaterials: 1
