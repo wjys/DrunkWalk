@@ -32,13 +32,9 @@ public class MouseMovement : MonoBehaviour {
 	public float currentTime = 0.0f;
 	public float delayTime = 2.0f;
 	
-	// sound stuff
-	private AudioSource source; 
-	private AudioClip[] clips; 
-	public int numClips = 1; 
-	public string[] sound; 
+	// sound stuff 
+	public AudioClip[] clips; 
 	public float soundDelay; 
-	public float soundVolume = 1.0f;
 	private bool soundPlayed; 
 
 
@@ -49,15 +45,14 @@ public class MouseMovement : MonoBehaviour {
 		fallen = false;
 		
 		/*
-		source = GetComponent<AudioSource>(); 
-		
-		clips = new AudioClip[numClips];
-		for (int i = 0; i < numClips; i++) {
-			clips [i] = (AudioClip)Resources.Load ("Sounds/" + sound [i]); 
-		}
-		source.volume = soundVolume;
-		source.loop = false; 
-		soundPlayed = false; */
+		clips = new AudioClip[5];
+		clips [0] = (AudioClip)Resources.Load ("Sounds/SFX/Walking/Ah_IllMakeIt"); 
+		clips [1] = (AudioClip)Resources.Load ("Sounds/SFX/Walking/Argh"); 
+		clips [2] = (AudioClip)Resources.Load ("Sounds/SFX/Walking/Hiccup"); 
+		clips [3] = (AudioClip)Resources.Load ("Sounds/SFX/Walking/M_Nope"); 
+		clips [4] = (AudioClip)Resources.Load ("Sounds/SFX/Walking/Oh_OhBoy"); 
+		*/
+		soundPlayed = false; 
 	}
 	
 	void Update () {
@@ -69,6 +64,11 @@ public class MouseMovement : MonoBehaviour {
 		// else, lean and drunk walk
 		else {
 			// get the current mouse position
+			if (!soundPlayed){
+				playGrunt (clips [Random.Range (0, 5)]);
+				soundPlayed = true; 
+			}
+			StartCoroutine(delaySound()); 
 			mouse = Input.mousePosition; 
 			angleBlur (angleBetween);
 			direction = getLeanDirection (mouse); 	//print ("1. got direction");
@@ -81,7 +81,7 @@ public class MouseMovement : MonoBehaviour {
 		//delayPlaceFeet();
 		currentTime += Time.deltaTime;
 		if (currentTime >= delayTime){
-			placeFeet (direction);
+			placeFeet ();
 			currentTime = 0.0f;
 		}
 	}
@@ -268,7 +268,7 @@ public class MouseMovement : MonoBehaviour {
 	 * AFTER DELAY, PLACE THE FEET DIRECTLY UNDER THE HEAD 
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 
-	private void placeFeet (int direction){			//print ("moving feet");
+	private void placeFeet (){			//print ("moving feet");
 		rfeet.MovePosition(new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z)); 
 	}
 
@@ -276,33 +276,20 @@ public class MouseMovement : MonoBehaviour {
 	 * PLAY SELECTED GRUNT SOUND
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 		
-	private void playGrunt(){
-		/*
-		// play pain sound
-		switchGrunt ();
-		if (!soundPlayed){
-			source.Play (); 
-			soundPlayed = true; 
-		}
-		StartCoroutine (stopSound ()); 
-	*/
-	}
+	private void playGrunt(AudioClip clip){
 
-	/* --------------------------------------------------------------------------------------------------------------------------
-	 * RANDOM SWITCHING GRUNT SOUND
-	 * -------------------------------------------------------------------------------------------------------------------------- */
-		
-	private void switchGrunt(){
-		int index = Random.Range (0, numClips); 
-		source.clip = clips [index];
+		audio.pitch = Random.value * 0.1f + 0.95f;
+		audio.volume = Random.value * 0.3f + 0.7f;
+		audio.PlayOneShot(clip); 
+	
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * DELAY BEING ABLE TO PLAY ANOTHER SOUND
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
-	IEnumerator stopSound(){
-		yield return new WaitForSeconds(soundDelay);
+	IEnumerator delaySound(){
+		yield return new WaitForSeconds(soundDelay); 
 		soundPlayed = false; 
 	}
 
@@ -319,6 +306,6 @@ public class MouseMovement : MonoBehaviour {
 
 	private IEnumerator delayPlaceFeet (){
 		yield return new WaitForSeconds(delay);
-		//placeFeet (direction);
+		placeFeet ();
 	}
 }
