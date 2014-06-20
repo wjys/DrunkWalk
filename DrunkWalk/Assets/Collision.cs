@@ -38,7 +38,10 @@ public class Collision : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {		
+	void Update () {	
+		if (score <= 0) {
+			Application.LoadLevel ("Lost"); 
+		}
 	}
 
 	void FixedUpdate(){
