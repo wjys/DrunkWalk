@@ -83,11 +83,10 @@ public class Collision : MonoBehaviour {
 			Debug.Log("Chair Collision - " + score);
 		}
 		else if (col.tag == "Bed"){ // WIN STATE
-			print ("HITTING BED");
 			reachedBed = true; 
-			audio.PlayOneShot (clips[5]); 
-			soundPlayed = true;
-			Application.LoadLevel(Application.loadedLevel); 
+			audio.PlayOneShot (clips[Random.Range(5, 8)]); 
+			soundPlayed = true; 
+			Application.LoadLevel (Application.loadedLevel); 
 		}
 /*		else if (col.tag == "Floor"){
 			score -= 500;
@@ -109,6 +108,7 @@ public class Collision : MonoBehaviour {
 	//When not:
 	void OnTriggerExit(Collider col) {
 		Debug.Log("No Longer Colliding");
+		soundPlayed = false; 
 	}
 
 	private void playGrunt(AudioClip clip){
