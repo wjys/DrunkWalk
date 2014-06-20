@@ -52,6 +52,7 @@ public class MouseMovement : MonoBehaviour {
 	void Update () {
 		// if the player has leaned too much, FALL AND LOSE
 		if (fallen) {
+			audio.PlayOneShot(clips[Random.Range(5,9)]); 
 			fallToLose();
 		}
 
@@ -97,9 +98,9 @@ public class MouseMovement : MonoBehaviour {
 
 		//print ("ap = " + dof.aperture); 
 		
-		if (angle >= 0.5f && angle <= maxAngle){
+		if (angle >= 0.3f && angle <= maxAngle){
 			dof.aperture += 0.5f;
-		} else if (angle < 0.5f){
+		} else if (angle < 0.3f){
 			dof.aperture -= 0.8f;
 		}
 	}
@@ -201,8 +202,6 @@ public class MouseMovement : MonoBehaviour {
 		// (4) play FALLEN TO FLOOR sound
 
 		// (5) display "YOU LOST. DO SOMETHING TO TRY AGAIN" or something
-
-		Application.LoadLevel("Lost"); 
 	}
 	
 

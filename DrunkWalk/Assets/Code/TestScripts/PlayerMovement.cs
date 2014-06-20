@@ -21,8 +21,8 @@ public class PlayerMovement : MonoBehaviour {
 	public UniMoveController UniMove; // get UniMove
 	public DepthOfFieldScatter dof; // depth of field component on cam
 
-	//private int halfWidth; 		// half the width of screen
-	//private int halfHeight; 	// half the height of screen
+	private int halfWidth; 		// half the width of screen
+	private int halfHeight; 	// half the height of screen
 
 	private enum Dir { forward, right, left, back }; 
 	public int direction; 
@@ -75,8 +75,8 @@ public class PlayerMovement : MonoBehaviour {
 			}
 		}
 
-		//halfWidth = Screen.width / 2; 
-		//halfHeight = Screen.height / 2; 
+		halfWidth = Screen.width / 2; 
+		halfHeight = Screen.height / 2; 
 
 		fallen = false;
 		angleBetween = 0.0f; 
@@ -166,10 +166,10 @@ public class PlayerMovement : MonoBehaviour {
 		
 		//print ("ap = " + dof.aperture); 
 		
-		if (angle >= 0.1f && angle <= maxAngle){
-			dof.aperture += 0.8f;
-		} else if (angle < 0.1f){
-			dof.aperture -= 0.5f;
+		if (angle >= 0.5f && angle <= maxAngle){
+			dof.aperture += 0.2f;
+		} else if (angle < 0.5f){
+			dof.aperture -= 0.8f;
 		}
 	}
 
@@ -247,7 +247,7 @@ public class PlayerMovement : MonoBehaviour {
 		if (UniMove.az <= 0.1f + initZ) {
 			return (int) Dir.back;
 		}
-		if (UniMove.az >= 0.5f + initZ) {
+		if (UniMove.az >= 0.8f + initZ) {
 			return (int) Dir.forward; 
 		}
 		if (UniMove.ax < -0.2f + initX) {
@@ -272,7 +272,7 @@ public class PlayerMovement : MonoBehaviour {
 		// (1) check angle between vectors
 		float angle = Vector3.Angle (vertVec, rhead.position);
 		angleBetween = angle;
-		print ("angle = " + angle); 
+		//print ("angle = " + angle); 
 		
 		// (2) if angle is at least 30
 		if (direction == (int) Dir.back || direction == (int) Dir.forward){
@@ -303,7 +303,7 @@ public class PlayerMovement : MonoBehaviour {
 		
 		// (1) switch cameras: from main to fallCam
 		cam.enabled = false;
-		//fallCam.enabled = true; 
+		fallCam.enabled = true; 
 		
 		// (2) play FALLING sounds
 		

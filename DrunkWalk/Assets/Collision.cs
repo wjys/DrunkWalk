@@ -12,37 +12,33 @@ public class Collision : MonoBehaviour {
 
 	private static bool yelling = false;
 
-	// sound stuff
-	private AudioSource source; 
-	private AudioClip[] clips; 
-	public int numClips = 1; 
-	public string[] sound; 
-	public float soundDelay; 
-	public float soundVolume = 1.0f;
+	// sound stuff 
+	public AudioClip[] clips; 
 	private bool soundPlayed; 
+	private bool reachedBed; 
 
+	public float currentSoundTime = 0.0f; 
+	public float delaySound = 1.0f; 
 
 	// Use this for initialization
 	void Start () {
 		score = 10000;
 
-
-		source = GetComponent<AudioSource>(); 
-		
-		clips = new AudioClip[numClips];
-		for (int i = 0; i < numClips; i++) {
-			clips [i] = (AudioClip)Resources.Load ("Sounds/SFX/Insults" + sound [i]); 
-		}
-		source.volume = soundVolume;
-		source.loop = false; 
 		soundPlayed = false; 
+		reachedBed = false; 
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		score--; 
-
-
+		
+	}
+	void FixedUpdate(){
+		currentSoundTime += Time.deltaTime;
+		if (currentSoundTime >= delaySound){
+			soundPlayed = false; 
+			currentSoundTime = 0.0f; 
+		}
 	}
 
 	void OnGUI () {
@@ -58,14 +54,6 @@ public class Collision : MonoBehaviour {
 	//When colliding with something:
 	void OnTriggerEnter(Collider col) {
 
-		// play pain sound
-		switchGrunt ();
-		if (!soundPlayed){
-			//source.Play (); 
-			soundPlayed = true; 
-		}
-		StartCoroutine (stopSound ()); 
-	
 		Debug.Log("Collision");
 		ouchAnim.SetTrigger("Ouch");
 		
@@ -94,7 +82,10 @@ public class Collision : MonoBehaviour {
 			score -= 100;
 			Debug.Log("Chair Collision - " + score);
 		}
-		else if (col.tag == "Bed"){
+		else if (col.tag == "Bed"){ // WIN STATE
+			reachedBed = true; 
+			audio.PlayOneShot (clips[Random.Range(5, 9)]); 
+			soundPlayed = true; 
 			Application.LoadLevel (Application.loadedLevel); 
 		}
 /*		else if (col.tag == "Floor"){
@@ -108,16 +99,23 @@ public class Collision : MonoBehaviour {
 		} else if (yelling == true){
 			StopAllCoroutines();
 		}
-
+		
+		if (!soundPlayed && !reachedBed){
+			playGrunt (clips[Random.Range(0, 5)]); 
+			soundPlayed = true; 
+		}
 	}
 	//When not:
 	void OnTriggerExit(Collider col) {
 		Debug.Log("No Longer Colliding");
 	}
 
-	private void switchGrunt(){
-		//int index = Random.Range (0, numClips); 
-		//source.clip = clips [index];
+	private void playGrunt(AudioClip clip){
+		
+		audio.pitch = Random.value * 0.1f + 0.95f;
+		audio.volume = Random.value * 0.3f + 0.7f;
+		audio.PlayOneShot(clip); 
+		
 	}
 
 	//Instantiate a hurt sound
@@ -133,8 +131,4 @@ public class Collision : MonoBehaviour {
 		yelling = true;
 	}
 
-	IEnumerator stopSound(){
-		yield return new WaitForSeconds(soundDelay);
-		soundPlayed = false; 
-	}
 }

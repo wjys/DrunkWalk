@@ -127,7 +127,7 @@ public class TopplingForce : MonoBehaviour {
 			cam.transform.rotation = new Quaternion (cam.transform.rotation.x, cam.transform.rotation.y - (camInc-0.001f), cam.transform.rotation.z + (camInc-0.001f), cam.transform.rotation.w); 
 			break;
 		case (int) Dir.back:
-			cam.transform.rotation = new Quaternion (cam.transform.rotation.x - (camInc - 0.0008f), cam.transform.rotation.y, cam.transform.rotation.z, cam.transform.rotation.w); 
+			cam.transform.rotation = new Quaternion (cam.transform.rotation.x - camInc, cam.transform.rotation.y, cam.transform.rotation.z, cam.transform.rotation.w); 
 			break;
 		default:
 			break; 
