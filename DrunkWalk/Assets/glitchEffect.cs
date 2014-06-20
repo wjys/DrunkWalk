@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
-using UnityEditor;
+// using UnityEditor;
  
-[ExecuteInEditMode]
+// [ExecuteInEditMode]
 [AddComponentMenu("Image Effects/GlitchEffect")]
 
 
