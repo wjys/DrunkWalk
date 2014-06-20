@@ -52,6 +52,7 @@ public class MouseMovement : MonoBehaviour {
 	void Update () {
 		// if the player has leaned too much, FALL AND LOSE
 		if (fallen) {
+			audio.PlayOneShot(clips[Random.Range(5,9)]); 
 			fallToLose();
 		}
 
