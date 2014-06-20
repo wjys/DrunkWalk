@@ -20,12 +20,18 @@ public class Collision : MonoBehaviour {
 	public float currentSoundTime = 0.0f; 
 	public float delaySound = 1.0f; 
 
+	public float currentCollTime = 0.0f;
+	public float delayCollision = 1.0f; 
+
+	private bool collided;
+
 	// Use this for initialization
 	void Start () {
 		score = 10000;
 
 		soundPlayed = false; 
 		reachedBed = false; 
+		collided = false; 
 	}
 	
 	// Update is called once per frame
@@ -38,6 +44,12 @@ public class Collision : MonoBehaviour {
 		if (currentSoundTime >= delaySound){
 			soundPlayed = false; 
 			currentSoundTime = 0.0f; 
+		}
+
+		currentCollTime += Time.deltaTime;
+		if (currentCollTime >= delayCollision){
+			collided = false; 
+			currentCollTime = 0.0f; 
 		}
 	}
 
@@ -54,55 +66,58 @@ public class Collision : MonoBehaviour {
 	//When colliding with something:
 	void OnTriggerEnter(Collider col) {
 
-		Debug.Log("Collision");
-		ouchAnim.SetTrigger("Ouch");
-		
-		//If collision is against a wall:
-		if (col.tag == "Wall") {
-			score -= 100;
-			Debug.Log("Wall Collision - " + score);
-		}
-		else if (col.tag == "Box"){
-			score -= 200;
-			Debug.Log("Box Collision - " + score);
-		}
-		else if (col.tag == "Cabinet"){
-			score -= 200;
-			Debug.Log("Cabinet Collision - " + score);
-		}
-		else if (col.tag == "Cat"){
-			score -= 250;
-			Debug.Log("Cat Collision - " + score);
-		}
-		else if (col.tag == "Table"){
-			score -= 300;
-			Debug.Log("Table Collision - " + score);
-		}
-		else if (col.tag == "Chair"){
-			score -= 100;
-			Debug.Log("Chair Collision - " + score);
-		}
-		else if (col.tag == "Bed"){ // WIN STATE
-			reachedBed = true; 
-			audio.PlayOneShot (clips[Random.Range(5, 8)]); 
-			soundPlayed = true; 
-			Application.LoadLevel (Application.loadedLevel); 
-		}
-/*		else if (col.tag == "Floor"){
-			score -= 500;
-			Debug.Log("Floor Collision - " + score);
-		}*/
+		if (!collided){
+			Debug.Log("Collision");
+			ouchAnim.SetTrigger("Ouch");
+			
+			//If collision is against a wall:
+			if (col.tag == "Wall") {
+				score -= 100;
+				Debug.Log("Wall Collision - " + score);
+			}
+			else if (col.tag == "Box"){
+				score -= 200;
+				Debug.Log("Box Collision - " + score);
+			}
+			else if (col.tag == "Cabinet"){
+				score -= 200;
+				Debug.Log("Cabinet Collision - " + score);
+			}
+			else if (col.tag == "Cat"){
+				score -= 250;
+				Debug.Log("Cat Collision - " + score);
+			}
+			else if (col.tag == "Table"){
+				score -= 300;
+				Debug.Log("Table Collision - " + score);
+			}
+			else if (col.tag == "Chair"){
+				score -= 100;
+				Debug.Log("Chair Collision - " + score);
+			}
+			else if (col.tag == "Bed"){ // WIN STATE
+				reachedBed = true; 
+				audio.PlayOneShot (clips[Random.Range(5, 8)]); 
+				soundPlayed = true; 
+				Application.LoadLevel (Application.loadedLevel); 
+			}
+	/*		else if (col.tag == "Floor"){
+				score -= 500;
+				Debug.Log("Floor Collision - " + score);
+			}*/
 
-		//If not currently yelling:
-		if (yelling == false){
-			Yell();
-		} else if (yelling == true){
-			StopAllCoroutines();
-		}
-		
-		if (!soundPlayed && !reachedBed){
-			playGrunt (clips[Random.Range(0, 5)]); 
-			soundPlayed = true; 
+			//If not currently yelling:
+			if (yelling == false){
+				Yell();
+			} else if (yelling == true){
+				StopAllCoroutines();
+			}
+			
+			if (!soundPlayed && !reachedBed){
+				playGrunt (clips[Random.Range(0, 5)]); 
+				soundPlayed = true; 
+			}
+			collided = true; 
 		}
 	}
 	//When not:
