@@ -15,6 +15,8 @@ public class Collision : MonoBehaviour {
 	// sound stuff 
 	public AudioClip[] clips; 
 	public AudioClip[] hitclips; 
+	public AudioClip hitit;
+	public AudioSource source;
 	private bool soundPlayed; 
 	private bool reachedBed; 
 
@@ -31,6 +33,7 @@ public class Collision : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		source.volume = 0.5f;
 		score = 10000;
 
 		soundPlayed = false; 
@@ -79,7 +82,7 @@ public class Collision : MonoBehaviour {
 	void OnTriggerEnter(Collider col) {
 
 		if (!collided){
-			audio.PlayOneShot (hitclips[0]);
+			audio.PlayOneShot (hitit);
 
 			Debug.Log("Collision");
 			ouchAnim.SetTrigger("Ouch");
@@ -110,10 +113,10 @@ public class Collision : MonoBehaviour {
 				Debug.Log("Chair Collision - " + score);
 			}
 			else if (col.tag == "Bed"){ // WIN STATE
+				Application.LoadLevel("Won"); 
 				reachedBed = true; 
-				audio.PlayOneShot (clips[Random.Range(5, 8)]); 
 				soundPlayed = true; 
-				Application.LoadLevel (Application.loadedLevel); 
+				audio.PlayOneShot (clips[Random.Range(5, 8)]); 
 			}
 	/*		else if (col.tag == "Floor"){
 				score -= 500;

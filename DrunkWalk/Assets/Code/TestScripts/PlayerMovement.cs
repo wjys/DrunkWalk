@@ -169,10 +169,10 @@ public class PlayerMovement : MonoBehaviour {
 		
 		//print ("ap = " + dof.aperture); 
 		
-		if (angle >= 0.5f && angle <= maxAngle){
-			dof.aperture += 0.2f;
-		} else if (angle < 0.5f){
-			dof.aperture -= 0.8f;
+		if (angle >= 0.3f && angle <= maxAngle){
+			dof.aperture += 0.53f;
+		} else if (angle < 0.3f){
+			dof.aperture -= 0.7f;
 		}
 	}
 
