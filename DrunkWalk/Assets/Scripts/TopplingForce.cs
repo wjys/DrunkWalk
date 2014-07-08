@@ -33,7 +33,7 @@ public class TopplingForce : MonoBehaviour {
 
 	void Update () {
 		// check camera rotation lose condition
-		camLose (cam.transform.rotation, playerMovement.direction);
+		// camLose (cam.transform.rotation, playerMovement.direction);
 
 		// camera wobble
 		camWobble (playerMovement.direction); 
@@ -104,6 +104,8 @@ public class TopplingForce : MonoBehaviour {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 
 	private void camLose(Quaternion camRotation, int direction){
+
+		print("LOST BECAUSE CAMERA ANGLE");
 
 		switch (direction) {
 		case (int) Dir.forward:

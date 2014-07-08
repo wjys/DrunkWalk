@@ -51,6 +51,7 @@ public class PlayerMovement : MonoBehaviour {
 	List<UniMoveController> moves = new List<UniMoveController>();
 
 	void Start () {
+		rfeet.MovePosition(new Vector3(rhead.position.x, rfeet.position.y, rhead.position.z));
 		int count = UniMoveController.GetNumConnected();
 
 		for (int i = 0; i < count; i++){
@@ -327,7 +328,8 @@ public class PlayerMovement : MonoBehaviour {
 		// (4) play FALLEN TO FLOOR sound
 		
 		// (5) SWITCH TO LOSE SCREEN
-		Application.LoadLevel("Lost"); 
+		Debug.Log ("Fallen");
+		//Application.LoadLevel("Lost"); 
 	}
 	
 	
