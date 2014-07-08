@@ -66,7 +66,7 @@ public class TopplingForce : MonoBehaviour {
 			break;
 
 		case (int) Dir.back:
-			rhead.AddForce (0, 0, -drunkInc);
+			rhead.AddForce (0, 0, -(drunkInc/2));
 			break;
 			
 		default:

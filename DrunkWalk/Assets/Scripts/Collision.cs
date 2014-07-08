@@ -7,8 +7,8 @@ public class Collision : MonoBehaviour {
 	public static int score;
 
 	//Hurt Sound
-	public GameObject ouch;
-	public Animator ouchAnim;
+	//public GameObject ouch;
+	//public Animator ouchAnim;
 
 	private static bool yelling = false;
 
@@ -85,7 +85,7 @@ public class Collision : MonoBehaviour {
 			audio.PlayOneShot (hitit);
 
 			Debug.Log("Collision");
-			ouchAnim.SetTrigger("Ouch");
+			//ouchAnim.SetTrigger("Ouch");
 			
 			//If collision is against a wall:
 			if (col.tag == "Wall") {
@@ -125,7 +125,7 @@ public class Collision : MonoBehaviour {
 
 			//If not currently yelling:
 			if (yelling == false){
-				Yell();
+				// Yell();
 			} else if (yelling == true){
 				StopAllCoroutines();
 			}
@@ -152,16 +152,16 @@ public class Collision : MonoBehaviour {
 	}
 
 	//Instantiate a hurt sound
-	public void Yell () {
-		GameObject newOuch = Instantiate(ouch, transform.position + (0.8f * Vector3.up) + (2.5f * Vector3.forward) + (0.5f * Vector3.right), Quaternion.identity) as GameObject;
-		this.StartCoroutine(this.DestroyYell(newOuch, 1.0f));
-	}
+	// public void Yell () {
+		//GameObject newOuch = Instantiate(ouch, transform.position + (0.8f * Vector3.up) + (2.5f * Vector3.forward) + (0.5f * Vector3.right), Quaternion.identity) as GameObject;
+		//this.StartCoroutine(this.DestroyYell(newOuch, 1.0f));
+	// }
 
 	//Destroy the hurt sound
-	IEnumerator DestroyYell(GameObject _yell, float delay) {
-		yield return new WaitForSeconds(delay);
-		Destroy(_yell);
-		yelling = true;
-	}
+	//IEnumerator DestroyYell(GameObject _yell, float delay) {
+	// 	yield return new WaitForSeconds(delay);
+	// 	Destroy(_yell);
+	// 	yelling = true;
+	// }
 
 }
