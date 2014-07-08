@@ -4,8 +4,10 @@ using System.Collections;
 public class Rotation : MonoBehaviour {
 	public UniMoveController UniMove;
 
+	// get direction of lean 
 	private enum Turn { left, right }; 
 	public int direction; 
+
 
 	// Use this for initialization
 	void Start () {

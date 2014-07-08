@@ -29,25 +29,28 @@ public class PlayerMovement : MonoBehaviour {
 	public int direction; 
 	private bool fallen;
 	public float angleBetween;  
-	public float maxAngle = 1.0f; 
+	public float maxAngle; 
 	public float maxAngleSides;
 
 	// TIME STUFF
-	public float currentTime = 0.0f;
-	public float delayTime = 2.0f;
-	public float currentSoundTime = 0.0f; 
+	public float currentTime;
+	public float delayTime;
+	public float currentSoundTime; 
 	public float delaySound; 
 
-	// SOUND STUFF 
-	public float soundDelay; 
+	// FRAME STUFF (instead of time)
+	public int currentFrame;
+	public int delayFrame; 
+	public int currentSoundFrame; 
+	public int delaySoundFrame; 
+
+	// SOUND STUFF  
 	private bool soundPlayed; 
 	public AudioClip[] clips; 
 
 	// GET RBs' Y COORDS SO THAT THE PLAYER DOESN'T FLOAT OVER BED
 	private float headY;
-
-
-
+	
 	List<UniMoveController> moves = new List<UniMoveController>();
 
 	void Start () {
@@ -116,8 +119,10 @@ public class PlayerMovement : MonoBehaviour {
 	void FixedUpdate() {
 
 		// DELAYING PLACE FEET AT HEAD'S XY POS
-		currentTime += Time.deltaTime;
-		if (currentTime >= delayTime){
+		// currentTime += Time.deltaTime;
+		currentFrame++; 
+		//if (currentTime >= delayTime){
+		if (currentFrame >= delayFrame){
 			placeFeet (direction);
 			currentTime = 0.0f;
 		}
@@ -129,8 +134,11 @@ public class PlayerMovement : MonoBehaviour {
 			delaySound = Random.Range (5, 10); 
 		}
 		else {
-			currentSoundTime += Time.deltaTime;
-			if (currentSoundTime >= delaySound){
+			//currentSoundTime += Time.deltaTime;
+			currentSoundFrame++; 
+
+			//if (currentSoundTime >= delaySound){
+			if (currentSoundFrame >= delaySoundFrame){
 				soundPlayed = false; 
 				currentSoundTime = 0.0f; 
 			}
