@@ -3,13 +3,15 @@ using System.Collections;
 
 public class moveFeet : MonoBehaviour {
 
-	private Rigidbody rb; 
+	public Rigidbody rb; 
 
-	void Start () {
-		rb = GetComponent <Rigidbody> (); 
+	public void Start () {
+		//rb = gameObject.GetComponent<Rigidbody>(); 
 	}
 
-	void Update () {
-		transform.position = rb.position; 
+	public void FixedUpdate () {
+		//Debug.Log("rb.x " + rb.transform.position.x);
+		//Debug.Log("feet.x " + transform.position.x);
+		gameObject.transform.position = rb.transform.position; 
 	}
 }
