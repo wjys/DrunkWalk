@@ -20,8 +20,7 @@ public class TopplingForce : MonoBehaviour {
 
 	// TO DRAG INTO COMPONENT
 	public Rigidbody rhead; 	// object's head rigidbody
-	public PlayerMovement playerMovement; 	// script from the player  
-	public Camera cam; 
+	public PlayerMovement playerMovement; 	// script from the player   
 
 	// COROUTINE DELAYS
 	public float drunkDelay;
@@ -33,7 +32,7 @@ public class TopplingForce : MonoBehaviour {
 
 	void Update () {
 		// check camera rotation lose condition
-		// camLose (cam.transform.rotation, playerMovement.direction);
+		// camLose (transform.rotation, playerMovement.direction);
 
 		// camera wobble
 		camWobble (playerMovement.direction); 
@@ -82,16 +81,16 @@ public class TopplingForce : MonoBehaviour {
 	private void camWobble(int lean){
 		switch (lean) {
 		case (int) Dir.forward:
-			cam.transform.rotation = new Quaternion (cam.transform.rotation.x + camInc, cam.transform.rotation.y, cam.transform.rotation.z, cam.transform.rotation.w); 
+			transform.rotation = new Quaternion (transform.rotation.x + camInc, transform.rotation.y, transform.rotation.z, transform.rotation.w); 
 			break;
 		case (int) Dir.right:
-			cam.transform.rotation = new Quaternion (cam.transform.rotation.x, cam.transform.rotation.y, cam.transform.rotation.z - camInc, cam.transform.rotation.w); 
+			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y, transform.rotation.z - camInc, transform.rotation.w); 
 			break;
 		case (int) Dir.left:
-			cam.transform.rotation = new Quaternion (cam.transform.rotation.x, cam.transform.rotation.y, cam.transform.rotation.z + camInc, cam.transform.rotation.w); 
+			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y, transform.rotation.z + camInc, transform.rotation.w); 
 			break;
 		case (int) Dir.back:
-			cam.transform.rotation = new Quaternion (cam.transform.rotation.x - camInc, cam.transform.rotation.y, cam.transform.rotation.z, cam.transform.rotation.w); 
+			transform.rotation = new Quaternion (transform.rotation.x - camInc, transform.rotation.y, transform.rotation.z, transform.rotation.w); 
 			break;
 		default:
 			break; 

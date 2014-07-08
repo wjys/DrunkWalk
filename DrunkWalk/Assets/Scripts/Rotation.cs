@@ -4,7 +4,6 @@ using System.Collections;
 public class Rotation : MonoBehaviour {
 	
 	public UniMoveController UniMove;
-	public Camera cam; 
 	public float camInc; 
 	public float boundLeft;
 	public float boundRight; 
@@ -45,13 +44,13 @@ public class Rotation : MonoBehaviour {
 		case (int) Turn.left:
 			//Debug.Log("Turning Left?");
 
-			cam.transform.rotation = new Quaternion (cam.transform.rotation.x, cam.transform.rotation.y - camInc, cam.transform.rotation.z, cam.transform.rotation.w); 
+			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y - camInc, transform.rotation.z, transform.rotation.w); 
 			break;
 
 		case (int) Turn.right:
 			//Debug.Log("Turning Right?");
 
-			cam.transform.rotation = new Quaternion (cam.transform.rotation.x, cam.transform.rotation.y + camInc, cam.transform.rotation.z, cam.transform.rotation.w); 
+			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + camInc, transform.rotation.z, transform.rotation.w); 
 			break;
 
 		default:
