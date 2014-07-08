@@ -95,7 +95,7 @@ public class TopplingForce : MonoBehaviour {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 
 	private void camLose(Quaternion camRotation){
-		playerMovement.fallToLose (); 
+		//playerMovement.fallToLose (); 
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
