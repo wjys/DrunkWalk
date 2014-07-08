@@ -141,7 +141,6 @@ public class PlayerMovement : MonoBehaviour {
 	// PREVENT THE COLLIDER FROM FLOATING ABOVE OBJECTS
 	private void resetY(){
 		rhead.MovePosition (new Vector3 (rhead.position.x, headY, rhead.position.z)); 
-		rfeet.MovePosition (new Vector3 (rfeet.position.x, feetY, rfeet.position.z)); 
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -316,7 +315,8 @@ public class PlayerMovement : MonoBehaviour {
 	 * (5) SWITCH TO LOSE SCREEN (different scene)
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
-	private void fallToLose(){	print ("YOU LOSE"); 
+	public void fallToLose(){	
+		//print ("YOU LOSE"); 
 		
 		// (1) switch cameras: from main to fallCam
 		cam.enabled = false;
