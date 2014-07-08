@@ -154,6 +154,7 @@ public class UniMoveController : MonoBehaviour
 	private Vector3 gyro = Vector3.zero;
 
 	public float ax = 0, ay = 0, az = 0;
+	public float gx = 0, gy = 0, gz = 0;
 	
 	// TODO: These values still need to be implemented, so we don't expose them publicly
 	private PSMove_Battery_Level battery = PSMove_Battery_Level.Batt_20Percent;
@@ -462,7 +463,7 @@ public class UniMoveController : MonoBehaviour
 		rawGyro.z = z;
 		
 		
-		float gx = 0, gy = 0, gz = 0;
+		//float gx = 0, gy = 0, gz = 0;
 		psmove_get_gyroscope_frame(handle, PSMove_Frame.Frame_SecondHalf, ref gx, ref gy, ref gz);
 		
 		gyro.x = gx;
