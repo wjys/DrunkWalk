@@ -28,8 +28,7 @@ public class PlayerMovement : MonoBehaviour {
 	private enum Dir { forward, right, left, back }; 
 	public int direction; 
 	private bool fallen;
-	public float angleBetween; 
-	public float currentAngle; 
+	public float angleBetween;  
 	public float maxAngle = 1.0f; 
 	public float maxAngleSides;
 
