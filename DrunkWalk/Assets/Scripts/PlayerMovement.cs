@@ -45,7 +45,6 @@ public class PlayerMovement : MonoBehaviour {
 
 	// GET RBs' Y COORDS SO THAT THE PLAYER DOESN'T FLOAT OVER BED
 	private float headY;
-	private float feetY;
 
 
 
@@ -87,8 +86,7 @@ public class PlayerMovement : MonoBehaviour {
 		//initX = 0;
 		initZ = UniMove.az;
 
-		headY = rhead.position.y;
-		feetY = rfeet.position.y; 
+		headY = rhead.position.y; 
 
 	}
 	

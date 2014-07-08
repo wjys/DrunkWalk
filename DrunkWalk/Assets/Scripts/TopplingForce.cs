@@ -6,10 +6,17 @@ using System.Collections;
 
 public class TopplingForce : MonoBehaviour {
 
+	// DRUNK FORCE PARAMS
 	private enum Dir { forward, right, left, back }; // to modify drunkDir
 	private int drunkDir; 	// randomly changing after coroutine delays (random delays?)
 	public float drunkInc;	// amount by which we increment/multiply the toppling force
-	public float camInc; 
+
+	// CAMERA PARAMS
+	public float camInc; 	// cam wobble amount
+	public float boundCamForward;
+	public float boundCamBack;
+	public float boundCamRight;
+	public float boundCamLeft; 
 
 	// TO DRAG INTO COMPONENT
 	public Rigidbody rhead; 	// object's head rigidbody
@@ -19,12 +26,14 @@ public class TopplingForce : MonoBehaviour {
 	// COROUTINE DELAYS
 	public float drunkDelay;
 
+
+
 	void Start () {
 	}
 
 	void Update () {
 		// check camera rotation lose condition
-		camLose (cam.transform.rotation);
+		camLose (cam.transform.rotation, playerMovement.direction);
 
 		// camera wobble
 		camWobble (playerMovement.direction); 
@@ -45,15 +54,15 @@ public class TopplingForce : MonoBehaviour {
 		
 		switch (direction) {
 			
-		case (int) Dir.forward:				//print ("moving head forward");
+		case (int) Dir.forward:					//print ("moving head forward");
 			rhead.AddForce (0, 0, drunkInc);  
 			break;
 			
-		case (int) Dir.right:				//print ("moving head to the right");
+		case (int) Dir.right:					//print ("moving head to the right");
 			rhead.AddForce (drunkInc, 0, 0); 
 			break;
 			
-		case (int) Dir.left:				//print ("moving head to the left");
+		case (int) Dir.left:					//print ("moving head to the left");
 			rhead.AddForce (-drunkInc, 0, 0); 
 			break;
 			
@@ -76,10 +85,10 @@ public class TopplingForce : MonoBehaviour {
 			cam.transform.rotation = new Quaternion (cam.transform.rotation.x + camInc, cam.transform.rotation.y, cam.transform.rotation.z, cam.transform.rotation.w); 
 			break;
 		case (int) Dir.right:
-			cam.transform.rotation = new Quaternion (cam.transform.rotation.x, cam.transform.rotation.y + camInc*2, cam.transform.rotation.z - camInc, cam.transform.rotation.w); 
+			cam.transform.rotation = new Quaternion (cam.transform.rotation.x, cam.transform.rotation.y, cam.transform.rotation.z - camInc, cam.transform.rotation.w); 
 			break;
 		case (int) Dir.left:
-			cam.transform.rotation = new Quaternion (cam.transform.rotation.x, cam.transform.rotation.y - camInc*2, cam.transform.rotation.z + camInc, cam.transform.rotation.w); 
+			cam.transform.rotation = new Quaternion (cam.transform.rotation.x, cam.transform.rotation.y, cam.transform.rotation.z + camInc, cam.transform.rotation.w); 
 			break;
 		case (int) Dir.back:
 			cam.transform.rotation = new Quaternion (cam.transform.rotation.x - camInc, cam.transform.rotation.y, cam.transform.rotation.z, cam.transform.rotation.w); 
@@ -94,8 +103,32 @@ public class TopplingForce : MonoBehaviour {
 	 * => lose if exceeding cap
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 
-	private void camLose(Quaternion camRotation){
-		//playerMovement.fallToLose (); 
+	private void camLose(Quaternion camRotation, int direction){
+
+		switch (direction) {
+		case (int) Dir.forward:
+			if (camRotation.x > boundCamForward){
+				playerMovement.fallToLose (); 
+			}
+			break;
+		case (int) Dir.right:
+			if (camRotation.x > boundCamBack) {
+				playerMovement.fallToLose (); 
+			}
+			break;
+		case (int) Dir.left:
+			if (camRotation.z > boundCamRight) {
+				playerMovement.fallToLose ();
+			}
+			break;
+		case (int) Dir.back:
+			if (camRotation.z > boundCamLeft) {
+				playerMovement.fallToLose ();
+			}
+			break;
+		default:
+			break; 
+		}
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
