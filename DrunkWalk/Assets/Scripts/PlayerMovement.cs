@@ -6,44 +6,48 @@ using System.Collections.Generic;
 
 public class PlayerMovement : MonoBehaviour {
 	
-	public Vector3 mouse;		// current mouse position on screen
-	public float delay; 		// time delay between feet movement and head movement 
-	public float fallDelay; 	
-	public float getupDelay; 
 	public float hinc = 0.5f;	// force increment for head
 	public float finc = 0.5f; 	// force increment for feet
-	public float camInc = 0.5f; 
 
+	// COMPONENTS/OBJECTS TO GET
 	public Rigidbody rhead;		// rigidbody at the head of the player
 	public Rigidbody rfeet;		// rigidbody at the feet of the player
 	public Camera cam; 			// to force the camera to just fall over if leaning too much
 	public Camera fallCam; 
-	public UniMoveController UniMove; // get UniMove
-	public DepthOfFieldScatter dof; // depth of field component on cam
+	public UniMoveController UniMove; 	// get UniMove
+	public DepthOfFieldScatter dof; 	// depth of field component on cam
 
-	private int halfWidth; 		// half the width of screen
-	private int halfHeight; 	// half the height of screen
+	// BOUNDS TO CHECK TILT OF MOVE CONTROLLER
+	private float initX, initZ;
+	public float boundBack;
+	public float boundForward;
+	public float boundRight;
+	public float boundLeft; 
 
+	// TO INDICATE DIRECTION OF PLAYER'S MOVEMENT
 	private enum Dir { forward, right, left, back }; 
 	public int direction; 
 	private bool fallen;
-	private float angleBetween; 
+	public float angleBetween; 
+	public float currentAngle; 
 	public float maxAngle = 1.0f; 
 	public float maxAngleSides;
 
-	//TIME STUFF
+	// TIME STUFF
 	public float currentTime = 0.0f;
 	public float delayTime = 2.0f;
 	public float currentSoundTime = 0.0f; 
 	public float delaySound; 
 
-	// sound stuff 
-	public AudioClip[] clips; 
+	// SOUND STUFF 
 	public float soundDelay; 
 	private bool soundPlayed; 
+	public AudioClip[] clips; 
 
+	// GET RBs' Y COORDS SO THAT THE PLAYER DOESN'T FLOAT OVER BED
+	private float headY;
+	private float feetY;
 
-	private float initX, initZ;
 
 
 	List<UniMoveController> moves = new List<UniMoveController>();
@@ -75,9 +79,6 @@ public class PlayerMovement : MonoBehaviour {
 			}
 		}
 
-		halfWidth = Screen.width / 2; 
-		halfHeight = Screen.height / 2; 
-
 		fallen = false;
 		angleBetween = 0.0f; 
 		
@@ -87,19 +88,68 @@ public class PlayerMovement : MonoBehaviour {
 		//initX = 0;
 		initZ = UniMove.az;
 
+		headY = rhead.position.y;
+		feetY = rfeet.position.y; 
+
 	}
 	
 	void Update () {
 
+		resetY (); 
+
 		if (Input.GetKey("r"))
 			Application.LoadLevel (Application.loadedLevel);
 
-		//print (direction);
+		// CHECK UNIMOVE BUTTONS 
+		UniMoveSet ();
+		
+		// IF THE PLAYER LEANS TOO MUCH, FALL AND LOSE
+		if (fallen) {
+			fallToLose();
+		}
+		else {  
+			angleBlur (angleBetween);
+			direction = getLeanDirection(); 		//print ("1. got direction");
+			fallen = isLeaningTooMuch (); 			
+			moveHead (direction); 					//print ("2. moved head"); 
+		}
+	}
 
-		/* --------------------------------------------------------------------------------------------------------------------------
-		 * (1) MAKE THE KNOB GLOW A COLOUR DEPENDING ON WHICH BUTTON IS PRESSED
-		 * (2) SET THE RUMBLE BASED ON TRIGGER
-		 * -------------------------------------------------------------------------------------------------------------------------- */
+	void FixedUpdate() {
+
+		// DELAYING PLACE FEET AT HEAD'S XY POS
+		currentTime += Time.deltaTime;
+		if (currentTime >= delayTime){
+			placeFeet (direction);
+			currentTime = 0.0f;
+		}
+
+		// PLAY A GRUNT
+		if (!soundPlayed){
+			soundPlayed = true; 
+			playGrunt (clips [Random.Range (0, 5)]);
+			delaySound = Random.Range (5, 10); 
+		}
+		else {
+			currentSoundTime += Time.deltaTime;
+			if (currentSoundTime >= delaySound){
+				soundPlayed = false; 
+				currentSoundTime = 0.0f; 
+			}
+		}
+	}
+
+	// PREVENT THE COLLIDER FROM FLOATING ABOVE OBJECTS
+	private void resetY(){
+		rhead.MovePosition (new Vector3 (rhead.position.x, headY, rhead.position.z)); 
+		rfeet.MovePosition (new Vector3 (rfeet.position.x, feetY, rfeet.position.z)); 
+	}
+
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * (1) MAKE THE KNOB GLOW A COLOUR DEPENDING ON WHICH BUTTON IS PRESSED
+	 * (2) SET THE RUMBLE BASED ON TRIGGER
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+	private void UniMoveSet(){
 		foreach (UniMoveController UniMove in moves) 
 		{
 			// Instead of this somewhat kludge-y check, we'd probably want to remove/destroy
@@ -120,43 +170,9 @@ public class PlayerMovement : MonoBehaviour {
 			else if(UniMove.GetButtonDown(PSMoveButton.Square)) 	UniMove.SetLED(Color.yellow);
 			else if(UniMove.GetButtonDown(PSMoveButton.Triangle)) 	UniMove.SetLED(Color.magenta);
 			else if(UniMove.GetButtonDown(PSMoveButton.Move)) 		UniMove.SetLED(Color.black);
-
+			
 			// Set the rumble based on how much the trigger is down
 			UniMove.SetRumble(UniMove.Trigger);
-		}
-		
-		// if the player has leaned too much, FALL AND LOSE
-		if (fallen) {
-			fallToLose();
-		}
-		else { //print ("0. got mouse position ");
-			//playGrunt (); 
-			angleBlur (angleBetween);
-			direction = getLeanDirection(); 		//print ("1. got direction");
-			fallen = isLeaningTooMuch (); 			
-			moveHead (direction); 					//print ("2. moved head"); 
-		}
-	}
-
-	void FixedUpdate() {
-		//delayPlaceFeet();
-		currentTime += Time.deltaTime;
-		if (currentTime >= delayTime){
-			placeFeet (direction);
-			currentTime = 0.0f;
-		}
-
-		if (!soundPlayed){
-			soundPlayed = true; 
-			playGrunt (clips [Random.Range (0, 5)]);
-			delaySound = Random.Range (5, 10); 
-		}
-		else {
-			currentSoundTime += Time.deltaTime;
-			if (currentSoundTime >= delaySound){
-				soundPlayed = false; 
-				currentSoundTime = 0.0f; 
-			}
 		}
 	}
 
@@ -183,6 +199,21 @@ public class PlayerMovement : MonoBehaviour {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 
 	private int getLeanDirection(){	//print("entered get direction");
+		// ----------------- CHECK ALL DIRECTIONS NO PRIORITY
+
+		if (UniMove.az <= boundBack + initZ) {
+			return (int) Dir.back;
+		}
+		if (UniMove.az >= boundForward + initZ) {
+			return (int) Dir.forward; 
+		}
+		if (UniMove.ax < boundRight + initX) {
+			return (int) Dir.right; 
+		}
+		if (UniMove.ax > boundLeft + initX) {
+			return (int) Dir.left; 
+		}
+		return (0);
 
 		// ----------------- CHECK FRONT/BACK FIRST
 		/*
@@ -245,22 +276,6 @@ public class PlayerMovement : MonoBehaviour {
 			}
 		}
 		*/
-		// ----------------- CHECK ALL DIRECTIONS NO PRIORITY
-
-		if (UniMove.az <= 0.1f + initZ) {
-			return (int) Dir.back;
-		}
-		if (UniMove.az >= 0.8f + initZ) {
-			return (int) Dir.forward; 
-		}
-		if (UniMove.ax < -0.2f + initX) {
-			return (int) Dir.right; 
-		}
-		if (UniMove.ax > 0.2f + initX) {
-			return (int) Dir.left; 
-		}
-
-		return (0);
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -351,36 +366,7 @@ public class PlayerMovement : MonoBehaviour {
 			break; 
 		}
 	}
-	
-	
-	/* --------------------------------------------------------------------------------------------------------------------------
-	 * DEPENDING ON DIRECTION OF THE LEAN, ADD A FORCE TO THE FEET RIGIDBODY 
-	 * -------------------------------------------------------------------------------------------------------------------------- */
-	
-	private void moveFeet (int direction){			//print ("moving feet");
-		/*		switch (direction) {
-			
-		case (int) Dir.forward:						//print ("moving feet forward");
-			rfeet.AddForce (0, 0, finc);
-			break;
-			
-		case (int) Dir.right:						//print ("moving feet right");
-			rfeet.AddForce (finc, 0, 0);
-			break;
-			
-		case (int) Dir.left:						//print ("moving feet left");
-			rfeet.AddForce (-finc, 0, 0);
-			break;
-			
-			// if player leans back, the feet will match the feet 
-		case (int) Dir.back:						//print ("stopping feet under head");
-			rfeet.AddForce (0, 0, -finc); 
-			break; 
-			
-		default:
-			break; 
-		}*/
-	}
+
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * AFTER DELAY, PLACE THE FEET DIRECTLY UNDER THE HEAD 
 	 * -------------------------------------------------------------------------------------------------------------------------- */
@@ -399,21 +385,5 @@ public class PlayerMovement : MonoBehaviour {
 		audio.volume = Random.value * 0.3f + 0.7f;
 		audio.PlayOneShot(clip); 
 		
-	}
-
-	/* --------------------------------------------------------------------------------------------------------------------------
-	 * DELAY THE MOVEMENT OF THE FEET AFTER THE MOVEMENT OF THE HEAD
-	 * -------------------------------------------------------------------------------------------------------------------------- */
-	
-	private IEnumerator delayFeet (){				//print ("delaying");
-		yield return new WaitForSeconds(delay);
-		moveFeet (direction); 					//print ("4. moved feet"); 
-		StartCoroutine (delayPlaceFeet ());
-		//yield break; 
-	}
-	
-	private IEnumerator delayPlaceFeet (){
-		yield return new WaitForSeconds(delay);
-		placeFeet (direction);
 	}
 }
