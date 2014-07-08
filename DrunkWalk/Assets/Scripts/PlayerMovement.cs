@@ -27,10 +27,15 @@ public class PlayerMovement : MonoBehaviour {
 	// TO INDICATE DIRECTION OF PLAYER'S MOVEMENT
 	private enum Dir { forward, right, left, back }; 
 	public int direction; 
+
+	// TO CHECK PLAYER LEAN
 	private bool fallen;
 	public float angleBetween;  
 	public float maxAngle; 
 	public float maxAngleSides;
+
+	public float radius; 
+	public float maxRad; 
 
 	// TIME STUFF
 	public float currentTime;
@@ -54,7 +59,7 @@ public class PlayerMovement : MonoBehaviour {
 	List<UniMoveController> moves = new List<UniMoveController>();
 
 	void Start () {
-		rfeet.MovePosition(new Vector3(rhead.position.x, rfeet.position.y, rhead.position.z));
+		rfeet.MovePosition(new Vector3(transform.position.x, rfeet.position.y, transform.position.z));
 		int count = UniMoveController.GetNumConnected();
 
 		for (int i = 0; i < count; i++){
@@ -90,7 +95,7 @@ public class PlayerMovement : MonoBehaviour {
 		//initX = 0;
 		initZ = UniMove.az;
 
-		headY = rhead.position.y; 
+		headY = transform.position.y; 
 
 	}
 	
@@ -149,7 +154,7 @@ public class PlayerMovement : MonoBehaviour {
 
 	// PREVENT THE COLLIDER FROM FLOATING ABOVE OBJECTS
 	private void resetY(){
-		rhead.MovePosition (new Vector3 (rhead.position.x, headY, rhead.position.z)); 
+		rhead.MovePosition (new Vector3 (transform.position.x, headY, transform.position.z)); 
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -292,10 +297,22 @@ public class PlayerMovement : MonoBehaviour {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	private bool isLeaningTooMuch(){ //print ("checking lean");
-		Vector3 vertVec = new Vector3 (rfeet.position.x, rhead.position.y, rfeet.position.z); 
+
+		float x = Mathf.Abs (rfeet.position.x - transform.position.x);
+		float y = Mathf.Abs (rfeet.position.z - transform.position.z); 
+		radius = Mathf.Sqrt (x * x + y * y); 
+
+		if (radius >= maxRad) {
+			return true; 
+		}
+		return false; 
+
+
+		/*
+		 * Vector3 vertVec = new Vector3 (rfeet.position.x, transform.position.y, rfeet.position.z); 
 		
 		// (1) check angle between vectors
-		float angle = Vector3.Angle (vertVec, rhead.position);
+		float angle = Vector3.Angle (vertVec, transform.position);
 		angleBetween = angle;
 		print ("angle = " + angle); 
 		
@@ -312,6 +329,7 @@ public class PlayerMovement : MonoBehaviour {
 			} 						// print ("STILL STANDING");
 			return false; 
 		}
+		 */
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -368,7 +386,6 @@ public class PlayerMovement : MonoBehaviour {
 			
 		case (int) Dir.back:				//print ("stopping head movement");
 			rhead.AddForce (0, 0, (-hinc - 0.3f)); 
-			//rhead.position = new Vector3 (rfeet.position.x, rhead.position.y, rfeet.position.z); 
 			break; 
 			
 		default:
@@ -381,7 +398,7 @@ public class PlayerMovement : MonoBehaviour {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	private void placeFeet (int direction){			//print ("moving feet");
-		rfeet.MovePosition(new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z)); 
+		rfeet.MovePosition(new Vector3 (transform.position.x, rfeet.position.y, transform.position.z)); 
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
