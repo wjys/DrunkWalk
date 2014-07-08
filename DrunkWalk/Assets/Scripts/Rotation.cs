@@ -35,7 +35,7 @@ public class Rotation : MonoBehaviour {
 		if (UniMove.gy >= boundLeft){
 			return (int) Turn.left;
 		}
-		return (0);
+		return (-1);
 	}
 
 	private void turnHead (int direction){

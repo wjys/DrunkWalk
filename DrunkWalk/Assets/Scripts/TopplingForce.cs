@@ -64,6 +64,10 @@ public class TopplingForce : MonoBehaviour {
 		case (int) Dir.left:					//print ("moving head to the left");
 			rhead.AddForce (-drunkInc, 0, 0); 
 			break;
+
+		case (int) Dir.back:
+			rhead.AddForce (0, 0, -drunkInc);
+			break;
 			
 		default:
 			break; 
