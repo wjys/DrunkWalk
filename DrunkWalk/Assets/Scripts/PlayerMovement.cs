@@ -124,7 +124,8 @@ public class PlayerMovement : MonoBehaviour {
 		//if (currentTime >= delayTime){
 		if (currentFrame >= delayFrame){
 			placeFeet (direction);
-			currentTime = 0.0f;
+			//currentTime = 0.0f;
+			currentFrame = 0;
 		}
 
 		// PLAY A GRUNT
@@ -140,7 +141,8 @@ public class PlayerMovement : MonoBehaviour {
 			//if (currentSoundTime >= delaySound){
 			if (currentSoundFrame >= delaySoundFrame){
 				soundPlayed = false; 
-				currentSoundTime = 0.0f; 
+				//currentSoundTime = 0.0f; 
+				currentSoundFrame = 0; 
 			}
 		}
 	}
