@@ -18,16 +18,16 @@ public class Rotation : MonoBehaviour {
 		direction = getTurnDirection();
 		turnHead (direction);
 
-		Debug.Log(UniMove.gy);
+		//Debug.Log(UniMove.gy);
 		
 	}
 
 	private int getTurnDirection(){
-		if (UniMove.gy <= 0.1f){
-			return (int) Turn.left;
-		}
-		if (UniMove.gy >= 0.1f){
+		if (UniMove.gy <= -0.4f){
 			return (int) Turn.right;
+		}
+		if (UniMove.gy >= 0.4f){
+			return (int) Turn.left;
 		}
 		return (0);
 	}
