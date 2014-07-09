@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 // MOUSE POSITION TO READ WHERE PLAYER LEANS AND RESULTING MOVEMENT 
 
-public class MouseMovement : MonoBehaviour {
+public class MouseMovement : InGame {
 	
 	public Vector3 mouse;		// current mouse position on screen
 	public float hinc = 0.5f;	// force increment for head
