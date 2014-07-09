@@ -5,13 +5,13 @@ public class InGame : MonoBehaviour {
 
 	public bool paused {
 		set {
-			// pause animator component if possible
+			// pause transform
 			Transform trans = GetComponent<Transform>();
 			TopplingForce tf = GetComponent<TopplingForce>();
 			trans = gameObject.transform;
 			tf.enabled = false; 
 			
-			// pause animation component if possible
+			// pause child transform if relevant
 			Transform transChild = GetComponentInChildren<Transform>();
 			transChild = transform;
 			tf.enabled = false; 

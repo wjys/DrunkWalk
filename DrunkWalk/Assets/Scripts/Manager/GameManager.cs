@@ -37,12 +37,10 @@ public class GameManager : MonoBehaviour {
             } else {
                 UnPause();
             }
-            togglePause();
         }
 	}
 
 	//Pause Menu Initialize
-
 	public void Pause () {
 		InGame[] objs = FindObjectsOfType(typeof(InGame)) as InGame[];
 		foreach (var obj in objs) {
@@ -64,19 +62,4 @@ public class GameManager : MonoBehaviour {
 		pauseMenuIns.SetActive(paused);
 
 	}
-
-	bool togglePause()
-    {
-    	Debug.Log("Pause??");
-        if(Time.timeScale == 0f)
-        {
-            Time.timeScale = 1f;
-            return(false);
-        }
-        else
-        {
-            Time.timeScale = 0f;
-            return(true);   
-        }
-    }
 }
