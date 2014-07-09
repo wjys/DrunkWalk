@@ -28,7 +28,8 @@ public class Rotation : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
+		StartCoroutine(rotateHead (direction)); 
+		/*
 		direction = getTurnDirection();
 		turnHead (direction);
 
@@ -40,7 +41,10 @@ public class Rotation : MonoBehaviour {
 				currentFrame = 0; 
 			}
 		}
+		*/
 		//Debug.Log(UniMove.gy);
+
+
 		
 	}
 
@@ -52,6 +56,31 @@ public class Rotation : MonoBehaviour {
 			return (int) Turn.left;
 		}
 		return (-1);
+	}
+
+	private IEnumerator rotateHead (int direction) {
+
+		switch (direction){
+			
+		case (int) Turn.left:
+			//Debug.Log("Turning Left?");
+			
+			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y - camInc, transform.rotation.z, transform.rotation.w); 
+
+			WaitForSeconds(2); 
+			break;
+			
+		case (int) Turn.right:
+			//Debug.Log("Turning Right?");
+			
+			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + camInc, transform.rotation.z, transform.rotation.w); 
+			WaitForSeconds(2); 
+			break;
+			
+		default:	// if not turning read gy
+			direction = getTurnDirection (); 
+			break;
+		}
 	}
 
 	private void turnHead (int direction){
