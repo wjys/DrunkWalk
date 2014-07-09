@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class ReadMovement : InGame {
 
@@ -66,11 +67,11 @@ public class ReadMovement : InGame {
 		
 		headY = transform.position.y; 
 
-		if (useMouse){
+		//Mouse Start
 			halfWidth = Screen.width / 2; 
 			halfHeight = Screen.height / 2; 
-		}
-		else {
+
+		//PSMove Start
 			int count = UniMoveController.GetNumConnected();
 			
 			for (int i = 0; i < count; i++){
@@ -94,7 +95,7 @@ public class ReadMovement : InGame {
 					
 					// Start all controllers with a white LED
 					UniMove.SetLED(Color.white);
-				}
+				
 			}
 		}
 	}
@@ -102,6 +103,35 @@ public class ReadMovement : InGame {
 	// Update is called once per frame
 	void Update () {
 	
+	}
+
+
+	//Set PSMove
+	private void UniMoveSet(){
+		foreach (UniMoveController UniMove in moves) 
+		{
+			// Instead of this somewhat kludge-y check, we'd probably want to remove/destroy
+			// the now-defunct controller in the disconnected event handler below.
+			if (UniMove.Disconnected) continue;
+			
+			// Button events. Works like Unity's Input.GetButton
+			// if (UniMove.GetButtonDown(PSMoveButton.Circle)){
+			// 	Debug.Log("Circle Down");
+			// }
+			// if (UniMove.GetButtonUp(PSMoveButton.Circle)){
+			// 	Debug.Log("Circle UP");
+			// }
+			
+			// Change the colors of the LEDs based on which button has just been pressed:
+			if (UniMove.GetButtonDown(PSMoveButton.Circle)) 		UniMove.SetLED(Color.cyan);
+			else if(UniMove.GetButtonDown(PSMoveButton.Cross)) 		UniMove.SetLED(Color.red);
+			else if(UniMove.GetButtonDown(PSMoveButton.Square)) 	UniMove.SetLED(Color.yellow);
+			else if(UniMove.GetButtonDown(PSMoveButton.Triangle)) 	UniMove.SetLED(Color.magenta);
+			else if(UniMove.GetButtonDown(PSMoveButton.Move)) 		UniMove.SetLED(Color.black);
+			
+			// Set the rumble based on how much the trigger is down
+			UniMove.SetRumble(UniMove.Trigger);
+		}
 	}
 
 
