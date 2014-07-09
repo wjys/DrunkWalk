@@ -19,16 +19,25 @@ public class Rotation : MonoBehaviour {
 
 	// delay while rotating
 	public float whileDelay;
+
+	public bool orient = true;
 	
 	// Use this for initialization
 	void Start () {
 		rotating = false; 
 		currentFrame = 0; 
+		direction = -1;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		StartCoroutine(rotateHead (direction)); 
+		if (orient){
+			direction = getTurnDirection();
+			rotateHead(direction); 
+	} else {
+			StartCoroutine(waiting());
+			orient = true;
+		}
 		/*
 		direction = getTurnDirection();
 		turnHead (direction);
@@ -58,7 +67,11 @@ public class Rotation : MonoBehaviour {
 		return (-1);
 	}
 
-	private IEnumerator rotateHead (int direction) {
+	public IEnumerator waiting(){
+		yield return new WaitForSeconds(2);
+	}
+
+	private void rotateHead (int direction) {
 
 		switch (direction){
 			
@@ -66,15 +79,16 @@ public class Rotation : MonoBehaviour {
 			//Debug.Log("Turning Left?");
 			
 			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y - camInc, transform.rotation.z, transform.rotation.w); 
-
-			WaitForSeconds(2); 
+			orient = false;
+			direction = -1;
 			break;
 			
 		case (int) Turn.right:
 			//Debug.Log("Turning Right?");
 			
 			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + camInc, transform.rotation.z, transform.rotation.w); 
-			WaitForSeconds(2); 
+			orient = false;
+			direction = -1;
 			break;
 			
 		default:	// if not turning read gy
