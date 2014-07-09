@@ -217,7 +217,7 @@ public class PlayerMovement : InGame {
 		if (UniMove.ax > boundLeft + initX) {
 			return (int) Dir.left; 
 		}
-		return (-1);
+		return (0);
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
