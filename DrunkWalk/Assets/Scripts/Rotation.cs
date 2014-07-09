@@ -67,14 +67,14 @@ public class Rotation : MonoBehaviour {
 			
 			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y - camInc, transform.rotation.z, transform.rotation.w); 
 
-			WaitForSeconds(2); 
+			yield return new WaitForSeconds(2); 
 			break;
 			
 		case (int) Turn.right:
 			//Debug.Log("Turning Right?");
 			
 			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + camInc, transform.rotation.z, transform.rotation.w); 
-			WaitForSeconds(2); 
+			yield return new WaitForSeconds(2); 
 			break;
 			
 		default:	// if not turning read gy
