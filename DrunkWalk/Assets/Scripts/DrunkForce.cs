@@ -41,8 +41,7 @@ public class DrunkForce : MonoBehaviour {
 		
 		// drunk force
 		StartCoroutine(newDrunkDirection ());
-		drunkForce (drunkDir); 
-		
+		drunkForce (drunkDir);
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -88,10 +87,10 @@ public class DrunkForce : MonoBehaviour {
 		switch (lean) {
 		case (int) Dir.forward:
 			camInc += camAcc;
-			transform.rotation = new Quaternion (transform.rotation.x + camInc, transform.rotation.y, transform.rotation.z, transform.rotation.w); 
+			transform.rotation = new Quaternion (transform.rotation.x + camInc*player.radius, transform.rotation.y, transform.rotation.z, transform.rotation.w); 
 			break;
 		case (int) Dir.right:
-			camInc -= camAcc;
+			camInc += camAcc;
 			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y, transform.rotation.z - camInc, transform.rotation.w); 
 			break;
 		case (int) Dir.left:
@@ -99,7 +98,7 @@ public class DrunkForce : MonoBehaviour {
 			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y, transform.rotation.z + camInc, transform.rotation.w); 
 			break;
 		case (int) Dir.back:
-			camInc -= camAcc;
+			camInc += camAcc;
 			transform.rotation = new Quaternion (transform.rotation.x - camInc, transform.rotation.y, transform.rotation.z, transform.rotation.w); 
 			break;
 		default:

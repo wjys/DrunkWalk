@@ -7,8 +7,15 @@ public class DrunkMovement : InGame {
 	public bool useMouse; 
 
 	// FORCE INCREMENTS FOR HEAD AND FEET
-	public float hinc;	
-	public float finc; 	
+	public float hinc;
+	public float incAcc;
+
+	private bool wentR;
+	private bool wentL;
+	private bool wentB;
+	private bool wentF;
+
+	public float smooth = 1.5f;
 
 	// MOVE CONTROLLER
 	public UniMoveController UniMove; 	// get UniMove
@@ -121,6 +128,13 @@ public class DrunkMovement : InGame {
 			fallen = isLeaningTooMuch (); 			
 			moveHead (direction); 					//print ("2. moved head"); 
 		}
+
+		if (wentB == wentF == true){
+			toggleFB();
+		} else if (wentL == wentR == true){
+			toggleLR();
+		}
+
 	}
 	
 	void FixedUpdate() {
@@ -145,6 +159,14 @@ public class DrunkMovement : InGame {
 				currentSoundFrame = 0; 
 			}
 		}
+
+		// if (finc <= 0){
+		// 	finc = 0;
+		// }
+
+		// if (hinc <= 0){
+		// 	hinc = 0;
+		// }
 	}
 
 
@@ -237,20 +259,48 @@ public class DrunkMovement : InGame {
 		}
 		else {
 			if (UniMove.az <= boundBack + initZ) {
+				wentB = true;
+				wentF = wentL = wentR = false;
 				return (int) Dir.back;
 			}
 			if (UniMove.az >= boundForward + initZ) {
+				wentF = true;
+				wentB = wentL = wentR = false;
 				return (int) Dir.forward; 
 			}
 			if (UniMove.ax < boundRight + initX) {
+				wentR = true;
+				wentF = wentL = wentB = false;
 				return (int) Dir.right; 
 			}
 			if (UniMove.ax > boundLeft + initX) {
+				wentL = true;
+				wentF = wentB = wentR = false;
 				return (int) Dir.left; 
 			}
 			return (0);
 		}
 		return (0);
+	}
+
+	public void toggleLR(){
+		if (wentL){
+			hinc = 1;
+			wentL = false;
+		} else if (wentR){
+			hinc = 1;
+			wentR = false;
+		}
+	}
+
+	public void toggleFB(){
+		if (wentF){
+			hinc = 1;
+			wentF = false;
+		} else if (wentB){
+			hinc = 1;
+			wentB = false;
+		}
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -280,6 +330,7 @@ public class DrunkMovement : InGame {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	private void moveHead (int direction){	//print ("moving head ");
+		//Invoke("resetHinc", 1);
 		
 		switch (direction) {
 			
@@ -310,6 +361,7 @@ public class DrunkMovement : InGame {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	private void placeFeet (){			//print ("moving feet");
+		// rfeet.MovePosition(Vector3.Lerp(rfeet.position, transform.position, smooth * Time.frameCount));
 		rfeet.MovePosition(new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z)); 
 	}
 
