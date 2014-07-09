@@ -13,10 +13,11 @@ public class MouseForce : MonoBehaviour {
 	
 	// CAMERA PARAMS
 	public float camInc; 	// cam wobble amount
+	public float camAcc;    // cam wobble acceleration
 	
 	// TO DRAG INTO COMPONENT
 	public Rigidbody rhead; 	// object's head rigidbody
-	public MouseMovement playerMovement; 	// script from the player   
+	public MouseMovement player; 	// script from the player   
 	
 	// COROUTINE DELAYS
 	public float drunkDelay;
@@ -35,7 +36,7 @@ public class MouseForce : MonoBehaviour {
 		
 		// camera wobble
 		if (!hitWall) {
-			camWobble (playerMovement.direction); 
+			camWobble (player.direction); 
 		}
 		
 		// drunk force
@@ -86,22 +87,26 @@ public class MouseForce : MonoBehaviour {
 	private void camWobble(int lean){
 		switch (lean) {
 		case (int) Dir.forward:
+			camInc += camAcc;
 			transform.rotation = new Quaternion (transform.rotation.x + camInc, transform.rotation.y, transform.rotation.z, transform.rotation.w); 
 			break;
 		case (int) Dir.right:
+			camInc -= camAcc;
 			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y, transform.rotation.z - camInc, transform.rotation.w); 
 			break;
 		case (int) Dir.left:
+			camInc += camAcc;
 			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y, transform.rotation.z + camInc, transform.rotation.w); 
 			break;
 		case (int) Dir.back:
+			camInc -= camAcc;
 			transform.rotation = new Quaternion (transform.rotation.x - camInc, transform.rotation.y, transform.rotation.z, transform.rotation.w); 
 			break;
 		default:
 			break; 
 		}
 	}
-
+	
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * Delay changing the DRUNK DIRECTION to trigger DRUNK FORCE
 	 * -------------------------------------------------------------------------------------------------------------------------- */
