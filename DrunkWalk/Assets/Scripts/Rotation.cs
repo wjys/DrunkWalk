@@ -16,6 +16,9 @@ public class Rotation : MonoBehaviour {
 	private bool rotating; 
 	public float rotateDelay; 
 	public float currentFrame; 
+
+	// delay while rotating
+	public float whileDelay;
 	
 	// Use this for initialization
 	void Start () {
@@ -59,18 +62,32 @@ public class Rotation : MonoBehaviour {
 				//Debug.Log("Turning Left?");
 
 				transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y - camInc, transform.rotation.z, transform.rotation.w); 
+				if (currentFrame >= whileDelay){
+					rotating = true;
+					currentFrame = 0; 
+				}
+				else {
+					currentFrame++; 
+				}
 				break;
 
 			case (int) Turn.right:
 				//Debug.Log("Turning Right?");
 
 				transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + camInc, transform.rotation.z, transform.rotation.w); 
+				if (currentFrame >= whileDelay){
+					rotating = true;
+					currentFrame = 0; 
+				}
+				else {
+					currentFrame++; 
+				}
 				break;
 
 			default:
 				break;
 			}
-			rotating = true; 
+
 		}
 	}
 }
