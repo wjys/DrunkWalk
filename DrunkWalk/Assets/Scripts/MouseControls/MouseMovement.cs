@@ -14,7 +14,6 @@ public class MouseMovement : InGame {
 	public Rigidbody rhead;		// rigidbody at the head of the player
 	public Rigidbody rfeet;		// rigidbody at the feet of the player
 	public Camera cam; 			// to force the camera to just fall over if leaning too much
-	public Camera fallCam; 		// cam to switch to if lose the game
 	public DepthOfFieldScatter dof; // depth of field component on cam
 
 	private int halfWidth; 		// half the width of screen
@@ -37,7 +36,6 @@ public class MouseMovement : InGame {
 
 	// sound stuff 
 	public AudioClip[] clips; 
-	public float soundDelay; 
 	private bool soundPlayed; 
 
 	// GET RBs' Y COORDS SO THAT THE PLAYER DOESN'T FLOAT OVER BED
@@ -206,14 +204,11 @@ public class MouseMovement : InGame {
 	public void fallToLose(){	
 		//print ("YOU LOSE"); 
 		
-		// (1) switch cameras: from main to fallCam
-		cam.enabled = false;
-		fallCam.enabled = true; 
-		
 		// (2) play FALLING sounds
 		
 		// (3) animation? blink/blackout 
-		
+		cam.enabled = false; 
+
 		// (4) play FALLEN TO FLOOR sound
 		
 		// (5) SWITCH TO LOSE SCREEN

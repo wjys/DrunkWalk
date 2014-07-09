@@ -13,7 +13,6 @@ public class PlayerMovement : InGame {
 	public Rigidbody rhead;		// rigidbody at the head of the player
 	public Rigidbody rfeet;		// rigidbody at the feet of the player
 	public Camera cam; 			// to force the camera to just fall over if leaning too much
-	public Camera fallCam; 
 	public UniMoveController UniMove; 	// get UniMove
 	public DepthOfFieldScatter dof; 	// depth of field component on cam
 	
@@ -282,8 +281,7 @@ public class PlayerMovement : InGame {
 		//print ("YOU LOSE"); 
 		
 		// (1) switch cameras: from main to fallCam
-		cam.enabled = false;
-		fallCam.enabled = true; 
+		cam.enabled = false; 
 		
 		// (2) play FALLING sounds
 		

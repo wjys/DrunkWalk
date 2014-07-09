@@ -7,8 +7,8 @@ public class DrunkMovement : InGame {
 	public bool useMouse; 
 
 	// FORCE INCREMENTS FOR HEAD AND FEET
-	public float hinc = 0.5f;	
-	public float finc = 0.5f; 	
+	public float hinc;	
+	public float finc; 	
 
 	// MOVE CONTROLLER
 	public UniMoveController UniMove; 	// get UniMove
@@ -28,7 +28,6 @@ public class DrunkMovement : InGame {
 	public Rigidbody rhead;		// rigidbody at the head of the player
 	public Rigidbody rfeet;		// rigidbody at the feet of the player
 	public Camera cam; 			// to force the camera to just fall over if leaning too much
-	public Camera fallCam; 		// cam to switch to if lose the game
 	public DepthOfFieldScatter dof; // depth of field component on cam
 
 
@@ -46,7 +45,6 @@ public class DrunkMovement : InGame {
 	
 	// sound stuff 
 	public AudioClip[] clips; 
-	public float soundDelay; 
 	private bool soundPlayed; 
 	
 	// GET RBs' Y COORDS SO THAT THE PLAYER DOESN'T FLOAT OVER BED
@@ -359,7 +357,6 @@ public class DrunkMovement : InGame {
 		
 		// (1) switch cameras: from main to fallCam
 		cam.enabled = false;
-		fallCam.enabled = true; 
 		
 		// (2) play FALLING sounds
 		
