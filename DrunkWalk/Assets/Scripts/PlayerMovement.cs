@@ -85,8 +85,7 @@ public class PlayerMovement : InGame {
 		}
 		
 		fallen = false;
-		angleBetween = 0.0f; 
-		
+
 		soundPlayed = false; 
 		
 		initX = UniMove.ax;
