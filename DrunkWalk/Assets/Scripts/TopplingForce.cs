@@ -25,9 +25,12 @@ public class TopplingForce : MonoBehaviour {
 	// COROUTINE DELAYS
 	public float drunkDelay;
 
+	// TO STOP WOBBLE WHEN HIT A WALL
+	public bool hitWall; 
 
 
 	void Start () {
+		hitWall = false; 
 	}
 
 	void Update () {
@@ -35,7 +38,9 @@ public class TopplingForce : MonoBehaviour {
 		// camLose (transform.rotation, playerMovement.direction);
 
 		// camera wobble
-		camWobble (playerMovement.direction); 
+		if (!hitWall) {
+			camWobble (playerMovement.direction); 
+		}
 
 		// drunk force
 		StartCoroutine(newDrunkDirection ());

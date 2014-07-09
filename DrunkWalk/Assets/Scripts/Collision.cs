@@ -31,6 +31,9 @@ public class Collision : MonoBehaviour {
 
 	private bool collided;
 
+	// TO PREVENT CAM WOBBLE WHEN HIT A WALL
+	public TopplingForce tf; 
+
 	// Use this for initialization
 	void Start () {
 		source.volume = 0.5f;
@@ -91,6 +94,7 @@ public class Collision : MonoBehaviour {
 			if (col.tag == "Wall") {
 				score -= 100;
 				Debug.Log("Wall Collision - " + score);
+				tf.hitWall = true; 
 			}
 			else if (col.tag == "Box"){
 				score -= 200;
@@ -141,6 +145,7 @@ public class Collision : MonoBehaviour {
 	void OnTriggerExit(Collider col) {
 		Debug.Log("No Longer Colliding");
 		soundPlayed = false; 
+		tf.hitWall = false; 
 	}
 
 	private void playGrunt(AudioClip clip){

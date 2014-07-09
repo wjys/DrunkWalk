@@ -8,7 +8,7 @@ public class PlayerMovement : InGame {
 	
 	public float hinc = 0.5f;	// force increment for head
 	public float finc = 0.5f; 	// force increment for feet
-
+	
 	// COMPONENTS/OBJECTS TO GET
 	public Rigidbody rhead;		// rigidbody at the head of the player
 	public Rigidbody rfeet;		// rigidbody at the feet of the player
@@ -16,61 +16,68 @@ public class PlayerMovement : InGame {
 	public Camera fallCam; 
 	public UniMoveController UniMove; 	// get UniMove
 	public DepthOfFieldScatter dof; 	// depth of field component on cam
-
+	
 	// BOUNDS TO CHECK TILT OF MOVE CONTROLLER
 	private float initX, initZ;
 	public float boundBack;
 	public float boundForward;
 	public float boundRight;
 	public float boundLeft; 
-
+	
 	// TO INDICATE DIRECTION OF PLAYER'S MOVEMENT
 	private enum Dir { forward, right, left, back }; 
 	public int direction; 
-
+	
 	// TO CHECK PLAYER LEAN
 	private bool fallen;
 	public float angleBetween;  
 	public float maxAngle; 
 	public float maxAngleSides;
-
+	
 	public float radius; 
 	public float maxRad; 
-
+	
 	// TIME STUFF
 	public float currentTime;
 	public float delayTime;
 	public float currentSoundTime; 
 	public float delaySound; 
-
+	
 	// FRAME STUFF (instead of time)
 	public int currentFrame;
 	public int delayFrame; 
 	public int currentSoundFrame; 
 	public int delaySoundFrame; 
-
+	
 	// SOUND STUFF  
 	private bool soundPlayed; 
 	public AudioClip[] clips; 
-
+	
 	// GET RBs' Y COORDS SO THAT THE PLAYER DOESN'T FLOAT OVER BED
 	private float headY;
 	
+	// GET BACK UP ONCE FALLEN
+	private Vector3 fallenPos; 
+	public int tapsGetUp;
+	public int frameFall; 
+	private int tapCurrent;
+	
+	
 	List<UniMoveController> moves = new List<UniMoveController>();
-
+	
 	void Start () {
 		rfeet.MovePosition(new Vector3(transform.position.x, rfeet.position.y, transform.position.z));
 		int count = UniMoveController.GetNumConnected();
-
+		
 		for (int i = 0; i < count; i++){
 			UniMove = GetComponent<UniMoveController>();
-
+			
 			if (!UniMove.Init(i)) 
 			{	
 				Destroy(UniMove);	// If it failed to initialize, destroy and continue on
 				continue;
 			}
-					
+			
 			// This example program only uses Bluetooth-connected controllers
 			PSMoveConnectionType conn = UniMove.ConnectionType;
 			if (conn == PSMoveConnectionType.Unknown || conn == PSMoveConnectionType.USB) 
@@ -85,32 +92,33 @@ public class PlayerMovement : InGame {
 				UniMove.SetLED(Color.white);
 			}
 		}
-
+		
 		fallen = false;
 		angleBetween = 0.0f; 
 		
 		soundPlayed = false; 
-
+		
 		initX = UniMove.ax;
 		//initX = 0;
 		initZ = UniMove.az;
-
+		
 		headY = transform.position.y; 
-
+		
 	}
 	
 	void Update () {
-
+		
 		resetY (); 
-
+		
 		if (Input.GetKey("r"))
 			Application.LoadLevel (Application.loadedLevel);
-
+		
 		// CHECK UNIMOVE BUTTONS 
 		UniMoveSet ();
 		
 		// IF THE PLAYER LEANS TOO MUCH, FALL AND LOSE
 		if (fallen) {
+			currentFrame = 0; 
 			fallToLose();
 		}
 		else {  
@@ -120,9 +128,9 @@ public class PlayerMovement : InGame {
 			moveHead (direction); 					//print ("2. moved head"); 
 		}
 	}
-
+	
 	void FixedUpdate() {
-
+		
 		// DELAYING PLACE FEET AT HEAD'S XY POS
 		// currentTime += Time.deltaTime;
 		currentFrame++; 
@@ -132,7 +140,7 @@ public class PlayerMovement : InGame {
 			//currentTime = 0.0f;
 			currentFrame = 0;
 		}
-
+		
 		// PLAY A GRUNT
 		if (!soundPlayed){
 			soundPlayed = true; 
@@ -142,7 +150,7 @@ public class PlayerMovement : InGame {
 		else {
 			//currentSoundTime += Time.deltaTime;
 			currentSoundFrame++; 
-
+			
 			//if (currentSoundTime >= delaySound){
 			if (currentSoundFrame >= delaySoundFrame){
 				soundPlayed = false; 
@@ -151,12 +159,12 @@ public class PlayerMovement : InGame {
 			}
 		}
 	}
-
+	
 	// PREVENT THE COLLIDER FROM FLOATING ABOVE OBJECTS
 	private void resetY(){
 		rhead.MovePosition (new Vector3 (transform.position.x, headY, transform.position.z)); 
 	}
-
+	
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * (1) MAKE THE KNOB GLOW A COLOUR DEPENDING ON WHICH BUTTON IS PRESSED
 	 * (2) SET THE RUMBLE BASED ON TRIGGER
@@ -187,12 +195,12 @@ public class PlayerMovement : InGame {
 			UniMove.SetRumble(UniMove.Trigger);
 		}
 	}
-
+	
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * PARAM: angleBetween = the angle between the head/feet vector and the vertical vector
 	 * The closer angleBetween is to 30.0f, the blurrier things get!
 	 * -------------------------------------------------------------------------------------------------------------------------- */
-
+	
 	private void angleBlur (float angle){
 		
 		//print ("ap = " + dof.aperture); 
@@ -203,16 +211,16 @@ public class PlayerMovement : InGame {
 			dof.aperture -= 0.7f;
 		}
 	}
-
+	
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * (1) Check the current angle between the vector between the head rigidbody and the feed rigidboy with the vertical vector
 	 * (2) If the angle is at least 30 degrees, then you are leaning too much! (return true)
 	 * (3) otherwise return false
 	 * -------------------------------------------------------------------------------------------------------------------------- */
-
+	
 	private int getLeanDirection(){	//print("entered get direction");
 		// ----------------- CHECK ALL DIRECTIONS NO PRIORITY
-
+		
 		if (UniMove.az <= boundBack + initZ) {
 			return (int) Dir.back;
 		}
@@ -226,7 +234,7 @@ public class PlayerMovement : InGame {
 			return (int) Dir.left; 
 		}
 		return (0);
-
+		
 		// ----------------- CHECK FRONT/BACK FIRST
 		/*
 		if (UniMove.az <= -0.2f + initZ) {
@@ -289,7 +297,7 @@ public class PlayerMovement : InGame {
 		}
 		*/
 	}
-
+	
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * (1) Check the current angle between the vector between the head rigidbody and the feed rigidboy with the vertical vector
 	 * (2) If the angle is at least 30 degrees, then you are leaning too much! (return true)
@@ -297,17 +305,17 @@ public class PlayerMovement : InGame {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	private bool isLeaningTooMuch(){ //print ("checking lean");
-
+		
 		float x = Mathf.Abs (rfeet.position.x - transform.position.x);
 		float y = Mathf.Abs (rfeet.position.z - transform.position.z); 
 		radius = Mathf.Sqrt (x * x + y * y); 
-
+		
 		if (radius >= maxRad) {
 			return true; 
 		}
 		return false; 
-
-
+		
+		
 		/*
 		 * Vector3 vertVec = new Vector3 (rfeet.position.x, transform.position.y, rfeet.position.z); 
 		
@@ -330,6 +338,32 @@ public class PlayerMovement : InGame {
 			return false; 
 		}
 		 */
+	}
+	
+	private void stopRead(){
+		// freeze position
+		fallenPos = transform.position; 
+		// stop reading all inputs
+		
+	}
+	
+	private void tapsToGetUp(){
+		bool buttonTapped = Input.anyKeyDown; 
+		// read button taps 
+		if (buttonTapped) {
+			tapCurrent++; 
+		}
+		if (tapCurrent >= tapsGetUp) {
+			GetUp (); 
+		}
+		else if (currentFrame >= frameFall){
+			fallToLose (); 
+		}
+	}
+	
+	private void GetUp(){
+		transform.position = fallenPos;
+		rfeet.position = fallenPos; 
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -392,7 +426,7 @@ public class PlayerMovement : InGame {
 			break; 
 		}
 	}
-
+	
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * AFTER DELAY, PLACE THE FEET DIRECTLY UNDER THE HEAD 
 	 * -------------------------------------------------------------------------------------------------------------------------- */
