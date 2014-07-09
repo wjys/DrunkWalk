@@ -9,12 +9,7 @@ public class InGame : MonoBehaviour {
 			Transform trans = GetComponent<Transform>();
 			TopplingForce tf = GetComponent<TopplingForce>();
 			trans = gameObject.transform;
-			tf.enabled = false; 
-			
-			// pause child transform if relevant
-			Transform transChild = GetComponentInChildren<Transform>();
-			transChild = transform;
-			tf.enabled = false; 
+			tf.enabled = false;
 
 			_paused = value;
 		}
