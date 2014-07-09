@@ -124,7 +124,7 @@ public class PlayerMovement : InGame {
 		// DELAYING PLACE FEET AT HEAD'S XY POS
 		currentFrame++; 
 		if (currentFrame >= delayFrame){
-			placeFeet (direction);
+			placeFeet ();
 			currentFrame = 0;
 		}
 		
@@ -333,7 +333,7 @@ public class PlayerMovement : InGame {
 	 * AFTER DELAY, PLACE THE FEET DIRECTLY UNDER THE HEAD 
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
-	private void placeFeet (int direction){			//print ("moving feet");
+	private void placeFeet (){			//print ("moving feet");
 		rfeet.MovePosition(new Vector3 (transform.position.x, rfeet.position.y, transform.position.z)); 
 	}
 	
