@@ -14,7 +14,6 @@ public class InGame : MonoBehaviour {
 			// pause animation component if possible
 			Transform transChild = GetComponentInChildren<Transform>();
 			transChild = transform;
-
 			tf.enabled = false; 
 
 			_paused = value;
@@ -28,8 +27,14 @@ public class InGame : MonoBehaviour {
 	void LateUpdate () {
 		if (!paused) GameLateUpdate();
 	}
-	public virtual void GameUpdate () {}
-	public virtual void GameLateUpdate () {}
+	public virtual void GameUpdate () {
+		TopplingForce tf = GetComponent<TopplingForce>();
+		tf.enabled = true;
+	}
+	public virtual void GameLateUpdate () {
+		TopplingForce tf = GetComponent<TopplingForce>();
+		tf.enabled = true;
+	}
 
 	private void UpdateComponentStatus<T> (bool paused, ref bool status) {
 

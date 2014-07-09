@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 // MOVE CONTROLLER TILT TO READ WHERE PLAYER LEANS AND RESULTING MOVEMENT 
 
-public class PlayerMovement : MonoBehaviour {
+public class PlayerMovement : InGame {
 	
 	public float hinc = 0.5f;	// force increment for head
 	public float finc = 0.5f; 	// force increment for feet
