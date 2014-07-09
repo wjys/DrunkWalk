@@ -153,7 +153,6 @@ public class Collision : MonoBehaviour {
 		audio.pitch = Random.value * 0.1f + 0.95f;
 		audio.volume = Random.value * 0.3f + 0.7f;
 		audio.PlayOneShot(clip); 
-		
 	}
 
 	//Instantiate a hurt sound
