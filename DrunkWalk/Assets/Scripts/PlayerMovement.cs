@@ -30,19 +30,10 @@ public class PlayerMovement : InGame {
 	
 	// TO CHECK PLAYER LEAN
 	private bool fallen;
-	public float angleBetween;  
-	public float maxAngle; 
-	public float maxAngleSides;
 	
-	public float radius; 
+	private float radius; 
 	public float maxRad; 
-	
-	// TIME STUFF
-	public float currentTime;
-	public float delayTime;
-	public float currentSoundTime; 
-	public float delaySound; 
-	
+
 	// FRAME STUFF (instead of time)
 	public int currentFrame;
 	public int delayFrame; 
@@ -122,7 +113,7 @@ public class PlayerMovement : InGame {
 			fallToLose();
 		}
 		else {  
-			angleBlur (angleBetween);
+			//angleBlur (angleBetween);
 			direction = getLeanDirection(); 		//print ("1. got direction");
 			fallen = isLeaningTooMuch (); 			
 			moveHead (direction); 					//print ("2. moved head"); 
@@ -132,12 +123,9 @@ public class PlayerMovement : InGame {
 	void FixedUpdate() {
 		
 		// DELAYING PLACE FEET AT HEAD'S XY POS
-		// currentTime += Time.deltaTime;
 		currentFrame++; 
-		//if (currentTime >= delayTime){
 		if (currentFrame >= delayFrame){
 			placeFeet (direction);
-			//currentTime = 0.0f;
 			currentFrame = 0;
 		}
 		
@@ -145,16 +133,12 @@ public class PlayerMovement : InGame {
 		if (!soundPlayed){
 			soundPlayed = true; 
 			playGrunt (clips [Random.Range (0, 5)]);
-			delaySound = Random.Range (5, 10); 
 		}
 		else {
-			//currentSoundTime += Time.deltaTime;
 			currentSoundFrame++; 
-			
-			//if (currentSoundTime >= delaySound){
+
 			if (currentSoundFrame >= delaySoundFrame){
 				soundPlayed = false; 
-				//currentSoundTime = 0.0f; 
 				currentSoundFrame = 0; 
 			}
 		}
@@ -204,12 +188,13 @@ public class PlayerMovement : InGame {
 	private void angleBlur (float angle){
 		
 		//print ("ap = " + dof.aperture); 
-		
+		/*
 		if (angle >= 0.3f && angle <= maxAngle){
 			dof.aperture += 0.53f;
 		} else if (angle < 0.3f){
 			dof.aperture -= 0.7f;
 		}
+		*/
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
