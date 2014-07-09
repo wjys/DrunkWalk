@@ -7,10 +7,8 @@ using System.Collections.Generic;
 public class MouseMovement : MonoBehaviour {
 	
 	public Vector3 mouse;		// current mouse position on screen
-	public float delay; 		// time delay between feet movement and head movement 
 	public float hinc = 0.5f;	// force increment for head
 	public float finc = 0.5f; 	// force increment for feet
-	public float camInc = 0.5f; 
 
 	// OBJECTS TO DRAG INTO COMPONENT
 	public Rigidbody rhead;		// rigidbody at the head of the player
@@ -23,67 +21,82 @@ public class MouseMovement : MonoBehaviour {
 	private int halfHeight; 	// half the height of screen
 	
 	private enum Dir { forward, right, left, back }; 
-	public int direction; 
-	private bool fallen;
-	private float angleBetween;
-	public float maxAngle = 1.0f; 
+	public int direction;
 
-	//TIME STUFF
-	public float currentTime = 0.0f;
-	public float currentSoundTime = 0.0f; 
-	public float delayTime = 2.0f;
-	public float delaySound; 
-	
+
+	private bool fallen;
+
+	public float radius;
+	public float maxRad; 
+
+	// FRAME STUFF (instead of time)
+	public int currentFrame;
+	public int delayFrame; 
+	public int currentSoundFrame; 
+	public int delaySoundFrame; 
+
 	// sound stuff 
 	public AudioClip[] clips; 
 	public float soundDelay; 
 	private bool soundPlayed; 
 
+	// GET RBs' Y COORDS SO THAT THE PLAYER DOESN'T FLOAT OVER BED
+	private float headY;
+
+
 
 	void Start () {
-		halfWidth = Screen.width / 2; 
-		halfHeight = Screen.height / 2; 
+		rfeet.MovePosition(new Vector3(transform.position.x, rfeet.position.y, transform.position.z));
 		
 		fallen = false;
-
+		
 		soundPlayed = false; 
+		
+		headY = transform.position.y; 
+		halfWidth = Screen.width / 2; 
+		halfHeight = Screen.height / 2; 
 	}
 	
 	void Update () {
-		// if the player has leaned too much, FALL AND LOSE
+		resetY (); 
+		
+		if (Input.GetKey("r"))
+			Application.LoadLevel (Application.loadedLevel);
+		
+		// IF THE PLAYER LEANS TOO MUCH, FALL AND LOSE
 		if (fallen) {
-			audio.PlayOneShot(clips[Random.Range(5,9)]); 
+			currentFrame = 0; 
 			fallToLose();
 		}
-
-		// else, lean and drunk walk
-		else {
-					
-			mouse = Input.mousePosition; 
-			angleBlur (angleBetween);
-			direction = getLeanDirection (mouse); 	//print ("1. got direction");
-			fallen = isLeaningTooMuch (); 
+		else {  
+			mouse = Input.mousePosition;
+			//angleBlur (angleBetween);
+			direction = getLeanDirection(mouse); 		//print ("1. got direction");
+			fallen = isLeaningTooMuch (); 			
 			moveHead (direction); 					//print ("2. moved head"); 
 		}
 	}
 
 	void FixedUpdate() {
-		//delayPlaceFeet();
-		currentTime += Time.deltaTime;
-		if (currentTime >= delayTime) {
+		
+		// DELAYING PLACE FEET AT HEAD'S XY POS
+		currentFrame++; 
+		if (currentFrame >= delayFrame){
 			placeFeet ();
-			currentTime = 0.0f;
+			currentFrame = 0;
 		}
+		
+		// PLAY A GRUNT
 		if (!soundPlayed){
 			soundPlayed = true; 
 			playGrunt (clips [Random.Range (0, 5)]);
-			delaySound = Random.Range (3, 6); 
 		}
 		else {
-			currentSoundTime += Time.deltaTime;
-			if (currentSoundTime >= delaySound){
+			currentSoundFrame++; 
+			
+			if (currentSoundFrame >= delaySoundFrame){
 				soundPlayed = false; 
-				currentSoundTime = 0.0f; 
+				currentSoundFrame = 0; 
 			}
 		}
 	}
@@ -97,12 +110,17 @@ public class MouseMovement : MonoBehaviour {
 	private void angleBlur (float angle){
 
 		//print ("ap = " + dof.aperture); 
-		
+		/*
 		if (angle >= 0.3f && angle <= maxAngle){
 			dof.aperture += 0.5f;
 		} else if (angle < 0.3f){
 			dof.aperture -= 0.8f;
-		}
+		}*/
+	}
+
+	// PREVENT THE COLLIDER FROM FLOATING ABOVE OBJECTS
+	private void resetY(){
+		rhead.MovePosition (new Vector3 (transform.position.x, headY, transform.position.z)); 
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -139,7 +157,7 @@ public class MouseMovement : MonoBehaviour {
 			}
 		}
 		// (b)
-		else {
+		else if (mouse.y >= halfHeight) {
 			// (b1)
 			if (Mathf.Abs(mouse.x - halfWidth) < Mathf.Abs(mouse.y - halfHeight)){	// print ("leaning forward");
 				return (int) Dir.forward; 
@@ -155,7 +173,7 @@ public class MouseMovement : MonoBehaviour {
 				}
 			}
 		}
-		return (0);
+		return (-1);
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -165,20 +183,16 @@ public class MouseMovement : MonoBehaviour {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 
 	private bool isLeaningTooMuch(){ //print ("checking lean");
-		Vector3 vertVec = new Vector3 (rfeet.position.x, rhead.position.y, rfeet.position.z); 
-
-		// (1) check angle between vectors
-		float angle = Vector3.Angle (vertVec, rhead.position); 
-		angleBetween = angle;
-		print ("angle = " + angle); 
-
-		// (2) if angle is at least 30
-		if (angle >= maxAngle) { 	// print ("FALLEN!");
-			return true;
-		} 						// print ("STILL STANDING");
+		
+		float x = Mathf.Abs (rfeet.position.x - transform.position.x);
+		float y = Mathf.Abs (rfeet.position.z - transform.position.z); 
+		radius = Mathf.Sqrt (x * x + y * y); 
+		
+		if (radius >= maxRad) {
+			return true; 
+		}
 		return false; 
 	}
-
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * !! FOR NOW, IF LEAN TOO MUCH, FALL AND LOSE THE GAME
 	 * 
@@ -237,36 +251,7 @@ public class MouseMovement : MonoBehaviour {
 			break; 
 		}
 	}
-	
 
-	/* --------------------------------------------------------------------------------------------------------------------------
-	 * DEPENDING ON DIRECTION OF THE LEAN, ADD A FORCE TO THE FEET RIGIDBODY 
-	 * -------------------------------------------------------------------------------------------------------------------------- */
-
-	private void moveFeet (int direction){			//print ("moving feet");
-/*		switch (direction) {
-			
-		case (int) Dir.forward:						//print ("moving feet forward");
-			rfeet.AddForce (0, 0, finc);
-			break;
-			
-		case (int) Dir.right:						//print ("moving feet right");
-			rfeet.AddForce (finc, 0, 0);
-			break;
-			
-		case (int) Dir.left:						//print ("moving feet left");
-			rfeet.AddForce (-finc, 0, 0);
-			break;
-			
-			// if player leans back, the feet will match the feet 
-		case (int) Dir.back:						//print ("stopping feet under head");
-			rfeet.AddForce (0, 0, -finc); 
-			break; 
-			
-		default:
-			break; 
-		}*/
-	}
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * AFTER DELAY, PLACE THE FEET DIRECTLY UNDER THE HEAD 
 	 * -------------------------------------------------------------------------------------------------------------------------- */
@@ -285,21 +270,5 @@ public class MouseMovement : MonoBehaviour {
 		audio.volume = Random.value * 0.3f + 0.7f;
 		audio.PlayOneShot(clip); 
 	
-	}
-
-	/* --------------------------------------------------------------------------------------------------------------------------
-	 * DELAY THE MOVEMENT OF THE FEET AFTER THE MOVEMENT OF THE HEAD
-	 * -------------------------------------------------------------------------------------------------------------------------- */
-
-	private IEnumerator delayFeet (){				//print ("delaying");
-		yield return new WaitForSeconds(delay);
-		moveFeet (direction); 					//print ("4. moved feet"); 
-		StartCoroutine (delayPlaceFeet ());
-		//yield break; 
-	}
-
-	private IEnumerator delayPlaceFeet (){
-		yield return new WaitForSeconds(delay);
-		placeFeet ();
 	}
 }
