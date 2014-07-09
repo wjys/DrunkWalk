@@ -13,10 +13,6 @@ public class TopplingForce : MonoBehaviour {
 
 	// CAMERA PARAMS
 	public float camInc; 	// cam wobble amount
-	public float boundCamForward;
-	public float boundCamBack;
-	public float boundCamRight;
-	public float boundCamLeft; 
 
 	// TO DRAG INTO COMPONENT
 	public Rigidbody rhead; 	// object's head rigidbody
@@ -100,41 +96,6 @@ public class TopplingForce : MonoBehaviour {
 			break;
 		case (int) Dir.back:
 			transform.rotation = new Quaternion (transform.rotation.x - camInc, transform.rotation.y, transform.rotation.z, transform.rotation.w); 
-			break;
-		default:
-			break; 
-		}
-	}
-	/* --------------------------------------------------------------------------------------------------------------------------
-	 * EXTRA LOSE CONDITION
-	 * Given inputted CURRENT CAMERA ROTATION, we check if the rotation exceeds the cap
-	 * => lose if exceeding cap
-	 * -------------------------------------------------------------------------------------------------------------------------- */
-
-	private void camLose(Quaternion camRotation, int direction){
-
-		print("LOST BECAUSE CAMERA ANGLE");
-
-		switch (direction) {
-		case (int) Dir.forward:
-			if (camRotation.x > boundCamForward){
-				playerMovement.fallToLose (); 
-			}
-			break;
-		case (int) Dir.right:
-			if (camRotation.x > boundCamBack) {
-				playerMovement.fallToLose (); 
-			}
-			break;
-		case (int) Dir.left:
-			if (camRotation.z > boundCamRight) {
-				playerMovement.fallToLose ();
-			}
-			break;
-		case (int) Dir.back:
-			if (camRotation.z > boundCamLeft) {
-				playerMovement.fallToLose ();
-			}
 			break;
 		default:
 			break; 

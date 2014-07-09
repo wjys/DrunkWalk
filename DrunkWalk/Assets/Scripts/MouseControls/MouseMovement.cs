@@ -203,19 +203,22 @@ public class MouseMovement : InGame {
 	 * (5) display "YOU LOST/TRY AGAIN" 
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 
-	private void fallToLose(){	print ("YOU LOSE"); 
-
+	public void fallToLose(){	
+		//print ("YOU LOSE"); 
+		
 		// (1) switch cameras: from main to fallCam
 		cam.enabled = false;
 		fallCam.enabled = true; 
-
+		
 		// (2) play FALLING sounds
-
+		
 		// (3) animation? blink/blackout 
-
+		
 		// (4) play FALLEN TO FLOOR sound
-
-		// (5) display "YOU LOST. DO SOMETHING TO TRY AGAIN" or something
+		
+		// (5) SWITCH TO LOSE SCREEN
+		Debug.Log ("Fallen");
+		//Application.LoadLevel("Lost"); 
 	}
 	
 
