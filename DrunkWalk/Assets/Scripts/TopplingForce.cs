@@ -13,6 +13,7 @@ public class TopplingForce : MonoBehaviour {
 
 	// CAMERA PARAMS
 	public float camInc; 	// cam wobble amount
+	public float camAcc;    // cam wobble acceleration
 
 	// TO DRAG INTO COMPONENT
 	public Rigidbody rhead; 	// object's head rigidbody
@@ -84,17 +85,22 @@ public class TopplingForce : MonoBehaviour {
 	
 	// FOR NOW camera wobbles as lean changes 
 	private void camWobble(int lean){
+
 		switch (lean) {
 		case (int) Dir.forward:
+			camInc += camAcc;
 			transform.rotation = new Quaternion (transform.rotation.x + camInc, transform.rotation.y, transform.rotation.z, transform.rotation.w); 
 			break;
 		case (int) Dir.right:
+			camInc -= camAcc;
 			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y, transform.rotation.z - camInc, transform.rotation.w); 
 			break;
 		case (int) Dir.left:
+			camInc += camAcc;
 			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y, transform.rotation.z + camInc, transform.rotation.w); 
 			break;
 		case (int) Dir.back:
+			camInc -= camAcc;
 			transform.rotation = new Quaternion (transform.rotation.x - camInc, transform.rotation.y, transform.rotation.z, transform.rotation.w); 
 			break;
 		default:

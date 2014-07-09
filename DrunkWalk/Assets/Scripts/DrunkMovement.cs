@@ -248,6 +248,7 @@ public class DrunkMovement : InGame {
 			if (UniMove.ax > boundLeft + initX) {
 				return (int) Dir.left; 
 			}
+			return (0);
 		}
 		return (0);
 	}

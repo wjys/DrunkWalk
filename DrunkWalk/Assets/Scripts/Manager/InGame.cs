@@ -7,9 +7,9 @@ public class InGame : MonoBehaviour {
 		set {
 			// pause transform
 			Transform trans = GetComponent<Transform>();
-			TopplingForce tf = GetComponent<TopplingForce>();
+			DrunkForce df = GetComponent<DrunkForce>();
 			trans = gameObject.transform;
-			tf.enabled = false;
+			df.enabled = false;
 
 			_paused = value;
 		}
@@ -23,12 +23,12 @@ public class InGame : MonoBehaviour {
 		if (!paused) GameLateUpdate();
 	}
 	public virtual void GameUpdate () {
-		TopplingForce tf = GetComponent<TopplingForce>();
-		tf.enabled = true;
+		DrunkForce df = GetComponent<DrunkForce>();
+		df.enabled = true;
 	}
 	public virtual void GameLateUpdate () {
-		TopplingForce tf = GetComponent<TopplingForce>();
-		tf.enabled = true;
+		DrunkForce df = GetComponent<DrunkForce>();
+		df.enabled = true;
 	}
 
 	private void UpdateComponentStatus<T> (bool paused, ref bool status) {
