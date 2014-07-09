@@ -233,69 +233,7 @@ public class PlayerMovement : InGame {
 		if (UniMove.ax > boundLeft + initX) {
 			return (int) Dir.left; 
 		}
-		return (0);
-		
-		// ----------------- CHECK FRONT/BACK FIRST
-		/*
-		if (UniMove.az <= -0.2f + initZ) {
-
-			if (UniMove.ax > -0.2f + initX && UniMove.ax < 0.2f + initX) {
-				return (int) Dir.back; 
-			}
-			else {
-				if (UniMove.ax > 0.2f + initX) {
-					return (int) Dir.left; 
-				}
-				if (UniMove.ax < -0.2f + initX){
-					return (int) Dir.right; 
-				}
-			}
-		}
-		else if (UniMove.az >= 0.7f + initZ){	
-
-			if (UniMove.ax > -0.2f + initX && UniMove.ax< 0.2f + initX) {
-				return (int) Dir.forward; 
-			}
-			else {
-				if (UniMove.ax > 0.2f + initX) {
-					return (int) Dir.left; 
-				}
-				if (UniMove.ax < -0.2f + initX){
-					return (int) Dir.right; 
-				}
-			}
-		}
-		*/
-		// CHECK RIGHT/LEFT FIRST
-		/*
-		// ----------------- LEFT
-		if (UniMove.ax > 0.2f + initX) {
-			if (UniMove.az > -0.2f + initZ && UniMove.az < 0.7f +initZ){
-				return (int) Dir.left; 
-			}
-			else {
-				if (UniMove.az <= -0.2f + initZ){
-					return (int) Dir.back;
-				}
-				if (UniMove.az >= 0.7f + initZ){
-					return (int) Dir.forward; 
-				}
-			}
-		}
-		else if (UniMove.ax < -0.2f + initX){
-			if (UniMove.az > -0.2f + initZ && UniMove.az < 0.7f +initZ){
-				return (int) Dir.left; 
-			}
-			else {
-				if (UniMove.az <= -0.2f + initZ){
-					return (int) Dir.back;
-				}
-				if (UniMove.az >= 0.7f + initZ){
-					return (int) Dir.forward; 
-				}
-			}
-		}
-		*/
+		return (-1);
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -314,31 +252,11 @@ public class PlayerMovement : InGame {
 			return true; 
 		}
 		return false; 
-		
-		
-		/*
-		 * Vector3 vertVec = new Vector3 (rfeet.position.x, transform.position.y, rfeet.position.z); 
-		
-		// (1) check angle between vectors
-		float angle = Vector3.Angle (vertVec, transform.position);
-		angleBetween = angle;
-		print ("angle = " + angle); 
-		
-		// (2) if angle is at least 30
-		if (direction == (int) Dir.back || direction == (int) Dir.forward){
-			if (angle >= maxAngle) { 	// print ("FALLEN!");
-				return true;
-			} 						// print ("STILL STANDING");
-			return false; 
-		}
-		else {
-			if (angle >= maxAngleSides) { 	// print ("FALLEN!");
-				return true;
-			} 						// print ("STILL STANDING");
-			return false; 
-		}
-		 */
 	}
+
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * WORKING ON THIS~
+	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	private void stopRead(){
 		// freeze position
