@@ -49,7 +49,6 @@ public class Rotation : MonoBehaviour {
 
 		if (player.useMouse){
 			if (Input.GetMouseButtonDown(0)){	// left mouse button
-				print ("left mouse button");
 				if (transform.eulerAngles.y > 270.0f || transform.eulerAngles.y < 90.0f){
 					to = transform.eulerAngles.y - 45.0f; 
 					cur = transform.eulerAngles.y;
@@ -59,7 +58,6 @@ public class Rotation : MonoBehaviour {
 				return (int) Turn.left; 
 			}
 			if (Input.GetMouseButton(1)){	// right mouse button
-				print ("right mouse button");
 				if (transform.eulerAngles.y > 270.0f || transform.eulerAngles.y < 90.0f){
 					to = transform.eulerAngles.y + 45.0f;
 					cur = transform.eulerAngles.y; 
@@ -71,9 +69,21 @@ public class Rotation : MonoBehaviour {
 		}
 		else {
 			if (UniMove.gy <= boundRight){
+				if (transform.eulerAngles.y > 270.0f || transform.eulerAngles.y < 90.0f){
+					to = transform.eulerAngles.y + 45.0f;
+					cur = transform.eulerAngles.y; 
+				}
+				rotating = true; 
+				rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
 				return (int) Turn.right;
 			}
 			if (UniMove.gy >= boundLeft){
+				if (transform.eulerAngles.y > 270.0f || transform.eulerAngles.y < 90.0f){
+					to = transform.eulerAngles.y - 45.0f; 
+					cur = transform.eulerAngles.y;
+				}
+				rotating = true; 
+				rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
 				return (int) Turn.left;
 			}
 		}
