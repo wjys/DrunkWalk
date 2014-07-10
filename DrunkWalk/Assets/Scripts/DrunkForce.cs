@@ -72,8 +72,8 @@ public class DrunkForce : MonoBehaviour {
 	// head rotation too far = fall over
 
 	private void rotateFall(){
-		if ((transform.eulerAngles.x > boundRotForward && transform.eulerAngles.x < boundRotBack)	||	
-		    (transform.eulerAngles.z > boundRotRight && transform.eulerAngles.z < boundRotLeft)){
+		if ((transform.localEulerAngles.x > boundRotForward && transform.localEulerAngles.x < boundRotBack)	||	
+		    (transform.localEulerAngles.z > boundRotRight && transform.localEulerAngles.z < boundRotLeft)){
 			player.tapsToGetUp(); 
 		}
 	}
