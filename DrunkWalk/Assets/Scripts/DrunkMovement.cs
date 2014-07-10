@@ -379,6 +379,7 @@ public class DrunkMovement : InGame {
 		fallenRot = transform.rotation; 
 		currentFrame = 0; 
 		frozen = true;
+		rigidbody.isKinematic = true;
 	}
 	
 	public void tapsToGetUp(){
@@ -407,6 +408,7 @@ public class DrunkMovement : InGame {
 		transform.rotation = new Quaternion (0, fallenRot.y, 0, fallenRot.w); 
 		tapCurrent = 0; 
 		frozen = false;
+		rigidbody.isKinematic = false;
 		fallen = false; 
 	}
 	
