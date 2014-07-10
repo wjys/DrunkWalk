@@ -134,11 +134,11 @@ public class DrunkMovement : InGame {
 			moveHead (direction); 					//print ("2. moved head"); 
 		}
 
-		if (wentB == wentF == true){
-			toggleFB();
-		} else if (wentL == wentR == true){
-			toggleLR();
-		}
+		// if (wentB == wentF == true){
+		// 	toggleFB();
+		// } else if (wentL == wentR == true){
+		// 	toggleLR();
+		// }
 
 	}
 	
@@ -288,25 +288,25 @@ public class DrunkMovement : InGame {
 		return (0);
 	}
 
-	public void toggleLR(){
-		if (wentL){
-			hinc = 1;
-			wentL = false;
-		} else if (wentR){
-			hinc = 1;
-			wentR = false;
-		}
-	}
+	// public void toggleLR(){
+	// 	if (wentL){
+	// 		hinc = 1;
+	// 		wentL = false;
+	// 	} else if (wentR){
+	// 		hinc = 1;
+	// 		wentR = false;
+	// 	}
+	// }
 
-	public void toggleFB(){
-		if (wentF){
-			hinc = 1;
-			wentF = false;
-		} else if (wentB){
-			hinc = 1;
-			wentB = false;
-		}
-	}
+	// public void toggleFB(){
+	// 	if (wentF){
+	// 		hinc = 1;
+	// 		wentF = false;
+	// 	} else if (wentB){
+	// 		hinc = 1;
+	// 		wentB = false;
+	// 	}
+	// }
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * (1) Check the current angle between the vector between the head rigidbody and the feed rigidboy with the vertical vector
@@ -406,6 +406,7 @@ public class DrunkMovement : InGame {
 		rfeet.position = new Vector3 (fallenPos.x, rfeet.position.y, fallenPos.z); 
 		transform.rotation = new Quaternion (0, fallenRot.y, 0, fallenRot.w); 
 		tapCurrent = 0; 
+		frozen = false;
 		fallen = false; 
 	}
 	
