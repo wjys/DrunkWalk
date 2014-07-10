@@ -65,6 +65,7 @@ public class DrunkMovement : InGame {
 
 	// ANIMATION
 	public Animator meAnim;
+	public AnimatorStateInfo meAnimState;
 
 	// Use this for initialization
 	void Start () {
@@ -132,6 +133,7 @@ public class DrunkMovement : InGame {
 			direction = getLeanDirection(); 		//print ("1. got direction");
 			fallen = isLeaningTooMuch (); 			
 			moveHead (direction); 					//print ("2. moved head"); 
+
 		}
 
 	}
@@ -316,6 +318,7 @@ public class DrunkMovement : InGame {
 	
 	private void moveHead (int direction){	//print ("moving head ");
 		//Invoke("resetHinc", 1);
+
 		switch (direction) {
 			
 		case (int) Dir.forward:				//print ("moving head forward");
@@ -383,7 +386,9 @@ public class DrunkMovement : InGame {
 			print ("WINnie");
 			meAnim.SetBool("fallOver", false);
 			meAnim.SetBool("getUp", true);
-			GetUp (); 
+			if (meAnim.GetCurrentAnimatorStateInfo(0).IsName("Fine")){
+				GetUp();
+			}
 		}
 		else if (currentFrame >= frameFall){
 			print ("BOOi"); 
@@ -392,18 +397,20 @@ public class DrunkMovement : InGame {
 	}
 	
 	private void GetUp(){
-		cam.enabled = true;
-		transform.position = fallenPos;
+			cam.enabled = true;
+			fallCam.enabled = false;
+			transform.position = fallenPos;
 
-		rfeet.position = new Vector3 (fallenPos.x, rfeet.position.y, fallenPos.z); 
-		transform.rotation = new Quaternion (0, fallenRot.y, 0, fallenRot.w); 
+			rfeet.position = new Vector3 (fallenPos.x, rfeet.position.y, fallenPos.z); 
+			transform.rotation = new Quaternion (0, fallenRot.y, 0, fallenRot.w); 
 
-		tapCurrent = 0; 
-		frozen = false;
-		//rhead.isKinematic = false;
-		rhead.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
-		fallen = false;
-		df.enabled = true;
+			tapCurrent = 0; 
+			frozen = false;
+			//rhead.isKinematic = false;
+			rhead.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+			fallen = false;
+			df.enabled = true;
+		
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
