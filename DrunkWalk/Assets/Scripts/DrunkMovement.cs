@@ -65,7 +65,6 @@ public class DrunkMovement : InGame {
 
 	// ANIMATION
 	public Animator meAnim;
-	public AnimatorStateInfo meAnimState;
 
 	// Use this for initialization
 	void Start () {

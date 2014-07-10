@@ -32,12 +32,10 @@ public class Rotation : MonoBehaviour {
 	// FOR DELAY AFTER MOVE ROTATION
 	public int rotateDelay; 
 	private int currentFrame;
-	public bool delaying; 
 		
 
 	void Start () {
 		rotating = false; 
-		delaying = false; 
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -50,11 +48,8 @@ public class Rotation : MonoBehaviour {
 		if (!rotating){
 			direction = getTurnDirection();
 		}
-		else if (!delaying) {
+		else {
 			turnHead(direction);
-		}
-		else if (delaying){
-			delayRotation (); 
 		}
 	}
 
@@ -69,7 +64,6 @@ public class Rotation : MonoBehaviour {
 	private void delayRotation(){
 		if (currentFrame >= rotateDelay) {
 			currentFrame = 0;
-			delaying = false; 
 			rotating = false; 
 		}
 		currentFrame++; 
