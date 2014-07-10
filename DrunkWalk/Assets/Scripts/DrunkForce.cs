@@ -24,7 +24,13 @@ public class DrunkForce : MonoBehaviour {
 	
 	// TO STOP WOBBLE WHEN HIT A WALL
 	public bool hitWall; 
-	
+
+	// LOSE CONDITION: IF CAMERA IS TOO CRAZY U LOOKIN INSANE
+	public float boundRotForward;	// x < 30
+	public float boundRotBack;		// x > 330
+	public float boundRotRight;		// z < 30
+	public float boundRotLeft; 		// z > 330 
+
 	
 	void Start () {
 		hitWall = false; 
@@ -32,8 +38,8 @@ public class DrunkForce : MonoBehaviour {
 	
 	void Update () {
 		// check camera rotation lose condition
-		// camLose (transform.rotation, playerMovement.direction);
-		
+		rotateFall (); 
+
 		// camera wobble
 		if (!hitWall) {
 			camWobble (player.direction); 
@@ -42,6 +48,14 @@ public class DrunkForce : MonoBehaviour {
 		// drunk force
 		StartCoroutine(newDrunkDirection ());
 		drunkForce (drunkDir);
+	}
+
+	private void rotateFall(){
+		print ("checking rotation"); 
+		if ((transform.eulerAngles.x > boundRotForward && transform.eulerAngles.x < boundRotBack)	||	
+		    (transform.eulerAngles.z > boundRotRight && transform.eulerAngles.z < boundRotLeft)){
+			player.fallToLose(); 
+		}
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------

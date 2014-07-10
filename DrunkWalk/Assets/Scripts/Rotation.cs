@@ -5,8 +5,18 @@ public class Rotation : MonoBehaviour {
 	
 	public UniMoveController UniMove;
 	public float camInc; 
+
+	// MIN/MAX ANGLES
+	public float minAngle;
+	public float maxAngle; 
+
+	// UNIMOVE DETECTION BOUNDS FOR gy
 	public float boundLeft;
 	public float boundRight; 
+
+	// SHOULD I SET UP ITS OWN BOOL HERE TO CHECK FOR MOUSE VS MOVE INPUT OR JUST CHECK IN DRUNKMOVEMENT?
+	public DrunkMovement player; 
+
 
 	// get direction of lean 
 	private enum Turn { left, right }; 
@@ -28,35 +38,53 @@ public class Rotation : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		StartCoroutine(rotateHead (direction)); 
-		/*
 		direction = getTurnDirection();
-		turnHead (direction);
-
-		if (rotating) {
-			currentFrame++; 
-
-			if (currentFrame >= rotateDelay){
-				rotating = false; 
-				currentFrame = 0; 
-			}
-		}
-		*/
-		//Debug.Log(UniMove.gy);
-
-
-		
+		turnHead(direction); 
 	}
 
 	private int getTurnDirection(){
-		if (UniMove.gy <= boundRight){
-			return (int) Turn.right;
+		if (player.useMouse){
+			if (Input.GetMouseButtonDown(0)){	// left mouse button
+				return (int) Turn.left; 
+			}
+			else if (Input.GetMouseButton(1)){	// right mouse button
+				return (int) Turn.left; 
+			}
 		}
-		if (UniMove.gy >= boundLeft){
-			return (int) Turn.left;
+		else {
+			if (UniMove.gy <= boundRight){
+				return (int) Turn.right;
+			}
+			if (UniMove.gy >= boundLeft){
+				return (int) Turn.left;
+			}
 		}
 		return (-1);
 	}
+
+	private void turnHead (int direction) {
+		switch (direction){
+		case (int) Turn.left:
+			if (transform.eulerAngles.y > 270.0f || transform.eulerAngles.y < 90.0f){
+				print ("turning left"); 
+				float to = transform.eulerAngles.y - 45.0f;
+				transform.eulerAngles = new Vector3 (0, Mathf.LerpAngle (transform.eulerAngles.y, to, Time.time));
+			}
+			break;
+
+		case (int) Turn.right:
+			if (transform.eulerAngles.y < 90.0f || transform.eulerAngles.y > 270.0f){
+				print ("turning right"); 
+				float to = transform.eulerAngles.y + 45.0f;
+				transform.eulerAngles = new Vector3 (0, Mathf.LerpAngle (transform.eulerAngles.y, to, Time.time));
+			}
+			break;
+
+		default:
+			break; 
+		}
+	}
+
 
 	private IEnumerator rotateHead (int direction) {
 
@@ -83,7 +111,7 @@ public class Rotation : MonoBehaviour {
 		}
 	}
 
-	private void turnHead (int direction){
+	private void rotHead (int direction){
 		if (!rotating){
 			switch (direction){
 
