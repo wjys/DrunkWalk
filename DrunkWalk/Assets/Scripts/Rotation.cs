@@ -93,8 +93,8 @@ public class Rotation : MonoBehaviour {
 	private void turnHead (int direction) {
 		transform.rotation = Quaternion.Euler (transform.eulerAngles.x, cur, transform.eulerAngles.z); 
 		rhead.rotation = transform.rotation; 
-		print ("rb " + rhead.rotation); 
-		print (transform.rotation); 
+		//print ("rb " + rhead.rotation); 
+		//print (transform.rotation); 
 
 		switch (direction){
 		case (int) Turn.left: 

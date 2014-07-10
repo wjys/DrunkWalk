@@ -74,7 +74,7 @@ public class DrunkForce : MonoBehaviour {
 	private void rotateFall(){
 		if ((transform.localEulerAngles.x > boundRotForward && transform.localEulerAngles.x < boundRotBack)	||	
 		    (transform.localEulerAngles.z > boundRotRight && transform.localEulerAngles.z < boundRotLeft)){
-			player.tapsToGetUp(); 
+			player.fallen = true;
 		}
 	}
 	

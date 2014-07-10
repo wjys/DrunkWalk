@@ -54,7 +54,7 @@ public class DrunkMovement : InGame {
 	private float headY;
 
 	// GET BACK UP ONCE FALLEN
-	private bool fallen;
+	public bool fallen;
 	private Vector3 fallenPos; 
 	private Quaternion fallenRot; 
 	public int tapsGetUp;
@@ -118,7 +118,8 @@ public class DrunkMovement : InGame {
 		
 		// IF THE PLAYER LEANS TOO MUCH, FALL AND LOSE
 		if (fallen) {
-			tapsToGetUp(); 
+			tapsToGetUp();
+			direction = -1;
 			//fallToLose();
 		}
 		else {  
@@ -312,7 +313,6 @@ public class DrunkMovement : InGame {
 	
 	private void moveHead (int direction){	//print ("moving head ");
 		//Invoke("resetHinc", 1);
-		
 		switch (direction) {
 			
 		case (int) Dir.forward:				//print ("moving head forward");
@@ -356,15 +356,17 @@ public class DrunkMovement : InGame {
 		currentFrame = 0; 
 		frozen = true;
 		rhead.isKinematic = true;
-
-		df.enabled = false; 
+		df.enabled = false;
 	}
 	
 	public void tapsToGetUp(){
-		print ("CLICK!"); 
+		print ("CLICK!");
+		cam.enabled = false;
 		if (!frozen){
 			stopRead (); 
 		}
+
+
 		bool buttonTapped = Input.anyKeyDown; 
 		// read button taps 
 		if (buttonTapped) {
@@ -381,14 +383,16 @@ public class DrunkMovement : InGame {
 	}
 	
 	private void GetUp(){
+		cam.enabled = true;
 		transform.position = fallenPos;
+
 		rfeet.position = new Vector3 (fallenPos.x, rfeet.position.y, fallenPos.z); 
 		transform.rotation = new Quaternion (0, fallenRot.y, 0, fallenRot.w); 
+
 		tapCurrent = 0; 
 		frozen = false;
 		rhead.isKinematic = false;
-		fallen = false; 
-		 
+		fallen = false;
 		df.enabled = true; 
 	}
 	
