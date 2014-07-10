@@ -29,6 +29,7 @@ public class DrunkMovement : InGame {
 	// GENERAL VARIABLES FOR ALL CONTROLS 
 	public Rigidbody rhead;		// rigidbody at the head of the player
 	public Rigidbody rfeet;		// rigidbody at the feet of the player
+	public DrunkForce df; 
 	public Camera cam; 			// to force the camera to just fall over if leaning too much
 	public DepthOfFieldScatter dof; // depth of field component on cam
 
@@ -355,6 +356,8 @@ public class DrunkMovement : InGame {
 		currentFrame = 0; 
 		frozen = true;
 		rigidbody.isKinematic = true;
+
+		df.enabled = false; 
 	}
 	
 	public void tapsToGetUp(){
@@ -385,6 +388,8 @@ public class DrunkMovement : InGame {
 		frozen = false;
 		rigidbody.isKinematic = false;
 		fallen = false; 
+		 
+		df.enabled = true; 
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
