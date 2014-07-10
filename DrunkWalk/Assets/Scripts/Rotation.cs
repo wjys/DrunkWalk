@@ -18,8 +18,8 @@ public class Rotation : MonoBehaviour {
 	// SHOULD I SET UP ITS OWN BOOL HERE TO CHECK FOR MOUSE VS MOVE INPUT OR JUST CHECK IN DRUNKMOVEMENT?
 	public DrunkMovement player; 
 	public Rigidbody rhead; 
-	private float to; 	// destination rotation
-	private float cur;
+	public float to; 	// destination rotation
+	public float cur;
 
 
 	// get direction of lean 
@@ -27,12 +27,12 @@ public class Rotation : MonoBehaviour {
 	public int direction; 
 
 	// delay before checking rotation after rotated
-	private bool rotating;  
+	public bool rotating;  
 
 	// FOR DELAY AFTER MOVE ROTATION
 	public int rotateDelay; 
 	private int currentFrame;
-	private bool delaying; 
+	public bool delaying; 
 		
 
 	void Start () {
@@ -191,11 +191,11 @@ public class Rotation : MonoBehaviour {
 		case (int) Turn.left: 
 			cur -= speed; 
 			if (cur <= to){
-				if (!player.useMouse){
+				if (player.useMouse){
 					rotating = false; 
 				}
 				else {
-					delaying = true; 
+					delayRotation();
 				}
 				rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 			}
@@ -204,11 +204,11 @@ public class Rotation : MonoBehaviour {
 		case (int) Turn.right:
 			cur += speed; 
 			if (cur >= to){
-				if (!player.useMouse){
+				if (player.useMouse){
 					rotating = false; 
 				}
 				else {
-					delaying = true; 
+					delayRotation();
 				}
 				rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 			}
