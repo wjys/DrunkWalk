@@ -14,6 +14,11 @@ public class DrunkForce : MonoBehaviour {
 	// CAMERA PARAMS
 	public float camInc; 	// cam wobble amount
 	public float camAcc;    // cam wobble acceleration
+	public float camHiCap; 	// cam wobble high-cap
+	public float camLoCap;	// cam wobble low-cap
+	
+	private bool camHiCapped;	// cam wobble high-cap reached
+	private bool camLoCapped;	// cam wobble low-cap reached
 	
 	// TO DRAG INTO COMPONENT
 	public Rigidbody rhead; 	// object's head rigidbody
@@ -48,10 +53,25 @@ public class DrunkForce : MonoBehaviour {
 		// drunk force
 		StartCoroutine(newDrunkDirection ());
 		drunkForce (drunkDir);
+
+
+		// check camera rotation caps
+		if (camInc >= camHiCap){
+			camHiCapped = true;
+		} else {
+			camHiCapped = false;
+		}
+
+		if (camInc <= camLoCap){
+			camLoCapped = true;
+		} else {
+			camLoCapped = false;
+		}
 	}
 
 	private void rotateFall(){
-		print ("checking rotation"); 
+		print ("x " + transform.eulerAngles.x);
+		print ("z " + transform.eulerAngles.z); 
 		if ((transform.eulerAngles.x > boundRotForward && transform.eulerAngles.x < boundRotBack)	||	
 		    (transform.eulerAngles.z > boundRotRight && transform.eulerAngles.z < boundRotLeft)){
 			player.tapsToGetUp(); 
@@ -100,20 +120,28 @@ public class DrunkForce : MonoBehaviour {
 	private void camWobble(int lean){
 		switch (lean) {
 		case (int) Dir.forward:
-			camInc += camAcc;
+			if (!camHiCapped){
+				camInc += camAcc;
+			}
 			transform.rotation = new Quaternion (transform.rotation.x + camInc, transform.rotation.y, transform.rotation.z, transform.rotation.w); 
 			break;
 		case (int) Dir.right:
-			camInc -= camAcc;
-			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y, transform.rotation.z - camInc, transform.rotation.w); 
+			if (!camLoCapped){
+				camInc -= camAcc;
+			}
+			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y, transform.rotation.z + camInc, transform.rotation.w); 
 			break;
 		case (int) Dir.left:
-			camInc += camAcc;
+			if (!camHiCapped){
+				camInc += camAcc;
+			}
 			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y, transform.rotation.z + camInc, transform.rotation.w); 
 			break;
 		case (int) Dir.back:
-			camInc -= camAcc;
-			transform.rotation = new Quaternion (transform.rotation.x - camInc, transform.rotation.y, transform.rotation.z, transform.rotation.w); 
+			if (!camLoCapped){
+				camInc -= camAcc;
+			}
+			transform.rotation = new Quaternion (transform.rotation.x + camInc, transform.rotation.y, transform.rotation.z, transform.rotation.w); 
 			break;
 		default:
 			break; 

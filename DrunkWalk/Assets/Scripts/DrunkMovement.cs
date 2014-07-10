@@ -10,11 +10,6 @@ public class DrunkMovement : InGame {
 	public float hinc;
 	public float incAcc;
 
-	private bool wentR;
-	private bool wentL;
-	private bool wentB;
-	private bool wentF;
-
 	public float smooth = 1.5f;
 
 	// MOVE CONTROLLER
@@ -134,12 +129,6 @@ public class DrunkMovement : InGame {
 			moveHead (direction); 					//print ("2. moved head"); 
 		}
 
-		// if (wentB == wentF == true){
-		// 	toggleFB();
-		// } else if (wentL == wentR == true){
-		// 	toggleLR();
-		// }
-
 	}
 	
 	void FixedUpdate() {
@@ -166,14 +155,6 @@ public class DrunkMovement : InGame {
 				currentSoundFrame = 0; 
 			}
 		}
-
-		// if (finc <= 0){
-		// 	finc = 0;
-		// }
-
-		// if (hinc <= 0){
-		// 	hinc = 0;
-		// }
 	}
 
 
@@ -266,23 +247,15 @@ public class DrunkMovement : InGame {
 		}
 		else {
 			if (UniMove.az <= boundBack + initZ) {
-				wentB = true;
-				wentF = wentL = wentR = false;
 				return (int) Dir.back;
 			}
 			if (UniMove.az >= boundForward + initZ) {
-				wentF = true;
-				wentB = wentL = wentR = false;
 				return (int) Dir.forward; 
 			}
 			if (UniMove.ax < boundRight + initX) {
-				wentR = true;
-				wentF = wentL = wentB = false;
 				return (int) Dir.right; 
 			}
 			if (UniMove.ax > boundLeft + initX) {
-				wentL = true;
-				wentF = wentB = wentR = false;
 				return (int) Dir.left; 
 			}
 			return (0);
