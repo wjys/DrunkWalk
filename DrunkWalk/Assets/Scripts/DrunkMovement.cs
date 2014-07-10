@@ -60,9 +60,11 @@ public class DrunkMovement : InGame {
 	// GET BACK UP ONCE FALLEN
 	private bool fallen;
 	private Vector3 fallenPos; 
+	private Quaternion fallenRot; 
 	public int tapsGetUp;
 	public int frameFall; 
-	private int tapCurrent;
+	public int tapCurrent;
+	private bool frozen; 
 
 
 	// Use this for initialization
@@ -71,6 +73,7 @@ public class DrunkMovement : InGame {
 		fallen = false;		
 		soundPlayed = false; 		
 		headY = transform.position.y; 
+		frozen = false; 
 
 		//Mouse Start
 		halfWidth = Screen.width / 2; 
@@ -119,8 +122,8 @@ public class DrunkMovement : InGame {
 		
 		// IF THE PLAYER LEANS TOO MUCH, FALL AND LOSE
 		if (fallen) {
-			currentFrame = 0; 
-			fallToLose();
+			tapsToGetUp(); 
+			//fallToLose();
 		}
 		else {  
 			//angleBlur (angleBetween);
@@ -372,29 +375,38 @@ public class DrunkMovement : InGame {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	private void stopRead(){
-		// freeze position
 		fallenPos = transform.position; 
-		// stop reading all inputs
-		
+		fallenRot = transform.rotation; 
+		currentFrame = 0; 
+		frozen = true;
 	}
 	
-	private void tapsToGetUp(){
+	public void tapsToGetUp(){
+		print ("CLICK!"); 
+		if (!frozen){
+			stopRead (); 
+		}
 		bool buttonTapped = Input.anyKeyDown; 
 		// read button taps 
 		if (buttonTapped) {
 			tapCurrent++; 
 		}
 		if (tapCurrent >= tapsGetUp) {
+			print ("WINnie"); 
 			GetUp (); 
 		}
 		else if (currentFrame >= frameFall){
+			print ("BOOi"); 
 			fallToLose (); 
 		}
 	}
 	
 	private void GetUp(){
 		transform.position = fallenPos;
-		rfeet.position = fallenPos; 
+		rfeet.position = new Vector3 (fallenPos.x, rfeet.position.y, fallenPos.z); 
+		transform.rotation = new Quaternion (0, fallenRot.y, 0, fallenRot.w); 
+		tapCurrent = 0; 
+		fallen = false; 
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------

@@ -54,7 +54,7 @@ public class DrunkForce : MonoBehaviour {
 		print ("checking rotation"); 
 		if ((transform.eulerAngles.x > boundRotForward && transform.eulerAngles.x < boundRotBack)	||	
 		    (transform.eulerAngles.z > boundRotRight && transform.eulerAngles.z < boundRotLeft)){
-			player.fallToLose(); 
+			player.tapsToGetUp(); 
 		}
 	}
 	
