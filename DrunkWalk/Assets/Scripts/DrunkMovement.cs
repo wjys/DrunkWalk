@@ -124,6 +124,8 @@ public class DrunkMovement : InGame {
 		}
 		else {  
 			//angleBlur (angleBetween);
+			if (useMouse) 
+				mouse = Input.mousePosition;
 			direction = getLeanDirection(); 		//print ("1. got direction");
 			fallen = isLeaningTooMuch (); 			
 			moveHead (direction); 					//print ("2. moved head"); 
