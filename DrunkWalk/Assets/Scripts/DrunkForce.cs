@@ -16,7 +16,7 @@ public class DrunkForce : MonoBehaviour {
 	public float camAcc;    // cam wobble acceleration
 	public float camHiCap; 	// cam wobble high-cap
 	public float camLoCap;	// cam wobble low-cap
-	
+
 	private bool camHiCapped;	// cam wobble high-cap reached
 	private bool camLoCapped;	// cam wobble low-cap reached
 	
@@ -69,9 +69,9 @@ public class DrunkForce : MonoBehaviour {
 		}
 	}
 
+	// head rotation too far = fall over
+
 	private void rotateFall(){
-		print ("x " + transform.eulerAngles.x);
-		print ("z " + transform.eulerAngles.z); 
 		if ((transform.eulerAngles.x > boundRotForward && transform.eulerAngles.x < boundRotBack)	||	
 		    (transform.eulerAngles.z > boundRotRight && transform.eulerAngles.z < boundRotLeft)){
 			player.tapsToGetUp(); 
