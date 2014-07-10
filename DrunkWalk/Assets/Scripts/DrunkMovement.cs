@@ -146,9 +146,11 @@ public class DrunkMovement : InGame {
 		
 		// DELAYING PLACE FEET AT HEAD'S XY POS
 		currentFrame++; 
-		if (currentFrame >= delayFrame){
-			placeFeet ();
-			currentFrame = 0;
+		if (!fallen){
+			if (currentFrame >= delayFrame){
+				placeFeet ();
+				currentFrame = 0;
+			}
 		}
 		
 		// PLAY A GRUNT
