@@ -31,6 +31,7 @@ public class DrunkMovement : InGame {
 	public Rigidbody rfeet;		// rigidbody at the feet of the player
 	public DrunkForce df; 
 	public Camera cam; 			// to force the camera to just fall over if leaning too much
+	public Camera fallCam;
 	public DepthOfFieldScatter dof; // depth of field component on cam
 
 
@@ -62,6 +63,8 @@ public class DrunkMovement : InGame {
 	public int tapCurrent;
 	private bool frozen; 
 
+	// ANIMATION
+	public Animator meAnim;
 
 	// Use this for initialization
 	void Start () {
@@ -355,13 +358,17 @@ public class DrunkMovement : InGame {
 		fallenRot = transform.rotation; 
 		currentFrame = 0; 
 		frozen = true;
-		rhead.isKinematic = true;
+		//rhead.isKinematic = true;
+
+		rhead.constraints = RigidbodyConstraints.FreezeAll;
 		df.enabled = false;
 	}
 	
 	public void tapsToGetUp(){
 		print ("CLICK!");
 		cam.enabled = false;
+		fallCam.enabled = true;
+		meAnim.SetBool("fallOver", true);
 		if (!frozen){
 			stopRead (); 
 		}
@@ -373,7 +380,9 @@ public class DrunkMovement : InGame {
 			tapCurrent++; 
 		}
 		if (tapCurrent >= tapsGetUp) {
-			print ("WINnie"); 
+			print ("WINnie");
+			meAnim.SetBool("fallOver", false);
+			meAnim.SetBool("getUp", true);
 			GetUp (); 
 		}
 		else if (currentFrame >= frameFall){
@@ -391,9 +400,10 @@ public class DrunkMovement : InGame {
 
 		tapCurrent = 0; 
 		frozen = false;
-		rhead.isKinematic = false;
+		//rhead.isKinematic = false;
+		rhead.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 		fallen = false;
-		df.enabled = true; 
+		df.enabled = true;
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -410,7 +420,6 @@ public class DrunkMovement : InGame {
 		//print ("YOU LOSE"); 
 		
 		// (1) switch cameras: from main to fallCam
-		cam.enabled = false;
 		
 		// (2) play FALLING sounds
 		
