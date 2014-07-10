@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour {
 	void Awake () {
 		ins = this;
 
-		Screen.showCursor = false;
+		//Screen.showCursor = false;
 
 		if (AudioManager.ins == null){
 			(Instantiate(audioManager) as GameObject).SendMessage("Initialize");

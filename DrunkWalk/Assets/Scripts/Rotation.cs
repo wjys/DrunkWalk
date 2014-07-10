@@ -9,6 +9,7 @@ public class Rotation : MonoBehaviour {
 	// MIN/MAX ANGLES
 	public float minAngle;
 	public float maxAngle; 
+	public float speed; 
 
 	// UNIMOVE DETECTION BOUNDS FOR gy
 	public float boundLeft;
@@ -16,6 +17,9 @@ public class Rotation : MonoBehaviour {
 
 	// SHOULD I SET UP ITS OWN BOOL HERE TO CHECK FOR MOUSE VS MOVE INPUT OR JUST CHECK IN DRUNKMOVEMENT?
 	public DrunkMovement player; 
+	public Rigidbody rhead; 
+	private float to; 	// destination rotation
+	private float cur;
 
 
 	// get direction of lean 
@@ -23,32 +27,46 @@ public class Rotation : MonoBehaviour {
 	public int direction; 
 
 	// delay before checking rotation after rotated
-	private bool rotating; 
-	public float rotateDelay; 
-	public float currentFrame; 
-
-	// delay while rotating
-	public float whileDelay;
+	private bool rotating;  
 	
+
 	// Use this for initialization
 	void Start () {
 		rotating = false; 
-		currentFrame = 0; 
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		direction = getTurnDirection();
-		turnHead(direction); 
+		if (!rotating){
+			direction = getTurnDirection();
+		}
+		else {
+			turnHead(direction);
+		}
 	}
 
 	private int getTurnDirection(){
+
 		if (player.useMouse){
 			if (Input.GetMouseButtonDown(0)){	// left mouse button
+				print ("left mouse button");
+				if (transform.eulerAngles.y > 270.0f || transform.eulerAngles.y < 90.0f){
+					to = transform.eulerAngles.y - 45.0f; 
+					cur = transform.eulerAngles.y;
+				}
+				rotating = true; 
+				rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
 				return (int) Turn.left; 
 			}
-			else if (Input.GetMouseButton(1)){	// right mouse button
-				return (int) Turn.left; 
+			if (Input.GetMouseButton(1)){	// right mouse button
+				print ("right mouse button");
+				if (transform.eulerAngles.y > 270.0f || transform.eulerAngles.y < 90.0f){
+					to = transform.eulerAngles.y + 45.0f;
+					cur = transform.eulerAngles.y; 
+				}
+				rotating = true; 
+				rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+				return (int) Turn.right; 
 			}
 		}
 		else {
@@ -59,92 +77,34 @@ public class Rotation : MonoBehaviour {
 				return (int) Turn.left;
 			}
 		}
-		return (-1);
+		return (-1); 
 	}
 
 	private void turnHead (int direction) {
+		transform.rotation = Quaternion.Euler (transform.eulerAngles.x, cur, transform.eulerAngles.z); 
+		rhead.rotation = transform.rotation; 
+		print ("rb " + rhead.rotation); 
+		print (transform.rotation); 
+
 		switch (direction){
-		case (int) Turn.left:
-			if (transform.eulerAngles.y > 270.0f || transform.eulerAngles.y < 90.0f){
-				print ("turning left"); 
-				float to = transform.eulerAngles.y - 45.0f;
-				transform.eulerAngles = new Vector3 (0, Mathf.LerpAngle (transform.eulerAngles.y, to, Time.time));
+		case (int) Turn.left: 
+			cur -= speed; 
+			if (cur <= to){
+				rotating = false; 
+				rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 			}
 			break;
 
 		case (int) Turn.right:
-			if (transform.eulerAngles.y < 90.0f || transform.eulerAngles.y > 270.0f){
-				print ("turning right"); 
-				float to = transform.eulerAngles.y + 45.0f;
-				transform.eulerAngles = new Vector3 (0, Mathf.LerpAngle (transform.eulerAngles.y, to, Time.time));
+			cur += speed; 
+			if (cur >= to){
+				rotating = false; 
+				rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 			}
 			break;
 
 		default:
 			break; 
-		}
-	}
-
-
-	private IEnumerator rotateHead (int direction) {
-
-		switch (direction){
-			
-		case (int) Turn.left:
-			//Debug.Log("Turning Left?");
-			
-			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y - camInc, transform.rotation.z, transform.rotation.w); 
-
-			yield return new WaitForSeconds(2); 
-			break;
-			
-		case (int) Turn.right:
-			//Debug.Log("Turning Right?");
-			
-			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + camInc, transform.rotation.z, transform.rotation.w); 
-			yield return new WaitForSeconds(2); 
-			break;
-			
-		default:	// if not turning read gy
-			direction = getTurnDirection (); 
-			break;
-		}
-	}
-
-	private void rotHead (int direction){
-		if (!rotating){
-			switch (direction){
-
-			case (int) Turn.left:
-				//Debug.Log("Turning Left?");
-
-				transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y - camInc, transform.rotation.z, transform.rotation.w); 
-				if (currentFrame >= whileDelay){
-					rotating = true;
-					currentFrame = 0; 
-				}
-				else {
-					currentFrame++; 
-				}
-				break;
-
-			case (int) Turn.right:
-				//Debug.Log("Turning Right?");
-
-				transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + camInc, transform.rotation.z, transform.rotation.w); 
-				if (currentFrame >= whileDelay){
-					rotating = true;
-					currentFrame = 0; 
-				}
-				else {
-					currentFrame++; 
-				}
-				break;
-
-			default:
-				break;
-			}
-
 		}
 	}
 }
