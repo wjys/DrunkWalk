@@ -123,25 +123,25 @@ public class DrunkForce : MonoBehaviour {
 			if (!camHiCapped){
 				camInc += camAcc;
 			}
-			transform.rotation = new Quaternion (transform.rotation.x + camInc, transform.rotation.y, transform.rotation.z, transform.rotation.w); 
+			transform.localRotation = new Quaternion (transform.localRotation.x + camInc, transform.localRotation.y, transform.localRotation.z, transform.localRotation.w); 
 			break;
 		case (int) Dir.right:
 			if (!camLoCapped){
 				camInc -= camAcc;
 			}
-			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y, transform.rotation.z + camInc, transform.rotation.w); 
+			transform.localRotation = new Quaternion (transform.localRotation.x, transform.localRotation.y, transform.localRotation.z + camInc, transform.localRotation.w); 
 			break;
 		case (int) Dir.left:
 			if (!camHiCapped){
 				camInc += camAcc;
 			}
-			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y, transform.rotation.z + camInc, transform.rotation.w); 
+			transform.localRotation = new Quaternion (transform.localRotation.x, transform.localRotation.y, transform.localRotation.z + camInc, transform.localRotation.w); 
 			break;
 		case (int) Dir.back:
 			if (!camLoCapped){
 				camInc -= camAcc;
 			}
-			transform.rotation = new Quaternion (transform.rotation.x + camInc, transform.rotation.y, transform.rotation.z, transform.rotation.w); 
+			transform.localRotation = new Quaternion (transform.localRotation.x + camInc, transform.localRotation.y, transform.localRotation.z, transform.localRotation.w); 
 			break;
 		default:
 			break; 

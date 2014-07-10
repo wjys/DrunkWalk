@@ -315,19 +315,19 @@ public class DrunkMovement : InGame {
 		switch (direction) {
 			
 		case (int) Dir.forward:				//print ("moving head forward");
-			rhead.AddForce (0, 0, hinc);  
+			rhead.AddForce (hinc*transform.forward);  
 			break;
 			
 		case (int) Dir.right:				//print ("moving head to the right");
-			rhead.AddForce (hinc, 0, 0); 
+			rhead.AddForce (hinc*transform.right); 
 			break;
 			
 		case (int) Dir.left:				//print ("moving head to the left");
-			rhead.AddForce (-hinc, 0, 0); 
+			rhead.AddForce (-hinc*transform.right); 
 			break;
 			
 		case (int) Dir.back:				//print ("stopping head movement");
-			rhead.AddForce (0, 0, -hinc); 
+			rhead.AddForce (-hinc*transform.forward); 
 			//rhead.position = new Vector3 (rfeet.position.x, rhead.position.y, rfeet.position.z); 
 			break; 
 			
