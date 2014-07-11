@@ -74,6 +74,7 @@ public class DrunkForce : MonoBehaviour {
 	private void rotateFall(){
 		if ((transform.localEulerAngles.x > boundRotForward && transform.localEulerAngles.x < boundRotBack)	||	
 		    (transform.localEulerAngles.z > boundRotRight && transform.localEulerAngles.z < boundRotLeft)){
+			Debug.Log("LOST BC OF ANGLE");
 			player.fallen = true;
 		}
 	}
