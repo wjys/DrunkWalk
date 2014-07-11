@@ -49,9 +49,13 @@ public class DrunkMovement : InGame {
 	public int currentSoundFrame; 
 	public int delaySoundFrame; 
 	
-	// sound stuff 
-	public AudioClip[] clips; 
-	private bool soundPlayed; 
+	// SOUNDS
+	public AudioClip[] clips;
+	public AudioClip footstep;
+	private bool soundPlayed;
+	private float footstepTimer;
+
+	public float stepDiff;
 	
 	// GET RBs' Y COORDS SO THAT THE PLAYER DOESN'T FLOAT OVER BED
 	private float headY;
@@ -67,6 +71,7 @@ public class DrunkMovement : InGame {
 
 	// ANIMATION
 	public Animator meAnim;
+
 
 	// Use this for initialization
 	void Start () {
@@ -113,6 +118,8 @@ public class DrunkMovement : InGame {
 	
 	void Update () {
 		
+		Debug.Log(radius);
+
 		resetY (); 
 		
 		if (Input.GetKey("r"))
@@ -137,6 +144,8 @@ public class DrunkMovement : InGame {
 
 		}
 
+		playFootstep(radius);
+
 	}
 	
 	void FixedUpdate() {
@@ -153,7 +162,7 @@ public class DrunkMovement : InGame {
 		// PLAY A GRUNT
 		if (!soundPlayed){
 			soundPlayed = true; 
-			playGrunt (clips [Random.Range (0, 5)]);
+			playSound (clips [Random.Range (0, 5)]);
 		}
 		else {
 			currentSoundFrame++; 
@@ -285,6 +294,19 @@ public class DrunkMovement : InGame {
 			}
 		}
 		return (0);
+	}
+
+
+
+	private void playFootstep (float speed) {
+		footstepTimer += Time.deltaTime;
+		if (direction > -1){
+				float nowSpeed = stepDiff * speed;
+				if (footstepTimer > nowSpeed) {
+					footstepTimer -= nowSpeed;
+					playSound(footstep);
+				}
+			}
 	}
 
 	// public void toggleLR(){
@@ -460,7 +482,7 @@ public class DrunkMovement : InGame {
 	 * PLAY SELECTED GRUNT SOUND
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
-	private void playGrunt(AudioClip clip){
+	private void playSound(AudioClip clip){
 		
 		audio.pitch = Random.value * 0.1f + 0.95f;
 		audio.volume = Random.value * 0.3f + 0.7f;
