@@ -31,8 +31,17 @@ public class Collision : MonoBehaviour {
 
 	private bool collided;
 
+	//RECOIL STUFF
+	private int recoilDir;
+	private int currentDir; 
+	private bool recoiled; 
+	private enum Dir { forward, right, left, back }; 
+	public float recoilF; 
+
 	// TO PREVENT CAM WOBBLE WHEN HIT A WALL
+	public DrunkMovement dm;
 	public DrunkForce df; 
+	public Rigidbody rhead; 
 
 	// Use this for initialization
 	void Start () {
@@ -42,6 +51,7 @@ public class Collision : MonoBehaviour {
 		soundPlayed = false; 
 		reachedBed = false; 
 		collided = false; 
+		recoiled = false; 
 	}
 	
 	// Update is called once per frame
@@ -83,9 +93,12 @@ public class Collision : MonoBehaviour {
 
 	//When colliding with something:
 	void OnTriggerEnter(Collider col) {
-
+		currentDir = dm.direction; 
 		if (!collided){
 			audio.PlayOneShot (hitit);
+			print ("RECOIL");
+			setRecoilDir(currentDir); 
+			recoilForce(recoilDir); 
 
 			Debug.Log("Collision");
 			//ouchAnim.SetTrigger("Ouch");
@@ -153,6 +166,53 @@ public class Collision : MonoBehaviour {
 		audio.pitch = Random.value * 0.1f + 0.95f;
 		audio.volume = Random.value * 0.3f + 0.7f;
 		audio.PlayOneShot(clip); 
+	}
+
+	private void setRecoilDir(int direction){
+		switch (direction) {
+		case (int) Dir.back:
+			recoilDir = (int) Dir.forward;
+			break;
+		case (int) Dir.forward:
+			recoilDir = (int) Dir.back;
+			break;
+		case (int) Dir.left:
+			recoilDir = (int) Dir.right;
+			break;
+		case (int) Dir.right:
+			recoilDir = (int) Dir.left; 
+			break;
+		default:
+			break;
+		}
+		print ("recoil dir " + recoilDir); 
+
+	}
+
+	private void recoilForce(int direction){
+		switch (direction) {
+			
+		case (int) Dir.forward:				//print ("moving head forward");
+			rhead.AddForce (recoilF*transform.forward);  
+			break;
+			
+		case (int) Dir.right:				//print ("moving head to the right");
+			rhead.AddForce (recoilF*transform.right); 
+			break;
+			
+		case (int) Dir.left:				//print ("moving head to the left");
+			rhead.AddForce (-recoilF*transform.right); 
+			break;
+			
+		case (int) Dir.back:				//print ("stopping head movement");
+			rhead.AddForce (-recoilF*transform.forward); 
+			//rhead.position = new Vector3 (rfeet.position.x, rhead.position.y, rfeet.position.z); 
+			break; 
+			
+		default:
+			break; 
+		}
+		print ("SENT BACK"); 
 	}
 
 	//Instantiate a hurt sound
