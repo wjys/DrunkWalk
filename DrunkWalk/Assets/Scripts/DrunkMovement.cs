@@ -4,7 +4,9 @@ using System.Collections.Generic;
 
 public class DrunkMovement : InGame {
 
-	public bool useMouse; 
+	// ENUM TO SWITCH BETWEEN CONTROLLERS
+	public int controller;
+	private enum controlInput { mouse, move, xbox }; 
 
 	// FORCE INCREMENTS FOR HEAD AND FEET
 	public float hinc;
@@ -127,7 +129,7 @@ public class DrunkMovement : InGame {
 		}
 		else {  
 			//angleBlur (angleBetween);
-			if (useMouse) 
+			if (controller == (int) controlInput.mouse) 
 				mouse = Input.mousePosition;
 			direction = getLeanDirection(); 		//print ("1. got direction");
 			fallen = isLeaningTooMuch (); 			
@@ -223,7 +225,7 @@ public class DrunkMovement : InGame {
 	
 	private int getLeanDirection(){	//print("entered get direction");
 		// ----------------- CHECK ALL DIRECTIONS NO PRIORITY
-		if (useMouse) {
+		if (controller == (int) controlInput.mouse) {
 			if (mouse.y < halfHeight) {	
 				if (Mathf.Abs(mouse.x - halfWidth) < Mathf.Abs(mouse.y - halfHeight)){ 
 					return (int) Dir.back; 
@@ -251,7 +253,7 @@ public class DrunkMovement : InGame {
 				}
 			}
 		}
-		else {
+		else if (controller == (int) controlInput.move){
 			if (UniMove.az <= boundBack + initZ) {
 				return (int) Dir.back;
 			}
@@ -265,6 +267,22 @@ public class DrunkMovement : InGame {
 				return (int) Dir.left; 
 			}
 			return (0);
+		}
+		else if (controller == (int) controlInput.xbox){
+			print("x " + Input.GetAxis ("LeftStickX"));
+			print("y " + Input.GetAxis ("LeftStickY"));
+			if (Input.GetAxis("LeftStickY") > 0.9f){
+				return (int) Dir.back;
+			}
+			if (Input.GetAxis("LeftStickY") < -0.9f){
+				return (int) Dir.forward;
+			}
+			if (Input.GetAxis("LeftStickX") > 0.9f){
+				return (int) Dir.right;
+			}
+			if (Input.GetAxis("LeftStickX") < -0.9f){
+				return (int) Dir.left; 
+			}
 		}
 		return (0);
 	}
