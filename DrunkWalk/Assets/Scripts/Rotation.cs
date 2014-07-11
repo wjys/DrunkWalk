@@ -19,6 +19,7 @@ public class Rotation : MonoBehaviour {
 	// SHOULD I SET UP ITS OWN BOOL HERE TO CHECK FOR MOUSE VS MOVE INPUT OR JUST CHECK IN DRUNKMOVEMENT?
 	public DrunkMovement player; 
 	public Rigidbody rhead; 
+	public GameObject feet; 
 	public float to; 	// destination rotation
 	public float cur;
 
@@ -29,7 +30,8 @@ public class Rotation : MonoBehaviour {
 
 	// delay before checking rotation after rotated
 	public bool rotating;  
-	public bool delaying; 
+	public bool delaying;
+	private bool feetPlaced; 
 
 	// FOR DELAY AFTER MOVE ROTATION
 	public int rotateDelay; 
@@ -38,6 +40,8 @@ public class Rotation : MonoBehaviour {
 
 	void Start () {
 		rotating = false; 
+		delaying = false; 
+		feetPlaced = false;
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -48,17 +52,23 @@ public class Rotation : MonoBehaviour {
 
 	void Update () {
 
-		// PLAYER NOT ROTATING => GET DIRECTION
-		if (!rotating){
-			direction = getTurnDirection();
-		}
-		// PLAYER IS ROTATING & NOT RESETTING THE MOVE (DELAY) => TURN
-		else if (!delaying){
-			turnHead(direction);
-		}
-		// RESETTING THE MOVE (DELAY) => NO TURNING/NO GETTING DIRECTION
-		else {
-			delayRotation (); 
+		// PLAYER HASN'T FALLEN
+		if (!player.fallen){
+			// PLAYER NOT ROTATING => GET DIRECTION
+			if (!rotating){
+				direction = getTurnDirection();
+			}
+			// PLAYER IS ROTATING & NOT RESETTING THE MOVE (DELAY) => TURN
+			else if (!delaying){
+				if (!feetPlaced){
+					placeFeet (); 
+				}
+				turnHead(direction);
+			}
+			// RESETTING THE MOVE (DELAY) => NO TURNING/NO GETTING DIRECTION
+			else {
+				delayRotation (); 
+			}
 		}
 	}
 
@@ -77,6 +87,12 @@ public class Rotation : MonoBehaviour {
 			rotating = false; 
 		}
 		currentFrame++;
+	}
+
+	private void placeFeet (){			//print ("moving feet");
+		// rfeet.MovePosition(Vector3.Lerp(rfeet.position, transform.position, smooth * Time.frameCount));
+		feet.transform.position = new Vector3 (rhead.position.x, feet.transform.position.y, rhead.position.z); 
+		feetPlaced = true; 
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -243,6 +259,7 @@ public class Rotation : MonoBehaviour {
 				else {
 					rotating = false; 
 				}
+				feetPlaced = false;
 				rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 			}
 			break;
@@ -256,6 +273,7 @@ public class Rotation : MonoBehaviour {
 				else {
 					rotating = false; 
 				}
+				feetPlaced = false; 
 				rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 			}
 			break;
