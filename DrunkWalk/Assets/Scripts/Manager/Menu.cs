@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 public class Menu : MonoBehaviour {
-	//private Tween.Interpolation flickInterpolation = Tween.InOut(Tween.Sinusoidal);
+	private Tween.Interpolation flickInterpolation = Tween.InOut(Tween.Sinusoidal);
 
 	public delegate void Command ();
 
