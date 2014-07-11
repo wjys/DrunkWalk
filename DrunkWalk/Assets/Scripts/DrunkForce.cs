@@ -124,9 +124,7 @@ public class DrunkForce : MonoBehaviour {
 			if (!camHiCapped){
 				camInc += camAcc;
 			}
-			if (transform.localRotation.x < transform.localScale.x + (boundRotForward*player.radius/player.maxRad)){
-				transform.localRotation = new Quaternion (transform.localRotation.x + camInc, transform.localRotation.y, transform.localRotation.z, transform.localRotation.w); 
-			}
+			transform.localRotation = new Quaternion (transform.localRotation.x + camInc, transform.localRotation.y, transform.localRotation.z, transform.localRotation.w); 
 			break;
 		case (int) Dir.right:
 			if (!camLoCapped){
@@ -144,9 +142,7 @@ public class DrunkForce : MonoBehaviour {
 			if (!camLoCapped){
 				camInc -= camAcc;
 			}
-			if (transform.localRotation.x > transform.localScale.x + (boundRotBack*player.radius/player.maxRad)){
-				transform.localRotation = new Quaternion (transform.localRotation.x + camInc, transform.localRotation.y, transform.localRotation.z, transform.localRotation.w); 
-			}
+			transform.localRotation = new Quaternion (transform.localRotation.x + camInc, transform.localRotation.y, transform.localRotation.z, transform.localRotation.w); 
 			break;
 		default:
 			break; 
