@@ -118,7 +118,7 @@ public class DrunkMovement : InGame {
 	
 	void Update () {
 		
-		Debug.Log(radius);
+		//Debug.Log(radius);
 
 		resetY (); 
 		

@@ -23,6 +23,7 @@ public class DrunkForce : MonoBehaviour {
 	// TO DRAG INTO COMPONENT
 	public Rigidbody rhead; 	// object's head rigidbody
 	public DrunkMovement player; 	// script from the player   
+	public Rotation rot; 
 	
 	// COROUTINE DELAYS
 	public float drunkDelay;
@@ -47,7 +48,7 @@ public class DrunkForce : MonoBehaviour {
 
 		// camera wobble
 		if (!hitWall) {
-			camWobble (player.direction); 
+			camWobble (switchBackForward(player.direction)); 
 		}
 		
 		// drunk force
@@ -109,7 +110,20 @@ public class DrunkForce : MonoBehaviour {
 			break; 
 		}
 	}
-	
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * INVERT BACKWARD AND FORWARD IF -90 ROTATION ON PLAYER
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+	private int switchBackForward(int lean){
+		if (rot.to <= -90){
+			if (lean == (int) Dir.forward)
+				return (int) Dir.back; 
+			else if (lean == (int) Dir.back)
+				return (int) Dir.forward; 
+			else return lean;
+		}
+		return lean; 
+	}
+
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * CAMERA WOBBLE
 	 * Given inputted LEAN DIRECTION, the camera will wobble correspondingly
@@ -119,7 +133,8 @@ public class DrunkForce : MonoBehaviour {
 	
 	// FOR NOW camera wobbles as lean changes 
 	private void camWobble(int lean){
-		switch (lean) {
+		print ("leaning"); 
+	switch (lean) {
 		case (int) Dir.forward:
 			if (!camHiCapped){
 				camInc += camAcc;

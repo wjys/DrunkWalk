@@ -10,26 +10,10 @@ public class BreakObject : MonoBehaviour {
 	public float shatterVelocity; 
 	public float shatterRadius;
 	public float shatterForce; 
-
-	void OnCollisionEnter (Collision collision) {
-		if (collision.relativeVelocity.magnitude > shatterVelocity) { return; } // why is this syntax wrong?
-		else {
-			Destroy (gameObject); 
-			GameObject broken = Instantiate(brokenVase, transform.position, transform.rotation);
-			Rigidbody[] pieces = broken.GetComponentsInChildren<Rigidbody>(); 
-			Vector3 shatterPos = transform.position; 
-
-			foreach (Rigidbody piece in pieces){
-				piece.AddExplosionForce (shatterForce, shatterPos, shatterRadius);
-				piece.velocity = rigidbody.velocity;
-				piece.angularVelocity = rigidbody.angularVelocity; 
-			}
-		}
-	}
-
+	
 	void OnTriggerEnter (Collider col){
 		if (col.tag == "Floor"){
-			GameObject broken = Instantiate(brokenVase, transform.position, transform.rotation);
+			GameObject broken = Instantiate(brokenVase, transform.position, transform.rotation) as GameObject;
 			Rigidbody[] pieces = broken.GetComponentsInChildren<Rigidbody>(); 
 			Vector3 shatterPos = transform.position; 
 			
@@ -40,4 +24,21 @@ public class BreakObject : MonoBehaviour {
 			}
 		}
 	}
+	/*
+	void OnCollisionEnter (Collision collision) {
+		if (collision.relativeVelocity.magnitude > shatterVelocity) { return; } // why is this syntax wrong?
+		else {
+			Destroy (gameObject); 
+			GameObject broken = Instantiate(brokenVase, transform.position, transform.rotation) as GameObject;
+			Rigidbody[] pieces = broken.GetComponentsInChildren<Rigidbody>(); 
+			Vector3 shatterPos = transform.position; 
+
+			foreach (Rigidbody piece in pieces){
+				piece.AddExplosionForce (shatterForce, shatterPos, shatterRadius);
+				piece.velocity = rigidbody.velocity;
+				piece.angularVelocity = rigidbody.angularVelocity; 
+			}
+		}
+	}*/
+
 }
