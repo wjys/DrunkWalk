@@ -48,7 +48,9 @@ public class DrunkForce : MonoBehaviour {
 
 		// camera wobble
 		if (!hitWall) {
-			camWobble (switchBackForward(player.direction)); 
+			if (player.radius < player.maxRad) {
+				camWobble (switchBackForward(player.direction)); 
+			}
 		}
 		
 		// drunk force
@@ -123,6 +125,10 @@ public class DrunkForce : MonoBehaviour {
 		}
 		return lean; 
 	}
+
+	//private void checkRad(){
+	//	player.radius;
+	//}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * CAMERA WOBBLE
