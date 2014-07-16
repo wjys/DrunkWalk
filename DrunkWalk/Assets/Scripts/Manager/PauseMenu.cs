@@ -14,8 +14,8 @@ public class PauseMenu : Menu {
 	private Item[] items= new Item[] {
 		new Item("resume game", delegate () { GameManager.ins.UnPause(); }),
 		new Item("restart the level", delegate () { Application.LoadLevel(Application.loadedLevel);}),
-		new Item("quit to title", delegate () { Application.LoadLevel(0);}),
-		new Item("quit", delegate () { Application.Quit(); })
+		new Item("options", delegate () { Application.LoadLevel (Application.loadedLevel); }),
+		new Item("quit to title", delegate () { Application.Quit(); })
 	};
 
 	void OnGUI () {

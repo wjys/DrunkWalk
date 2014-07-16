@@ -49,7 +49,8 @@ public class DrunkForce : MonoBehaviour {
 		// camera wobble
 		if (!hitWall) {
 			if (player.radius < player.maxRad) {
-				camWobble (switchBackForward(player.direction)); 
+				camWobble (switchBackForward(player.direction)); 	// USE THIS IF INVERTED BACK/FWD AT -90 DEGREES
+				//camWobble (player.direction); 
 			}
 		}
 		
@@ -116,11 +117,15 @@ public class DrunkForce : MonoBehaviour {
 	 * INVERT BACKWARD AND FORWARD IF -90 ROTATION ON PLAYER
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	private int switchBackForward(int lean){
-		if (rot.to <= -90){
+		if (rot.turnedLeft == true){
 			if (lean == (int) Dir.forward)
 				return (int) Dir.back; 
 			else if (lean == (int) Dir.back)
 				return (int) Dir.forward; 
+			if (lean == (int) Dir.left)
+				return (int) Dir.right;
+			else if (lean == (int) Dir.right)
+				return (int) Dir.left;
 			else return lean;
 		}
 		return lean; 
@@ -139,7 +144,8 @@ public class DrunkForce : MonoBehaviour {
 	
 	// FOR NOW camera wobbles as lean changes 
 	private void camWobble(int lean){
-		print ("leaning"); 
+		//print ("leaning");
+
 	switch (lean) {
 		case (int) Dir.forward:
 			if (!camHiCapped){

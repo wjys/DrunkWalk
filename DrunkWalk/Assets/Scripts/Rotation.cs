@@ -36,6 +36,9 @@ public class Rotation : MonoBehaviour {
 	// FOR DELAY AFTER MOVE ROTATION
 	public int rotateDelay; 
 	public int currentFrame;
+
+	//DEBUG ROT PROBLEM
+	public bool turnedLeft = false;
 		
 
 	void Start () {
@@ -250,7 +253,8 @@ public class Rotation : MonoBehaviour {
 		//print (transform.rotation); 
 
 		switch (direction){
-		case (int) Turn.left: 
+		case (int) Turn.left:
+			turnedLeft = true;
 			cur -= speed; 
 			if (cur <= to){
 				if (player.controller == (int) controlInput.move){
@@ -265,6 +269,7 @@ public class Rotation : MonoBehaviour {
 			break;
 
 		case (int) Turn.right:
+			turnedLeft = false;
 			cur += speed; 
 			if (cur >= to){
 				if (player.controller == (int) controlInput.move){

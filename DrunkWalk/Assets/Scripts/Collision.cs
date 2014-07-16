@@ -97,8 +97,8 @@ public class Collision : MonoBehaviour {
 		if (!collided){
 			audio.PlayOneShot (hitit);
 			print ("RECOIL");
-			setRecoilDir(currentDir); 
-			recoilForce(recoilDir); 
+			//setRecoilDir(currentDir); 
+			//recoilForce(recoilDir); 
 
 			Debug.Log("Collision");
 			//ouchAnim.SetTrigger("Ouch");
