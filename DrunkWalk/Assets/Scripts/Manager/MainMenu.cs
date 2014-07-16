@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 
 public class MainMenu : Menu {
+
+	static public GameManager ins;
+
 	public Texture2D backgroundTexture;
 	public Color backgroundColor;
 	public GUISkin skin;
@@ -11,12 +14,23 @@ public class MainMenu : Menu {
 	private bool wasDown = false;
 	private bool wasUp = false;
 
+	//THE MENU ITEM VISUALIZATION
+	private GameObject mMenuIns;
+	public GameObject mMenu;
+	public GameObject cube;
+
+
 	private Item[] items= new Item[] {
-		new Item("resume game", delegate () { GameManager.ins.UnPause(); }),
-		new Item("restart the level", delegate () { Application.LoadLevel(Application.loadedLevel);}),
-		new Item("quit to title", delegate () { Application.LoadLevel(0);}),
-		new Item("quit", delegate () { Application.Quit(); })
+		new Item("START", delegate () { }),
+		new Item("SET UP", delegate () { Application.LoadLevel(Application.loadedLevel);}),
+		new Item("CALIBRATE", delegate () { Application.LoadLevel(0);}),
+		new Item("EXIT", delegate () { Application.Quit(); })
 	};
+
+	void Start() {
+		mMenuIns = Instantiate(mMenu) as GameObject;
+		mMenuIns.SetActive(true);
+	}
 
 	void OnGUI () {
 		GUI.skin = skin;
@@ -26,7 +40,16 @@ public class MainMenu : Menu {
 		GUIMenu(idx, 200, 80, items, timer);
 	}
 
+	/*IEnumerator StartGame(){
+		ins.isSplash = false;
+		ins.isGame = true;
+		Application.LoadLevel ("WastedMove");
+	}*/
+
 	void Update () {
+
+		Debug.Log (idx);
+
 		timer += Time.deltaTime;
 
 		bool isUp = Input.GetAxis("Vertical") > 0.8f,
@@ -35,29 +58,32 @@ public class MainMenu : Menu {
 			 justDown = isDown && !wasDown;
 
 		if (Input.GetButtonDown("Down") || justDown) {
-			Debug.Log("d");
 			idx += 1;
 			idx %= items.Length;
 			timer = 0;
 		}
+
 		if (Input.GetButtonDown("Up") || justUp) {
-			Debug.Log("u");
+			Debug.Log ("UP");
 			idx += items.Length - 1;
 			idx %= items.Length;
 			timer = 0;
 		}
 
 		if (Input.GetButtonDown("Confirm")) {
-			Debug.Log("conf");
 			items[idx].command();
 		}
 
 		if (Input.GetButtonDown("Cancel")) {
-			Debug.Log("canc");
-			GameManager.ins.UnPause();
+			GameManager.ins.UnMenu();
 		}
 
 		wasUp = isUp;
 		wasDown = isDown;
+
+
+		if (idx == 1){
+			mMenuIns.GetComponentInChildren<MeshRenderer>().material.color = Color.red;
+		}
 	}
 }

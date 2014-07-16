@@ -17,7 +17,13 @@ public class GameManager : MonoBehaviour {
 	private bool paused = false;
 	private bool menu = false;
 
+	public static int wow;
+
+
+	//IN GAME VARIABLES
+
 	void Awake () {
+		DontDestroyOnLoad(this);
 		ins = this;
 
 		//Screen.showCursor = false;
@@ -35,6 +41,8 @@ public class GameManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		inGame = false;
+		inSplash = true;
 	}
 	
 	// Update is called once per frame
@@ -54,9 +62,11 @@ public class GameManager : MonoBehaviour {
         		} else {
         			UnMenu();
         		}
+				Debug.Log ("MENU");
         	}
         }
 	}
+
 
 	//Pause Menu Initialize
 	public void Pause () {
@@ -82,10 +92,12 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void Menu() {
-
+		menu = true;
+		mainMenuIns.SetActive (menu);
 	}
 
 	public void UnMenu() {
-		
+		menu = false;
+		mainMenuIns.SetActive (menu);
 	}
 }

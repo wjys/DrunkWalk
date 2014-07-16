@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class DrunkMovement : InGame {
 
+
 	// ENUM TO SWITCH BETWEEN CONTROLLERS
 	public int controller;
 	private enum controlInput { mouse, move, xbox }; 
@@ -12,7 +13,10 @@ public class DrunkMovement : InGame {
 	public float hinc;
 	public float incAcc;
 
-	public float smooth = 1.5f;
+
+
+	public float speed;
+	public float smooth;
 
 	// MOVE CONTROLLER
 	public UniMoveController UniMove; 	// get UniMove
@@ -71,6 +75,9 @@ public class DrunkMovement : InGame {
 
 	// ANIMATION
 	public Animator meAnim;
+
+	//
+	public GameObject ft;
 
 
 	// Use this for initialization
@@ -387,7 +394,23 @@ public class DrunkMovement : InGame {
 	
 	private void placeFeet (){			//print ("moving feet");
 		// rfeet.MovePosition(Vector3.Lerp(rfeet.position, transform.position, smooth * Time.frameCount));
-		rfeet.MovePosition(new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z)); 
+		float time = 0.1f;
+		time += speed;
+		float fhDistZ = transform.position.z - ft.transform.position.z;
+		float fhDistX = transform.position.x - ft.transform.position.x;
+
+
+		StartCoroutine(lerpFeet(time, fhDistZ, fhDistX));
+		//rfeet.MovePosition(new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z)); 
+	}
+
+	IEnumerator lerpFeet( float time, float fhDistZ, float fhDistX) {
+		for (float t = 0; t < time; t+=Time.deltaTime) {
+			float feetOffsetX = fhDistX * (t/time);
+			float feetOffsetZ = fhDistZ * (t/time);
+			ft.transform.position = new Vector3(transform.position.x + feetOffsetX, ft.transform.position.y, transform.position.z + feetOffsetZ);
+			yield return 0;	
+		}
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
