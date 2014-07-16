@@ -21,7 +21,7 @@ public class MainMenu : Menu {
 
 
 	private Item[] items= new Item[] {
-		new Item("START", delegate () { }),
+		new Item("START", delegate () { Application.LoadLevel("WastedMove"); }),
 		new Item("SET UP", delegate () { Application.LoadLevel(Application.loadedLevel);}),
 		new Item("CALIBRATE", delegate () { Application.LoadLevel(0);}),
 		new Item("EXIT", delegate () { Application.Quit(); })
