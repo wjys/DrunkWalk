@@ -29,7 +29,7 @@ public class DrunkForce : MonoBehaviour {
 	public float drunkDelay;
 	
 	// TO STOP WOBBLE WHEN HIT A WALL
-	public bool hitWall; 
+	public bool stopWobble; 
 
 	// LOSE CONDITION: IF CAMERA IS TOO CRAZY U LOOKIN INSANE
 	public float boundRotForward;	// x < 30
@@ -42,7 +42,7 @@ public class DrunkForce : MonoBehaviour {
 
 
 	void Start () {
-		hitWall = false; 
+		stopWobble = false; 
 	}
 	
 	void Update () {
@@ -50,7 +50,7 @@ public class DrunkForce : MonoBehaviour {
 		rotateFall (); 
 
 		// camera wobble
-		if (!hitWall) {
+		if (!stopWobble) {
 			if (player.radius < player.maxRad) {
 				camWobble (switchBackForward(player.direction)); 	// USE THIS IF INVERTED BACK/FWD AT -90 DEGREES
 				//camWobble (player.direction); 
