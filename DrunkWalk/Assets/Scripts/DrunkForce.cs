@@ -37,7 +37,10 @@ public class DrunkForce : MonoBehaviour {
 	public float boundRotRight;		// z < 30
 	public float boundRotLeft; 		// z > 330 
 
-	
+	//CAMERA FX
+	public DepthOfFieldScatter dof;
+
+
 	void Start () {
 		hitWall = false; 
 	}
@@ -82,7 +85,6 @@ public class DrunkForce : MonoBehaviour {
 			player.fallen = true;
 		}
 	}
-	
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * DRUNKFORCE 
 	 * Depending on the (random) inputted direction, add a drunk force in the corresponding direction
@@ -145,6 +147,15 @@ public class DrunkForce : MonoBehaviour {
 	// FOR NOW camera wobbles as lean changes 
 	private void camWobble(int lean){
 		//print ("leaning");
+
+
+		//DEPTH OF FIELD STUFF
+		/*if (player.radius >= 0.3f){
+			dof.aperture += (Mathf.Abs(camInc)*500);
+		} else if (player.radius < 0.3f){
+			dof.aperture -= (Mathf.Abs(camInc)*500);
+		}*/
+
 
 	switch (lean) {
 		case (int) Dir.forward:

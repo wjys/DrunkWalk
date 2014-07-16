@@ -135,7 +135,7 @@ public class DrunkMovement : InGame {
 			//fallToLose();
 		}
 		else {  
-			//angleBlur (angleBetween);
+			angleBlur ();
 			if (controller == (int) controlInput.mouse) 
 				mouse = Input.mousePosition;
 			direction = getLeanDirection(); 		//print ("1. got direction");
@@ -214,16 +214,15 @@ public class DrunkMovement : InGame {
 	 * The closer angleBetween is to 30.0f, the blurrier things get!
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
-	private void angleBlur (float angle){
+	private void angleBlur (){
 		
 		//print ("ap = " + dof.aperture); 
-		/*
-		if (angle >= 0.3f && angle <= maxAngle){
-			dof.aperture += 0.53f;
-		} else if (angle < 0.3f){
+	
+		/*if (radius >= 0.5f && radius <= maxRad){
+			dof.aperture += 0.5f;
+		} else if (radius < 0.5f){
 			dof.aperture -= 0.7f;
-		}
-		*/
+		}*/
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
