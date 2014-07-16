@@ -12,7 +12,7 @@ public class DrunkMovement : InGame {
 	// FORCE INCREMENTS FOR HEAD AND FEET
 	public float hinc;
 	public float incAcc;
-
+	public Transform target; 
 
 
 	public float speed;
@@ -35,7 +35,7 @@ public class DrunkMovement : InGame {
 	// GENERAL VARIABLES FOR ALL CONTROLS 
 	public Rigidbody rhead;		// rigidbody at the head of the player
 	public Rigidbody rfeet;		// rigidbody at the feet of the player
-	public DrunkForce df; 
+	//public DrunkForce df; 
 	public Camera cam; 			// to force the camera to just fall over if leaning too much
 	public Camera fallCam;
 	public DepthOfFieldScatter dof; // depth of field component on cam
@@ -142,6 +142,7 @@ public class DrunkMovement : InGame {
 			//fallToLose();
 		}
 		else {  
+			transform.LookAt(target, Vector3.up); 
 			angleBlur ();
 			if (controller == (int) controlInput.mouse) 
 				mouse = Input.mousePosition;
@@ -394,8 +395,8 @@ public class DrunkMovement : InGame {
 	
 	private void placeFeet (){			//print ("moving feet");
 		// rfeet.MovePosition(Vector3.Lerp(rfeet.position, transform.position, smooth * Time.frameCount));
-		float time = 0.1f;
-		time += speed;
+		float time = 0.05f;
+		//time += speed;
 		float fhDistZ = transform.position.z - ft.transform.position.z;
 		float fhDistX = transform.position.x - ft.transform.position.x;
 
@@ -405,7 +406,7 @@ public class DrunkMovement : InGame {
 	}
 
 	IEnumerator lerpFeet( float time, float fhDistZ, float fhDistX) {
-		for (float t = 0; t < time; t+=Time.deltaTime) {
+		for (float t = 0; t < time; t+= 0.01f) {
 			float feetOffsetX = fhDistX * (t/time);
 			float feetOffsetZ = fhDistZ * (t/time);
 			ft.transform.position = new Vector3(transform.position.x + feetOffsetX, ft.transform.position.y, transform.position.z + feetOffsetZ);
@@ -425,7 +426,7 @@ public class DrunkMovement : InGame {
 		//rhead.isKinematic = true;
 
 		rhead.constraints = RigidbodyConstraints.FreezeAll;
-		df.enabled = false;
+		//df.enabled = false;
 	}
 	
 	public void tapsToGetUp(){
@@ -470,7 +471,7 @@ public class DrunkMovement : InGame {
 			//rhead.isKinematic = false;
 			rhead.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 			fallen = false;
-			df.enabled = true;
+			//df.enabled = true;
 		
 	}
 	

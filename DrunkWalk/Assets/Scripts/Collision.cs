@@ -40,7 +40,7 @@ public class Collision : MonoBehaviour {
 
 	// TO PREVENT CAM WOBBLE WHEN HIT A WALL
 	public DrunkMovement dm;
-	public DrunkForce df; 
+	//public DrunkForce df; 
 	public Rigidbody rhead; 
 
 	// Use this for initialization
@@ -107,7 +107,7 @@ public class Collision : MonoBehaviour {
 			if (col.tag == "Wall") {
 				score -= 100;
 				Debug.Log("Wall Collision - " + score);
-				df.stopWobble = true; 
+				//df.stopWobble = true; 
 			}
 			else if (col.tag == "Box"){
 				score -= 200;
@@ -158,7 +158,7 @@ public class Collision : MonoBehaviour {
 	void OnTriggerExit(Collider col) {
 		Debug.Log("No Longer Colliding");
 		soundPlayed = false; 
-		df.stopWobble = false; 
+		//df.stopWobble = false; 
 	}
 
 	private void playGrunt(AudioClip clip){
