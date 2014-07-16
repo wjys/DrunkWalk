@@ -107,7 +107,7 @@ public class Collision : MonoBehaviour {
 			if (col.tag == "Wall") {
 				score -= 100;
 				Debug.Log("Wall Collision - " + score);
-				df.hitWall = true; 
+				df.stopWobble = true; 
 			}
 			else if (col.tag == "Box"){
 				score -= 200;
@@ -158,7 +158,7 @@ public class Collision : MonoBehaviour {
 	void OnTriggerExit(Collider col) {
 		Debug.Log("No Longer Colliding");
 		soundPlayed = false; 
-		df.hitWall = false; 
+		df.stopWobble = false; 
 	}
 
 	private void playGrunt(AudioClip clip){
