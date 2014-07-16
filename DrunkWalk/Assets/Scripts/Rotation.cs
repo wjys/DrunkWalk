@@ -4,6 +4,7 @@ using System.Collections;
 public class Rotation : MonoBehaviour {
 	
 	public UniMoveController UniMove;
+	public DrunkForce df; 
 	public float camInc; 
 	private enum controlInput { mouse, move, xbox }; 
 
@@ -62,10 +63,12 @@ public class Rotation : MonoBehaviour {
 				direction = getTurnDirection();
 			}
 			// PLAYER IS ROTATING & NOT RESETTING THE MOVE (DELAY) => TURN
-			else if (!delaying){
+			else if (!delaying){ 
 				if (!feetPlaced){
 					placeFeet (); 
 				}
+				df.enabled = false;
+				rhead.constraints = RigidbodyConstraints.FreezeAll;
 				turnHead(direction);
 			}
 			// RESETTING THE MOVE (DELAY) => NO TURNING/NO GETTING DIRECTION
@@ -265,6 +268,7 @@ public class Rotation : MonoBehaviour {
 				}
 				feetPlaced = false;
 				rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+				df.enabled = true; 
 			}
 			break;
 
@@ -280,6 +284,7 @@ public class Rotation : MonoBehaviour {
 				}
 				feetPlaced = false; 
 				rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+				df.enabled = true;
 			}
 			break;
 
