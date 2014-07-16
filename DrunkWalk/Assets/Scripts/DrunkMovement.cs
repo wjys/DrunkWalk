@@ -395,24 +395,28 @@ public class DrunkMovement : InGame {
 	
 	private void placeFeet (){			//print ("moving feet");
 		// rfeet.MovePosition(Vector3.Lerp(rfeet.position, transform.position, smooth * Time.frameCount));
-		float time = 0.05f;
+
+
+		//float time = 1.0f;
 		//time += speed;
-		float fhDistZ = transform.position.z - ft.transform.position.z;
-		float fhDistX = transform.position.x - ft.transform.position.x;
+		//float fhDistZ = transform.position.z - ft.transform.position.z;
+		//float fhDistX = transform.position.x - ft.transform.position.x;
 
 
-		StartCoroutine(lerpFeet(time, fhDistZ, fhDistX));
-		//rfeet.MovePosition(new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z)); 
+		//StartCoroutine(lerpFeet(speed, fhDistZ, fhDistX));
+
+
+		rfeet.MovePosition(new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z)); 
 	}
 
-	IEnumerator lerpFeet( float time, float fhDistZ, float fhDistX) {
-		for (float t = 0; t < time; t+= 0.01f) {
+	/*IEnumerator lerpFeet( float time, float fhDistZ, float fhDistX) {
+		for (float t = 0; t < time; t+= 0.0005f) {
 			float feetOffsetX = fhDistX * (t/time);
 			float feetOffsetZ = fhDistZ * (t/time);
 			ft.transform.position = new Vector3(transform.position.x + feetOffsetX, ft.transform.position.y, transform.position.z + feetOffsetZ);
 			yield return 0;	
 		}
-	}
+	}*/
 
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * WORKING ON THIS~
@@ -464,7 +468,9 @@ public class DrunkMovement : InGame {
 			transform.position = fallenPos;
 
 			rfeet.position = new Vector3 (fallenPos.x, rfeet.position.y, fallenPos.z); 
-			transform.rotation = new Quaternion (0, fallenRot.y, 0, fallenRot.w); 
+			//transform.rotation = new Quaternion (0, fallenRot.y, 0, fallenRot.w);
+		transform.rotation = Quaternion.Slerp(new Quaternion (0, 0, 0, 0), new Quaternion (0, fallenRot.y, 0, fallenRot.w), 0.01f); 
+
 
 			tapCurrent = 0; 
 			frozen = false;
