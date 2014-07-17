@@ -52,8 +52,8 @@ public class DrunkForce : MonoBehaviour {
 		// camera wobble
 		if (!stopWobble) {
 			if (player.radius < player.maxRad) {
-				camWobble (switchBackForward(player.direction)); 	// USE THIS IF INVERTED BACK/FWD AT -90 DEGREES
-				//camWobble (player.direction); 
+				//camWobble (switchBackForward(player.direction)); 	// USE THIS IF INVERTED BACK/FWD AT -90 DEGREES
+				camWobble (player.direction); 
 			}
 		}
 		
@@ -159,29 +159,29 @@ public class DrunkForce : MonoBehaviour {
 
 	switch (lean) {
 		case (int) Dir.forward:
-			if (!camHiCapped){
+			/*if (!camHiCapped){
 				camInc += camAcc;
 			}
 			transform.localRotation = new Quaternion (transform.localRotation.x + camInc, transform.localRotation.y, transform.localRotation.z, transform.localRotation.w); 
-			break;
+			*/break;
 		case (int) Dir.right:
 			if (!camLoCapped){
 				camInc -= camAcc;
 			}
-			transform.localRotation = new Quaternion (transform.localRotation.x, transform.localRotation.y, transform.localRotation.z + camInc, transform.localRotation.w); 
+			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y, transform.rotation.z + camInc, transform.rotation.w); 
 			break;
 		case (int) Dir.left:
 			if (!camHiCapped){
 				camInc += camAcc;
 			}
-			transform.localRotation = new Quaternion (transform.localRotation.x, transform.localRotation.y, transform.localRotation.z + camInc, transform.localRotation.w); 
+			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y, transform.rotation.z + camInc, transform.rotation.w); 
 			break;
 		case (int) Dir.back:
-			if (!camLoCapped){
+			/*if (!camLoCapped){
 				camInc -= camAcc;
 			}
 			transform.localRotation = new Quaternion (transform.localRotation.x + camInc, transform.localRotation.y, transform.localRotation.z, transform.localRotation.w); 
-			break;
+			*/break;
 		default:
 			break; 
 		}
