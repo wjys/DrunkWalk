@@ -251,11 +251,11 @@ public class DrunkMovement : InGame {
 		
 		//print ("ap = " + dof.aperture); 
 	
-		/*if (radius >= 0.5f && radius <= maxRad){
+		if (radius >= 0.5f && radius <= maxRad){
 			dof.aperture += 0.5f;
 		} else if (radius < 0.5f){
 			dof.aperture -= 0.7f;
-		}*/
+		}
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -553,7 +553,7 @@ public class DrunkMovement : InGame {
 		yield return new WaitForSeconds(1.0f);
 
 		frozen = false;
-		rhead.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+		rhead.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY;
 
 		tapCurrent = 0; 
 		gettingUp = false;
