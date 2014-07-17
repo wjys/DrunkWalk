@@ -83,6 +83,7 @@ public class DrunkMovement : InGame {
 	private Vector3 newPos;
 
 	public bool buttonTapped;
+	private static bool camLerp;
 
 	// ANIMATION
 	public Animator meAnim;
@@ -172,8 +173,11 @@ public class DrunkMovement : InGame {
 	}
 	
 	void FixedUpdate() {
-		transform.rotation = Quaternion.Lerp(transform.rotation, newRot, smooth * Time.deltaTime);//new Quaternion (transform.rotation.x, 0, transform.rotation.z, 0), smooth * Time.deltaTime);
 
+		if (camLerp == true){
+			transform.rotation = Quaternion.Lerp(transform.rotation, newRot, smooth * Time.deltaTime);//new Quaternion (transform.rotation.x, 0, transform.rotation.z, 0), smooth * Time.deltaTime);
+			camLerp = false;
+		}
 		
 		// DELAYING PLACE FEET AT HEAD'S XY POS
 		currentFrame++; 
@@ -385,7 +389,6 @@ public class DrunkMovement : InGame {
 	
 	private void moveHead (int direction){	//print ("moving head ");
 		//Invoke("resetHinc", 1);
-
 		switch (direction) {
 			
 		case (int) Dir.forward:				//print ("moving head forward");
@@ -529,6 +532,7 @@ public class DrunkMovement : InGame {
 		rfeet.position = new Vector3 (fallenPos.x, rfeet.position.y, fallenPos.z);
 		StartCoroutine(backToOrigin());
 
+
 		//frozen = false;
 		//rhead.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 
@@ -544,18 +548,20 @@ public class DrunkMovement : InGame {
 	public IEnumerator backToOrigin () {
 		newRot = new Quaternion(0.0f, fallenRot.y, 0.0f, fallenRot.w);
 		gettingUp = true;
+		camLerp = true;
 
 		yield return new WaitForSeconds(1.0f);
 
 		frozen = false;
 		rhead.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 
-		//transform.rotation = newRot;
-		
 		tapCurrent = 0; 
 		gettingUp = false;
-        fallen = false;
+		fallen = false;
 		newRot = transform.rotation;
+
+		//transform.rotation = newRot;
+
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
