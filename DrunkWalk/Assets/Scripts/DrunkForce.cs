@@ -77,7 +77,7 @@ public class DrunkForce : MonoBehaviour {
 	}
 
 	void FixedUpdate(){
-		if (player.direction != (int) Dir.right && player.direction != (int) Dir.left) {
+		if (player.direction != (int) Dir.right && player.direction != (int) Dir.left && transform.rotation.y != 0) {
 			transform.rotation = Quaternion.Lerp (transform.rotation, new Quaternion (transform.rotation.x, 0, transform.rotation.z, transform.rotation.y), 1f*Time.deltaTime);
 		}
 	}
