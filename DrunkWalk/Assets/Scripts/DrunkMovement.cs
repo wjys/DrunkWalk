@@ -74,7 +74,9 @@ public class DrunkMovement : InGame {
 	public int tapsGetUp;
 	public int frameFall; 
 	public int tapCurrent;
-	private bool frozen; 
+	private bool frozen;
+	public int fallCt;
+	public int maxFallCt; 
 
 	private bool gettingUp;
 	private Quaternion newRot;
@@ -97,6 +99,7 @@ public class DrunkMovement : InGame {
 		soundPlayed = false; 		
 		headY = transform.position.y; 
 		frozen = false; 
+		fallCt = 0;
 
 		//Mouse Start
 		halfWidth = Screen.width / 2; 
@@ -451,6 +454,10 @@ public class DrunkMovement : InGame {
 		//rhead.isKinematic = true;
 
 		rhead.constraints = RigidbodyConstraints.FreezeAll;
+		fallCt++; 
+		if (fallCt >= maxFallCt) {
+			Application.LoadLevel("Lost");
+		}
 		//df.enabled = false;
 	}
 	
