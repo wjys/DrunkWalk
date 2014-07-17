@@ -76,6 +76,12 @@ public class DrunkForce : MonoBehaviour {
 		}
 	}
 
+	void FixedUpdate(){
+		if (player.direction != (int) Dir.right && player.direction != (int) Dir.left) {
+			transform.rotation = Quaternion.Lerp (transform.rotation, new Quaternion (transform.rotation.x, 0, transform.rotation.z, transform.rotation.y), 1f*Time.deltaTime);
+		}
+	}
+
 	// head rotation too far = fall over
 
 	private void rotateFall(){
@@ -157,31 +163,31 @@ public class DrunkForce : MonoBehaviour {
 		}*/
 
 
-	switch (lean) {
+		switch (lean) {
 		case (int) Dir.forward:
-			/*if (!camHiCapped){
+			if (!camHiCapped){
 				camInc += camAcc;
 			}
 			transform.localRotation = new Quaternion (transform.localRotation.x + camInc, transform.localRotation.y, transform.localRotation.z, transform.localRotation.w); 
-			*/break;
+			break;
 		case (int) Dir.right:
 			if (!camLoCapped){
 				camInc -= camAcc;
 			}
-			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y, transform.rotation.z + camInc, transform.rotation.w); 
+			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + camInc, transform.rotation.z + camInc, transform.rotation.w); 
 			break;
 		case (int) Dir.left:
 			if (!camHiCapped){
 				camInc += camAcc;
 			}
-			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y, transform.rotation.z + camInc, transform.rotation.w); 
+			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y - camInc, transform.rotation.z + camInc, transform.rotation.w); 
 			break;
 		case (int) Dir.back:
-			/*if (!camLoCapped){
+			if (!camLoCapped){
 				camInc -= camAcc;
 			}
 			transform.localRotation = new Quaternion (transform.localRotation.x + camInc, transform.localRotation.y, transform.localRotation.z, transform.localRotation.w); 
-			*/break;
+			break;
 		default:
 			break; 
 		}
