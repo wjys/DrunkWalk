@@ -4,6 +4,10 @@ using System.Collections.Generic;
 
 public class DrunkMovement : InGame {
 
+   	// ___  ____ _  _ _  _ _  _    _  _ ____ _  _ ____ _  _ ____ _  _ ___ 
+	// |  \ |__/ |  | |\ | |_/     |\/| |  | |  | |___ |\/| |___ |\ |  |  
+	// |__/ |  \ |__| | \| | \_    |  | |__|  \/  |___ |  | |___ | \|  |  
+	//
 
 	// ENUM TO SWITCH BETWEEN CONTROLLERS
 	public int controller;
@@ -13,8 +17,7 @@ public class DrunkMovement : InGame {
 	public float hinc;
 	public float incAcc;
 	public Transform target; 
-
-
+	
 	public float speed;
 	public float smooth;
 
@@ -73,10 +76,14 @@ public class DrunkMovement : InGame {
 	public int tapCurrent;
 	private bool frozen; 
 
+	private bool gettingUp;
+	private Quaternion newRot;
+	private Vector3 newPos;
+
 	// ANIMATION
 	public Animator meAnim;
 
-	//
+	// LERP FOOT???
 	public GameObject ft;
 
 
@@ -154,9 +161,14 @@ public class DrunkMovement : InGame {
 
 		playFootstep(radius);
 
+		newPos = transform.position;
+		//newRot = transform.rotation;
+
 	}
 	
 	void FixedUpdate() {
+		transform.rotation = Quaternion.Lerp(transform.rotation, newRot, smooth * Time.deltaTime);//new Quaternion (transform.rotation.x, 0, transform.rotation.z, 0), smooth * Time.deltaTime);
+
 		
 		// DELAYING PLACE FEET AT HEAD'S XY POS
 		currentFrame++; 
@@ -180,6 +192,10 @@ public class DrunkMovement : InGame {
 				currentSoundFrame = 0; 
 			}
 		}
+
+		//transform.position = Vector3.Lerp(transform.position, newPos, smooth * Time.deltaTime);
+		//newRot = Quaternion.Lerp(new Quaternion (0, newRot.y, 0, newRot.w), new Quaternion (transform.rotation.x, 0, transform.rotation.z, 0), smooth * Time.deltaTime); 
+
 	}
 
 
@@ -346,7 +362,7 @@ public class DrunkMovement : InGame {
 		
 		float x = Mathf.Abs (rfeet.position.x - transform.position.x);
 		float y = Mathf.Abs (rfeet.position.z - transform.position.z); 
-		radius = Mathf.Sqrt (x * x + y * y); 
+		radius = Mathf.Sqrt (x * x + y * y);
 		
 		if (radius >= maxRad) {
 			return true; 
@@ -419,7 +435,7 @@ public class DrunkMovement : InGame {
 	}*/
 
 	/* --------------------------------------------------------------------------------------------------------------------------
-	 * WORKING ON THIS~
+	 * FALLEN STUFF
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	private void stopRead(){
@@ -434,14 +450,24 @@ public class DrunkMovement : InGame {
 	}
 	
 	public void tapsToGetUp(){
-		print ("CLICK!");
+
+		print ("FALLEN");
+
+		//Disable maincam, enable fallcam
 		cam.enabled = false;
 		fallCam.enabled = true;
+
+		//Play fallover Anim
 		meAnim.SetBool("fallOver", true);
+
+		//At this point, no movement should be read
 		if (!frozen){
 			stopRead (); 
 		}
 
+		/////////////////
+		//[TAP TO GET UP]
+		/////////////////
 
 		bool buttonTapped = Input.anyKeyDown; 
 		// read button taps 
@@ -449,36 +475,68 @@ public class DrunkMovement : InGame {
 			tapCurrent++; 
 		}
 		if (tapCurrent >= tapsGetUp) {
+			//SUCCESSFULLY GOT UP
 			print ("WINnie");
+
 			meAnim.SetBool("fallOver", false);
 			meAnim.SetBool("getUp", true);
+
+			//IF PLAYING FINE, GET BACK UP
 			if (meAnim.GetCurrentAnimatorStateInfo(0).IsName("Fine")){
 				GetUp();
 			}
-		}
+		} // LOST
 		else if (currentFrame >= frameFall){
 			print ("BOOi"); 
 			fallToLose (); 
 		}
 	}
-	
+
+	/////////////////
+	//GETTING UP/////
+	/////////////////
+
 	private void GetUp(){
-			cam.enabled = true;
-			fallCam.enabled = false;
-			transform.position = fallenPos;
+		cam.enabled = true;
+		fallCam.enabled = false;
 
-			rfeet.position = new Vector3 (fallenPos.x, rfeet.position.y, fallenPos.z); 
-			//transform.rotation = new Quaternion (0, fallenRot.y, 0, fallenRot.w);
-		transform.rotation = Quaternion.Slerp(new Quaternion (0, 0, 0, 0), new Quaternion (0, fallenRot.y, 0, fallenRot.w), 0.01f); 
+		newPos = fallenPos;
 
+		//RESET POSITION
+		//transform.position = fallenPos;
+		//rfeet.position = new Vector3 (fallenPos.x, rfeet.position.y, fallenPos.z); 
 
-			tapCurrent = 0; 
-			frozen = false;
-			//rhead.isKinematic = false;
-			rhead.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
-			fallen = false;
-			//df.enabled = true;
+		//transform.rotation = new Quaternion (0, fallenRot.y, 0, fallenRot.w);
+		//transform.rotation = Quaternion.Slerp(new Quaternion (0, 0, 0, 0), new Quaternion (0, fallenRot.y, 0, fallenRot.w), 0.01f); 
+		transform.position = Vector3.Lerp(transform.position, newPos, smooth * Time.deltaTime);
+		rfeet.position = new Vector3 (fallenPos.x, rfeet.position.y, fallenPos.z);
+		StartCoroutine(backToOrigin());
+
+		//frozen = false;
+		//rhead.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+
+		//tapCurrent = 0; 
+
+		//fallen = false;
+		//df.enabled = true;
 		
+	}
+
+	public IEnumerator backToOrigin () {
+		newRot = new Quaternion(0.0f, fallenRot.y, 0.0f, fallenRot.w);
+		gettingUp = true;
+
+		yield return new WaitForSeconds(1.0f);
+
+		frozen = false;
+		rhead.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+
+		//transform.rotation = newRot;
+		
+		tapCurrent = 0; 
+		gettingUp = false;
+        fallen = false;
+		newRot = transform.rotation;
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------

@@ -2,7 +2,12 @@ using UnityEngine;
 using System.Collections;
 
 public class GameManager : MonoBehaviour {
+
+	//This
 	static public GameManager ins;
+
+	//Game State
+	public GameState.GameStatus status;
 
 	public GUISkin skin;
 	public GameObject pauseMenu;
