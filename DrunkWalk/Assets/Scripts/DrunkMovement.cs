@@ -80,6 +80,8 @@ public class DrunkMovement : InGame {
 	private Quaternion newRot;
 	private Vector3 newPos;
 
+	public bool buttonTapped;
+
 	// ANIMATION
 	public Animator meAnim;
 
@@ -453,12 +455,18 @@ public class DrunkMovement : InGame {
 
 		print ("FALLEN");
 
+		//Set Global Player State
+		if (GameManager.ins.playerStatus != GameState.PlayerStatus.Fallen){
+			GameManager.ins.playerStatus = GameState.PlayerStatus.Fallen;
+		}
+
 		//Disable maincam, enable fallcam
 		cam.enabled = false;
 		fallCam.enabled = true;
 
 		//Play fallover Anim
 		meAnim.SetBool("fallOver", true);
+	
 
 		//At this point, no movement should be read
 		if (!frozen){
@@ -469,7 +477,7 @@ public class DrunkMovement : InGame {
 		//[TAP TO GET UP]
 		/////////////////
 
-		bool buttonTapped = Input.anyKeyDown; 
+		buttonTapped = Input.anyKeyDown; 
 		// read button taps 
 		if (buttonTapped) {
 			tapCurrent++; 
@@ -480,7 +488,9 @@ public class DrunkMovement : InGame {
 
 			meAnim.SetBool("fallOver", false);
 			meAnim.SetBool("getUp", true);
-
+			if (GameManager.ins.playerStatus == GameState.PlayerStatus.Fallen){
+				GameManager.ins.playerStatus = GameState.PlayerStatus.Fine;
+            }
 			//IF PLAYING FINE, GET BACK UP
 			if (meAnim.GetCurrentAnimatorStateInfo(0).IsName("Fine")){
 				GetUp();
@@ -519,6 +529,8 @@ public class DrunkMovement : InGame {
 
 		//fallen = false;
 		//df.enabled = true;
+
+		//Set Global Player State
 		
 	}
 

@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour {
 
 	//Game State
 	public GameState.GameStatus status;
+	public GameState.PlayerStatus playerStatus;
 
 	public GUISkin skin;
 	public GameObject pauseMenu;
