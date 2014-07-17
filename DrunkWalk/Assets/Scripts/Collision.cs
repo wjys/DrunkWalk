@@ -43,6 +43,9 @@ public class Collision : MonoBehaviour {
 	//public DrunkForce df; 
 	public Rigidbody rhead; 
 
+	//RUMBLE
+	public float rumbleAmt;
+
 	// Use this for initialization
 	void Start () {
 		source.volume = 0.5f;
@@ -96,6 +99,9 @@ public class Collision : MonoBehaviour {
 		currentDir = dm.direction; 
 		if (!collided){
 			audio.PlayOneShot (hitit);
+
+			dm.hitRumble = rumbleAmt;
+
 			print ("RECOIL");
 			//setRecoilDir(currentDir); 
 			//recoilForce(recoilDir); 
@@ -156,6 +162,7 @@ public class Collision : MonoBehaviour {
 	}
 	//When not:
 	void OnTriggerExit(Collider col) {
+		dm.hitRumble = 0.0f;
 		Debug.Log("No Longer Colliding");
 		soundPlayed = false; 
 		//df.stopWobble = false; 

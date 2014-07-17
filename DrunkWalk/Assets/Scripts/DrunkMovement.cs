@@ -91,6 +91,9 @@ public class DrunkMovement : InGame {
 	// LERP FOOT???
 	public GameObject ft;
 
+	//COLLISION RUMBLE
+	public float hitRumble;
+
 
 	// Use this for initialization
 	void Start () {
@@ -238,7 +241,8 @@ public class DrunkMovement : InGame {
 			else if(UniMove.GetButtonDown(PSMoveButton.Move)) 		UniMove.SetLED(Color.black);
 			
 			// Set the rumble based on how much the trigger is down
-			UniMove.SetRumble(UniMove.Trigger);
+			//UniMove.SetRumble(UniMove.Trigger);
+			UniMove.SetRumble (hitRumble);
 		}
 	}
 
