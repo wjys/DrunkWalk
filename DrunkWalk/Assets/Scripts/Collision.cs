@@ -176,21 +176,21 @@ public class Collision : MonoBehaviour {
 
 	private void setRecoilDir(Vector3 colPos, Vector3 playerPos){
 		recoiled = true; 
-		print ("collision pos " + colPos + ", player pos    " + playerPos); 
+		//print ("collision pos " + colPos + ", player pos    " + playerPos); 
 		if (colPos.x > playerPos.x) {
-			print ("higher x, recoil left"); 
+			//print ("higher x, recoil left"); 
 			recoilForce ((int) Dir.left);
 		}
 		else if (colPos.x < playerPos.x){
-			print ("lower x, recoil right"); 
+			//print ("lower x, recoil right"); 
 			recoilForce ((int) Dir.right); 
 		}
 		else if (colPos.z > playerPos.z) {
-			print ("higher z, recoil back"); 
+			//print ("higher z, recoil back"); 
 			recoilForce ((int) Dir.back);
 		}
 		else {
-			print ("lower z, recoil forward"); 
+			//print ("lower z, recoil forward"); 
 			recoilForce ((int) Dir.forward); 
 		}
 	}
