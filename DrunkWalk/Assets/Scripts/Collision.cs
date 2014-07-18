@@ -103,7 +103,7 @@ public class Collision : MonoBehaviour {
 			dm.hitRumble = rumbleAmt;
 
 			print ("RECOIL");
-			setRecoilDir(currentDir); 
+			setRecoilDir(col.ClosestPointOnBounds(transform.position)); 
 			recoilForce(recoilDir); 
 
 			Debug.Log("Collision");
@@ -175,24 +175,23 @@ public class Collision : MonoBehaviour {
 		audio.PlayOneShot(clip); 
 	}
 
-	private void setRecoilDir(int direction){
-		switch (direction) {
-		case (int) Dir.back:
-			recoilDir = (int) Dir.forward;
-			break;
-		case (int) Dir.forward:
-			recoilDir = (int) Dir.back;
-			break;
-		case (int) Dir.left:
-			recoilDir = (int) Dir.right;
-			break;
-		case (int) Dir.right:
-			recoilDir = (int) Dir.left; 
-			break;
-		default:
-			break;
+	private void setRecoilDir(Vector3 colPos){
+		if (colPos.z >= transform.position.z) {
+			recoilForce ((int) Dir.back);
 		}
+		else {
+			recoilForce ((int) Dir.forward); 
+		}
+
+		if (colPos.x >= transform.position.x) {
+			recoilForce ((int) Dir.left);
+		}
+		else {
+			recoilForce ((int) Dir.right); 
+		}
+
 		print ("recoil dir " + recoilDir); 
+
 
 	}
 
@@ -219,7 +218,7 @@ public class Collision : MonoBehaviour {
 		default:
 			break; 
 		}
-		print ("SENT BACK"); 
+		print ("RECOILED!"); 
 	}
 
 	//Instantiate a hurt sound
