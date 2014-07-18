@@ -196,7 +196,7 @@ public class Collision : MonoBehaviour {
 	}
 
 	private void recoilForce(int direction){
-		recoilDir = direction; 
+		df.recoiled = true; 
 		switch (direction) {
 			
 		case (int) Dir.forward:				//print ("moving head forward");

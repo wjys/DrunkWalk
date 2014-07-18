@@ -23,7 +23,6 @@ public class DrunkForce : MonoBehaviour {
 	// TO DRAG INTO COMPONENT
 	public Rigidbody rhead; 	// object's head rigidbody
 	public DrunkMovement player; 	// script from the player   
-	public Collision colscript; 
 
 	
 	// COROUTINE DELAYS
@@ -31,6 +30,7 @@ public class DrunkForce : MonoBehaviour {
 	
 	// TO STOP WOBBLE WHEN HIT A WALL
 	public bool stopWobble; 
+	public bool recoiled; 
 
 	// LOSE CONDITION: IF CAMERA IS TOO CRAZY U LOOKIN INSANE
 	public float boundRotForward;	// x < 30
@@ -56,10 +56,6 @@ public class DrunkForce : MonoBehaviour {
 				//camWobble (switchBackForward(player.direction)); 	// USE THIS IF INVERTED BACK/FWD AT -90 DEGREES
 				camWobble (player.direction); 
 			}
-
-			/*if (colscript.recoiled){
-				recoilWobble (colscript.recoilDir); 
-			}*/
 		}
 		
 		// drunk force
@@ -79,6 +75,16 @@ public class DrunkForce : MonoBehaviour {
 		} else {
 			camLoCapped = false;
 		}
+
+		/*if (recoiled){
+			print ("resetting the rotation after recoil");
+			transform.rotation = Quaternion.Lerp (transform.rotation, new Quaternion(transform.rotation.x, 0, 0, transform.rotation.w), 0.5f*Time.deltaTime);
+			recoiled = false; 
+		}*/
+	}
+
+	void FixedUpdate(){
+
 	}
 
 
@@ -166,38 +172,6 @@ public class DrunkForce : MonoBehaviour {
 				camInc -= camAcc;
 			}
 			transform.rotation = new Quaternion (transform.rotation.x + camInc, transform.rotation.y, transform.rotation.z, transform.rotation.w); 
-			break;
-		default:
-			break; 
-		}
-	}
-	
-	private void recoilWobble(int lean){
-		
-		switch (lean) {
-		case (int) Dir.forward:
-			if (!camHiCapped){
-				camInc += camAcc;
-			}
-			transform.rotation = new Quaternion (transform.rotation.x - camInc, transform.rotation.y, transform.rotation.z, transform.rotation.w); 
-			break;
-		case (int) Dir.right:
-			if (!camLoCapped){
-				camInc -= camAcc;
-			}
-			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + camInc*0.1f, transform.rotation.z - camInc, transform.rotation.w); 
-			break;
-		case (int) Dir.left:
-			if (!camHiCapped){
-				camInc += camAcc;
-			}
-			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + camInc*0.1f, transform.rotation.z - camInc, transform.rotation.w); 
-			break;
-		case (int) Dir.back:
-			if (!camLoCapped){
-				camInc -= camAcc;
-			}
-			transform.rotation = new Quaternion (transform.rotation.x - camInc, transform.rotation.y, transform.rotation.z, transform.rotation.w); 
 			break;
 		default:
 			break; 
