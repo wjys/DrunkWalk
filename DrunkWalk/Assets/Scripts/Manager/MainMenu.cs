@@ -21,7 +21,7 @@ public class MainMenu : Menu {
 
 
 	private Item[] items= new Item[] {
-		new Item("START", delegate () { Application.LoadLevel("WastedMove"); }),
+		new Item("START", delegate () { StartGame (); }),
 		new Item("SET UP", delegate () { Application.LoadLevel(Application.loadedLevel);}),
 		new Item("CALIBRATE", delegate () { Application.LoadLevel(0);}),
 		new Item("EXIT", delegate () { Application.Quit(); })
@@ -40,11 +40,11 @@ public class MainMenu : Menu {
 		GUIMenu(idx, 200, 80, items, timer);
 	}
 
-	/*IEnumerator StartGame(){
-		ins.isSplash = false;
-		ins.isGame = true;
+	public static void StartGame(){
+		GameManager.ins.game = true;
+		GameManager.ins.status = GameState.GameStatus.Game;
 		Application.LoadLevel ("WastedMove");
-	}*/
+	}
 
 	void Update () {
 

@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour {
 	public GameState.GameStatus status;
 	public GameState.PlayerStatus playerStatus;
 
+	//Menu Assets
 	public GUISkin skin;
 	public GameObject pauseMenu;
 	public GameObject audioManager;
@@ -18,17 +19,19 @@ public class GameManager : MonoBehaviour {
 	private GameObject mainMenuIns;
 	private float lastRealtimeSinceStartup;
 
-	public bool inGame, inSplash;
-
+	//Bools
 	private bool paused = false;
 	private bool menu = false;
+	public bool game;
 
-	public static int wow;
-
-
-	//IN GAME VARIABLES
 
 	void Awake () {
+		if (!game){
+			status = GameState.GameStatus.Splash;
+		} else {
+			status = GameState.GameStatus.Game;
+		}
+
 		DontDestroyOnLoad(this);
 		ins = this;
 
@@ -47,13 +50,11 @@ public class GameManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		inGame = false;
-		inSplash = true;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (inGame){
+		if (status == GameState.GameStatus.Game){
 		 	if (Input.GetKeyDown("p")){
           	 	if (!paused) {
            	    	Pause();
@@ -61,8 +62,8 @@ public class GameManager : MonoBehaviour {
            	    	UnPause();
            		}
            	}
-        } else if (inSplash) {
-        	if (Input.GetKeyDown("m")){
+		} else if (status == GameState.GameStatus.Splash) {
+        	if (Input.anyKey){
         		if (!menu) {
         			Menu();
         		} else {
@@ -97,6 +98,8 @@ public class GameManager : MonoBehaviour {
 
 	}
 
+
+	//Main Menu Initialize
 	public void Menu() {
 		menu = true;
 		mainMenuIns.SetActive (menu);

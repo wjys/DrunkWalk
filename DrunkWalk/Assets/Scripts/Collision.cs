@@ -7,8 +7,8 @@ public class Collision : MonoBehaviour {
 	public static int score;
 
 	//Hurt Sound
-	//public GameObject ouch;
-	//public Animator ouchAnim;
+	public GameObject[] ouch;
+	public Animator ouchAnim;
 
 	private static bool yelling = false;
 
@@ -40,7 +40,7 @@ public class Collision : MonoBehaviour {
 
 	// TO PREVENT CAM WOBBLE WHEN HIT A WALL
 	public DrunkMovement dm;
-	//public DrunkForce df; 
+	public DrunkForce df; 
 	public Rigidbody rhead; 
 
 	//RUMBLE
@@ -103,8 +103,8 @@ public class Collision : MonoBehaviour {
 			dm.hitRumble = rumbleAmt;
 
 			print ("RECOIL");
-			//setRecoilDir(currentDir); 
-			//recoilForce(recoilDir); 
+			setRecoilDir(currentDir); 
+			recoilForce(recoilDir); 
 
 			Debug.Log("Collision");
 			//ouchAnim.SetTrigger("Ouch");
@@ -113,7 +113,7 @@ public class Collision : MonoBehaviour {
 			if (col.tag == "Wall") {
 				score -= 100;
 				Debug.Log("Wall Collision - " + score);
-				//df.stopWobble = true; 
+				df.stopWobble = true; 
 			}
 			else if (col.tag == "Box"){
 				score -= 200;
@@ -223,16 +223,16 @@ public class Collision : MonoBehaviour {
 	}
 
 	//Instantiate a hurt sound
-	// public void Yell () {
-		//GameObject newOuch = Instantiate(ouch, transform.position + (0.8f * Vector3.up) + (2.5f * Vector3.forward) + (0.5f * Vector3.right), Quaternion.identity) as GameObject;
-		//this.StartCoroutine(this.DestroyYell(newOuch, 1.0f));
-	// }
+	 public void Yell () {
+		GameObject newOuch = Instantiate(ouch[1], transform.position + (0.8f * Vector3.up) + (2.5f * Vector3.forward) + (0.5f * Vector3.right), Quaternion.identity) as GameObject;
+		this.StartCoroutine(this.DestroyYell(newOuch, 1.0f));
+	}
 
 	//Destroy the hurt sound
-	//IEnumerator DestroyYell(GameObject _yell, float delay) {
-	// 	yield return new WaitForSeconds(delay);
-	// 	Destroy(_yell);
-	// 	yelling = true;
-	// }
+	IEnumerator DestroyYell(GameObject _yell, float delay) {
+	 	yield return new WaitForSeconds(delay);
+	 	Destroy(_yell);
+	 	yelling = true;
+	 }
 
 }

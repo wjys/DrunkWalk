@@ -9,6 +9,9 @@ public class Eyelids : MonoBehaviour {
 	public GameObject BR, BL, TR, TL;
 	public DrunkMovement me;
 
+	//Blink Counter
+	public int blinkCnt;
+	
 	//Starting Position
 	private Vector3 startPosUp;
 	private Vector3 startPosDown;
@@ -31,6 +34,7 @@ public class Eyelids : MonoBehaviour {
 	private float sWakeUp;
 	
 	private static bool gettingUp;
+	private static bool blinked;
 
 	// Use this for initialization
 	void Start () {
@@ -56,8 +60,8 @@ public class Eyelids : MonoBehaviour {
 			wakeUp = sWakeUp;
 		
 		} else {
+			//Player Fell
 			if (GameManager.ins.playerStatus == GameState.PlayerStatus.Fallen){
-			Debug.Log ("fall state");
 			
 			//Drooping gets faster
 			speed += accel;
@@ -88,9 +92,19 @@ public class Eyelids : MonoBehaviour {
 				accel += 0.0001f;
 			}
 
+				if (topLids.transform.position.y <= (startPosUp.y-10) && blinkCnt < 3){
+					blinkCnt += 1;
+					blinked = true;
+				} else if (topLids.transform.position.y <= (startPosUp.y-10) && blinkCnt >= 3){
+					GameManager.ins.playerStatus = GameState.PlayerStatus.Lost;
+				}
+
+				if (topLids.transform.position.y >= (startPosUp.y-3)){
+					blinked = false;
+				}
+
 			//newPosUp = new Vector3 (startPosUp.x, -100, startPosUp.z);
 		} else if (GameManager.ins.playerStatus == GameState.PlayerStatus.Fine){
-			Debug.Log ("good state");
 			gettingUp = true;
 		}
 		}
@@ -98,14 +112,29 @@ public class Eyelids : MonoBehaviour {
 
 	void FixedUpdate() {
 		if (gettingUp){
-			topLids.transform.position = Vector3.Lerp(topLids.transform.position, startPosUp, smooth * Time.deltaTime);
-			bottomLids.transform.position = Vector3.Lerp(bottomLids.transform.position, startPosDown, smooth * Time.deltaTime);
 
-			BR.transform.rotation = Quaternion.Lerp (BR.transform.rotation, startRotBR, smooth * Time.deltaTime);
-			BL.transform.rotation = Quaternion.Lerp (BL.transform.rotation, startRotBL, smooth * Time.deltaTime);
-			TR.transform.rotation = Quaternion.Lerp (TR.transform.rotation, startRotTR, smooth * Time.deltaTime);
-			TL.transform.rotation = Quaternion.Lerp (TL.transform.rotation, startRotTL, smooth * Time.deltaTime);
+			lidCurl();
+
 			gettingUp = false;
 		}
+
+		if (blinked){
+			speed = sSpeed + 0.0005f;
+			accel = sAccel + 0.0005f;
+			wakeUp = sWakeUp - 0.2f;
+
+			lidCurl ();
+		}
+
+	}
+
+	public void lidCurl(){
+		topLids.transform.position = Vector3.Lerp(topLids.transform.position, startPosUp, smooth * Time.deltaTime);
+		bottomLids.transform.position = Vector3.Lerp(bottomLids.transform.position, startPosDown, smooth * Time.deltaTime);
+
+		BR.transform.rotation = Quaternion.Lerp (BR.transform.rotation, startRotBR, smooth * Time.deltaTime);
+		BL.transform.rotation = Quaternion.Lerp (BL.transform.rotation, startRotBL, smooth * Time.deltaTime);
+		TR.transform.rotation = Quaternion.Lerp (TR.transform.rotation, startRotTR, smooth * Time.deltaTime);
+		TL.transform.rotation = Quaternion.Lerp (TL.transform.rotation, startRotTL, smooth * Time.deltaTime);
 	}
 }

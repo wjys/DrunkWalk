@@ -168,10 +168,14 @@ public class DrunkMovement : InGame {
 
 		}
 
-		playFootstep(radius);
+		playFootstep(radius * 100);
 
 		newPos = transform.position;
 		//newRot = transform.rotation;
+
+		if (GameManager.ins.playerStatus == GameState.PlayerStatus.Lost){
+			Application.LoadLevel("Lost");
+		}
 
 	}
 	
@@ -460,7 +464,7 @@ public class DrunkMovement : InGame {
 		rhead.constraints = RigidbodyConstraints.FreezeAll;
 		fallCt++; 
 		if (fallCt >= maxFallCt) {
-			Application.LoadLevel("Lost");
+			GameManager.ins.playerStatus = GameState.PlayerStatus.Lost;
 		}
 		//df.enabled = false;
 	}
@@ -512,7 +516,7 @@ public class DrunkMovement : InGame {
 		} // LOST
 		else if (currentFrame >= frameFall){
 			print ("BOOi"); 
-			fallToLose (); 
+			GameManager.ins.playerStatus = GameState.PlayerStatus.Lost;
 		}
 	}
 
@@ -554,7 +558,7 @@ public class DrunkMovement : InGame {
 		gettingUp = true;
 		camLerp = true;
 
-		yield return new WaitForSeconds(1.0f);
+		yield return new WaitForSeconds(0.5f);
 
 		frozen = false;
 		rhead.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY;
@@ -563,8 +567,6 @@ public class DrunkMovement : InGame {
 		gettingUp = false;
 		fallen = false;
 		newRot = transform.rotation;
-
-		//transform.rotation = newRot;
 
 	}
 	

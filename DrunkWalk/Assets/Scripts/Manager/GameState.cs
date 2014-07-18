@@ -3,8 +3,8 @@ using System.Collections;
 
 public class GameState : MonoBehaviour {
 
-	public enum GameStatus { Splash, Option, Game }
-	public enum PlayerStatus { Fine, Fallen }
+	public enum GameStatus { Splash, Paused, Game }
+	public enum PlayerStatus { Fine, Fallen, Lost }
 
 	// Use this for initialization
 	void Start () {
