@@ -75,16 +75,14 @@ public class DrunkForce : MonoBehaviour {
 		} else {
 			camLoCapped = false;
 		}
-
-		/*if (recoiled){
-			print ("resetting the rotation after recoil");
-			transform.rotation = Quaternion.Lerp (transform.rotation, new Quaternion(transform.rotation.x, 0, 0, transform.rotation.w), 0.5f*Time.deltaTime);
-			recoiled = false; 
-		}*/
 	}
 
 	void FixedUpdate(){
-
+		if (recoiled){
+			print ("resetting the rotation after recoil");
+			transform.rotation = Quaternion.Lerp (transform.rotation, new Quaternion(transform.rotation.x, 0, 0, transform.rotation.w), 0.5f*Time.deltaTime);
+			recoiled = false; 
+		}
 	}
 
 
