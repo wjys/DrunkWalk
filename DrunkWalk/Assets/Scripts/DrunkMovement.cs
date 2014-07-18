@@ -173,10 +173,6 @@ public class DrunkMovement : InGame {
 		newPos = transform.position;
 		//newRot = transform.rotation;
 
-		if (GameManager.ins.playerStatus == GameState.PlayerStatus.Lost){
-			Application.LoadLevel("Lost");
-		}
-
 	}
 	
 	void FixedUpdate() {
@@ -516,7 +512,7 @@ public class DrunkMovement : InGame {
 		} // LOST
 		else if (currentFrame >= frameFall){
 			print ("BOOi"); 
-			GameManager.ins.playerStatus = GameState.PlayerStatus.Lost;
+			//GameManager.ins.playerStatus = GameState.PlayerStatus.Lost;
 		}
 	}
 

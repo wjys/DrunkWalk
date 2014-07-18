@@ -54,6 +54,7 @@ public class Eyelids : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
 		if (gettingUp == true){
 			speed = sSpeed;
 			accel = sAccel;
@@ -95,16 +96,18 @@ public class Eyelids : MonoBehaviour {
 			}
 			
 			//If blinked 3 times, pass out.
-				if (topLids.transform.position.y <= (startPosUp.y-10) && blinkCnt < 3){
-					blinkCnt += 1;
-					blinked = true;
-				} else if (topLids.transform.position.y <= (startPosUp.y-10) && blinkCnt >= 3){
-					GameManager.ins.playerStatus = GameState.PlayerStatus.Lost;
-				}
+			if (topLids.transform.position.y <= (startPosUp.y-(7+blinkCnt)) && blinkCnt < 3){
+				blinkCnt += 1;
+				blinked = true;
+			}
+			
+			if (blinkCnt >=3){
+				GameManager.ins.playerStatus = GameState.PlayerStatus.Lost;
+			}
 
-				if (topLids.transform.position.y >= (startPosUp.y-(2*blinkCnt))){
+			if (topLids.transform.position.y >= (startPosUp.y-(3*blinkCnt))){
 					blinked = false;
-				}
+			}
 
 			//newPosUp = new Vector3 (startPosUp.x, -100, startPosUp.z);
 		} else if (GameManager.ins.playerStatus == GameState.PlayerStatus.Fine){
@@ -126,9 +129,9 @@ public class Eyelids : MonoBehaviour {
 
 		if (blinked){
 
-			speed = sSpeed + (0.0005f * blinkCnt);
-			accel = sAccel + (0.0005f * blinkCnt);
-			wakeUp = sWakeUp - (0.2f * blinkCnt);
+			speed = sSpeed*(me.fallCt) + (0.0005f * blinkCnt);
+			accel = sAccel*(me.fallCt) + (0.0005f * blinkCnt);
+			wakeUp = sWakeUp*(me.fallCt) - (0.2f * blinkCnt);
 
 			lidCurl ();
 		}
