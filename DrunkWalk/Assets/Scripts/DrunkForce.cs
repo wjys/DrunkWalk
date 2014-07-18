@@ -23,7 +23,8 @@ public class DrunkForce : MonoBehaviour {
 	// TO DRAG INTO COMPONENT
 	public Rigidbody rhead; 	// object's head rigidbody
 	public DrunkMovement player; 	// script from the player   
-	public Rotation rot; 
+	public Collision colscript; 
+
 	
 	// COROUTINE DELAYS
 	public float drunkDelay;
@@ -55,6 +56,10 @@ public class DrunkForce : MonoBehaviour {
 				//camWobble (switchBackForward(player.direction)); 	// USE THIS IF INVERTED BACK/FWD AT -90 DEGREES
 				camWobble (player.direction); 
 			}
+
+			/*if (colscript.recoiled){
+				recoilWobble (colscript.recoilDir); 
+			}*/
 		}
 		
 		// drunk force
@@ -75,6 +80,8 @@ public class DrunkForce : MonoBehaviour {
 			camLoCapped = false;
 		}
 	}
+
+
 
 	// head rotation too far = fall over
 
@@ -115,27 +122,6 @@ public class DrunkForce : MonoBehaviour {
 			break; 
 		}
 	}
-	/* --------------------------------------------------------------------------------------------------------------------------
-	 * INVERT BACKWARD AND FORWARD IF -90 ROTATION ON PLAYER
-	 * -------------------------------------------------------------------------------------------------------------------------- */
-	private int switchBackForward(int lean){
-		if (rot.turnedLeft == true){
-			if (lean == (int) Dir.forward)
-				return (int) Dir.back; 
-			else if (lean == (int) Dir.back)
-				return (int) Dir.forward; 
-			if (lean == (int) Dir.left)
-				return (int) Dir.right;
-			else if (lean == (int) Dir.right)
-				return (int) Dir.left;
-			else return lean;
-		}
-		return lean; 
-	}
-
-	//private void checkRad(){
-	//	player.radius;
-	//}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * CAMERA WOBBLE
@@ -156,13 +142,12 @@ public class DrunkForce : MonoBehaviour {
 			dof.aperture -= (Mathf.Abs(camInc)*500);
 		}*/
 
-
 		switch (lean) {
 		case (int) Dir.forward:
 			if (!camHiCapped){
 				camInc += camAcc;
 			}
-			transform.localRotation = new Quaternion (transform.localRotation.x + camInc, transform.localRotation.y, transform.localRotation.z, transform.localRotation.w); 
+			transform.rotation = new Quaternion (transform.rotation.x + camInc, transform.rotation.y, transform.rotation.z, transform.rotation.w); 
 			break;
 		case (int) Dir.right:
 			if (!camLoCapped){
@@ -180,13 +165,47 @@ public class DrunkForce : MonoBehaviour {
 			if (!camLoCapped){
 				camInc -= camAcc;
 			}
-			transform.localRotation = new Quaternion (transform.localRotation.x + camInc, transform.localRotation.y, transform.localRotation.z, transform.localRotation.w); 
+			transform.rotation = new Quaternion (transform.rotation.x + camInc, transform.rotation.y, transform.rotation.z, transform.rotation.w); 
 			break;
 		default:
 			break; 
 		}
 	}
 	
+	private void recoilWobble(int lean){
+		
+		switch (lean) {
+		case (int) Dir.forward:
+			if (!camHiCapped){
+				camInc += camAcc;
+			}
+			transform.rotation = new Quaternion (transform.rotation.x - camInc, transform.rotation.y, transform.rotation.z, transform.rotation.w); 
+			break;
+		case (int) Dir.right:
+			if (!camLoCapped){
+				camInc -= camAcc;
+			}
+			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + camInc*0.1f, transform.rotation.z - camInc, transform.rotation.w); 
+			break;
+		case (int) Dir.left:
+			if (!camHiCapped){
+				camInc += camAcc;
+			}
+			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + camInc*0.1f, transform.rotation.z - camInc, transform.rotation.w); 
+			break;
+		case (int) Dir.back:
+			if (!camLoCapped){
+				camInc -= camAcc;
+			}
+			transform.rotation = new Quaternion (transform.rotation.x - camInc, transform.rotation.y, transform.rotation.z, transform.rotation.w); 
+			break;
+		default:
+			break; 
+		}
+	}
+
+
+
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * Delay changing the DRUNK DIRECTION to trigger DRUNK FORCE
 	 * -------------------------------------------------------------------------------------------------------------------------- */

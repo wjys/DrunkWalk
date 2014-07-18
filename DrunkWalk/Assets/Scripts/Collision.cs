@@ -32,9 +32,8 @@ public class Collision : MonoBehaviour {
 	private bool collided;
 
 	//RECOIL STUFF
-	private int recoilDir;
-	private int currentDir; 
-	private bool recoiled; 
+	public int recoilDir; 
+	public bool recoiled; 
 	private enum Dir { forward, right, left, back }; 
 	public float recoilF; 
 
@@ -96,17 +95,15 @@ public class Collision : MonoBehaviour {
 
 	//When colliding with something:
 	void OnTriggerEnter(Collider col) {
-		currentDir = dm.direction; 
 		if (!collided){
 			audio.PlayOneShot (hitit);
 
 			dm.hitRumble = rumbleAmt;
 
-			print ("RECOIL");
-			print ("collision pos " + col.ClosestPointOnBounds(transform.position));
-			print ("player pos " + (transform.position));
-			setRecoilDir(col.ClosestPointOnBounds(transform.position));  
-
+			if (!recoiled){
+				print ("RECOILING");
+				setRecoilDir(col.ClosestPointOnBounds(transform.position), transform.position);  
+			}
 			Debug.Log("Collision");
 			//ouchAnim.SetTrigger("Ouch");
 			
@@ -166,6 +163,7 @@ public class Collision : MonoBehaviour {
 		dm.hitRumble = 0.0f;
 		Debug.Log("No Longer Colliding");
 		soundPlayed = false; 
+		recoiled = false; 
 		//df.stopWobble = false; 
 	}
 
@@ -176,27 +174,29 @@ public class Collision : MonoBehaviour {
 		audio.PlayOneShot(clip); 
 	}
 
-	private void setRecoilDir(Vector3 colPos){
-		if (colPos.z >= transform.position.z) {
+	private void setRecoilDir(Vector3 colPos, Vector3 playerPos){
+		recoiled = true; 
+		print ("collision pos " + colPos + ", player pos    " + playerPos); 
+		if (colPos.x > playerPos.x) {
+			print ("higher x, recoil left"); 
+			recoilForce ((int) Dir.left);
+		}
+		else if (colPos.x < playerPos.x){
+			print ("lower x, recoil right"); 
+			recoilForce ((int) Dir.right); 
+		}
+		else if (colPos.z > playerPos.z) {
+			print ("higher z, recoil back"); 
 			recoilForce ((int) Dir.back);
 		}
 		else {
+			print ("lower z, recoil forward"); 
 			recoilForce ((int) Dir.forward); 
 		}
-
-		if (colPos.x >= transform.position.x) {
-			recoilForce ((int) Dir.left);
-		}
-		else {
-			recoilForce ((int) Dir.right); 
-		}
-
-		print ("recoil dir " + recoilDir); 
-
-
 	}
 
 	private void recoilForce(int direction){
+		recoilDir = direction; 
 		switch (direction) {
 			
 		case (int) Dir.forward:				//print ("moving head forward");
@@ -204,11 +204,11 @@ public class Collision : MonoBehaviour {
 			break;
 			
 		case (int) Dir.right:				//print ("moving head to the right");
-			rhead.AddForce (recoilF*transform.right); 
+			rhead.AddForce (recoilF*1.5f*transform.right); 
 			break;
 			
 		case (int) Dir.left:				//print ("moving head to the left");
-			rhead.AddForce (-recoilF*transform.right); 
+			rhead.AddForce (-recoilF*1.5f*transform.right); 
 			break;
 			
 		case (int) Dir.back:				//print ("stopping head movement");
