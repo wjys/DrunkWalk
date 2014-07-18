@@ -22,7 +22,7 @@ public class DrunkForce : MonoBehaviour {
 	
 	// TO DRAG INTO COMPONENT
 	public Rigidbody rhead; 	// object's head rigidbody
-	public DrunkMovement player; 	// script from the player   
+	public DrunkMovement dm; 	// script from the player   
 
 	
 	// COROUTINE DELAYS
@@ -52,9 +52,9 @@ public class DrunkForce : MonoBehaviour {
 
 		// camera wobble
 		if (!stopWobble) {
-			if (player.radius < player.maxRad) {
+			if (dm.radius < dm.maxRad) {
 				//camWobble (switchBackForward(player.direction)); 	// USE THIS IF INVERTED BACK/FWD AT -90 DEGREES
-				camWobble (player.direction); 
+				camWobble (dm.direction); 
 			}
 		}
 		
@@ -93,7 +93,7 @@ public class DrunkForce : MonoBehaviour {
 		if ((transform.localEulerAngles.x > boundRotForward && transform.localEulerAngles.x < boundRotBack)	||	
 		    (transform.localEulerAngles.z > boundRotRight && transform.localEulerAngles.z < boundRotLeft)){
 			Debug.Log("LOST BC OF ANGLE");
-			player.fallen = true;
+			dm.fallen = true;
 		}
 	}
 	/* --------------------------------------------------------------------------------------------------------------------------
