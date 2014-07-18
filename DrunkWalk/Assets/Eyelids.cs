@@ -122,6 +122,8 @@ public class Eyelids : MonoBehaviour {
 			accel = sAccel;
 			wakeUp = sWakeUp;
 
+			//blinkCnt = 0;
+
 			lidCurl();
 
 			gettingUp = false;

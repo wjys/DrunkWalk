@@ -559,6 +559,9 @@ public class DrunkMovement : InGame {
 		frozen = false;
 		rhead.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY;
 
+		UniMove.ax = initX;
+		UniMove.az = initZ;
+
 		tapCurrent = 0; 
 		gettingUp = false;
 		fallen = false;
