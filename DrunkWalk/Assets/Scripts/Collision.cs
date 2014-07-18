@@ -103,8 +103,9 @@ public class Collision : MonoBehaviour {
 			dm.hitRumble = rumbleAmt;
 
 			print ("RECOIL");
-			setRecoilDir(col.ClosestPointOnBounds(transform.position)); 
-			recoilForce(recoilDir); 
+			print ("collision pos " + col.ClosestPointOnBounds(transform.position));
+			print ("player pos " + (transform.position));
+			setRecoilDir(col.ClosestPointOnBounds(transform.position));  
 
 			Debug.Log("Collision");
 			//ouchAnim.SetTrigger("Ouch");
@@ -113,7 +114,7 @@ public class Collision : MonoBehaviour {
 			if (col.tag == "Wall") {
 				score -= 100;
 				Debug.Log("Wall Collision - " + score);
-				df.stopWobble = true; 
+				//df.stopWobble = true; 
 			}
 			else if (col.tag == "Box"){
 				score -= 200;
