@@ -140,8 +140,6 @@ public class DrunkMovement : InGame {
 	}
 	
 	void Update () {
-		
-		//Debug.Log(radius);
 
 		resetY (); 
 		
@@ -155,24 +153,21 @@ public class DrunkMovement : InGame {
 		if (fallen) {
 			tapsToGetUp();
 			direction = -1;
-			//fallToLose();
 		}
 		else {  
 			transform.LookAt(target, Vector3.up); 
 			angleBlur ();
 			if (controller == (int) controlInput.mouse) 
 				mouse = Input.mousePosition;
-			direction = getLeanDirection(); 		//print ("1. got direction");
+			direction = getLeanDirection(); 
 			fallen = isLeaningTooMuch (); 			
-			moveHead (direction); 					//print ("2. moved head"); 
+			moveHead (direction); 
 
 		}
 
 		playFootstep(radius * 100);
 
 		newPos = transform.position;
-		//newRot = transform.rotation;
-
 	}
 	
 	void FixedUpdate() {
@@ -204,10 +199,6 @@ public class DrunkMovement : InGame {
 				currentSoundFrame = 0; 
 			}
 		}
-
-		//transform.position = Vector3.Lerp(transform.position, newPos, smooth * Time.deltaTime);
-		//newRot = Quaternion.Lerp(new Quaternion (0, newRot.y, 0, newRot.w), new Quaternion (transform.rotation.x, 0, transform.rotation.z, 0), smooth * Time.deltaTime); 
-
 	}
 
 
@@ -252,9 +243,7 @@ public class DrunkMovement : InGame {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	private void angleBlur (){
-		
-		//print ("ap = " + dof.aperture); 
-	
+
 		if (radius >= 0.5f && radius <= maxRad){
 			dof.aperture += 0.5f;
 		} else if (radius < 0.5f){
@@ -268,31 +257,31 @@ public class DrunkMovement : InGame {
 	 * (3) otherwise return false
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
-	private int getLeanDirection(){	//print("entered get direction");
-		// ----------------- CHECK ALL DIRECTIONS NO PRIORITY
+	private int getLeanDirection(){
+
 		if (controller == (int) controlInput.mouse) {
 			if (mouse.y < halfHeight) {	
 				if (Mathf.Abs(mouse.x - halfWidth) < Mathf.Abs(mouse.y - halfHeight)){ 
 					return (int) Dir.back; 
 				}
 				else {
-					if (mouse.x >= halfWidth){		// print ("leaning right");
+					if (mouse.x >= halfWidth){		
 						return (int) Dir.right; 
 					}
-					else {							// print ("leaning left");
+					else {	
 						return (int) Dir.left; 
 					}
 				}
 			}
 			else if (mouse.y >= halfHeight) {
-				if (Mathf.Abs(mouse.x - halfWidth) < Mathf.Abs(mouse.y - halfHeight)){	// print ("leaning forward");
+				if (Mathf.Abs(mouse.x - halfWidth) < Mathf.Abs(mouse.y - halfHeight)){
 					return (int) Dir.forward; 
 				}
 				else {
-					if (mouse.x >= halfWidth){ 	// print ("leaning right");
+					if (mouse.x >= halfWidth){ 
 						return (int) Dir.right; 
 					}
-					else {						// print ("leaning left");
+					else {
 						return (int) Dir.left; 
 					}
 				}
@@ -314,8 +303,7 @@ public class DrunkMovement : InGame {
 			return (0);
 		}
 		else if (controller == (int) controlInput.xbox){
-			print("x " + Input.GetAxis ("LeftStickX"));
-			print("y " + Input.GetAxis ("LeftStickY"));
+
 			if (Input.GetAxis("LeftStickY") > 0.9f){
 				return (int) Dir.back;
 			}
@@ -332,8 +320,10 @@ public class DrunkMovement : InGame {
 		return (0);
 	}
 
-
-
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * Play the footsteps -> time between footsteps depend on the radius between the head and the feet 
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+	
 	private void playFootstep (float speed) {
 		footstepTimer += Time.deltaTime;
 		if (direction > -1){
@@ -344,34 +334,15 @@ public class DrunkMovement : InGame {
 				}
 			}
 	}
-
-	// public void toggleLR(){
-	// 	if (wentL){
-	// 		hinc = 1;
-	// 		wentL = false;
-	// 	} else if (wentR){
-	// 		hinc = 1;
-	// 		wentR = false;
-	// 	}
-	// }
-
-	// public void toggleFB(){
-	// 	if (wentF){
-	// 		hinc = 1;
-	// 		wentF = false;
-	// 	} else if (wentB){
-	// 		hinc = 1;
-	// 		wentB = false;
-	// 	}
-	// }
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
+	 * RETURN BOOL to fallen: true if isLeaningTooMuch. NO ARGS. 
 	 * (1) Check the current angle between the vector between the head rigidbody and the feed rigidboy with the vertical vector
 	 * (2) If the angle is at least 30 degrees, then you are leaning too much! (return true)
 	 * (3) otherwise return false
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
-	private bool isLeaningTooMuch(){ //print ("checking lean");
+	private bool isLeaningTooMuch(){ 
 		
 		float x = Mathf.Abs (rfeet.position.x - transform.position.x);
 		float y = Mathf.Abs (rfeet.position.z - transform.position.z); 
@@ -386,30 +357,29 @@ public class DrunkMovement : InGame {
 
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * DEPENDING ON THE LEAN DIRECTION, ADD A FORCE TO THE RIGIDBODY OF THE HEAD
-	 * 
+	 * NO RETURN. ARG: the direction the player is leaning 
 	 * (1) switch/case to check which direction we're leaning
 	 * (2) add the force in the appropriate direction
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
-	private void moveHead (int direction){	//print ("moving head ");
+	private void moveHead (int direction){
 		//Invoke("resetHinc", 1);
 		switch (direction) {
 			
-		case (int) Dir.forward:				//print ("moving head forward");
+		case (int) Dir.forward:	
 			rhead.AddForce (hinc*transform.forward);  
 			break;
 			
-		case (int) Dir.right:				//print ("moving head to the right");
+		case (int) Dir.right:
 			rhead.AddForce (hinc*transform.right); 
 			break;
 			
-		case (int) Dir.left:				//print ("moving head to the left");
+		case (int) Dir.left:
 			rhead.AddForce (-hinc*transform.right); 
 			break;
 			
-		case (int) Dir.back:				//print ("stopping head movement");
+		case (int) Dir.back:
 			rhead.AddForce (-hinc*transform.forward); 
-			//rhead.position = new Vector3 (rfeet.position.x, rhead.position.y, rfeet.position.z); 
 			break; 
 			
 		default:
@@ -418,36 +388,21 @@ public class DrunkMovement : InGame {
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
-	 * AFTER DELAY, PLACE THE FEET DIRECTLY UNDER THE HEAD 
+	 * NO ARGS. NO RETURN.
+	 * AFTER DELAY, PLACE THE FEET DIRECTLY UNDER THE HEAD.
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
-	private void placeFeet (){			//print ("moving feet");
-		// rfeet.MovePosition(Vector3.Lerp(rfeet.position, transform.position, smooth * Time.frameCount));
-
-
-		//float time = 1.0f;
-		//time += speed;
-		//float fhDistZ = transform.position.z - ft.transform.position.z;
-		//float fhDistX = transform.position.x - ft.transform.position.x;
-
-
-		//StartCoroutine(lerpFeet(speed, fhDistZ, fhDistX));
-
-
+	private void placeFeet (){
 		rfeet.MovePosition(new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z)); 
 	}
 
-	/*IEnumerator lerpFeet( float time, float fhDistZ, float fhDistX) {
-		for (float t = 0; t < time; t+= 0.0005f) {
-			float feetOffsetX = fhDistX * (t/time);
-			float feetOffsetZ = fhDistZ * (t/time);
-			ft.transform.position = new Vector3(transform.position.x + feetOffsetX, ft.transform.position.y, transform.position.z + feetOffsetZ);
-			yield return 0;	
-		}
-	}*/
-
 	/* --------------------------------------------------------------------------------------------------------------------------
-	 * FALLEN STUFF
+	 * WHAT HAPPENS WHEN YOU FALL - P1 
+	 * stopRead(): no arg, no return
+	 * 		(1) saves the position and rotation of the player before falls, 
+	 * 		(2) freezes player movement and rotation
+	 * 		(3) increase the number of times the player has fallen
+	 * 		(4) if the player has fallen the max number of times allowed, lose the game 
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	private void stopRead(){
@@ -455,19 +410,25 @@ public class DrunkMovement : InGame {
 		fallenRot = transform.rotation; 
 		currentFrame = 0; 
 		frozen = true;
-		//rhead.isKinematic = true;
 
 		rhead.constraints = RigidbodyConstraints.FreezeAll;
 		fallCt++; 
 		if (fallCt >= maxFallCt) {
 			GameManager.ins.playerStatus = GameState.PlayerStatus.Lost;
 		}
-		//df.enabled = false;
 	}
-	
-	public void tapsToGetUp(){
 
-		print ("FALLEN");
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * WHAT HAPPENS WHEN YOU FALL - PART 2: ELECTRIC BOOGALOO
+	 * tapsToGetUp(): no arg, no return
+	 * 		(1) change the player status in the game manager to fallen
+	 * 		(2) switch to the fall camera
+	 * 		(3) play the fall over animation
+	 * 		(4) stopRead() if hasn't already been stopped (i.e. if frozen is false)
+	 * 		(5) 
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+
+	public void tapsToGetUp(){
 
 		//Set Global Player State
 		if (GameManager.ins.playerStatus != GameState.PlayerStatus.Fallen){
@@ -480,7 +441,6 @@ public class DrunkMovement : InGame {
 
 		//Play fallover Anim
 		meAnim.SetBool("fallOver", true);
-	
 
 		//At this point, no movement should be read
 		if (!frozen){
@@ -498,7 +458,6 @@ public class DrunkMovement : InGame {
 		}
 		if (tapCurrent >= tapsGetUp) {
 			//SUCCESSFULLY GOT UP
-			print ("WINnie");
 
 			meAnim.SetBool("fallOver", false);
 			meAnim.SetBool("getUp", true);
@@ -511,7 +470,6 @@ public class DrunkMovement : InGame {
 			}
 		} // LOST
 		else if (currentFrame >= frameFall){
-			print ("BOOi"); 
 			//GameManager.ins.playerStatus = GameState.PlayerStatus.Lost;
 		}
 	}
@@ -527,23 +485,9 @@ public class DrunkMovement : InGame {
 		newPos = fallenPos;
 
 		//RESET POSITION
-		//transform.position = fallenPos;
-		//rfeet.position = new Vector3 (fallenPos.x, rfeet.position.y, fallenPos.z); 
-
-		//transform.rotation = new Quaternion (0, fallenRot.y, 0, fallenRot.w);
-		//transform.rotation = Quaternion.Slerp(new Quaternion (0, 0, 0, 0), new Quaternion (0, fallenRot.y, 0, fallenRot.w), 0.01f); 
 		transform.position = Vector3.Lerp(transform.position, newPos, smooth * Time.deltaTime);
 		rfeet.position = new Vector3 (fallenPos.x, rfeet.position.y, fallenPos.z);
 		StartCoroutine(backToOrigin());
-
-
-		//frozen = false;
-		//rhead.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
-
-		//tapCurrent = 0; 
-
-		//fallen = false;
-		//df.enabled = true;
 
 		//Set Global Player State
 		
@@ -567,32 +511,6 @@ public class DrunkMovement : InGame {
 		fallen = false;
 		//newRot = transform.rotation;
 
-	}
-	
-	/* --------------------------------------------------------------------------------------------------------------------------
-	 * !! FOR NOW, IF LEAN TOO MUCH, FALL AND LOSE THE GAME
-	 * 
-	 * (1) switch from main camera view to the fall camera view (going down to the floor)
-	 * (2) play fallING sounds (progressively going down sounds)
-	 * (3) play some kind of blink or blackout animation (fade out to black)
-	 * (4) play fallEN to floor sound (random between many different fallen sounds)
-	 * (5) SWITCH TO LOSE SCREEN (different scene)
-	 * -------------------------------------------------------------------------------------------------------------------------- */
-	
-	public void fallToLose(){	
-		//print ("YOU LOSE"); 
-		
-		// (1) switch cameras: from main to fallCam
-		
-		// (2) play FALLING sounds
-		
-		// (3) animation? blink/blackout 
-		
-		// (4) play FALLEN TO FLOOR sound
-		
-		// (5) SWITCH TO LOSE SCREEN
-		Debug.Log ("Fallen");
-		//Application.LoadLevel("Lost"); 
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
