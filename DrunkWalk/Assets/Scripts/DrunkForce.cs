@@ -16,6 +16,7 @@ public class DrunkForce : MonoBehaviour {
 	public float camAcc;    // cam wobble acceleration
 	public float camHiCap; 	// cam wobble high-cap
 	public float camLoCap;	// cam wobble low-cap
+	public float rotInc;	// cam orient inc
 
 	private bool camHiCapped;	// cam wobble high-cap reached
 	private bool camLoCapped;	// cam wobble low-cap reached
@@ -157,13 +158,13 @@ public class DrunkForce : MonoBehaviour {
 			if (!camLoCapped){
 				camInc -= camAcc;
 			}
-			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y - camInc*0.1f, transform.rotation.z + camInc, transform.rotation.w); 
+			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + rotInc, transform.rotation.z + camInc, transform.rotation.w); 
 			break;
 		case (int) Dir.left:
 			if (!camHiCapped){
 				camInc += camAcc;
 			}
-			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y - camInc*0.1f, transform.rotation.z + camInc, transform.rotation.w); 
+			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y - rotInc, transform.rotation.z + camInc, transform.rotation.w); 
 			break;
 		case (int) Dir.back:
 			if (!camLoCapped){

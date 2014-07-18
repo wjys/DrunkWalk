@@ -11,6 +11,9 @@ public class Eyelids : MonoBehaviour {
 
 	//Blink Counter
 	public int blinkCnt;
+
+	//GuiText
+	public GUIText Tap;
 	
 	//Starting Position
 	private Vector3 startPosUp;
@@ -64,6 +67,9 @@ public class Eyelids : MonoBehaviour {
 			//Player Fell
 			if (GameManager.ins.playerStatus == GameState.PlayerStatus.Fallen){
 			
+			//Enable gui
+				Tap.enabled = true;
+
 			//Drooping gets faster
 			speed += accel;
 
@@ -112,6 +118,7 @@ public class Eyelids : MonoBehaviour {
 			//newPosUp = new Vector3 (startPosUp.x, -100, startPosUp.z);
 		} else if (GameManager.ins.playerStatus == GameState.PlayerStatus.Fine){
 			gettingUp = true;
+				Tap.enabled = false;
 		}
 		}
 	}

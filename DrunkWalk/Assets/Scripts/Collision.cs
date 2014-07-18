@@ -84,7 +84,7 @@ public class Collision : MonoBehaviour {
 	}
 
 	void OnGUI () {
-		GUI.Box(new Rect(10,10,100,23), "Score: " + score);
+		//GUI.Box(new Rect(10,10,100,23), "Score: " + score);
 		// if (GameOver){
 		// 	GUI.Box(new Rect(670,300,100,25), "GAME OVER");
 		// 	if (Input.GetKeyDown ("space")) {  
@@ -95,15 +95,16 @@ public class Collision : MonoBehaviour {
 
 	//When colliding with something:
 	void OnTriggerEnter(Collider col) {
+		if (!recoiled){
+			print ("RECOILING");
+			setRecoilDir(col.ClosestPointOnBounds(transform.position), transform.position);  
+		}
 		if (!collided){
+			//Yell();
 			audio.PlayOneShot (hitit);
 
 			dm.hitRumble = rumbleAmt;
 
-			if (!recoiled){
-				print ("RECOILING");
-				setRecoilDir(col.ClosestPointOnBounds(transform.position), transform.position);  
-			}
 			Debug.Log("Collision");
 			//ouchAnim.SetTrigger("Ouch");
 			
@@ -146,7 +147,8 @@ public class Collision : MonoBehaviour {
 
 			//If not currently yelling:
 			if (yelling == false){
-				// Yell();
+				Debug.Log ("YELL");
+				//Yell();
 			} else if (yelling == true){
 				StopAllCoroutines();
 			}
@@ -222,9 +224,10 @@ public class Collision : MonoBehaviour {
 		print ("RECOILED!"); 
 	}
 
+	/*
 	//Instantiate a hurt sound
 	 public void Yell () {
-		GameObject newOuch = Instantiate(ouch[1], transform.position + (0.8f * Vector3.up) + (2.5f * Vector3.forward) + (0.5f * Vector3.right), Quaternion.identity) as GameObject;
+		GameObject newOuch = Instantiate(ouch[0], transform.position + (0.8f * Vector3.up) + (2.5f * Vector3.forward) + (0.5f * Vector3.right), Quaternion.identity) as GameObject;
 		this.StartCoroutine(this.DestroyYell(newOuch, 1.0f));
 	}
 
@@ -234,5 +237,5 @@ public class Collision : MonoBehaviour {
 	 	Destroy(_yell);
 	 	yelling = true;
 	 }
-
+*/
 }
