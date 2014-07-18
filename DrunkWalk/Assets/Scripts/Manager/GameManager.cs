@@ -54,6 +54,12 @@ public class GameManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+	
+	if (playerStatus == GameState.PlayerStatus.Lost){
+			//LOST
+			Application.LoadLevel("Lost");
+	}
+
 		if (status == GameState.GameStatus.Game){
 		 	if (Input.GetKeyDown("p")){
           	 	if (!paused) {
