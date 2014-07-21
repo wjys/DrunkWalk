@@ -12,6 +12,7 @@ public class DrunkForce : MonoBehaviour {
 	public float drunkInc;	// amount by which we increment/multiply the toppling force
 	
 	// CAMERA PARAMS
+	public float smooth; 
 	public float camInc; 	// cam wobble amount
 	public float camAcc;    // cam wobble acceleration
 	public float camHiCap; 	// cam wobble high-cap
@@ -23,7 +24,8 @@ public class DrunkForce : MonoBehaviour {
 	
 	// TO DRAG INTO COMPONENT
 	public Rigidbody rhead; 	// object's head rigidbody
-	public DrunkMovement dm; 	// script from the player   
+	public DrunkMovement dm; 	// script from the player  
+	public GameObject feet; 
 
 	
 	// COROUTINE DELAYS
@@ -55,7 +57,7 @@ public class DrunkForce : MonoBehaviour {
 		if (!stopWobble) {
 			if (dm.radius < dm.maxRad) {
 				//camWobble (switchBackForward(player.direction)); 	// USE THIS IF INVERTED BACK/FWD AT -90 DEGREES
-				//camWobble (dm.direction); 
+				camWobble (dm.direction); 
 			}
 		}
 		
@@ -149,28 +151,40 @@ public class DrunkForce : MonoBehaviour {
 
 		switch (lean) {
 		case (int) Dir.forward:
-			if (!camHiCapped){
+			/*if (!camHiCapped){
 				camInc += camAcc;
 			}
-			transform.rotation = new Quaternion (transform.rotation.x + camInc, transform.rotation.y, transform.rotation.z, transform.rotation.w); 
+			transform.rotation = new Quaternion (transform.rotation.x + camInc, transform.rotation.y, transform.rotation.z, transform.rotation.w); */
+			transform.localRotation = Quaternion.Lerp (transform.localRotation, 
+			                                           Quaternion.Euler (Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.localPosition.y - feet.transform.localPosition.y))/(Mathf.Abs(transform.localPosition.z - feet.transform.localPosition.z))))), 
+			                                           Time.deltaTime * smooth);
 			break;
 		case (int) Dir.right:
-			if (!camLoCapped){
+			/*if (!camLoCapped){
 				camInc -= camAcc;
 			}
-			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + rotInc, transform.rotation.z + camInc, transform.rotation.w); 
+			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + rotInc, transform.rotation.z + camInc, transform.rotation.w); */
+			transform.localRotation = Quaternion.Lerp (transform.localRotation, 
+			                                           Quaternion.Euler (Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.localPosition.y - feet.transform.localPosition.y))/(Mathf.Abs(transform.localPosition.x - feet.transform.localPosition.x))))), 
+			                                           Time.deltaTime * smooth);
 			break;
 		case (int) Dir.left:
-			if (!camHiCapped){
+			/*if (!camHiCapped){
 				camInc += camAcc;
 			}
-			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y - rotInc, transform.rotation.z + camInc, transform.rotation.w); 
+			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y - rotInc, transform.rotation.z + camInc, transform.rotation.w); */
+			transform.localRotation = Quaternion.Lerp (transform.localRotation, 
+			                                           Quaternion.Euler (Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.localPosition.y - feet.transform.localPosition.y))/(Mathf.Abs(transform.localPosition.x - feet.transform.localPosition.x))))), 
+			                                           Time.deltaTime * smooth);
 			break;
 		case (int) Dir.back:
-			if (!camLoCapped){
+			/*if (!camLoCapped){
 				camInc -= camAcc;
 			}
-			transform.rotation = new Quaternion (transform.rotation.x + camInc, transform.rotation.y, transform.rotation.z, transform.rotation.w); 
+			transform.rotation = new Quaternion (transform.rotation.x + camInc, transform.rotation.y, transform.rotation.z, transform.rotation.w);*/
+			transform.localRotation = Quaternion.Lerp (transform.localRotation, 
+			                                           Quaternion.Euler (Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.localPosition.y - feet.transform.localPosition.y))/(Mathf.Abs(transform.localPosition.z - feet.transform.localPosition.z))))), 
+			                                           Time.deltaTime * smooth);
 			break;
 		default:
 			break; 
