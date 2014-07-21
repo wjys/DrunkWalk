@@ -130,8 +130,6 @@ public class Rotation : MonoBehaviour {
 					transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y - rotInc, transform.rotation.z, transform.rotation.w); 
 					return (int) Turn.left; 
 				}	
-				else if (rotated)
-					delaying = true; 
 			}
 			if (dm.direction == (int) Dir.right){
 				if (Input.GetMouseButton(1)){	// right mouse button
@@ -170,6 +168,7 @@ public class Rotation : MonoBehaviour {
 				else {*/
 					print ("turning left"); 
 					transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y - rotInc, transform.rotation.z, transform.rotation.w); 
+					return (int) Turn.left; 
 				//}
 			}
 			if (current == (int) Turn.right){
@@ -181,8 +180,10 @@ public class Rotation : MonoBehaviour {
 				else {*/
 					print ("turning right"); 
 					transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + rotInc, transform.rotation.z, transform.rotation.w); 
+					return (int) Turn.right;
 				//}
 			}
+			return (int) Turn.idle; 
 		}
 		else if (dm.controller == (int) controlInput.xbox){
 			if (Input.GetAxis("RightStickX") < -0.9f){
@@ -199,5 +200,6 @@ public class Rotation : MonoBehaviour {
 			}
 			return (int) Turn.idle; 
 		}
+		return (int)Turn.idle; 
 	}
 }
