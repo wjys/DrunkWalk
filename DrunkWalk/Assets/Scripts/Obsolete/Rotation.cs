@@ -160,28 +160,27 @@ public class Rotation : MonoBehaviour {
 				return (int) Turn.idle; 
 			}
 			if (current == (int) Turn.left){
-				/*if (UniMove.gy < boundRight && rotated){
+				if (UniMove.gy < boundRight && rotated){
 					print ("stop turning left"); 
 					delaying = true; 
 					return (int) Turn.idle;
-				}
-				else {*/
+				else {
 					print ("turning left"); 
 					transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y - rotInc, transform.rotation.z, transform.rotation.w); 
 					return (int) Turn.left; 
-				//}
+				}
 			}
 			if (current == (int) Turn.right){
-				/*if (UniMove.gy > boundLeft && rotated){
+				if (UniMove.gy > boundLeft && rotated){
 					print ("stop turning right"); 
 					delaying = true; 
 					return (int) Turn.idle;
 				}
-				else {*/
+				else {
 					print ("turning right"); 
 					transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + rotInc, transform.rotation.z, transform.rotation.w); 
 					return (int) Turn.right;
-				//}
+				}
 			}
 			return (int) Turn.idle; 
 		}
