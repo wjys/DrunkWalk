@@ -26,7 +26,7 @@ public class Rotation : MonoBehaviour {
 	public float cur;
 
 	public float rotInc; 
-	public bool mouseClicked; 
+	public bool rotated; 
 
 
 	// get direction of lean 
@@ -53,7 +53,7 @@ public class Rotation : MonoBehaviour {
 		rotating = false; 
 		delaying = false; 
 		feetPlaced = false;
-		mouseClicked = false; 
+		rotated = false; 
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -86,10 +86,11 @@ public class Rotation : MonoBehaviour {
 
 	private void delayRotation(){
 		if (currentFrame >= rotateDelay) {
+			//rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ; 
 			currentFrame = 0;
 			delaying = false; 
 			feetPlaced = false;
-			rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ; 
+			rotated = false; 
 		}
 		currentFrame++;
 	}
@@ -119,67 +120,62 @@ public class Rotation : MonoBehaviour {
 
 		float y = transform.eulerAngles.y;
 
-		if (dm.direction == (int) Dir.left || dm.direction == (int) Dir.right){
-			if (dm.controller == (int) controlInput.mouse){
-				if (dm.direction == (int) Dir.left){
-					if (Input.GetMouseButton(0)){	// left mouse button
-						mouseClicked = true; 
-						rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY; 
-						transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y - rotInc, transform.rotation.z, transform.rotation.w); 
-						return (int) Turn.left; 
-					}	
-					else if (mouseClicked)
-						delaying = true; 
-				}
-				if (dm.direction == (int) Dir.right){
-					if (Input.GetMouseButton(1)){	// right mouse button
-						mouseClicked = true; 
-						rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY; 
-						transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + rotInc, transform.rotation.z, transform.rotation.w);  
-						return (int) Turn.right; 
-					}
-					else if (mouseClicked)
-						delaying = true; 
-				}
-				return (-1); 
-			}
-			else if (dm.controller == (int) controlInput.move){
-				if (UniMove.gy >= boundLeft){
+		if (dm.controller == (int) controlInput.mouse){
+			if (dm.direction == (int) Dir.left){
+				if (Input.GetMouseButton(0)){	// left mouse button
+					rotated = true; 
 					rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY; 
 					transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y - rotInc, transform.rotation.z, transform.rotation.w); 
-					if (UniMove.gy < boundRight){
-						delaying = true;
-					}
-					return (int) Turn.left;
-				}
-				if (dm.direction == (int) Dir.right){
-					if (UniMove.gy <= boundRight){
-						rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY; 
-						transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + rotInc, transform.rotation.z, transform.rotation.w); 
-						if (UniMove.gy > boundLeft){
-							delaying = true; 
-						}
-						return (int) Turn.right; 
-					}
-				}
+					return (int) Turn.left; 
+				}	
+				else if (rotated)
+					delaying = true; 
 			}
-			else if (dm.controller == (int) controlInput.xbox){
-				if (Input.GetAxis("RightStickX") < -0.9f){
+			if (dm.direction == (int) Dir.right){
+				if (Input.GetMouseButton(1)){	// right mouse button
+					rotated = true; 
 					rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY; 
-					transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y - rotInc, transform.rotation.z, transform.rotation.w); 
-					if (Input.GetAxis ("RightStickX") >= 0.0f){
-						delaying = true; 
-					}
-					return (int) Turn.left;
-				}
-				if (Input.GetAxis("RightStickX") > 0.9f){
-					rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY; 
-					transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + rotInc, transform.rotation.z, transform.rotation.w); 
-					if (Input.GetAxis ("RightStickX") <= 0.0f){
-						delaying = true; 
-					}
+					transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + rotInc, transform.rotation.z, transform.rotation.w);  
 					return (int) Turn.right; 
 				}
+				else if (rotated)
+					delaying = true; 
+			}
+			return (-1); 
+		}
+		else if (dm.controller == (int) controlInput.move){
+			if (dm.direction == (int) Dir.left){
+				if (UniMove.gy >= boundLeft){
+					rotated = true; 
+					rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY; 
+					transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y - rotInc, transform.rotation.z, transform.rotation.w); 
+					return (int) Turn.left;
+				}
+			}
+			if (dm.direction == (int) Dir.right){
+				if (UniMove.gy <= boundRight){
+					rotated = true; 
+					rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY; 
+					transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + rotInc, transform.rotation.z, transform.rotation.w); 
+					return (int) Turn.right; 
+				}
+			}
+			if ((UniMove.gy > boundLeft && rotated && direction != (int) Dir.right) || (UniMove.gy < boundRight && rotated && direction != (int) Dir.left)){
+				delaying = true; 
+			}
+		}
+		else if (dm.controller == (int) controlInput.xbox){
+			if (Input.GetAxis("RightStickX") < -0.9f){
+				print ("turning LEFT"); 
+				//rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY; 
+				transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y - rotInc, transform.rotation.z, transform.rotation.w); 
+				return (int) Turn.left;
+			}
+			if (Input.GetAxis("RightStickX") > 0.9f){
+				print ("turning RIGHT");
+				//rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY; 
+				transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + rotInc, transform.rotation.z, transform.rotation.w);
+				return (int) Turn.right; 
 			}
 		}
 		return (-1); 
