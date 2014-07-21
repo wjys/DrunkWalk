@@ -18,11 +18,14 @@ public class Rotation : MonoBehaviour {
 	public float boundRight; 
 
 	// SHOULD I SET UP ITS OWN BOOL HERE TO CHECK FOR MOUSE VS MOVE INPUT OR JUST CHECK IN DRUNKMOVEMENT?
-	public DrunkMovement player; 
+	public DrunkMovement dm; 
+	private enum Dir { forward, right, left, back }; // to modify drunkDir
 	public Rigidbody rhead; 
 	public GameObject feet; 
 	public float to; 	// destination rotation
 	public float cur;
+
+	public float rotInc; 
 
 
 	// get direction of lean 
@@ -57,21 +60,16 @@ public class Rotation : MonoBehaviour {
 	void Update () {
 
 		// PLAYER HASN'T FALLEN
-		if (!player.fallen){
+		if (!dm.fallen){
 			// PLAYER NOT ROTATING => GET DIRECTION
 			if (!rotating){
-				direction = getTurnDirection();
-			}
-			// PLAYER IS ROTATING & NOT RESETTING THE MOVE (DELAY) => TURN
-			else if (!delaying){ 
 				if (!feetPlaced){
 					placeFeet (); 
 				}
 				df.enabled = false;
 				rhead.constraints = RigidbodyConstraints.FreezeAll;
-				turnHead(direction);
+				direction = getTurnDirection();
 			}
-			// RESETTING THE MOVE (DELAY) => NO TURNING/NO GETTING DIRECTION
 			else {
 				delayRotation (); 
 			}
@@ -89,7 +87,6 @@ public class Rotation : MonoBehaviour {
 	private void delayRotation(){
 		if (currentFrame >= rotateDelay) {
 			currentFrame = 0;
-			delaying = false; 
 			rotating = false; 
 		}
 		currentFrame++;
@@ -115,131 +112,55 @@ public class Rotation : MonoBehaviour {
 
 		float y = transform.eulerAngles.y;
 
-		if (player.controller == (int) controlInput.mouse){
-			if (Input.GetMouseButtonDown(0)){	// left mouse button
-
-				if ((y > -5 && y < 5) || (y > 355)){
-					to = -45.0f; 
+		if (dm.direction == (int) Dir.left || dm.direction == (int) Dir.right){
+			if (dm.controller == (int) controlInput.mouse){
+				if (dm.direction == (int) Dir.left){
+					if (Input.GetMouseButton(0)){	// left mouse button
+						rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+						transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y - rotInc, transform.rotation.z, transform.rotation.w); 
+						rotating = true; 
+						return (int) Turn.left; 
+					}	
 				}
-				else if ((y >-50 && y < -40) || (y > 310 && y < 320)){
-					to = -90.0f; 
+				if (dm.direction == (int) Dir.right){
+					if (Input.GetMouseButton(1)){	// right mouse button
+						rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+						transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + rotInc, transform.rotation.z, transform.rotation.w); 
+						rotating = true; 
+						return (int) Turn.right; 
+					}
 				}
-				else if (y > 85 && y < 95){
-					to = 45.0f; 
-				}
-				else if (y > 40 && y < 50){
-					to = 0.0f; 
-				}
-				else {
-					return (-1); 
-				}
-				rotating = true; 
-				rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-				return (int) Turn.left; 
+				return (-1); 
 			}
-			if (Input.GetMouseButton(1)){	// right mouse button
-				if ((y > -5 && y < 5) || (y > 355)){
-					to = 45.0f; 
+			else if (dm.controller == (int) controlInput.move){
+				if (UniMove.gy >= boundLeft){
+					rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+					transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y - rotInc, transform.rotation.z, transform.rotation.w); 
+					rotating = true; 
+					return (int) Turn.left;
 				}
-				else if (y > 40 && y < 50){
-					to = 90.0f; 
+				if (dm.direction == (int) Dir.right){
+					if (UniMove.gy <= boundRight){
+						rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+						transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + rotInc, transform.rotation.z, transform.rotation.w); 
+						rotating = true; 
+						return (int) Turn.right; 
+					}
 				}
-				else if ((y > -95 && y < -85) || (y > 265 && y < 275)){
-					to = -45.0f; 
-				}
-				else if ((y > -50 && y < -40) || (y > 310 && y < 320)){
-					to = 0.0f; 
-				}
-				else {
-					return (-1); 
-				}
-				rotating = true; 
-				rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-				return (int) Turn.right; 
 			}
-		}
-		else if (player.controller == (int) controlInput.move){
-			if (UniMove.gy <= boundRight){
-				if ((y > -5 && y < 5) || (y > 355)){
-					to = 45.0f; 
+			else if (dm.controller == (int) controlInput.xbox){
+				if (Input.GetAxis("RightStickX") < -0.9f){
+					rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+					transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y - rotInc, transform.rotation.z, transform.rotation.w); 
+					rotating = true; 
+					return (int) Turn.left;
 				}
-				else if (y > 40 && y < 50){
-					to = 90.0f; 
+				if (Input.GetAxis("RightStickX") > 0.9f){
+					rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+					transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + rotInc, transform.rotation.z, transform.rotation.w); 
+					rotating = true; 
+					return (int) Turn.right; 
 				}
-				else if ((y > -95 && y < -85) || (y > 265 && y < 275)){
-					to = -45.0f; 
-				}
-				else if ((y > -50 && y < -40) || (y > 310 && y < 320)){
-					to = 0.0f; 
-				}
-				else {
-					return (-1); 
-				}
-				rotating = true; 
-				rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-				return (int) Turn.right; 
-			}
-			if (UniMove.gy >= boundLeft){
-				if ((y > -5 && y < 5) || (y > 355)){
-					to = -45.0f; 
-				}
-				else if ((y >-50 && y < -40) || (y > 310 && y < 320)){
-					to = -90.0f; 
-				}
-				else if (y > 85 && y < 95){
-					to = 45.0f; 
-				}
-				else if (y > 40 && y < 50){
-					to = 0.0f; 
-				}
-				else {
-					return (-1); 
-				}
-				rotating = true; 
-				rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-				return (int) Turn.left;
-			}
-		}
-		else if (player.controller == (int) controlInput.xbox){
-			if (Input.GetAxis("RightStickX") < -0.9f){
-				if ((y > -5 && y < 5) || (y > 355)){
-					to = -45.0f; 
-				}
-				else if ((y >-50 && y < -40) || (y > 310 && y < 320)){
-					to = -90.0f; 
-				}
-				else if (y > 85 && y < 95){
-					to = 45.0f; 
-				}
-				else if (y > 40 && y < 50){
-					to = 0.0f; 
-				}
-				else {
-					return (-1); 
-				}
-				rotating = true; 
-				rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-				return (int) Turn.left;
-			}
-			if (Input.GetAxis("RightStickX") > 0.9f){
-				if ((y > -5 && y < 5) || (y > 355)){
-					to = 45.0f; 
-				}
-				else if (y > 40 && y < 50){
-					to = 90.0f; 
-				}
-				else if ((y > -95 && y < -85) || (y > 265 && y < 275)){
-					to = -45.0f; 
-				}
-				else if ((y > -50 && y < -40) || (y > 310 && y < 320)){
-					to = 0.0f; 
-				}
-				else {
-					return (-1); 
-				}
-				rotating = true; 
-				rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-				return (int) Turn.right; 
 			}
 		}
 		return (-1); 
@@ -260,7 +181,7 @@ public class Rotation : MonoBehaviour {
 			turnedLeft = true;
 			cur -= speed; 
 			if (cur <= to){
-				if (player.controller == (int) controlInput.move){
+				if (dm.controller == (int) controlInput.move){
 					delaying = true; 
 				}
 				else {
@@ -276,7 +197,7 @@ public class Rotation : MonoBehaviour {
 			turnedLeft = false;
 			cur += speed; 
 			if (cur >= to){
-				if (player.controller == (int) controlInput.move){
+				if (dm.controller == (int) controlInput.move){
 					delaying = true; 
 				}
 				else {

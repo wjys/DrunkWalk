@@ -55,13 +55,13 @@ public class DrunkForce : MonoBehaviour {
 		if (!stopWobble) {
 			if (dm.radius < dm.maxRad) {
 				//camWobble (switchBackForward(player.direction)); 	// USE THIS IF INVERTED BACK/FWD AT -90 DEGREES
-				camWobble (dm.direction); 
+				//camWobble (dm.direction); 
 			}
 		}
 		
-		// drunk force
-		StartCoroutine(newDrunkDirection ());
-		drunkForce (drunkDir);
+		// DRUNK FORCE
+		//StartCoroutine(newDrunkDirection ());
+		//drunkForce (drunkDir);
 
 
 		// check camera rotation caps
