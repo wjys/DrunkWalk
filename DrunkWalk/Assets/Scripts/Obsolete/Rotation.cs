@@ -32,6 +32,7 @@ public class Rotation : MonoBehaviour {
 	// get direction of lean 
 	private enum Turn { left, right, idle }; 
 	public int direction; 
+	public int previous; 
 
 	// delay before checking rotation after rotated
 	public bool rotating;  
@@ -55,6 +56,7 @@ public class Rotation : MonoBehaviour {
 		feetPlaced = false;
 		rotated = false; 
 		direction = (int) Turn.idle; 
+		previous = (int) Turn.idle; 
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -69,7 +71,7 @@ public class Rotation : MonoBehaviour {
 		if (!dm.fallen){
 			// PLAYER NOT ROTATING => GET DIRECTION
 			if (!delaying){
-				turnHead(direction);
+				direction = turnHead(direction);
 			}
 			else {
 				delayRotation (); 
