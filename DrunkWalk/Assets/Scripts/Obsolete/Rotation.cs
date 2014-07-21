@@ -26,6 +26,7 @@ public class Rotation : MonoBehaviour {
 	public float cur;
 
 	public float rotInc; 
+	public bool mouseClicked; 
 
 
 	// get direction of lean 
@@ -46,9 +47,13 @@ public class Rotation : MonoBehaviour {
 		
 
 	void Start () {
+		if (dm.controller == (int)controlInput.mouse) {
+			rotateDelay = 0; 
+		}
 		rotating = false; 
 		delaying = false; 
 		feetPlaced = false;
+		mouseClicked = false; 
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -62,13 +67,8 @@ public class Rotation : MonoBehaviour {
 		// PLAYER HASN'T FALLEN
 		if (!dm.fallen){
 			// PLAYER NOT ROTATING => GET DIRECTION
-			if (!rotating){
-				if (!feetPlaced){
-					placeFeet (); 
-				}
-				df.enabled = false;
-				rhead.constraints = RigidbodyConstraints.FreezeAll;
-				direction = getTurnDirection();
+			if (!delaying){
+				turnHead();
 			}
 			else {
 				delayRotation (); 
@@ -87,7 +87,9 @@ public class Rotation : MonoBehaviour {
 	private void delayRotation(){
 		if (currentFrame >= rotateDelay) {
 			currentFrame = 0;
-			rotating = false; 
+			delaying = false; 
+			feetPlaced = false;
+			rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ; 
 		}
 		currentFrame++;
 	}
@@ -96,6 +98,11 @@ public class Rotation : MonoBehaviour {
 		// rfeet.MovePosition(Vector3.Lerp(rfeet.position, transform.position, smooth * Time.frameCount));
 		feet.transform.position = new Vector3 (rhead.position.x, feet.transform.position.y, rhead.position.z); 
 		feetPlaced = true; 
+		/*
+		if (!feetPlaced){
+			rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+			placeFeet (); 
+		}*/
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -108,7 +115,7 @@ public class Rotation : MonoBehaviour {
 	 * (2) 
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 
-	private int getTurnDirection(){
+	private int turnHead(){
 
 		float y = transform.eulerAngles.y;
 
@@ -116,101 +123,65 @@ public class Rotation : MonoBehaviour {
 			if (dm.controller == (int) controlInput.mouse){
 				if (dm.direction == (int) Dir.left){
 					if (Input.GetMouseButton(0)){	// left mouse button
-						rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+						mouseClicked = true; 
+						rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY; 
 						transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y - rotInc, transform.rotation.z, transform.rotation.w); 
-						rotating = true; 
 						return (int) Turn.left; 
 					}	
+					else if (mouseClicked)
+						delaying = true; 
 				}
 				if (dm.direction == (int) Dir.right){
 					if (Input.GetMouseButton(1)){	// right mouse button
-						rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-						transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + rotInc, transform.rotation.z, transform.rotation.w); 
-						rotating = true; 
+						mouseClicked = true; 
+						rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY; 
+						transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + rotInc, transform.rotation.z, transform.rotation.w);  
 						return (int) Turn.right; 
 					}
+					else if (mouseClicked)
+						delaying = true; 
 				}
 				return (-1); 
 			}
 			else if (dm.controller == (int) controlInput.move){
 				if (UniMove.gy >= boundLeft){
-					rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+					rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY; 
 					transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y - rotInc, transform.rotation.z, transform.rotation.w); 
-					rotating = true; 
+					if (UniMove.gy < boundRight){
+						delaying = true;
+					}
 					return (int) Turn.left;
 				}
 				if (dm.direction == (int) Dir.right){
 					if (UniMove.gy <= boundRight){
-						rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+						rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY; 
 						transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + rotInc, transform.rotation.z, transform.rotation.w); 
-						rotating = true; 
+						if (UniMove.gy > boundLeft){
+							delaying = true; 
+						}
 						return (int) Turn.right; 
 					}
 				}
 			}
 			else if (dm.controller == (int) controlInput.xbox){
 				if (Input.GetAxis("RightStickX") < -0.9f){
-					rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+					rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY; 
 					transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y - rotInc, transform.rotation.z, transform.rotation.w); 
-					rotating = true; 
+					if (Input.GetAxis ("RightStickX") >= 0.0f){
+						delaying = true; 
+					}
 					return (int) Turn.left;
 				}
 				if (Input.GetAxis("RightStickX") > 0.9f){
-					rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+					rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY; 
 					transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + rotInc, transform.rotation.z, transform.rotation.w); 
-					rotating = true; 
+					if (Input.GetAxis ("RightStickX") <= 0.0f){
+						delaying = true; 
+					}
 					return (int) Turn.right; 
 				}
 			}
 		}
 		return (-1); 
-	}
-
-	/* --------------------------------------------------------------------------------------------------------------------------
-	 * ARG: int = current direction index (enum) of rotation. NO RETURN
-	 * -------------------------------------------------------------------------------------------------------------------------- */
-
-	private void turnHead (int direction) {
-		transform.rotation = Quaternion.Euler (transform.eulerAngles.x, cur, transform.eulerAngles.z); 
-		rhead.rotation = transform.rotation; 
-		//print ("rb " + rhead.rotation); 
-		//print (transform.rotation); 
-
-		switch (direction){
-		case (int) Turn.left:
-			turnedLeft = true;
-			cur -= speed; 
-			if (cur <= to){
-				if (dm.controller == (int) controlInput.move){
-					delaying = true; 
-				}
-				else {
-					rotating = false; 
-				}
-				feetPlaced = false;
-				rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
-				df.enabled = true; 
-			}
-			break;
-
-		case (int) Turn.right:
-			turnedLeft = false;
-			cur += speed; 
-			if (cur >= to){
-				if (dm.controller == (int) controlInput.move){
-					delaying = true; 
-				}
-				else {
-					rotating = false; 
-				}
-				feetPlaced = false; 
-				rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
-				df.enabled = true;
-			}
-			break;
-
-		default:
-			break; 
-		}
 	}
 }
