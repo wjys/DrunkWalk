@@ -159,6 +159,9 @@ public class Rotation : MonoBehaviour {
 						return (int) Turn.right; 
 					}
 				}
+				else {
+					return (int) Turn.idle; 
+				}
 			}
 			if (current == (int) Turn.left){
 				/*if (UniMove.gy < boundRight && rotated){
