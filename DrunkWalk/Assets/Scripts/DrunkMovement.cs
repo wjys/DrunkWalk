@@ -90,19 +90,24 @@ public class DrunkMovement : InGame {
 
 	// LERP FOOT???
 	public GameObject ft;
+	private Vector3 newFeetPos;
+	private bool moveFeet;
 
 	//COLLISION RUMBLE
 	public float hitRumble;
 
 
-	// Use this for initialization
 	void Start () {
+
+		// Place feet under head
 		rfeet.MovePosition(new Vector3(transform.position.x, rfeet.position.y, transform.position.z));
+
+		//Bools
 		fallen = false;		
 		soundPlayed = false; 		
-		headY = transform.position.y; 
 		frozen = false; 
 		fallCt = 0;
+		headY = transform.position.y; 
 
 		//Mouse Start
 		halfWidth = Screen.width / 2; 
@@ -176,6 +181,10 @@ public class DrunkMovement : InGame {
 			transform.rotation = Quaternion.Lerp(transform.rotation, newRot, smooth * Time.deltaTime);//new Quaternion (transform.rotation.x, 0, transform.rotation.z, 0), smooth * Time.deltaTime);
 			camLerp = false;
 		}
+
+		if (moveFeet == true){
+			rfeet.position = Vector3.Lerp (rfeet.position, newFeetPos, smooth * Time.deltaTime);
+		}
 		
 		// DELAYING PLACE FEET AT HEAD'S XY POS
 		currentFrame++; 
@@ -183,6 +192,7 @@ public class DrunkMovement : InGame {
 			if (currentFrame >= delayFrame){
 				placeFeet ();
 				currentFrame = 0;
+				moveFeet = true;
 			}
 		}
 		
@@ -393,7 +403,11 @@ public class DrunkMovement : InGame {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	private void placeFeet (){
-		rfeet.MovePosition(new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z)); 
+
+		newFeetPos = new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z);
+		//rfeet.MovePosition(new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z)); 
+		moveFeet = false;
+
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -451,7 +465,9 @@ public class DrunkMovement : InGame {
 		//[TAP TO GET UP]
 		/////////////////
 
-		buttonTapped = Input.anyKeyDown; 
+		//buttonTapped = Input.anyKeyDown; 
+		//buttonTapped = UniMove.Trigger;
+
 		// read button taps 
 		if (buttonTapped) {
 			tapCurrent++; 
