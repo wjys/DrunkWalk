@@ -155,8 +155,8 @@ public class DrunkForce : MonoBehaviour {
 				camInc += camAcc;
 			}
 			transform.rotation = new Quaternion (transform.rotation.x + camInc, transform.rotation.y, transform.rotation.z, transform.rotation.w); */
-			transform.localRotation = Quaternion.Lerp (transform.localRotation, 
-			                                           Quaternion.Euler (Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.localPosition.y - feet.transform.localPosition.y))/(Mathf.Abs(transform.localPosition.z - feet.transform.localPosition.z))))), 
+				transform.localRotation = Quaternion.Lerp (transform.localRotation, 
+			                                           Quaternion.Euler	(Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.localPosition.y - feet.transform.localPosition.y))/(Mathf.Abs(transform.localPosition.z - feet.transform.localPosition.z)))), transform.localRotation.y, transform.localRotation.z), 
 			                                           Time.deltaTime * smooth);
 			break;
 		case (int) Dir.right:
@@ -165,7 +165,7 @@ public class DrunkForce : MonoBehaviour {
 			}
 			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + rotInc, transform.rotation.z + camInc, transform.rotation.w); */
 			transform.localRotation = Quaternion.Lerp (transform.localRotation, 
-			                                           Quaternion.Euler (Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.localPosition.y - feet.transform.localPosition.y))/(Mathf.Abs(transform.localPosition.x - feet.transform.localPosition.x))))), 
+			                                           Quaternion.Euler (transform.localRotation.x, transform.localRotation.y, Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.localPosition.y - feet.transform.localPosition.y))/(Mathf.Abs(transform.localPosition.x - feet.transform.localPosition.x))))), 
 			                                           Time.deltaTime * smooth);
 			break;
 		case (int) Dir.left:
@@ -174,7 +174,7 @@ public class DrunkForce : MonoBehaviour {
 			}
 			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y - rotInc, transform.rotation.z + camInc, transform.rotation.w); */
 			transform.localRotation = Quaternion.Lerp (transform.localRotation, 
-			                                           Quaternion.Euler (Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.localPosition.y - feet.transform.localPosition.y))/(Mathf.Abs(transform.localPosition.x - feet.transform.localPosition.x))))), 
+			                                           Quaternion.Euler (transform.localRotation.x, transform.localRotation.y, -Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.localPosition.y - feet.transform.localPosition.y))/(Mathf.Abs(transform.localPosition.x - feet.transform.localPosition.x))))), 
 			                                           Time.deltaTime * smooth);
 			break;
 		case (int) Dir.back:
@@ -183,7 +183,7 @@ public class DrunkForce : MonoBehaviour {
 			}
 			transform.rotation = new Quaternion (transform.rotation.x + camInc, transform.rotation.y, transform.rotation.z, transform.rotation.w);*/
 			transform.localRotation = Quaternion.Lerp (transform.localRotation, 
-			                                           Quaternion.Euler (Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.localPosition.y - feet.transform.localPosition.y))/(Mathf.Abs(transform.localPosition.z - feet.transform.localPosition.z))))), 
+			                                           Quaternion.Euler (-Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.localPosition.y - feet.transform.localPosition.y))/(Mathf.Abs(transform.localPosition.z - feet.transform.localPosition.z)))),  transform.localRotation.y, transform.localRotation.z), 
 			                                           Time.deltaTime * smooth);
 			break;
 		default:
