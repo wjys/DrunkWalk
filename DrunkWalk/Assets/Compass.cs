@@ -19,7 +19,7 @@ public class Compass : MonoBehaviour {
 
 		rot = Quaternion.FromToRotation(me.transform.position, dirVector);
 
-		print (rot);
+		//print (rot);
 
 		//rot.ToAngleAxis(
 	}

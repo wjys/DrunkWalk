@@ -89,15 +89,22 @@ public class DrunkMovement : InGame {
 	public Animator meAnim;
 
 	// LERP FOOT???
-	public GameObject ft;
 	private Vector3 newFeetPos;
 	private bool moveFeet;
 
 	//COLLISION RUMBLE
 	public float hitRumble;
 
+	//TRIGGER
+	private bool trigger1;
+	private static float triggerInt;
+
 
 	void Start () {
+
+		triggerInt = UniMove.Trigger;
+
+		trigger1 = false;
 
 		// Place feet under head
 		rfeet.MovePosition(new Vector3(transform.position.x, rfeet.position.y, transform.position.z));
@@ -145,6 +152,21 @@ public class DrunkMovement : InGame {
 	}
 	
 	void Update () {
+
+		print (triggerInt);
+		if (triggerInt == 1){
+			trigger1 = true;
+			triggerInt = 0;
+		} else {
+			trigger1 = false;
+		}
+
+		//if (trigger1 == false){
+		//	triggerInt = UniMove.Trigger;
+		//}
+
+		triggerInt = UniMove.Trigger;
+
 
 		resetY (); 
 		
@@ -465,12 +487,14 @@ public class DrunkMovement : InGame {
 		//[TAP TO GET UP]
 		/////////////////
 
-		//buttonTapped = Input.anyKeyDown; 
+		//buttonTapped = (trigger1 = true);
+		buttonTapped = Input.anyKeyDown; 
 		//buttonTapped = UniMove.Trigger;
 
 		// read button taps 
 		if (buttonTapped) {
-			tapCurrent++; 
+			print ("TAPPED");
+			//tapCurrent++; 
 		}
 		if (tapCurrent >= tapsGetUp) {
 			//SUCCESSFULLY GOT UP

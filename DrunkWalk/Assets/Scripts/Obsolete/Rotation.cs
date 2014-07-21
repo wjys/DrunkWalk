@@ -164,9 +164,10 @@ public class Rotation : MonoBehaviour {
 					print ("stop turning left"); 
 					delaying = true; 
 					return (int) Turn.idle;
+				}
 				else {
 					print ("turning left"); 
-					transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y - rotInc, transform.rotation.z, transform.rotation.w); 
+					transform.localRotation = new Quaternion (transform.localRotation.x, transform.localRotation.y - rotInc, transform.localRotation.z, transform.localRotation.w); 
 					return (int) Turn.left; 
 				}
 			}
@@ -178,7 +179,7 @@ public class Rotation : MonoBehaviour {
 				}
 				else {
 					print ("turning right"); 
-					transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + rotInc, transform.rotation.z, transform.rotation.w); 
+					transform.localRotation = new Quaternion (transform.localRotation.x, transform.localRotation.y + rotInc, transform.localRotation.z, transform.localRotation.w); 
 					return (int) Turn.right;
 				}
 			}
