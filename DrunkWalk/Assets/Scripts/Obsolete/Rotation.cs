@@ -140,7 +140,7 @@ public class Rotation : MonoBehaviour {
 					return (int) Turn.right; 
 				}
 			}
-			return (-1); 
+			return (int) Turn.idle; 
 		}
 		else if (dm.controller == (int) controlInput.move){
 			if (current == (int) Turn.idle){
@@ -159,9 +159,7 @@ public class Rotation : MonoBehaviour {
 						return (int) Turn.right; 
 					}
 				}
-				else {
-					return (int) Turn.idle; 
-				}
+				return (int) Turn.idle; 
 			}
 			if (current == (int) Turn.left){
 				/*if (UniMove.gy < boundRight && rotated){
@@ -199,7 +197,7 @@ public class Rotation : MonoBehaviour {
 				transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + rotInc, transform.rotation.z, transform.rotation.w);
 				return (int) Turn.right; 
 			}
+			return (int) Turn.idle; 
 		}
-		return (-1); 
 	}
 }
