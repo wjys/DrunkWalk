@@ -5,6 +5,7 @@ public class GameState : MonoBehaviour {
 
 	public enum GameStatus { Splash, Paused, Game }
 	public enum PlayerStatus { Fine, Fallen, Lost }
+	public static int pScore;
 
 	// Use this for initialization
 	void Start () {

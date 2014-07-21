@@ -26,21 +26,26 @@ public class GameManager : MonoBehaviour {
 
 
 	void Awake () {
+		//Setup instance
+		DontDestroyOnLoad(this);
+		ins = this;
+
+		//Set Game Status
 		if (!game){
 			status = GameState.GameStatus.Splash;
 		} else {
 			status = GameState.GameStatus.Game;
 		}
 
-		DontDestroyOnLoad(this);
-		ins = this;
-
+		//Don't show mouse
 		//Screen.showCursor = false;
 
+		//Setup Audio Manager
 		if (AudioManager.ins == null){
 			(Instantiate(audioManager) as GameObject).SendMessage("Initialize");
 		}
 
+		//Menu Instances
 		mainMenuIns = Instantiate(mainMenu) as GameObject;
 		mainMenuIns.SetActive(false);
 
@@ -48,11 +53,12 @@ public class GameManager : MonoBehaviour {
 		pauseMenuIns.SetActive(false);
 	}
 
-	// Use this for initialization
+
+
 	void Start () {
 	}
-	
-	// Update is called once per frame
+
+
 	void Update () {
 	
 	if (playerStatus == GameState.PlayerStatus.Lost){
@@ -60,6 +66,7 @@ public class GameManager : MonoBehaviour {
 			Application.LoadLevel("Lost");
 	}
 
+		//Pause Menu in Game, Main menu in Splash
 		if (status == GameState.GameStatus.Game){
 		 	if (Input.GetKeyDown("p")){
           	 	if (!paused) {
