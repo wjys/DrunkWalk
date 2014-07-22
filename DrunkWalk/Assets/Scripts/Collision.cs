@@ -95,71 +95,73 @@ public class Collision : MonoBehaviour {
 
 	//When colliding with something:
 	void OnTriggerEnter(Collider col) {
-		df.stopWobble = true; 
-		if (!recoiled){
-			print ("RECOILING");
-			setRecoilDir(col.ClosestPointOnBounds(transform.position), transform.position);  
-		}
-		if (!collided){
-			//Yell();
-			audio.PlayOneShot (hitit);
-
-			dm.hitRumble = rumbleAmt;
-
-
-			Debug.Log("Collision");
-			//ouchAnim.SetTrigger("Ouch");
-			
-			//If collision is against a wall:
-			if (col.tag == "Wall") {
-				score -= 100;
-				Debug.Log("Wall Collision - " + score);
-				//df.stopWobble = true; 
+		if (col.tag != "Trigger"){
+			df.stopWobble = true; 
+			if (!recoiled){
+				print ("RECOILING");
+				setRecoilDir(col.ClosestPointOnBounds(transform.position), transform.position);  
 			}
-			else if (col.tag == "Box"){
-				score -= 200;
-				Debug.Log("Box Collision - " + score);
-			}
-			else if (col.tag == "Cabinet"){
-				score -= 200;
-				Debug.Log("Cabinet Collision - " + score);
-			}
-			else if (col.tag == "Cat"){
-				score -= 250;
-				Debug.Log("Cat Collision - " + score);
-			}
-			else if (col.tag == "Table"){
-				score -= 300;
-				Debug.Log("Table Collision - " + score);
-			}
-			else if (col.tag == "Chair"){
-				score -= 100;
-				Debug.Log("Chair Collision - " + score);
-			}
-			else if (col.tag == "Bed"){ // WIN STATE
-				Application.LoadLevel("Won"); 
-				reachedBed = true; 
-				soundPlayed = true; 
-				audio.PlayOneShot (clips[Random.Range(5, 8)]); 
-			}
-	/*		else if (col.tag == "Floor"){
-				score -= 500;
-				Debug.Log("Floor Collision - " + score);
-			}*/
-
-			//If not currently yelling:
-			if (yelling == false){
-				Debug.Log ("YELL");
+			if (!collided){
 				//Yell();
-			} else if (yelling == true){
-				StopAllCoroutines();
+				audio.PlayOneShot (hitit);
+
+				dm.hitRumble = rumbleAmt;
+
+
+				Debug.Log("Collision");
+				//ouchAnim.SetTrigger("Ouch");
+				
+				//If collision is against a wall:
+				if (col.tag == "Wall") {
+					score -= 100;
+					Debug.Log("Wall Collision - " + score);
+					//df.stopWobble = true; 
+				}
+				else if (col.tag == "Box"){
+					score -= 200;
+					Debug.Log("Box Collision - " + score);
+				}
+				else if (col.tag == "Cabinet"){
+					score -= 200;
+					Debug.Log("Cabinet Collision - " + score);
+				}
+				else if (col.tag == "Cat"){
+					score -= 250;
+					Debug.Log("Cat Collision - " + score);
+				}
+				else if (col.tag == "Table"){
+					score -= 300;
+					Debug.Log("Table Collision - " + score);
+				}
+				else if (col.tag == "Chair"){
+					score -= 100;
+					Debug.Log("Chair Collision - " + score);
+				}
+				else if (col.tag == "Bed"){ // WIN STATE
+					Application.LoadLevel("Won"); 
+					reachedBed = true; 
+					soundPlayed = true; 
+					audio.PlayOneShot (clips[Random.Range(5, 8)]); 
+				}
+		/*		else if (col.tag == "Floor"){
+					score -= 500;
+					Debug.Log("Floor Collision - " + score);
+				}*/
+
+				//If not currently yelling:
+				if (yelling == false){
+					Debug.Log ("YELL");
+					//Yell();
+				} else if (yelling == true){
+					StopAllCoroutines();
+				}
+				
+				if (!soundPlayed && !reachedBed){
+					playGrunt (clips[Random.Range(0, 5)]); 
+					soundPlayed = true; 
+				}
+				collided = true; 
 			}
-			
-			if (!soundPlayed && !reachedBed){
-				playGrunt (clips[Random.Range(0, 5)]); 
-				soundPlayed = true; 
-			}
-			collided = true; 
 		}
 	}
 	//When not:

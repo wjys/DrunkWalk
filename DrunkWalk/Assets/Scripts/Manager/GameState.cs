@@ -3,7 +3,7 @@ using System.Collections;
 
 public class GameState : MonoBehaviour {
 
-	public enum GameStatus { Splash, Paused, Game }
+	public enum GameStatus { Splash, Paused, Game, Tutorial }
 	public enum PlayerStatus { Fine, Fallen, Lost }
 	public static int pScore;
 

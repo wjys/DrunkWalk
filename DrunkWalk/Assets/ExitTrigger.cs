@@ -15,7 +15,7 @@ public class ExitTrigger : MonoBehaviour {
 
 	public void OnTriggerEnter(Collider other){
 		if (other.tag == "Me"){
-			Debug.Log ("Went through door");
+			print ("Went through door");
 		}
 	}
 }
