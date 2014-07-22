@@ -24,7 +24,7 @@ public class Compass : MonoBehaviour {
 	}
 
 	private void compassCheck(){
-		Vector3 dirVector = bed.transform.position - me.transform.TransformDirection(Vector3.forward);
+		Vector3 dirVector = bed.transform.position - me.transform.position;
 		Vector3 dirFacing = me.transform.TransformDirection (Vector3.forward); 
 		dirVector.y = 0;
 		dirFacing.y = 0;
