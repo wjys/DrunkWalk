@@ -7,6 +7,7 @@ public class UniMoveDisplay : MonoBehaviour
 	// We save the Move controller associated to the player
 	UniMoveController move = new UniMoveController();
 	public int id; 
+	private string display = "";
 	
 	void Start() 
 	{
@@ -24,17 +25,18 @@ public class UniMoveDisplay : MonoBehaviour
 		int count = UniMoveController.GetNumConnected();
 
 		move = gameObject.AddComponent<UniMoveController> (); 
-		/*
+
 		if (!move.Init(id)) 
 		{	
-			Destroy(move);	// If it failed to initialize, destroy and continue on
-			continue;
-		}*/
+			display = "No Bluetooth-connected controllers found. Make sure one or more are both paired and connected to this computer.";
+			//Destroy(move);	// If it failed to initialize, destroy and continue on
+		}
 
 		PSMoveConnectionType conn = move.ConnectionType;
 		if (conn == PSMoveConnectionType.Unknown || conn == PSMoveConnectionType.USB) 
 		{
-			Destroy(move);
+			display = "No Bluetooth-connected controllers found. Make sure one or more are both paired and connected to this computer.";
+			//Destroy(move);
 		}
 		else 
 		{
@@ -74,8 +76,6 @@ public class UniMoveDisplay : MonoBehaviour
 	
 	void OnGUI() 
 	{
-		string display = "";
-		
 		if (!move.Init (id) || move.Disconnected) {
 			display = "No Bluetooth-connected controllers found. Make sure one or more are both paired and connected to this computer.";
 		}
