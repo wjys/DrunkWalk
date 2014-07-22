@@ -541,7 +541,7 @@ public class DrunkMovement : InGame {
 		yield return new WaitForSeconds(0.5f);
 
 		frozen = false;
-		rhead.constraints = RigidbodyConstraints.FreezePositionY;
+		rhead.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY;
 
 		//UniMove.ax = initX;
 		//UniMove.az = initZ;

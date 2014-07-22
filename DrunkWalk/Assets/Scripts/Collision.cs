@@ -95,6 +95,7 @@ public class Collision : MonoBehaviour {
 
 	//When colliding with something:
 	void OnTriggerEnter(Collider col) {
+		df.stopWobble = true; 
 		if (!recoiled){
 			print ("RECOILING");
 			setRecoilDir(col.ClosestPointOnBounds(transform.position), transform.position);  
@@ -104,6 +105,7 @@ public class Collision : MonoBehaviour {
 			audio.PlayOneShot (hitit);
 
 			dm.hitRumble = rumbleAmt;
+
 
 			Debug.Log("Collision");
 			//ouchAnim.SetTrigger("Ouch");
@@ -166,7 +168,7 @@ public class Collision : MonoBehaviour {
 		Debug.Log("No Longer Colliding");
 		soundPlayed = false; 
 		recoiled = false; 
-		//df.stopWobble = false; 
+		df.stopWobble = false; 
 	}
 
 	private void playGrunt(AudioClip clip){
