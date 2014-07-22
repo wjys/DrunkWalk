@@ -37,9 +37,8 @@ using System.Collections.Generic;
 public class UniMoveManager : MonoBehaviour 
 {
 	// We save a list of Move controllers.
-	List<UniMoveController> moves = new List<UniMoveController>();
-	public DrunkMovement p1;
-	public DrunkMovement p2; 
+	public List<UniMoveController> moves = new List<UniMoveController>();
+	public DrunkMovement[] players;
 	
 	void Start() 
 	{
@@ -67,6 +66,7 @@ public class UniMoveManager : MonoBehaviour
 		for (int i = 0; i < count; i++) 
 		{
 			UniMoveController move = gameObject.AddComponent<UniMoveController>();	// It's a MonoBehaviour, so we can't just call a constructor
+			move.id = i;
 			
 			// Remember to initialize!
 			if (!move.Init(i)) 
@@ -121,7 +121,10 @@ public class UniMoveManager : MonoBehaviour
 	}
 
 	private void UniMoveSetPlayers(){
-		p1.UniMove = moves [0];
-		p2.UniMove = moves [1]; 
+			for (int i = 0; i < moves.Count; i++) {
+				if (moves[i].id == i){
+					players[i].UniMove = moves[i]; 
+				}
+			}
 	}
 }
