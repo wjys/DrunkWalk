@@ -158,7 +158,7 @@ public class DrunkForce : MonoBehaviour {
 			print ("leaning forward"); 
 			transform.localRotation = Quaternion.Lerp (transform.localRotation, 
 			                                           Quaternion.Euler	(Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.localPosition.y - feet.transform.localPosition.y))/(Mathf.Abs(transform.localPosition.z - feet.transform.localPosition.z)))), transform.localEulerAngles.y, transform.localEulerAngles.z), 
-			                                           Time.deltaTime * smooth);
+			                                           Time.deltaTime * (smooth*2));
 			break;
 		case (int) Dir.right:
 			/*if (!camLoCapped){
@@ -167,7 +167,7 @@ public class DrunkForce : MonoBehaviour {
 			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + rotInc, transform.rotation.z + camInc, transform.rotation.w); */
 			print ("leaning right"); 
 			transform.localRotation = Quaternion.Lerp (transform.localRotation, 
-			                                           Quaternion.Euler (transform.localEulerAngles.x, transform.localEulerAngles.y, Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.localPosition.y - feet.transform.localPosition.y))/(Mathf.Abs(transform.localPosition.x - feet.transform.localPosition.x))))), 
+			                                           Quaternion.Euler (transform.localEulerAngles.x, transform.localEulerAngles.y, -Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.localPosition.y - feet.transform.localPosition.y))/(Mathf.Abs(transform.localPosition.x - feet.transform.localPosition.x))))), 
 			                                           Time.deltaTime * smooth);
 			break;
 		case (int) Dir.left:
@@ -177,7 +177,7 @@ public class DrunkForce : MonoBehaviour {
 			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y - rotInc, transform.rotation.z + camInc, transform.rotation.w); */
 			print ("leaning left"); 
 			transform.localRotation = Quaternion.Lerp (transform.localRotation, 
-			                                           Quaternion.Euler (transform.localEulerAngles.x, transform.localEulerAngles.y, -Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.localPosition.y - feet.transform.localPosition.y))/(Mathf.Abs(transform.localPosition.x - feet.transform.localPosition.x))))), 
+			                                           Quaternion.Euler (transform.localEulerAngles.x, transform.localEulerAngles.y, Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.localPosition.y - feet.transform.localPosition.y))/(Mathf.Abs(transform.localPosition.x - feet.transform.localPosition.x))))), 
 			                                           Time.deltaTime * smooth);
 			break;
 		case (int) Dir.back:
@@ -188,7 +188,7 @@ public class DrunkForce : MonoBehaviour {
 			print ("leaning back"); 
 			transform.localRotation = Quaternion.Lerp (transform.localRotation, 
 			                                           Quaternion.Euler (-Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.localPosition.y - feet.transform.localPosition.y))/(Mathf.Abs(transform.localPosition.z - feet.transform.localPosition.z)))),  transform.localEulerAngles.y, transform.localEulerAngles.z), 
-			                                           Time.deltaTime * smooth);
+			                                           Time.deltaTime * (smooth*2));
 			break;
 		default:
 			break; 

@@ -493,8 +493,8 @@ public class DrunkMovement : InGame {
 
 		// read button taps 
 		if (buttonTapped) {
-			print ("TAPPED");
-			//tapCurrent++; 
+			//print ("TAPPED");
+			tapCurrent++; 
 		}
 		if (tapCurrent >= tapsGetUp) {
 			//SUCCESSFULLY GOT UP
@@ -541,7 +541,7 @@ public class DrunkMovement : InGame {
 		yield return new WaitForSeconds(0.5f);
 
 		frozen = false;
-		rhead.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY;
+		rhead.constraints = RigidbodyConstraints.FreezePositionY;
 
 		//UniMove.ax = initX;
 		//UniMove.az = initZ;
