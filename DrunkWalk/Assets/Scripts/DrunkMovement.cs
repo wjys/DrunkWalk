@@ -153,7 +153,7 @@ public class DrunkMovement : InGame {
 	
 	void Update () {
 
-		print (triggerInt);
+		//print (triggerInt);
 		if (triggerInt == 1){
 			trigger1 = true;
 			triggerInt = 0;

@@ -11,6 +11,7 @@ public class UniMoveDisplay : MonoBehaviour
 	
 	void Start() 
 	{
+		print ("move!"); 
 		/* NOTE! We recommend that you limit the maximum frequency between frames.
 		 * This is because the controllers use Update() and not FixedUpdate(),
 		 * and yet need to update often enough to respond sufficiently fast.
@@ -23,6 +24,7 @@ public class UniMoveDisplay : MonoBehaviour
 		Time.maximumDeltaTime = 0.1f;
 		
 		int count = UniMoveController.GetNumConnected();
+		print ("move count " + count); 
 
 		move = gameObject.AddComponent<UniMoveController> (); 
 
