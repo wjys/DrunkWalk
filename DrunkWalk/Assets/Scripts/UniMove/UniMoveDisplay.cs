@@ -105,7 +105,12 @@ public class UniMoveDisplay : MonoBehaviour
 			                         uni.Gyro.x, uni.Gyro.y, uni.Gyro.z);
 		}
 		else display = string.Format("No Player {0} Controller found.\n", id+1);
-		
-		GUI.Label(new Rect(10, Screen.height-100, 500, 100), display);
+
+		if (id == 0) {
+			GUI.Label(new Rect(10, Screen.height-100, 500, 100), display);
+		}
+		else {
+			GUI.Label(new Rect(Screen.width/2+10, Screen.height-100, 500, 100), display);
+		}
 	}
 }
