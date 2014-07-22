@@ -34,28 +34,34 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 
-public class UniMoveDisplay : MonoBehaviour 
+public class UniMoveManager : MonoBehaviour 
 {
 	// We save a list of Move controllers.
 	List<UniMoveController> moves = new List<UniMoveController>();
-	public int id; 
-	private UniMoveController uni;
+	public DrunkMovement p1;
+	public DrunkMovement p2; 
 	
 	void Start() 
 	{
-		/* NOTE! We recommend that you limit the maximum frequency between frames.
-		 * This is because the controllers use Update() and not FixedUpdate(),
-		 * and yet need to update often enough to respond sufficiently fast.
-		 * Unity advises to keep this value "between 1/10th and 1/3th of a second."
-		 * However, even 100 milliseconds could seem slightly sluggish, so you
-		 * might want to experiment w/ reducing this value even more.
-		 * Obviously, this should only be relevant in case your framerare is starting
-		 * to lag. Most of the time, Update() should be called very regularly.
-		 */
+		UniMoveInit ();
+		UniMoveSetPlayers (); 
+	}
+	
+	
+	void Update() 
+	{
+		UniMoveButtons (); 
+	}
+	
+	void HandleControllerDisconnected (object sender, EventArgs e)
+	{
+		// TODO: Remove this disconnected controller from the list and maybe give an update to the player
+	}
+
+	private void UniMoveInit(){
 		Time.maximumDeltaTime = 0.1f;
 		
 		int count = UniMoveController.GetNumConnected();
-		uni = GetComponent<UniMoveController> (); 
 		
 		// Iterate through all connections (USB and Bluetooth)
 		for (int i = 0; i < count; i++) 
@@ -86,26 +92,36 @@ public class UniMoveDisplay : MonoBehaviour
 			}
 		}
 	}
-	
-	void HandleControllerDisconnected (object sender, EventArgs e)
-	{
-		// TODO: Remove this disconnected controller from the list and maybe give an update to the player
-	}
-	
-	void OnGUI() 
-	{
-		string display = "";
-		
-		if (moves.Count > 0) 
+
+	private void UniMoveButtons(){
+		foreach (UniMoveController move in moves) 
 		{
-			display += string.Format("Player {0}: \n" +
-									 "ax:{1:0.000}, ay:{2:0.000}, az:{3:0.000}, \n" +
-									 "gx:{4:0.000}, gy:{5:0.000}, gz:{6:0.000} \n", 
-			                         id+1, uni.Acceleration.x, uni.Acceleration.y, uni.Acceleration.z,
-			                         uni.Gyro.x, uni.Gyro.y, uni.Gyro.z);
+			// Instead of this somewhat kludge-y check, we'd probably want to remove/destroy
+			// the now-defunct controller in the disconnected event handler below.
+			if (move.Disconnected) continue;
+			
+			// Button events. Works like Unity's Input.GetButton
+			if (move.GetButtonDown(PSMoveButton.Circle)){
+				Debug.Log("Circle Down");
+			}
+			if (move.GetButtonUp(PSMoveButton.Circle)){
+				Debug.Log("Circle UP");
+			}
+			
+			// Change the colors of the LEDs based on which button has just been pressed:
+			if (move.GetButtonDown(PSMoveButton.Circle)) 		move.SetLED(Color.cyan);
+			else if(move.GetButtonDown(PSMoveButton.Cross)) 	move.SetLED(Color.red);
+			else if(move.GetButtonDown(PSMoveButton.Square)) 	move.SetLED(Color.yellow);
+			else if(move.GetButtonDown(PSMoveButton.Triangle)) 	move.SetLED(Color.magenta);
+			else if(move.GetButtonDown(PSMoveButton.Move)) 		move.SetLED(Color.black);
+			
+			// Set the rumble based on how much the trigger is down
+			move.SetRumble(move.Trigger);
 		}
-		else display = string.Format("No Player {0} Controller found.\n", id+1);
-		
-		GUI.Label(new Rect(10, Screen.height-100, 500, 100), display);
+	}
+
+	private void UniMoveSetPlayers(){
+		p1.UniMove = moves [0];
+		p2.UniMove = moves [1]; 
 	}
 }
