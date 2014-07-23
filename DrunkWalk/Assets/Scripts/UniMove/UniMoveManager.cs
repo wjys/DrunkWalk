@@ -50,9 +50,11 @@ public class UniMoveManager : MonoBehaviour
 	
 	void Update() 
 	{
-		UniMoveSetID ();
-		UniMoveSetPlayers ();
-		UniMoveActivateComponents ();
+		if (StopManager () == false) {
+			UniMoveSetID ();
+			UniMoveSetPlayers ();
+			UniMoveActivateComponents ();
+		}
 	}
 	
 	void HandleControllerDisconnected (object sender, EventArgs e)
@@ -134,21 +136,31 @@ public class UniMoveManager : MonoBehaviour
 					move.SetLED (Color.cyan);
 					move.id = 1;
 					moveCount++;
+					return;
 					break;
 				case 1:
-					move.SetLED (Color.red);
-					move.id = 2;
-					moveCount++;
+					if (move.id == 0){
+						move.SetLED (Color.red);
+						move.id = 2;
+						moveCount++;
+					}
+					return;
 					break;
 				case 2:
-					move.SetLED (Color.yellow);
-					move.id = 3;
-					moveCount++;
+					if (move.id == 0){
+						move.SetLED (Color.yellow);
+						move.id = 3;
+						moveCount++;
+					}
+					return;
 					break;
 				case 3:
-					move.SetLED (Color.magenta);
-					move.id = 4;
-					moveCount++; 
+					if (move.id == 0){
+						move.SetLED (Color.magenta);
+						move.id = 4;
+						moveCount++; 
+					}
+					return;
 					break;
 				default:
 					break;
@@ -156,7 +168,6 @@ public class UniMoveManager : MonoBehaviour
 			}
 		}
 	}
-
 	private void UniMoveSetPlayers(){ 
 		for(int i = 0; i < moves.Count; i++){
 			UniMoveController mv; 
@@ -167,7 +178,7 @@ public class UniMoveManager : MonoBehaviour
 						UniMoveDisplay display = player.GetComponent<UniMoveDisplay>();
 						if (moves[i].id == display.id){
 							moves[i] = player.AddComponent<UniMoveController>() as UniMoveController;
-							moves[i].Init (i);
+							moves[i].Init (i); 
 						}
 						break;
 					}
@@ -192,5 +203,20 @@ public class UniMoveManager : MonoBehaviour
 				col.enabled = true;
 			}
 		}
+	}
+
+	private bool StopManager(){
+		/*foreach (UniMoveController move in moves) {
+			if (move.GetButtonDown (PSMoveButton.Start)){
+				return true; 
+			}
+		}*/
+		foreach (GameObject player in players) {
+			UniMoveController mv = player.GetComponent<UniMoveController>();
+			if (mv == null){
+				return false; 
+			}
+		}
+		return true; 
 	}
 }

@@ -52,8 +52,6 @@ public class UniMoveDisplay : MonoBehaviour
 		 * to lag. Most of the time, Update() should be called very regularly.
 		 */
 		Time.maximumDeltaTime = 0.1f;
-		
-		int count = UniMoveController.GetNumConnected();
 		uni = GetComponent<UniMoveController> (); 
 		
 		// Iterate through all connections (USB and Bluetooth)
@@ -72,7 +70,7 @@ public class UniMoveDisplay : MonoBehaviour
 			display += string.Format("Player {0}: \n" +
 									 "ax:{1:0.000}, ay:{2:0.000}, az:{3:0.000}, \n" +
 									 "gx:{4:0.000}, gy:{5:0.000}, gz:{6:0.000} \n", 
-			                         id+1, uni.Acceleration.x, uni.Acceleration.y, uni.Acceleration.z,
+			                         id, uni.Acceleration.x, uni.Acceleration.y, uni.Acceleration.z,
 			                         uni.Gyro.x, uni.Gyro.y, uni.Gyro.z);
 		}
 
