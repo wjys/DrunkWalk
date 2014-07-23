@@ -9,7 +9,22 @@ public class DrunkMovement : InGame {
 	// |__/ |  \ |__| | \| | \_    |  | |__|  \/  |___ |  | |___ | \|  |  
 	//
 
-	public int id; 
+	// -------- PLAYER ID: 0 to 3 --------
+	public int id; 	// assign in inspector
+	
+	// -------- ALL COMPONENTS TO GET IN START() -------- 
+	public UniMoveController UniMove; 	// get UniMove
+	public Rigidbody rhead;		// rigidbody at the head of the player
+	public Animator meAnim;
+	public GameObject feet; 
+	public GameObject pfeet; 
+	public Rigidbody rfeet;
+
+	// -------- ALL OBJECTS/COMPONENTS TO BE DRAGGED INTO INSPECTOR -------- 
+	public Camera cam; 				// to force the camera to just fall over if leaning too much
+	public Camera fallCam;
+	public DepthOfFieldScatter dof; // depth of field component on cam
+	public Transform target;
 
 	// ENUM TO SWITCH BETWEEN CONTROLLERS
 	public int controller;
@@ -18,14 +33,11 @@ public class DrunkMovement : InGame {
 	// FORCE INCREMENTS FOR HEAD AND FEET
 	public float hinc;
 	public float incAcc;
-	public Transform target; 
 	
 	public float speed;
 	public float smooth;
 
 	// MOVE CONTROLLER
-	public UniMoveController UniMove; 	// get UniMove
-	List<UniMoveController> moves = new List<UniMoveController>();
 	private float initX, initZ;			// for calibration
 	public float boundBack;				// bounds to check tilt of controller
 	public float boundForward;
@@ -36,15 +48,6 @@ public class DrunkMovement : InGame {
 	private Vector3 mouse;		// current mouse position on screen
 	private int halfWidth; 		// half the width of screen (mouse bounds)
 	private int halfHeight; 	// half the height of screen (mouse bounds) 
-	
-	// GENERAL VARIABLES FOR ALL CONTROLS 
-	public Rigidbody rhead;		// rigidbody at the head of the player
-	public Rigidbody rfeet;		// rigidbody at the feet of the player
-	//public DrunkForce df; 
-	public Camera cam; 			// to force the camera to just fall over if leaning too much
-	public Camera fallCam;
-	public DepthOfFieldScatter dof; // depth of field component on cam
-
 
 	private enum Dir { forward, right, left, back }; 
 	public int direction;
@@ -71,6 +74,8 @@ public class DrunkMovement : InGame {
 
 	// GET BACK UP ONCE FALLEN
 	public bool fallen;
+	public bool buttonTapped;
+
 	private Vector3 fallenPos; 
 	private Quaternion fallenRot; 
 	public int tapsGetUp;
@@ -83,12 +88,8 @@ public class DrunkMovement : InGame {
 	private bool gettingUp;
 	private Quaternion newRot;
 	private Vector3 newPos;
-
-	public bool buttonTapped;
+	
 	private static bool camLerp;
-
-	// ANIMATION
-	public Animator meAnim;
 
 	// LERP FOOT???
 	private Vector3 newFeetPos;
@@ -103,7 +104,11 @@ public class DrunkMovement : InGame {
 
 
 	void Start () {
+		pfeet = Instantiate (feet) as GameObject; 
+		rfeet = pfeet.GetComponent<Rigidbody> ();
 		UniMove = gameObject.GetComponent<UniMoveController>();
+		rhead = gameObject.GetComponent<Rigidbody> ();
+		meAnim = gameObject.GetComponent<Animator> ();
 		triggerInt = UniMove.Trigger;
 
 		trigger1 = false;
@@ -137,10 +142,6 @@ public class DrunkMovement : InGame {
 			trigger1 = false;
 		}
 
-		//if (trigger1 == false){
-		//	triggerInt = UniMove.Trigger;
-		//}
-
 		triggerInt = UniMove.Trigger;
 
 
@@ -148,9 +149,6 @@ public class DrunkMovement : InGame {
 		
 		if (Input.GetKey("r"))
 			Application.LoadLevel (Application.loadedLevel);
-		
-		// CHECK UNIMOVE BUTTONS 
-		//UniMoveSet ();
 		
 		// IF THE PLAYER LEANS TOO MUCH, FALL AND LOSE
 		if (fallen) {
@@ -215,35 +213,7 @@ public class DrunkMovement : InGame {
 	private void resetY(){
 		rhead.MovePosition (new Vector3 (transform.position.x, headY, transform.position.z)); 
 	}
-
-	//Set PSMove
-	private void UniMoveSet(){
-		foreach (UniMoveController UniMove in moves) 
-		{
-			// Instead of this somewhat kludge-y check, we'd probably want to remove/destroy
-			// the now-defunct controller in the disconnected event handler below.
-			if (UniMove.Disconnected) continue;
-			
-			// Button events. Works like Unity's Input.GetButton
-			// if (UniMove.GetButtonDown(PSMoveButton.Circle)){
-			// 	Debug.Log("Circle Down");
-			// }
-			// if (UniMove.GetButtonUp(PSMoveButton.Circle)){
-			// 	Debug.Log("Circle UP");
-			// }
-			
-			// Change the colors of the LEDs based on which button has just been pressed:
-			if (UniMove.GetButtonDown(PSMoveButton.Circle)) 		UniMove.SetLED(Color.cyan);
-			else if(UniMove.GetButtonDown(PSMoveButton.Cross)) 		UniMove.SetLED(Color.red);
-			else if(UniMove.GetButtonDown(PSMoveButton.Square)) 	UniMove.SetLED(Color.yellow);
-			else if(UniMove.GetButtonDown(PSMoveButton.Triangle)) 	UniMove.SetLED(Color.magenta);
-			else if(UniMove.GetButtonDown(PSMoveButton.Move)) 		UniMove.SetLED(Color.black);
-			
-			// Set the rumble based on how much the trigger is down
-			//UniMove.SetRumble(UniMove.Trigger);
-			UniMove.SetRumble (hitRumble);
-		}
-	}
+	
 
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * PARAM: angleBetween = the angle between the head/feet vector and the vertical vector

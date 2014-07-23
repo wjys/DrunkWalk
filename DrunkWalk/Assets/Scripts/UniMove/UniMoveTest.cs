@@ -134,6 +134,6 @@ public class UniMoveTest : MonoBehaviour
         }
         else display = "No Bluetooth-connected controllers found. Make sure one or more are both paired and connected to this computer.";
 
-        GUI.Label(new Rect(10, Screen.height-100, 500, 100), display);
+        GUI.Label(new Rect(10, 100, 500, 100), display);
     }
 }

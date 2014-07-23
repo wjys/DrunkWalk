@@ -2,52 +2,47 @@
 using System.Collections;
 
 public class Rotation : MonoBehaviour {
-	
-	public UniMoveController UniMove;
-	public DrunkForce df; 
-	public float camInc; 
-	private enum controlInput { mouse, move, xbox }; 
 
-	// MIN/MAX ANGLES
+	// -------- COMPONENTS TO GET IN START() -------- 
+	public UniMoveController UniMove;
+	public DrunkMovement dm; 
+	public DrunkForce df; 
+	public Rigidbody rhead; 
+	public GameObject feet; 
+
+	// -------- PRIVATE VARIABLES -------- 
+	private enum controlInput { mouse, move, xbox }; 	// to know which controller we're using
+	private enum Dir { forward, right, left, back }; 	// to modify drunkDir
+	private enum Turn { left, right, idle }; 			// turn states
+	private bool feetPlaced; 
+	private int direction;
+
+	// -------- PUBLIC VARIABLES - TO SET IN INSPECTOR -------- 
+	public float camInc; 
+	public float rotInc; 
+
 	public float minAngle;
 	public float maxAngle; 
 	public float speed; 
+	
+	public float boundLeft;		// unimove gy bound turning left
+	public float boundRight; 	// unimove gy bound turning right
 
-	// UNIMOVE DETECTION BOUNDS FOR gy
-	public float boundLeft;
-	public float boundRight; 
-
-	// SHOULD I SET UP ITS OWN BOOL HERE TO CHECK FOR MOUSE VS MOVE INPUT OR JUST CHECK IN DRUNKMOVEMENT?
-	public DrunkMovement dm; 
-	private enum Dir { forward, right, left, back }; // to modify drunkDir
-	public Rigidbody rhead; 
-	public GameObject feet; 
-	public float to; 	// destination rotation
-	public float cur;
-
-	public float rotInc; 
-	public bool rotated; 
-
-
-	// get direction of lean 
-	private enum Turn { left, right, idle }; 
-	public int direction; 
-	public int previous; 
-
-	// delay before checking rotation after rotated
-	public bool rotating;  
-	public bool delaying;
-	private bool feetPlaced; 
-
-	// FOR DELAY AFTER MOVE ROTATION
-	public int rotateDelay; 
+	public int rotateDelay; 	// for delay after move rotation (in number of frames)
 	public int currentFrame;
-
-	//DEBUG ROT PROBLEM
-	public bool turnedLeft = false;
 		
+	// -------- PUBLIC BOOLS -------- 
+	public bool rotated; 
+	public bool rotating; 
+	public bool delaying;
+	public bool turnedLeft;	// to debug rot problem
 
 	void Start () {
+		UniMove = gameObject.GetComponent<UniMoveController>();
+		dm 		= gameObject.GetComponent<DrunkMovement>();
+		df 		= gameObject.GetComponent<DrunkForce>();
+		rhead 	= gameObject.GetComponent<Rigidbody>();
+
 		if (dm.controller == (int)controlInput.mouse) {
 			rotateDelay = 0; 
 		}
@@ -56,7 +51,6 @@ public class Rotation : MonoBehaviour {
 		feetPlaced = false;
 		rotated = false; 
 		direction = (int) Turn.idle; 
-		previous = (int) Turn.idle; 
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -65,12 +59,13 @@ public class Rotation : MonoBehaviour {
 	 * (3) if we ARE resetting the move (delay), then delay
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 
+
 	void Update () {
 
-		// PLAYER HASN'T FALLEN
-		if (!dm.fallen){
-			// PLAYER NOT ROTATING => GET DIRECTION
-			if (!delaying){
+		feet 	= dm.pfeet;
+
+		if (!dm.fallen){		// player is still standing
+			if (!delaying){		// player hasn't already turned recently
 				direction = turnHead(direction);
 			}
 			else {
@@ -89,7 +84,6 @@ public class Rotation : MonoBehaviour {
 
 	private void delayRotation(){
 		if (currentFrame >= rotateDelay) {
-			//rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ; 
 			currentFrame = 0;
 			delaying = false; 
 			feetPlaced = false;
@@ -98,7 +92,8 @@ public class Rotation : MonoBehaviour {
 		currentFrame++;
 	}
 
-	private void placeFeet (){			//print ("moving feet");
+	// NOT USED? PLACE FEET BEFORE ROTATION
+	private void placeFeet (){	
 		// rfeet.MovePosition(Vector3.Lerp(rfeet.position, transform.position, smooth * Time.frameCount));
 		feet.transform.position = new Vector3 (rhead.position.x, feet.transform.position.y, rhead.position.z); 
 		feetPlaced = true; 

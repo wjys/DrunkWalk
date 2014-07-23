@@ -5,10 +5,29 @@ using System.Collections;
 // ADDITIONAL DRUNK FORCE (NOT PLAYER MOVEMENT) - ALSO CONTAINS CAM WOBBLE SCRIPT!
 
 public class DrunkForce : MonoBehaviour {
-	
+
+	// -------- COMPONENTS TO GET IN START() -------- 
+	public Rigidbody rhead; 	// object's head rigidbody
+	public DrunkMovement dm; 	// script from the player
+	public GameObject feet; 
+
+	// -------- OBJECTS TO DRAG INTO COMPONENT -------- 
+	public DepthOfFieldScatter dof;
+
+	// -------- PRIVATE GAME OBJECT TO INSTANTIATE FROM PREFAB --------
+	private GameObject pfeet; 	// stands for "player" feet
+
+	// -------- PRIVATE VARIABLES --------
+	// drunk force stuff
+	private enum Dir { forward, right, left, back }; 	// to modify drunkDir
+	private int drunkDir; 		// randomly changing after coroutine delays (random delays?)
+	private bool camHiCapped;	// cam wobble high-cap reached
+	private bool camLoCapped;	// cam wobble low-cap reached
+
+
+	// -------- PUBLIC VARIABLES --------
+
 	// DRUNK FORCE PARAMS
-	private enum Dir { forward, right, left, back }; // to modify drunkDir
-	private int drunkDir; 	// randomly changing after coroutine delays (random delays?)
 	public float drunkInc;	// amount by which we increment/multiply the toppling force
 	
 	// CAMERA PARAMS
@@ -18,22 +37,9 @@ public class DrunkForce : MonoBehaviour {
 	public float camHiCap; 	// cam wobble high-cap
 	public float camLoCap;	// cam wobble low-cap
 	public float rotInc;	// cam orient inc
-
-	private bool camHiCapped;	// cam wobble high-cap reached
-	private bool camLoCapped;	// cam wobble low-cap reached
-	
-	// TO DRAG INTO COMPONENT
-	public Rigidbody rhead; 	// object's head rigidbody
-	public DrunkMovement dm; 	// script from the player  
-	public GameObject feet; 
-
 	
 	// COROUTINE DELAYS
 	public float drunkDelay;
-	
-	// TO STOP WOBBLE WHEN HIT A WALL
-	public bool stopWobble; 
-	public bool recoiled; 
 
 	// LOSE CONDITION: IF CAMERA IS TOO CRAZY U LOOKIN INSANE
 	public float boundRotForward;	// x < 30
@@ -41,15 +47,18 @@ public class DrunkForce : MonoBehaviour {
 	public float boundRotRight;		// z < 30
 	public float boundRotLeft; 		// z > 330 
 
-	//CAMERA FX
-	public DepthOfFieldScatter dof;
-
+	// TO STOP WOBBLE WHEN HIT A WALL
+	public bool stopWobble; 
+	public bool recoiled; 
 
 	void Start () {
+		rhead = gameObject.GetComponent<Rigidbody> ();
+		dm = gameObject.GetComponent<DrunkMovement> ();
 		stopWobble = false; 
 	}
 	
 	void Update () {
+		feet = dm.pfeet;
 		// check camera rotation lose condition
 		rotateFall (); 
 
