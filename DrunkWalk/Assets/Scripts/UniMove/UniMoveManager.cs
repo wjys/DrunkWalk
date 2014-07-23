@@ -38,12 +38,12 @@ public class UniMoveManager : MonoBehaviour
 {
 	// We save a list of Move controllers.
 	public List<UniMoveController> moves = new List<UniMoveController>();
-	public DrunkMovement[] players;
+	public GameObject[] players;
 	
 	void Start() 
 	{
 		UniMoveInit ();
-		UniMoveSetPlayers (); 
+		//UniMoveSetPlayers (); 
 	}
 	
 	
@@ -67,6 +67,12 @@ public class UniMoveManager : MonoBehaviour
 		{	
 			UniMoveController move = gameObject.AddComponent<UniMoveController>();	// It's a MonoBehaviour, so we can't just call a constructor
 			move.id = i;
+			foreach (GameObject player in players){
+				DrunkMovement dm = player.GetComponent<DrunkMovement>();
+				if (dm.id == move.id){
+					move = player.AddComponent<UniMoveController>(); 
+				}
+			}
 			
 			// Remember to initialize!
 			if (!move.Init(i)) 
@@ -120,11 +126,11 @@ public class UniMoveManager : MonoBehaviour
 		}
 	}
 
-	private void UniMoveSetPlayers(){
+	/*private void UniMoveSetPlayers(){
 			for (int i = 0; i < moves.Count; i++) {
 				if (moves[i].id == i){
 					players[i].UniMove = moves[i]; 
 				}
 			}
-	}
+	}*/
 }

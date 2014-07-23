@@ -9,6 +9,8 @@ public class DrunkMovement : InGame {
 	// |__/ |  \ |__| | \| | \_    |  | |__|  \/  |___ |  | |___ | \|  |  
 	//
 
+	public int id; 
+
 	// ENUM TO SWITCH BETWEEN CONTROLLERS
 	public int controller;
 	private enum controlInput { mouse, move, xbox }; 
@@ -101,7 +103,7 @@ public class DrunkMovement : InGame {
 
 
 	void Start () {
-
+		UniMove = gameObject.GetComponent<UniMoveController>();
 		triggerInt = UniMove.Trigger;
 
 		trigger1 = false;
@@ -123,32 +125,6 @@ public class DrunkMovement : InGame {
 		//PSMove Start
 		initX = UniMove.ax;	// calibrate ax
 		initZ = UniMove.az;	// calibrate az
-		int count = UniMoveController.GetNumConnected();
-		
-		for (int i = 0; i < count; i++){
-			UniMove = GetComponent<UniMoveController>();
-			
-			if (!UniMove.Init(i)) 
-			{	
-				Destroy(UniMove);	// If it failed to initialize, destroy and continue on
-				continue;
-			}
-			
-			// This example program only uses Bluetooth-connected controllers
-			PSMoveConnectionType conn = UniMove.ConnectionType;
-			if (conn == PSMoveConnectionType.Unknown || conn == PSMoveConnectionType.USB) 
-			{
-				Destroy(UniMove);
-			}
-			else 
-			{
-				moves.Add(UniMove);
-				
-				// Start all controllers with a white LED
-				UniMove.SetLED(Color.white);
-				
-			}
-		}
 	}
 	
 	void Update () {
@@ -174,7 +150,7 @@ public class DrunkMovement : InGame {
 			Application.LoadLevel (Application.loadedLevel);
 		
 		// CHECK UNIMOVE BUTTONS 
-		UniMoveSet ();
+		//UniMoveSet ();
 		
 		// IF THE PLAYER LEANS TOO MUCH, FALL AND LOSE
 		if (fallen) {

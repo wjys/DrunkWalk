@@ -37,7 +37,6 @@ using System.Collections.Generic;
 public class UniMoveDisplay : MonoBehaviour 
 {
 	// We save a list of Move controllers.
-	List<UniMoveController> moves = new List<UniMoveController>();
 	public int id; 
 	private UniMoveController uni;
 	
@@ -58,33 +57,6 @@ public class UniMoveDisplay : MonoBehaviour
 		uni = GetComponent<UniMoveController> (); 
 		
 		// Iterate through all connections (USB and Bluetooth)
-		for (int i = 0; i < count; i++) 
-		{
-			UniMoveController move = gameObject.AddComponent<UniMoveController>();	// It's a MonoBehaviour, so we can't just call a constructor
-			
-			// Remember to initialize!
-			if (!move.Init(i)) 
-			{	
-				Destroy(move);	// If it failed to initialize, destroy and continue on
-				continue;
-			}
-			
-			// This example program only uses Bluetooth-connected controllers
-			PSMoveConnectionType conn = move.ConnectionType;
-			if (conn == PSMoveConnectionType.Unknown || conn == PSMoveConnectionType.USB) 
-			{
-				Destroy(move);
-			}
-			else 
-			{
-				moves.Add(move);
-				
-				move.OnControllerDisconnected += HandleControllerDisconnected;
-				
-				// Start all controllers with a white LED
-				move.SetLED(Color.white);
-			}
-		}
 	}
 	
 	void HandleControllerDisconnected (object sender, EventArgs e)
@@ -95,8 +67,7 @@ public class UniMoveDisplay : MonoBehaviour
 	void OnGUI() 
 	{
 		string display = "";
-		
-		if (moves.Count > 0) 
+
 		{
 			display += string.Format("Player {0}: \n" +
 									 "ax:{1:0.000}, ay:{2:0.000}, az:{3:0.000}, \n" +
@@ -104,7 +75,6 @@ public class UniMoveDisplay : MonoBehaviour
 			                         id+1, uni.Acceleration.x, uni.Acceleration.y, uni.Acceleration.z,
 			                         uni.Gyro.x, uni.Gyro.y, uni.Gyro.z);
 		}
-		else display = string.Format("No Player {0} Controller found.\n", id+1);
 
 		if (id == 0) {
 			GUI.Label(new Rect(10, Screen.height-100, 500, 100), display);
