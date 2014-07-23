@@ -9,6 +9,7 @@ public class Rotation : MonoBehaviour {
 	public DrunkForce df; 
 	public Rigidbody rhead; 
 	public GameObject feet; 
+	public Collision coll;
 
 	// -------- PRIVATE VARIABLES -------- 
 	private enum controlInput { mouse, move, xbox }; 	// to know which controller we're using
@@ -42,6 +43,7 @@ public class Rotation : MonoBehaviour {
 		dm 		= gameObject.GetComponent<DrunkMovement>();
 		df 		= gameObject.GetComponent<DrunkForce>();
 		rhead 	= gameObject.GetComponent<Rigidbody>();
+		coll 	= gameObject.GetComponent<Collision>();
 
 		if (dm.controller == (int)controlInput.mouse) {
 			rotateDelay = 0; 
@@ -64,12 +66,14 @@ public class Rotation : MonoBehaviour {
 
 		feet 	= dm.pfeet;
 
-		if (!dm.fallen){		// player is still standing
-			if (!delaying){		// player hasn't already turned recently
-				direction = turnHead(direction);
-			}
-			else {
-				delayRotation (); 
+		if (!coll.colliding){
+			if (!dm.fallen){		// player is still standing
+				if (!delaying){		// player hasn't already turned recently
+					direction = turnHead(direction);
+				}
+				else {
+					delayRotation (); 
+				}
 			}
 		}
 	}

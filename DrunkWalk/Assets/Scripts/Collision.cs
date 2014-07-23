@@ -30,6 +30,7 @@ public class Collision : MonoBehaviour {
 	public float delayScore = 1.0f; 
 
 	private bool collided;
+	public bool colliding;
 
 	//RECOIL STUFF
 	public int recoilDir; 
@@ -47,6 +48,7 @@ public class Collision : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		colliding = false;
 		source.volume = 0.5f;
 		score = 10000;
 
@@ -93,20 +95,27 @@ public class Collision : MonoBehaviour {
 		// }
 	}
 
+	void OnCollisionEnter (Collider col){
+		if (!recoiled){
+			print ("RECOILING");
+			setRecoilDir(col.ClosestPointOnBounds(transform.position), transform.position);  
+		}
+	}
+
 	//When colliding with something:
 	void OnTriggerEnter(Collider col) {
+
+		colliding = true;
+
 		if (col.tag != "Trigger"){
 			df.stopWobble = true; 
-			if (!recoiled){
-				print ("RECOILING");
-				setRecoilDir(col.ClosestPointOnBounds(transform.position), transform.position);  
-			}
 			if (!collided){
 				//Yell();
 				audio.PlayOneShot (hitit);
 
 				dm.hitRumble = rumbleAmt;
 
+				rhead.constraints = RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY;
 
 				Debug.Log("Collision");
 				//ouchAnim.SetTrigger("Ouch");
@@ -166,6 +175,7 @@ public class Collision : MonoBehaviour {
 	}
 	//When not:
 	void OnTriggerExit(Collider col) {
+		colliding = false;
 		dm.hitRumble = 0.0f;
 		Debug.Log("No Longer Colliding");
 		soundPlayed = false; 
