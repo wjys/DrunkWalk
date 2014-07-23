@@ -470,7 +470,7 @@ public class UniMoveController : MonoBehaviour
 		psmove_get_gyroscope_frame(handle, PSMove_Frame.Frame_SecondHalf, ref gx, ref gy, ref gz);
 		
 		gyro.x = gx;
-		gyro.y = gy;
+		gyro.y = -gy;
 		gyro.z = gz;
 		
 		psmove_get_magnetometer(handle, ref x, ref y, ref z );
