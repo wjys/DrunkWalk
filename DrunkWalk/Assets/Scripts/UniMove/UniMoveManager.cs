@@ -39,17 +39,22 @@ public class UniMoveManager : MonoBehaviour
 	// We save a list of Move controllers.
 	public List<UniMoveController> moves = new List<UniMoveController>();
 	public GameObject[] players;
+	public int moveCount; 
 	
 	void Start() 
 	{
-		UniMoveInit ();
-		//UniMoveSetPlayers (); 
+		moveCount = 0; 
+		UniMoveInit (); 
 	}
 	
 	
 	void Update() 
 	{
-		UniMoveButtons (); 
+		if (StopManager () == false) {
+			UniMoveSetID ();
+			UniMoveSetPlayers ();
+			UniMoveActivateComponents ();
+		}
 	}
 	
 	void HandleControllerDisconnected (object sender, EventArgs e)
@@ -66,14 +71,13 @@ public class UniMoveManager : MonoBehaviour
 		for (int i = 0; i < count; i++) 
 		{	
 			UniMoveController move = gameObject.AddComponent<UniMoveController>();	// It's a MonoBehaviour, so we can't just call a constructor
-			move.id = i;
+			/*move.id = i+1; 
 			foreach (GameObject player in players){
 				DrunkMovement dm = player.GetComponent<DrunkMovement>();
 				if (dm.id == move.id){
 					move = player.AddComponent<UniMoveController>(); 
 				}
-			}
-			
+			}*/
 			// Remember to initialize!
 			if (!move.Init(i)) 
 			{	
@@ -92,9 +96,7 @@ public class UniMoveManager : MonoBehaviour
 				moves.Add(move);
 				
 				move.OnControllerDisconnected += HandleControllerDisconnected;
-				
-				// Start all controllers with a white LED
-				move.SetLED(Color.white);
+
 			}
 		}
 	}
@@ -125,12 +127,93 @@ public class UniMoveManager : MonoBehaviour
 			move.SetRumble(move.Trigger);
 		}
 	}
-
-	/*private void UniMoveSetPlayers(){
-			for (int i = 0; i < moves.Count; i++) {
-				if (moves[i].id == i){
-					players[i].UniMove = moves[i]; 
+	private void UniMoveSetID(){
+		foreach (UniMoveController move in moves){
+			if (move.id == 0){
+				if (move.GetButtonDown(PSMoveButton.Move)){
+					switch (moveCount){
+					case 0:
+						move.SetLED (Color.cyan);
+						move.id = 1;
+						moveCount++;
+						return;
+					case 1:
+						if (move.id == 0){
+							move.SetLED (Color.red);
+							move.id = 2;
+							moveCount++;
+						}
+						return;
+					case 2:
+						if (move.id == 0){
+							move.SetLED (Color.yellow);
+							move.id = 3;
+							moveCount++;
+						}
+						return;
+					case 3:
+						if (move.id == 0){
+							move.SetLED (Color.magenta);
+							move.id = 4;
+							moveCount++; 
+						}
+						return;
+					default:
+						return;
+					}
 				}
 			}
-	}*/
+		}
+	}
+	private void UniMoveSetPlayers(){ 
+		for(int i = 0; i < moves.Count; i++){
+			UniMoveController mv; 
+			if (moves[i].id > 0){
+				foreach (GameObject player in players){
+					mv = player.GetComponent<UniMoveController>();
+					if (mv == null){
+						UniMoveDisplay display = player.GetComponent<UniMoveDisplay>();
+						if (moves[i].id == display.id){
+							moves[i] = player.AddComponent<UniMoveController>() as UniMoveController;
+							moves[i].Init (i); 
+						}
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	private void UniMoveActivateComponents(){
+		UniMoveController mv; 
+		foreach (GameObject player in players) {
+			mv = player.GetComponent<UniMoveController>();
+			if (mv != null){
+				DrunkMovement dm 	= player.GetComponent<DrunkMovement>(); 
+				Rotation rot 		= player.GetComponent<Rotation>();
+				DrunkForce df 		= player.GetComponent<DrunkForce>();
+				Collision col 		= player.GetComponent<Collision>();
+
+				dm.enabled 	= true;
+				rot.enabled = true;
+				df.enabled	= true;
+				col.enabled = true;
+			}
+		}
+	}
+
+	private bool StopManager(){
+		/*foreach (UniMoveController move in moves) {
+			if (move.GetButtonDown (PSMoveButton.Start)){
+				return true; 
+			}
+		}*/
+		foreach (GameObject player in players) {
+			UniMoveController mv = player.GetComponent<UniMoveController>();
+			if (mv == null){
+				return false; 
+			}
+		}
+		return true; 
+	}
 }

@@ -104,9 +104,9 @@ public class DrunkMovement : InGame {
 
 
 	void Start () {
+		UniMove = gameObject.GetComponent<UniMoveController> ();
 		pfeet = Instantiate (feet) as GameObject; 
 		rfeet = pfeet.GetComponent<Rigidbody> ();
-		UniMove = gameObject.GetComponent<UniMoveController>();
 		rhead = gameObject.GetComponent<Rigidbody> ();
 		meAnim = gameObject.GetComponent<Animator> ();
 		triggerInt = UniMove.Trigger;
