@@ -63,7 +63,7 @@ public class UniMoveManager : MonoBehaviour
 	}
 
 	private void UniMoveInit(){
-		Time.maximumDeltaTime = 0.1f;
+		Time.maximumDeltaTime = 0.05f;
 		
 		int count = UniMoveController.GetNumConnected();
 		
@@ -129,8 +129,9 @@ public class UniMoveManager : MonoBehaviour
 	}
 	private void UniMoveSetID(){
 		foreach (UniMoveController move in moves){
+			print (move.id);
 			if (move.id == 0){
-				if (move.GetButtonDown(PSMoveButton.Move)){
+				if (move.GetButtonUp(PSMoveButton.Move)){
 					switch (moveCount){
 					case 0:
 						move.SetLED (Color.cyan);
@@ -174,8 +175,9 @@ public class UniMoveManager : MonoBehaviour
 					if (mv == null){
 						UniMoveDisplay display = player.GetComponent<UniMoveDisplay>();
 						if (moves[i].id == display.id){
-							moves[i] = player.AddComponent<UniMoveController>() as UniMoveController;
-							moves[i].Init (i); 
+							mv = player.AddComponent<UniMoveController>() as UniMoveController;
+							mv.Init (i); 
+							mv.id = display.id;
 						}
 						break;
 					}
