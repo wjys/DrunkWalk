@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Eyelids : InGame {
+public class Eyelids : MonoBehaviour {
 
 	//World Objects
 	public GameObject topLids;
@@ -39,9 +39,6 @@ public class Eyelids : InGame {
 	private static bool gettingUp;
 	private static bool blinked;
 
-	//Paused
-	public bool paused;
-
 	// Use this for initialization
 	void Start () {
 		startPosUp = topLids.transform.position;
@@ -60,9 +57,6 @@ public class Eyelids : InGame {
 	
 	// Update is called once per frame
 	void Update () {
-
-		if (!paused){
-
 		if (gettingUp == true){
 			speed = sSpeed;
 			accel = sAccel;
@@ -126,7 +120,7 @@ public class Eyelids : InGame {
 				Tap.enabled = false;
 		}
 		}
-		}
+
 	}
 
 	void FixedUpdate() {

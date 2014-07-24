@@ -31,11 +31,11 @@ public class GameManager : MonoBehaviour {
 		ins = this;
 
 		//Set Game Status
-		if (!game){
-			status = GameState.GameStatus.Splash;
-		} else {
-			status = GameState.GameStatus.Game;
-		}
+		//if (!game){
+		//	status = GameState.GameStatus.Splash;
+		//} else {
+		//	status = GameState.GameStatus.Game;
+		//}
 
 		//Don't show mouse
 		//Screen.showCursor = false;
@@ -46,11 +46,11 @@ public class GameManager : MonoBehaviour {
 		}
 
 		//Menu Instances
-		mainMenuIns = Instantiate(mainMenu) as GameObject;
-		mainMenuIns.SetActive(false);
-
 		pauseMenuIns = Instantiate(pauseMenu) as GameObject;
 		pauseMenuIns.SetActive(false);
+
+		mainMenuIns = Instantiate(mainMenu) as GameObject;
+		mainMenuIns.SetActive(false);
 	}
 
 
@@ -71,12 +71,14 @@ public class GameManager : MonoBehaviour {
 		 	if (Input.GetKeyDown("p")){
           	 	if (!paused) {
            	    	Pause();
+					Debug.Log ("activate");
           	 	} else {
            	    	UnPause();
+					Debug.Log ("deactivate");
            		}
            	}
 		} else if (status == GameState.GameStatus.Splash) {
-        	if (Input.anyKey){
+			if (Input.GetKeyDown("m")){
         		if (!menu) {
         			Menu();
         		} else {

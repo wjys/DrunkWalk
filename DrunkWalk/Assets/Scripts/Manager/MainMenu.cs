@@ -19,10 +19,15 @@ public class MainMenu : Menu {
 	public GameObject mMenu;
 	public GameObject cube;
 
+	//Camera
+	public GameObject camObj;
+	public float smooth;
+	public static Vector3 newPos;
+
 
 	private Item[] items= new Item[] {
 		new Item("START", delegate () { StartGame (); }),
-		new Item("SET UP", delegate () { Application.LoadLevel(Application.loadedLevel);}),
+		new Item("SET UP", delegate () { Settings (); }),
 		new Item("CALIBRATE", delegate () { Application.LoadLevel(0);}),
 		new Item("EXIT", delegate () { Application.Quit(); })
 	};
@@ -30,6 +35,8 @@ public class MainMenu : Menu {
 	void Start() {
 		mMenuIns = Instantiate(mMenu) as GameObject;
 		mMenuIns.SetActive(true);
+		camObj = GameObject.FindGameObjectWithTag("MainCamera");
+		newPos = new Vector3 (0,0,0);
 	}
 
 	void OnGUI () {
@@ -46,12 +53,21 @@ public class MainMenu : Menu {
 		Application.LoadLevel ("WastedMove");
 	}
 
+	public static void Settings(){
+		newPos = new Vector3 (10,10,10);
+	}
+
+	void FixedUpdate() {
+		camObj.transform.position = Vector3.Lerp(camObj.transform.position, newPos, smooth * Time.deltaTime);
+	}
+
 	void Update () {
 
 		Debug.Log (idx);
 
 		timer += Time.deltaTime;
 
+		//GET INPUT
 		bool isUp = Input.GetAxis("Vertical") > 0.8f,
 			 isDown = Input.GetAxis("Vertical") < -0.8f;
 		bool justUp = isUp && !wasUp,
@@ -82,8 +98,17 @@ public class MainMenu : Menu {
 		wasDown = isDown;
 
 
+
+
+		//HIGHLIGHTED OBJS
 		if (idx == 1){
 			mMenuIns.GetComponentInChildren<MeshRenderer>().material.color = Color.red;
+		} else if (idx == 2){
+			mMenuIns.GetComponentInChildren<MeshRenderer>().material.color = Color.blue;
+		} else if (idx == 3){
+			mMenuIns.GetComponentInChildren<MeshRenderer>().material.color = Color.white;
+		} else if (idx == 4){
+			mMenuIns.GetComponentInChildren<MeshRenderer>().material.color = Color.green;
 		}
 	}
 }

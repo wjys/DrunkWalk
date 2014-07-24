@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 
 public class PauseMenu : Menu {
+	static public PauseMenu ins;
+
 	public Texture2D backgroundTexture;
 	public Color backgroundColor;
 	public GUISkin skin;
