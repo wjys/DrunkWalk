@@ -24,11 +24,15 @@ public class GameManager : MonoBehaviour {
 	private bool menu = false;
 	public bool game;
 
+	//Difficulty
+	public static int chosenChar;
+
 
 	void Awake () {
 		//Setup instance
 		DontDestroyOnLoad(this);
 		ins = this;
+		chosenChar = 0;
 
 		//Set Game Status
 		//if (!game){
