@@ -1,36 +1,4 @@
-﻿/**
- * UniMove API - A Unity plugin for the PlayStation Move motion controller
- * Copyright (C) 2012, 2013, Copenhagen Game Collective (http://www.cphgc.org)
- * 					         Patrick Jarnfelt
- * 					         Douglas Wilson (http://www.doougle.net)
- * 
- * 
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- *    1. Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *
- *    2. Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- **/
-
-using UnityEngine;
+﻿using UnityEngine;
 using System;
 using System.Collections.Generic;
 
@@ -39,12 +7,48 @@ public class UniMoveManager : MonoBehaviour
 	// We save a list of Move controllers.
 	public List<UniMoveController> moves = new List<UniMoveController>();
 	public GameObject[] players;
+	public GameObject player; 
 	public int moveCount; 
+	public int numPlayers;
+	private bool createPlayer;
+	private bool setPlayer;
+
+	private Rect[] rects; 
+	private Rect rect1a;
+	private Rect rect2a;
+	private Rect rect1b;
+	private Rect rect2b;
+	private Rect rect3;
+	private Rect rect4;
+
+	private Vector3[] positions; 
+	private Quaternion rotations;
 	
 	void Start() 
 	{
+		players = new GameObject[4];
+		rects = new Rect[6];
+		rects[0].Set (0, 0, 0.5f, 1f);
+		rects[1].Set (0.5f, 0, 0.5f, 1f);
+		rects[2].Set (0, 0.5f, 0.5f, 0.5f);
+		rects[3].Set (0.5f, 0.5f, 0.5f, 0.5f);
+
+		// players 1-2 if 3 or more players
+		rects[4].Set (0, 0, 0.5f, 0.5f);
+		rects[5].Set (0.5f, 0, 0.5f, 0.5f);
+
+		positions = new Vector3[3] { 	new Vector3 (-0.03585815f, 1.424898f, 3.941933f), 
+										new Vector3 (2.383401f, 1.424898f, 3.366474f),
+										new Vector3 (-0.03585815f, 1.424898f, 3.941933f)};//, 
+										//new Vector3 (,1.424898,), 
+										//new Vector3 (,1.424898,)}
+
+		rotations = new Quaternion (0, 0, 0, 0);
+
 		moveCount = 0; 
 		UniMoveInit (); 
+		setPlayer = false; 
+
 	}
 	
 	
@@ -52,8 +56,14 @@ public class UniMoveManager : MonoBehaviour
 	{
 		if (StopManager () == false) {
 			UniMoveSetID ();
-			UniMoveSetPlayers ();
-			UniMoveActivateComponents ();
+			if (createPlayer)
+				createPlayers();
+			if (setPlayer)
+				UniMoveSetPlayers ();
+		} 
+		else {
+			UniMoveActivateComponents();
+			this.enabled = false; 
 		}
 	}
 	
@@ -61,6 +71,13 @@ public class UniMoveManager : MonoBehaviour
 	{
 		// TODO: Remove this disconnected controller from the list and maybe give an update to the player
 	}
+
+
+
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * NO ARG. NO RETURN.
+	 * API Code to initialize the move controllers within this manager 
+	 * -------------------------------------------------------------------------------------------------------------------------- */
 
 	private void UniMoveInit(){
 		Time.maximumDeltaTime = 0.05f;
@@ -71,13 +88,7 @@ public class UniMoveManager : MonoBehaviour
 		for (int i = 0; i < count; i++) 
 		{	
 			UniMoveController move = gameObject.AddComponent<UniMoveController>();	// It's a MonoBehaviour, so we can't just call a constructor
-			/*move.id = i+1; 
-			foreach (GameObject player in players){
-				DrunkMovement dm = player.GetComponent<DrunkMovement>();
-				if (dm.id == move.id){
-					move = player.AddComponent<UniMoveController>(); 
-				}
-			}*/
+
 			// Remember to initialize!
 			if (!move.Init(i)) 
 			{	
@@ -101,6 +112,8 @@ public class UniMoveManager : MonoBehaviour
 		}
 	}
 
+
+	// NOT USED - simple button checks
 	private void UniMoveButtons(){
 		foreach (UniMoveController move in moves) 
 		{
@@ -127,6 +140,13 @@ public class UniMoveManager : MonoBehaviour
 			move.SetRumble(move.Trigger);
 		}
 	}
+
+
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * NO ARG. NO RETURN.
+	 * when a player taps the Move button on their controller, set the ID on the move controller to the first available player
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+
 	private void UniMoveSetID(){
 		foreach (UniMoveController move in moves){
 			print (move.id);
@@ -136,27 +156,27 @@ public class UniMoveManager : MonoBehaviour
 					case 0:
 						move.SetLED (Color.cyan);
 						move.id = 1;
-						moveCount++;
+						createPlayer = true;
 						return;
 					case 1:
 						if (move.id == 0){
 							move.SetLED (Color.red);
 							move.id = 2;
-							moveCount++;
+							createPlayer = true;
 						}
 						return;
 					case 2:
 						if (move.id == 0){
 							move.SetLED (Color.yellow);
 							move.id = 3;
-							moveCount++;
+							createPlayer = true;
 						}
 						return;
 					case 3:
 						if (move.id == 0){
 							move.SetLED (Color.magenta);
-							move.id = 4;
-							moveCount++; 
+							move.id = 4; 
+							createPlayer = true;
 						}
 						return;
 					default:
@@ -166,56 +186,104 @@ public class UniMoveManager : MonoBehaviour
 			}
 		}
 	}
+
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * NO ARG. NO RETURN.
+	 * instantiate the player:
+	 * (1) set up the viewport rect of the player cameras
+	 * (2) set the appropriate ID to the player 
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+
+	private void createPlayers(){
+		players [moveCount] = Instantiate (player, positions [moveCount], rotations) as GameObject;
+		Camera[] cams = players [moveCount].GetComponentsInChildren<Camera> ();
+		foreach (Camera cam in cams){
+			cam.rect = (rects [moveCount]);
+		}
+		players [moveCount].GetComponent<DrunkMovement> ().id = moveCount + 1;
+		players [moveCount].GetComponent<UniMoveDisplay> ().id = moveCount + 1; 
+		if (moveCount >= 1) {
+		GameObject ui;
+			foreach (Camera cam in cams){
+				if (cam.name.Equals("UICam")){
+					ui = cam.gameObject;
+					ui.layer = 7+moveCount;
+					foreach (Transform trans in ui.GetComponentsInChildren<Transform>()){
+						trans.gameObject.layer = 7+moveCount;
+					}
+					break;
+				}
+			}
+		}
+		if (moveCount >= 2) {
+			cams = players[0].GetComponentsInChildren<Camera> ();
+			foreach (Camera cam in cams){
+				cam.rect = (rects[4]);
+			}
+			cams = players[1].GetComponentsInChildren<Camera> ();
+			foreach (Camera cam in cams){
+				cam.rect = (rects[5]);
+			}
+		}
+		setPlayer = true;
+		createPlayer = false; 
+	}
+
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * NO ARG. NO RETURN.
+	 * set the UniMove controller to the player (add component to the player)
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+
 	private void UniMoveSetPlayers(){ 
 		for(int i = 0; i < moves.Count; i++){
 			UniMoveController mv; 
+
 			if (moves[i].id > 0){
-				foreach (GameObject player in players){
-					mv = player.GetComponent<UniMoveController>();
-					if (mv == null){
-						UniMoveDisplay display = player.GetComponent<UniMoveDisplay>();
-						if (moves[i].id == display.id){
-							mv = player.AddComponent<UniMoveController>() as UniMoveController;
-							mv.Init (i); 
-							mv.id = display.id;
-						}
-						break;
+				mv = players[moveCount].GetComponent<UniMoveController>();
+				if (mv == null){
+					UniMoveDisplay display = players[moveCount].GetComponent<UniMoveDisplay>();
+					if (moves[i].id == display.id){
+						print ("ADD UNIMOVE CONTROLLER TO PLAYER");
+						mv = players[moveCount].AddComponent<UniMoveController>() as UniMoveController;
+						mv.Init (i); 
+						mv.id = display.id;
 					}
+					setPlayer = false;
+					moveCount++;
+					break;
 				}
 			}
 		}
 	}
 
-	private void UniMoveActivateComponents(){
-		UniMoveController mv; 
-		foreach (GameObject player in players) {
-			mv = player.GetComponent<UniMoveController>();
-			if (mv != null){
-				DrunkMovement dm 	= player.GetComponent<DrunkMovement>(); 
-				Rotation rot 		= player.GetComponent<Rotation>();
-				DrunkForce df 		= player.GetComponent<DrunkForce>();
-				Collision col 		= player.GetComponent<Collision>();
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * NO ARG. NO RETURN.
+	 * when all the players have been set, activate the player components
+	 * -------------------------------------------------------------------------------------------------------------------------- */
 
-				dm.enabled 	= true;
+	private void UniMoveActivateComponents(){
+		print ("ENABLE PLAYER COMPONENTS!");
+		for (int i = 0; i < numPlayers; i++) {
+			UniMoveController mv = players [i].GetComponent<UniMoveController> ();
+
+			if (mv != null) {
+				DrunkMovement dm = players [i].GetComponent<DrunkMovement> (); 
+				Rotation rot = players [i].GetComponent<Rotation> ();
+				DrunkForce df = players [i].GetComponent<DrunkForce> ();
+				Collision col = players [i].GetComponent<Collision> ();
+
+				dm.enabled = true;
 				rot.enabled = true;
-				df.enabled	= true;
+				df.enabled = true;
 				col.enabled = true;
 			}
 		}
 	}
 
 	private bool StopManager(){
-		/*foreach (UniMoveController move in moves) {
-			if (move.GetButtonDown (PSMoveButton.Start)){
-				return true; 
-			}
-		}*/
-		foreach (GameObject player in players) {
-			UniMoveController mv = player.GetComponent<UniMoveController>();
-			if (mv == null){
-				return false; 
-			}
+		if (moveCount == numPlayers){
+			return true;
 		}
-		return true; 
+		return false; 
 	}
 }
