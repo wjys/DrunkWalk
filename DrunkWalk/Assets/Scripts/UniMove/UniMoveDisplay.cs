@@ -74,7 +74,7 @@ public class UniMoveDisplay : MonoBehaviour
 			                         uni.Gyro.x, uni.Gyro.y, uni.Gyro.z);
 		}
 
-		if (id == 0) {
+		if (id == 1) {
 			GUI.Label(new Rect(10, Screen.height-100, 500, 100), display);
 		}
 		else {

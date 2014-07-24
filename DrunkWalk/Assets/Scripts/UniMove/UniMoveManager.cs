@@ -129,41 +129,38 @@ public class UniMoveManager : MonoBehaviour
 	}
 	private void UniMoveSetID(){
 		foreach (UniMoveController move in moves){
-			
-			if (move.GetButtonDown(PSMoveButton.Move)){
-				switch (moveCount){
-				case 0:
-					move.SetLED (Color.cyan);
-					move.id = 1;
-					moveCount++;
-					return;
-					break;
-				case 1:
-					if (move.id == 0){
-						move.SetLED (Color.red);
-						move.id = 2;
+			if (move.id == 0){
+				if (move.GetButtonDown(PSMoveButton.Move)){
+					switch (moveCount){
+					case 0:
+						move.SetLED (Color.cyan);
+						move.id = 1;
 						moveCount++;
+						return;
+					case 1:
+						if (move.id == 0){
+							move.SetLED (Color.red);
+							move.id = 2;
+							moveCount++;
+						}
+						return;
+					case 2:
+						if (move.id == 0){
+							move.SetLED (Color.yellow);
+							move.id = 3;
+							moveCount++;
+						}
+						return;
+					case 3:
+						if (move.id == 0){
+							move.SetLED (Color.magenta);
+							move.id = 4;
+							moveCount++; 
+						}
+						return;
+					default:
+						return;
 					}
-					return;
-					break;
-				case 2:
-					if (move.id == 0){
-						move.SetLED (Color.yellow);
-						move.id = 3;
-						moveCount++;
-					}
-					return;
-					break;
-				case 3:
-					if (move.id == 0){
-						move.SetLED (Color.magenta);
-						move.id = 4;
-						moveCount++; 
-					}
-					return;
-					break;
-				default:
-					break;
 				}
 			}
 		}
