@@ -135,6 +135,8 @@ public class DrunkMovement : InGame {
 	
 	void Update () {
 
+		setMoveColour ();
+
 		//print (triggerInt);
 		if (triggerInt == 1){
 			trigger1 = true;
@@ -510,5 +512,28 @@ public class DrunkMovement : InGame {
 		audio.volume = Random.value * 0.3f + 0.7f;
 		audio.PlayOneShot(clip); 
 		
+	}
+
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * SET MOVE CONTROLLER COLOUR
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+
+	private void setMoveColour(){
+		switch (id) {
+		case 1:
+			UniMove.SetLED (Color.cyan);
+			break;
+		case 2:
+			UniMove.SetLED (Color.red);
+			break;
+		case 3:
+			UniMove.SetLED (Color.green);
+			break;
+		case 4:
+			UniMove.SetLED (Color.magenta);
+			break;
+		default:
+			break;
+		}
 	}
 }
