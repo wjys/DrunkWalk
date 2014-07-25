@@ -262,11 +262,6 @@ public class MainMenu : Menu {
 		}
 
 		if (Input.GetButtonDown("Confirm")) {
-			if (!lerping){
-				lerping = true;
-				StartCoroutine("LerpCam");
-				print ("LERPING");
-			}
 			//CONFIRMED
 			if (menuNum == 1) {
 				items[idx].command();
@@ -279,14 +274,15 @@ public class MainMenu : Menu {
 			} else if (menuNum == 4){
 				litems[lidx].command();
 			}
-		}
 
-		if (Input.GetButtonDown("Cancel")) {
 			if (!lerping){
 				lerping = true;
 				StartCoroutine("LerpCam");
 				print ("LERPING");
 			}
+		}
+
+		if (Input.GetButtonDown("Cancel")) {
 			//CANCELLED
 			if (menuNum == 1){
 				GameManager.ins.UnMenu();
@@ -298,6 +294,12 @@ public class MainMenu : Menu {
 				menuNum = 1;
 				menuSet = false;
 				newPos = new Vector3 (0,0,0);
+			}
+
+			if (!lerping){
+				lerping = true;
+				StartCoroutine("LerpCam");
+				print ("LERPING");
 			}
 		}
 
@@ -320,19 +322,34 @@ public class MainMenu : Menu {
 	}
 
 	public IEnumerator LerpCam() {
+		if (menuNum == 4){
+			newPos = new Vector3(50, 25, 0);
+		}
+
 		if (menuNum == 3){
-			newPos = new Vector3(0,25,0);
-			newRot = new Quaternion (0, 90, 0, 0);
-		} else if (menuNum == 2){
-			newPos = new Vector3(0,25,0);
-			newRot = new Quaternion (0, 45, 0, 0);
-		} else if (menuNum == 1){
+			newPos = new Vector3(25,25,0);
+			newRot = new Quaternion (0, 0, 0, 0);
+		}
+
+		if (menuNum == 2){
 			newPos = new Vector3(0,25,0);
 			newRot = new Quaternion (0, 0, 0, 0);
-		} else if (menuNum == 0){
+		}
+
+		if (menuNum == 1){
 			newPos = new Vector3(0,0,0);
 			newRot = new Quaternion (0, 0, 0, 0);
 		}
+
+		if (menuNum == 0){
+			newPos = new Vector3(0,0,0);
+			newRot = new Quaternion (0, 0, 0, 0);
+		}
+
+		if (menuSet){
+			newPos = new Vector3(25,0,0);
+		}
+
 		yield return new WaitForSeconds(0.001f);
 		lerping = false;
 	}
