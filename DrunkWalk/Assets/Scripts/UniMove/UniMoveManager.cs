@@ -27,15 +27,16 @@ public class UniMoveManager : MonoBehaviour
 	void Start() 
 	{
 		players = new GameObject[4];
-		rects = new Rect[6];
-		rects[0].Set (0, 0, 0.5f, 1f);
+		rects = new Rect[7];
+		rects[0].Set (0, 0, 1f, 1f);
 		rects[1].Set (0.5f, 0, 0.5f, 1f);
 		rects[2].Set (0, 0.5f, 0.5f, 0.5f);
 		rects[3].Set (0.5f, 0.5f, 0.5f, 0.5f);
 
 		// players 1-2 if 3 or more players
-		rects[4].Set (0, 0, 0.5f, 0.5f);
-		rects[5].Set (0.5f, 0, 0.5f, 0.5f);
+		rects[4].Set (0, 0, 0.5f, 1f);
+		rects[5].Set (0, 0, 0.5f, 0.5f);
+		rects[6].Set (0.5f, 0, 0.5f, 0.5f);
 
 		positions = new Vector3[3] { 	new Vector3 (-0.03585815f, 1.424898f, 3.941933f), 
 										new Vector3 (2.383401f, 1.424898f, 3.366474f),
@@ -202,6 +203,12 @@ public class UniMoveManager : MonoBehaviour
 		}
 		players [moveCount].GetComponent<DrunkMovement> ().id = moveCount + 1;
 		players [moveCount].GetComponent<UniMoveDisplay> ().id = moveCount + 1; 
+		if (moveCount == 1) {
+			cams = players[0].GetComponentsInChildren<Camera> ();
+			foreach (Camera cam in cams){
+				cam.rect = (rects[4]);
+			}
+		}
 		if (moveCount >= 1) {
 		GameObject ui;
 			foreach (Camera cam in cams){
@@ -214,15 +221,15 @@ public class UniMoveManager : MonoBehaviour
 					break;
 				}
 			}
-		}
-		if (moveCount >= 2) {
-			cams = players[0].GetComponentsInChildren<Camera> ();
-			foreach (Camera cam in cams){
-				cam.rect = (rects[4]);
-			}
-			cams = players[1].GetComponentsInChildren<Camera> ();
-			foreach (Camera cam in cams){
-				cam.rect = (rects[5]);
+			if (moveCount >= 2) {
+				cams = players[0].GetComponentsInChildren<Camera> ();
+				foreach (Camera cam in cams){
+					cam.rect = (rects[5]);
+				}
+				cams = players[1].GetComponentsInChildren<Camera> ();
+				foreach (Camera cam in cams){
+					cam.rect = (rects[6]);
+				}
 			}
 		}
 		setPlayer = true;
