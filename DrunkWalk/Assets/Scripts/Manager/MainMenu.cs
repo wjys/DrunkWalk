@@ -109,8 +109,8 @@ public class MainMenu : Menu {
 			GUIMenu(idx, 200, 80, items, timer);}
 		else if (menuSet == true) {
 			GUIMenu(sidx, 200, 80, sitems, timer);}
-		else if (menuNum == 2) {
-			GUIMenu (cidx, 200, 80, citems, timer);}
+		//else if (menuNum == 2) {
+		//	GUIMenu (cidx, 200, 80, citems, timer);}
 		else if (menuNum == 3) {
 			GUIMenu (didx, 200, 80, ditems, timer);}
 		else if (menuNum == 4) {
@@ -151,8 +151,10 @@ public class MainMenu : Menu {
 	//////////////////////
 
 	public static void ChooseCharacter(){
-		menuNum = 2;
+
+
 		menuSet = false;
+		menuNum = 2;
 	}
 
 	/////////////
