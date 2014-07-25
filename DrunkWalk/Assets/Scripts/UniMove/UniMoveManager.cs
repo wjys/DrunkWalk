@@ -25,21 +25,21 @@ public class UniMoveManager : MonoBehaviour
 		// CAMERA VIEWPORT
 		rects = new Rect[7];
 
-		rects[0].Set (0, 0, 0.5f, 0.5f);		// multiplayer - p1
-		rects[1].Set (0.5f, 0, 0.5f, 0.5f);		// multiplayer - p2
-		rects[2].Set (0, 0.5f, 0.5f, 0.5f);		// multiplayer - p3
-		rects[3].Set (0.5f, 0.5f, 0.5f, 0.5f);	// multiplayer - p4
+		rects[0].Set (0.0f, 0.5f, 0.5f, 0.5f);	// multiplayer - p1
+		rects[1].Set (0.5f, 0.5f, 0.5f, 0.5f);	// multiplayer - p2
+		rects[2].Set (0.0f, 0.0f, 0.5f, 0.5f);	// multiplayer - p3
+		rects[3].Set (0.5f, 0.0f, 0.5f, 0.5f);	// multiplayer - p4
 
-		rects[4].Set (0, 0, 0.5f, 1f);			// two players - p1
-		rects[5].Set (0.5f, 0, 0.5f, 1f);		// two players - p2
+		rects[4].Set (0.0f, 0.0f, 0.5f, 1.0f);	// two players - p1
+		rects[5].Set (0.5f, 0.0f, 0.5f, 1.0f);	// two players - p2
 
-		rects[6].Set (0, 0, 1f, 1f);			// single player - full screen
+		rects[6].Set (0.0f, 0.0f, 1.0f, 1.0f);	// single player - full screen
 
 
-		positions = new Vector3[4] { 	new Vector3 (-0.03585815f, 1.424898f, 3.941933f), 
-										new Vector3 (2.383401f, 1.424898f, 3.366474f),
+		positions = new Vector3[4] { 	new Vector3 (-1.10f, 1.424898f, 3.941933f),
 										new Vector3 (-0.03585815f, 1.424898f, 3.941933f),
-										new Vector3 (-0.03585815f, 1.424898f, 3.941933f)};
+										new Vector3 (1.16f, 1.424898f, 3.941933f), 
+										new Vector3 (2.383401f, 1.424898f, 3.366474f)};
 
 		rotations = new Quaternion (0, 0, 0, 0);
 
@@ -175,29 +175,42 @@ public class UniMoveManager : MonoBehaviour
 		Camera[] cams;
 
 		switch (moveCount) {
+		
+		// 1 player
 		case 0:
+			print ("cam viewport for player 1 - first player assigned");
 			cams = players [moveCount].GetComponentsInChildren<Camera> ();
 			foreach (Camera cam in cams){
 				cam.rect = (rects[6]);
 			}
 			break;
+
+		// 2 players
 		case 1:
-			for (int i = 0; i < moveCount; i++){
+			print ("cam viewport for players 1 and 2 - first reassigned, 2nd player assigned");
+			for (int i = 0; i <= moveCount; i++){
 				cams = players[i].GetComponentsInChildren<Camera>();
 				foreach (Camera cam in cams){
 					cam.rect = (rects [i+4]);
+					print (i + " " + cam.rect);
 				}
 			}
 			break;
+
+		// 3 players
 		case 2:
-			for (int i = 0; i < moveCount; i++){
+			print ("cam viewport for players 1, 2, and 3 - 1st and 2nd reassigned, 3rd assigned");
+			for (int i = 0; i <= moveCount; i++){
 				cams = players[i].GetComponentsInChildren<Camera>();
 				foreach (Camera cam in cams){
 					cam.rect = (rects [i]);
 				}
 			}
 			break;
+
+		// 4 players
 		case 3:
+			print ("cam view port for player 4 - 4th player assigned");
 			cams = players [moveCount].GetComponentsInChildren<Camera> ();
 			foreach (Camera cam in cams){
 				cam.rect = (rects[3]);
@@ -247,34 +260,63 @@ public class UniMoveManager : MonoBehaviour
 		
 		// SINGLE PLAYER MODE
 		if (numPlayers == 1) {
+			print ("set ui for single player");
 			ui = GameObject.Find ("UICam 1").camera;
 			ui.rect = rects[6];
 			ui.GetComponentInChildren <Eyelids>().me = GameObject.Find ("Head 1").GetComponent<DrunkMovement>();
 			ui.GetComponentInChildren<Compass>().me =  GameObject.Find ("Head 1");
 			ui.GetComponentInChildren<Ouch>().collision = GameObject.Find ("Head 1").GetComponent<Collision>();
+
+			SpriteRenderer[] sprites = ui.GetComponentsInChildren<SpriteRenderer>();
+			foreach (SpriteRenderer sprite in sprites){
+				sprite.enabled = true;
+			}
+
 			ui.gameObject.SetActive(true);
 		}
 		
 		// 2 PLAYER MODE
 		else if (numPlayers == 2) {
+			print ("set ui for 2 players"); 
 			for (int i = 1; i < numPlayers+1; i++){
 				ui = GameObject.Find ("UICam " + i).camera;
 				ui.rect = rects[i+3];
 				ui.GetComponentInChildren <Eyelids>().me = GameObject.Find ("Head " + i).GetComponent<DrunkMovement>();
 				ui.GetComponentInChildren<Compass>().me =  GameObject.Find ("Head " + i);
 				ui.GetComponentInChildren<Ouch>().collision = GameObject.Find ("Head " + i).GetComponent<Collision>();
+				
+				SpriteRenderer[] sprites = ui.GetComponentsInChildren<SpriteRenderer>();
+				foreach (SpriteRenderer sprite in sprites){
+					sprite.enabled = true;
+				}
+				
+
 				ui.gameObject.SetActive(true);
 			}
 		}
 		
 		// MULTIPLAYER (3+) MODE
 		else if (numPlayers >= 3){
+			print ("set ui for multiplayer");
 			for (int i = 1; i < numPlayers+1; i++){
+				print ("getting ui for player " + i);
 				ui = GameObject.Find ("UICam " + i).camera;
+				print ("setting ui viewport for player " + i);
 				ui.rect = rects[i-1];
+				print ("setting dm me in eyelids for player " + i);
 				ui.GetComponentInChildren <Eyelids>().me = GameObject.Find ("Head " + i).GetComponent<DrunkMovement>();
+				print ("setting obj me in compass for player " + i);
 				ui.GetComponentInChildren<Compass>().me =  GameObject.Find ("Head " + i);
+				print ("setting collision in ouch for player " + i);
 				ui.GetComponentInChildren<Ouch>().collision = GameObject.Find ("Head " + i).GetComponent<Collision>();
+				
+				SpriteRenderer[] sprites = ui.GetComponentsInChildren<SpriteRenderer>();
+				foreach (SpriteRenderer sprite in sprites){
+					sprite.enabled = true;
+				}
+				
+
+				print ("setting ui active for player " + i);
 				ui.gameObject.SetActive(true);
 			}
 		}

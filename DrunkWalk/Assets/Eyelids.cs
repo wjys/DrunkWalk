@@ -69,7 +69,7 @@ public class Eyelids : InGame {
 		
 		} else {
 			//Player Fell
-			if (GameManager.ins.playerStatus == GameState.PlayerStatus.Fallen){
+			if (me.fallen){
 			
 			//Enable gui
 				Tap.enabled = true;
