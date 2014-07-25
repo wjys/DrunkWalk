@@ -14,12 +14,6 @@ public class UniMoveManager : MonoBehaviour
 	private bool setPlayer;
 
 	private Rect[] rects; 
-	private Rect rect1a;
-	private Rect rect2a;
-	private Rect rect1b;
-	private Rect rect2b;
-	private Rect rect3;
-	private Rect rect4;
 
 	private Vector3[] positions; 
 	private Quaternion rotations;
@@ -27,16 +21,20 @@ public class UniMoveManager : MonoBehaviour
 	void Start() 
 	{
 		players = new GameObject[4];
-		rects = new Rect[7];
-		rects[0].Set (0, 0, 1f, 1f);
-		rects[1].Set (0.5f, 0, 0.5f, 1f);
-		rects[2].Set (0, 0.5f, 0.5f, 0.5f);
-		rects[3].Set (0.5f, 0.5f, 0.5f, 0.5f);
 
-		// players 1-2 if 3 or more players
-		rects[4].Set (0, 0, 0.5f, 1f);
-		rects[5].Set (0, 0, 0.5f, 0.5f);
-		rects[6].Set (0.5f, 0, 0.5f, 0.5f);
+		// CAMERA VIEWPORT
+		rects = new Rect[7];
+
+		rects[0].Set (0, 0, 0.5f, 0.5f);		// multiplayer - p1
+		rects[1].Set (0.5f, 0, 0.5f, 0.5f);		// multiplayer - p2
+		rects[2].Set (0, 0.5f, 0.5f, 0.5f);		// multiplayer - p3
+		rects[3].Set (0.5f, 0.5f, 0.5f, 0.5f);	// multiplayer - p4
+
+		rects[4].Set (0, 0, 0.5f, 1f);			// two players - p1
+		rects[5].Set (0.5f, 0, 0.5f, 1f);		// two players - p2
+
+		rects[6].Set (0, 0, 1f, 1f);			// single player - full screen
+
 
 		positions = new Vector3[4] { 	new Vector3 (-0.03585815f, 1.424898f, 3.941933f), 
 										new Vector3 (2.383401f, 1.424898f, 3.366474f),
@@ -113,36 +111,6 @@ public class UniMoveManager : MonoBehaviour
 		}
 	}
 
-
-	// NOT USED - simple button checks
-	private void UniMoveButtons(){
-		foreach (UniMoveController move in moves) 
-		{
-			// Instead of this somewhat kludge-y check, we'd probably want to remove/destroy
-			// the now-defunct controller in the disconnected event handler below.
-			if (move.Disconnected) continue;
-			
-			// Button events. Works like Unity's Input.GetButton
-			if (move.GetButtonDown(PSMoveButton.Circle)){
-				Debug.Log("Circle Down");
-			}
-			if (move.GetButtonUp(PSMoveButton.Circle)){
-				Debug.Log("Circle UP");
-			}
-			
-			// Change the colors of the LEDs based on which button has just been pressed:
-			if (move.GetButtonDown(PSMoveButton.Circle)) 		move.SetLED(Color.cyan);
-			else if(move.GetButtonDown(PSMoveButton.Cross)) 	move.SetLED(Color.red);
-			else if(move.GetButtonDown(PSMoveButton.Square)) 	move.SetLED(Color.yellow);
-			else if(move.GetButtonDown(PSMoveButton.Triangle)) 	move.SetLED(Color.magenta);
-			else if(move.GetButtonDown(PSMoveButton.Move)) 		move.SetLED(Color.black);
-			
-			// Set the rumble based on how much the trigger is down
-			move.SetRumble(move.Trigger);
-		}
-	}
-
-
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * NO ARG. NO RETURN.
 	 * when a player taps the Move button on their controller, set the ID on the move controller to the first available player
@@ -197,61 +165,50 @@ public class UniMoveManager : MonoBehaviour
 
 	private void createPlayers(){
 		players [moveCount] = Instantiate (player, positions [moveCount], rotations) as GameObject;
+
+		// SET UP THE ID OF THE HEAD AND COMPONENTS
 		players [moveCount].name = "Head " + (moveCount + 1);
-		Camera[] cams = players [moveCount].GetComponentsInChildren<Camera> ();
-		foreach (Camera cam in cams){
-			cam.rect = (rects [moveCount]);
-		}
 		players [moveCount].GetComponent<DrunkMovement> ().id = moveCount + 1;
 		players [moveCount].GetComponent<UniMoveDisplay> ().id = moveCount + 1; 
-		if (moveCount == 1) {
-			cams = players[0].GetComponentsInChildren<Camera> ();
-			foreach (Camera cam in cams){
-				cam.rect = (rects[4]);
-			}
-		}
-		/*if (moveCount >= 1) {
-		GameObject ui;
-			foreach (Camera cam in cams){
-				if (cam.name.Equals("UICam")){
-					ui = cam.gameObject;
-					ui.layer = 7+moveCount;
-					foreach (Transform trans in ui.GetComponentsInChildren<Transform>()){
-						trans.gameObject.layer = 7+moveCount;
-					}
-					break;
-				}
-			}
-		}*/
-		if (moveCount >= 2) {
-			cams = players[0].GetComponentsInChildren<Camera> ();
-			foreach (Camera cam in cams){
-				cam.rect = (rects[5]);
-			}
-			cams = players[1].GetComponentsInChildren<Camera> ();
+
+		// SET UP THE CAMERAS (ON HEAD'S CHILDREN)
+		Camera[] cams;
+
+		switch (moveCount) {
+		case 0:
+			cams = players [moveCount].GetComponentsInChildren<Camera> ();
 			foreach (Camera cam in cams){
 				cam.rect = (rects[6]);
 			}
+			break;
+		case 1:
+			for (int i = 0; i < moveCount; i++){
+				cams = players[i].GetComponentsInChildren<Camera>();
+				foreach (Camera cam in cams){
+					cam.rect = (rects [i+4]);
+				}
+			}
+			break;
+		case 2:
+			for (int i = 0; i < moveCount; i++){
+				cams = players[i].GetComponentsInChildren<Camera>();
+				foreach (Camera cam in cams){
+					cam.rect = (rects [i]);
+				}
+			}
+			break;
+		case 3:
+			cams = players [moveCount].GetComponentsInChildren<Camera> ();
+			foreach (Camera cam in cams){
+				cam.rect = (rects[3]);
+			}
+			break;
+		default:
+			break;
 		}
 		setPlayer = true;
 		createPlayer = false; 
 	}
-	/* --------------------------------------------------------------------------------------------------------------------------
-	 * NO ARG. NO RETURN.
-	 * set UICam layers and culling mask
-	 * -------------------------------------------------------------------------------------------------------------------------- */
-	private void setUI(){
-		for (int i = 1; i < numPlayers; i++) {
-			GameObject ui = GameObject.Find ("/Head " + (i+1) + "/UICam");
-			ui.layer = 7+i;
-			foreach (Transform trans in ui.GetComponentsInChildren<Transform>()){
-				trans.gameObject.layer = 7+i;
-			}
-			Camera cam = ui.GetComponent<Camera>();
-			cam.cullingMask = 7;
-		}
-	}
-
 
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * NO ARG. NO RETURN.
@@ -282,11 +239,54 @@ public class UniMoveManager : MonoBehaviour
 
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * NO ARG. NO RETURN.
+	 * set UICam viewports and assign the scripts the children's components call
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+
+	private void setUI(){
+		Camera ui;
+		
+		// SINGLE PLAYER MODE
+		if (numPlayers == 1) {
+			ui = GameObject.Find ("UICam 1").camera;
+			ui.rect = rects[6];
+			ui.GetComponentInChildren <Eyelids>().me = GameObject.Find ("Head 1").GetComponent<DrunkMovement>();
+			ui.GetComponentInChildren<Compass>().me =  GameObject.Find ("Head 1");
+			ui.GetComponentInChildren<Ouch>().collision = GameObject.Find ("Head 1").GetComponent<Collision>();
+			ui.gameObject.SetActive(true);
+		}
+		
+		// 2 PLAYER MODE
+		else if (numPlayers == 2) {
+			for (int i = 1; i < numPlayers+1; i++){
+				ui = GameObject.Find ("UICam " + i).camera;
+				ui.rect = rects[i+3];
+				ui.GetComponentInChildren <Eyelids>().me = GameObject.Find ("Head " + i).GetComponent<DrunkMovement>();
+				ui.GetComponentInChildren<Compass>().me =  GameObject.Find ("Head " + i);
+				ui.GetComponentInChildren<Ouch>().collision = GameObject.Find ("Head " + i).GetComponent<Collision>();
+				ui.gameObject.SetActive(true);
+			}
+		}
+		
+		// MULTIPLAYER (3+) MODE
+		else if (numPlayers >= 3){
+			for (int i = 1; i < numPlayers+1; i++){
+				ui = GameObject.Find ("UICam " + i).camera;
+				ui.rect = rects[i-1];
+				ui.GetComponentInChildren <Eyelids>().me = GameObject.Find ("Head " + i).GetComponent<DrunkMovement>();
+				ui.GetComponentInChildren<Compass>().me =  GameObject.Find ("Head " + i);
+				ui.GetComponentInChildren<Ouch>().collision = GameObject.Find ("Head " + i).GetComponent<Collision>();
+				ui.gameObject.SetActive(true);
+			}
+		}
+	}
+
+
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * NO ARG. NO RETURN.
 	 * when all the players have been set, activate the player components
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 
 	private void UniMoveActivateComponents(){
-		print ("ENABLE PLAYER COMPONENTS!");
 		for (int i = 0; i < numPlayers; i++) {
 			UniMoveController mv = players [i].GetComponent<UniMoveController> ();
 
