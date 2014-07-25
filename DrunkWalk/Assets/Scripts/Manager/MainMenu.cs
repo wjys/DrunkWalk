@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class MainMenu : Menu {
 
@@ -17,7 +18,6 @@ public class MainMenu : Menu {
 	private bool wasLeft = false;
 
 	//Which menu?
-	public static bool menu1;
 	public static bool menuSet;
 
 	public static int menuNum;
@@ -33,6 +33,8 @@ public class MainMenu : Menu {
 	public static Vector3 newPos;
 	public static Quaternion newRot;
 
+	public bool lerping;
+
 	//Main
 	private Item[] items= new Item[] {
 		new Item("START", delegate () { ChooseCharacter (); }),
@@ -47,7 +49,8 @@ public class MainMenu : Menu {
 
 	private Item[] sitems = new Item[] {
 		new Item("SOUNDFX", delegate () { Debug.Log ("SOUNDFX"); }),
-		new Item("MUSIC", delegate () { Debug.Log ("MUSIC"); })
+		new Item("MUSIC", delegate () { Debug.Log ("MUSIC"); }),
+		new Item("CONTROLLER", delegate () { Debug.Log ("CONTROLLER"); })
 	};
 
 	//Characters
@@ -89,6 +92,8 @@ public class MainMenu : Menu {
 		menuSet = false;
 
 		charID = 0;
+
+		Menu1 ();
 	}
 
 	void OnGUI () {
@@ -118,6 +123,13 @@ public class MainMenu : Menu {
 		Application.LoadLevel ("WastedMove");
 	}
 
+	public static void Menu1 (){
+		menuNum = 1;
+		menuSet = false;
+		newPos = new Vector3 (0,0,0);
+		newRot = new Quaternion(0,0,0,0);
+	}
+
 	//////////
 	//SETTINGS
 	//////////
@@ -127,6 +139,7 @@ public class MainMenu : Menu {
 		menuSet = true;
 
 		newPos = new Vector3 (25,0,0);
+		newRot = new Quaternion(0,0,0,0);
 	}
 
 	///////////////////////
@@ -134,10 +147,8 @@ public class MainMenu : Menu {
 	//////////////////////
 
 	public static void ChooseCharacter(){
-		menuSet = false;
 		menuNum = 2;
-
-		newPos = new Vector3(0,25,0);
+		menuSet = false;
 	}
 
 	/////////////
@@ -173,6 +184,7 @@ public class MainMenu : Menu {
 
 	void FixedUpdate() {
 		camObj.transform.position = Vector3.Lerp(camObj.transform.position, newPos, smooth * Time.deltaTime);
+		camObj.transform.rotation = Quaternion.Lerp(camObj.transform.rotation, newRot, smooth * Time.deltaTime);
 	}
 
 	void Update () {
@@ -222,6 +234,14 @@ public class MainMenu : Menu {
 			if (menuNum == 2){
 				cidx += 1;
 				cidx %= citems.Length;
+			} 
+
+			if (menuSet){
+				if (sidx == 0){
+					AudioManager.ins.GetComponent<AudioSource>().volume += 0.1f;
+				} else if (sidx == 1){
+					AudioManager.ins.GetComponent<AudioSource>().volume += 0.1f;
+				}
 			}
 		}
 
@@ -230,6 +250,14 @@ public class MainMenu : Menu {
 			if (menuNum == 2){
 				cidx += citems.Length - 1;
 				cidx %= citems.Length;
+			}
+
+			if (menuSet){
+				if (sidx == 0){
+					AudioManager.ins.GetComponent<AudioSource>().volume -= 0.1f;
+				} else if (sidx == 1){
+					AudioManager.ins.GetComponent<AudioSource>().volume -= 0.1f;
+				}
 			}
 		}
 
@@ -246,6 +274,12 @@ public class MainMenu : Menu {
 			} else if (menuNum == 4){
 				litems[lidx].command();
 			}
+
+			if (!lerping){
+				lerping = true;
+				StartCoroutine("LerpCam");
+				print ("LERPING");
+			}
 		}
 
 		if (Input.GetButtonDown("Cancel")) {
@@ -260,6 +294,12 @@ public class MainMenu : Menu {
 				menuNum = 1;
 				menuSet = false;
 				newPos = new Vector3 (0,0,0);
+			}
+
+			if (!lerping){
+				lerping = true;
+				StartCoroutine("LerpCam");
+				print ("LERPING");
 			}
 		}
 
@@ -279,8 +319,38 @@ public class MainMenu : Menu {
 		} else if (idx == 3){
 			mMenuIns.GetComponentInChildren<MeshRenderer>().material.color = Color.green;
 		}
+	}
 
+	public IEnumerator LerpCam() {
+		if (menuNum == 4){
+			newPos = new Vector3(50, 25, 0);
+		}
 
-		//GameManager.ins.chosenChar = charID;
+		if (menuNum == 3){
+			newPos = new Vector3(25,25,0);
+			newRot = new Quaternion (0, 0, 0, 0);
+		}
+
+		if (menuNum == 2){
+			newPos = new Vector3(0,25,0);
+			newRot = new Quaternion (0, 0, 0, 0);
+		}
+
+		if (menuNum == 1){
+			newPos = new Vector3(0,0,0);
+			newRot = new Quaternion (0, 0, 0, 0);
+		}
+
+		if (menuNum == 0){
+			newPos = new Vector3(0,0,0);
+			newRot = new Quaternion (0, 0, 0, 0);
+		}
+
+		if (menuSet){
+			newPos = new Vector3(25,0,0);
+		}
+
+		yield return new WaitForSeconds(0.001f);
+		lerping = false;
 	}
 }
