@@ -4,7 +4,7 @@ using System.Collections;
 // ONLY AFFECTS HEAD RIGIDBODY AND CAMERA
 // ADDITIONAL DRUNK FORCE (NOT PLAYER MOVEMENT) - ALSO CONTAINS CAM WOBBLE SCRIPT!
 
-public class DrunkForce : MonoBehaviour {
+public class DrunkForce : InGame {
 
 	// -------- COMPONENTS TO GET IN START() -------- 
 	public Rigidbody rhead; 	// object's head rigidbody

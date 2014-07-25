@@ -12,15 +12,17 @@ public class GameManager : MonoBehaviour {
 
 	//Menu Assets
 	public GUISkin skin;
+
 	public GameObject pauseMenu;
-	public GameObject audioManager;
 	public GameObject mainMenu;
+	public GameObject audioManager;
+
 	private GameObject pauseMenuIns;
 	private GameObject mainMenuIns;
 	private float lastRealtimeSinceStartup;
 
 	//Bools
-	private bool paused = false;
+	public bool paused = false;
 	private bool menu = false;
 	public bool game;
 
@@ -35,11 +37,11 @@ public class GameManager : MonoBehaviour {
 		chosenChar = 0;
 
 		//Set Game Status
-		//if (!game){
-		//	status = GameState.GameStatus.Splash;
-		//} else {
-		//	status = GameState.GameStatus.Game;
-		//}
+		if (!game){
+			status = GameState.GameStatus.Splash;
+		} else {
+			status = GameState.GameStatus.Game;
+		}
 
 		//Don't show mouse
 		//Screen.showCursor = false;
@@ -74,9 +76,25 @@ public class GameManager : MonoBehaviour {
 		if (status == GameState.GameStatus.Game){
 		 	if (Input.GetKeyDown("p")){
           	 	if (!paused) {
+					paused = true;
+					pauseMenuIns.SetActive(true);
+
+					InGame[] objs = FindObjectsOfType(typeof(InGame)) as InGame[];
+					foreach (var obj in objs) {
+						obj.paused = true;
+					}
+
            	    	Pause();
 					Debug.Log ("activate");
-          	 	} else {
+          	 	} else if (paused == true){
+					paused = false;
+					pauseMenuIns.SetActive(false);
+
+					InGame[] objs = FindObjectsOfType(typeof(InGame)) as InGame[];
+					foreach (var obj in objs) {
+						obj.paused = false;
+					}
+
            	    	UnPause();
 					Debug.Log ("deactivate");
            		}
@@ -96,6 +114,7 @@ public class GameManager : MonoBehaviour {
 
 	//Pause Menu Initialize
 	public void Pause () {
+		Debug.Log ("!!!!!");
 		InGame[] objs = FindObjectsOfType(typeof(InGame)) as InGame[];
 		foreach (var obj in objs) {
 			obj.paused = true;
@@ -107,13 +126,15 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void UnPause () {
+		Debug.Log ("?????");
+
 		InGame[] objs = FindObjectsOfType(typeof(InGame)) as InGame[];
 		foreach (var obj in objs) {
 			obj.paused = false;
 		}
 
 		paused = false;
-		pauseMenuIns.SetActive(paused);
+		pauseMenuIns.SetActive(false);
 
 	}
 

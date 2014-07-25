@@ -120,7 +120,7 @@ public class MainMenu : Menu {
 	public static void StartGame(){
 		GameManager.ins.game = true;
 		GameManager.ins.status = GameState.GameStatus.Game;
-		Application.LoadLevel ("WastedMove");
+		Application.LoadLevel ("WastedMouse");
 	}
 
 	public static void Menu1 (){
