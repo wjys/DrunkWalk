@@ -14,20 +14,26 @@ public class GameManager : MonoBehaviour {
 	public GUISkin skin;
 
 	public GameObject pauseMenu;
-	public GameObject mainMenu;
 	public GameObject audioManager;
+	public GameObject mainMenu;
 
 	private GameObject pauseMenuIns;
 	private GameObject mainMenuIns;
 	private float lastRealtimeSinceStartup;
 
 	//Bools
-	public bool paused = false;
+	private bool paused = false;
 	private bool menu = false;
 	public bool game;
 
-	//Difficulty
+	//Character
 	public static int chosenChar;
+
+	//Difficulty
+	public static int diffInt;
+
+	//Level
+	public static int levelInt;
 
 
 	void Awake () {
@@ -52,11 +58,11 @@ public class GameManager : MonoBehaviour {
 		}
 
 		//Menu Instances
-		pauseMenuIns = Instantiate(pauseMenu) as GameObject;
-		pauseMenuIns.SetActive(false);
-
 		mainMenuIns = Instantiate(mainMenu) as GameObject;
 		mainMenuIns.SetActive(false);
+
+		pauseMenuIns = Instantiate(pauseMenu) as GameObject;
+		pauseMenuIns.SetActive(false);
 	}
 
 
@@ -76,45 +82,31 @@ public class GameManager : MonoBehaviour {
 		if (status == GameState.GameStatus.Game){
 		 	if (Input.GetKeyDown("p")){
           	 	if (!paused) {
-					paused = true;
-					pauseMenuIns.SetActive(true);
-
-					InGame[] objs = FindObjectsOfType(typeof(InGame)) as InGame[];
-					foreach (var obj in objs) {
-						obj.paused = true;
+					if (pauseMenuIns == null){
+						pauseMenuIns = Instantiate (pauseMenu) as GameObject;
+						pauseMenuIns.SetActive (true);
 					}
-
            	    	Pause();
-					Debug.Log ("activate");
-          	 	} else if (paused == true){
-					paused = false;
-					pauseMenuIns.SetActive(false);
-
-					InGame[] objs = FindObjectsOfType(typeof(InGame)) as InGame[];
-					foreach (var obj in objs) {
-						obj.paused = false;
-					}
-
+          	 	} else {
            	    	UnPause();
-					Debug.Log ("deactivate");
            		}
            	}
 		} else if (status == GameState.GameStatus.Splash) {
-			if (Input.GetKeyDown("m")){
+        	/*if (Input.GetKeyDown("m")){
         		if (!menu) {
         			Menu();
         		} else {
         			UnMenu();
         		}
 				Debug.Log ("MENU");
-        	}
+        	}*/
+			Menu ();
         }
 	}
 
 
 	//Pause Menu Initialize
 	public void Pause () {
-		Debug.Log ("!!!!!");
 		InGame[] objs = FindObjectsOfType(typeof(InGame)) as InGame[];
 		foreach (var obj in objs) {
 			obj.paused = true;
@@ -126,15 +118,13 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void UnPause () {
-		Debug.Log ("?????");
-
 		InGame[] objs = FindObjectsOfType(typeof(InGame)) as InGame[];
 		foreach (var obj in objs) {
 			obj.paused = false;
 		}
 
 		paused = false;
-		pauseMenuIns.SetActive(false);
+		pauseMenuIns.SetActive(paused);
 
 	}
 

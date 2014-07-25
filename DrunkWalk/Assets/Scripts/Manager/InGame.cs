@@ -7,8 +7,8 @@ public class InGame : MonoBehaviour {
 		set {
 			Eyelids eye = GetComponent<Eyelids>();
 			DrunkForce df = GetComponent<DrunkForce>();
-			eye.pausing = true;
 			df.enabled = false;
+			eye.enabled = false;
 			rigidbody.isKinematic = true;
 
 			_paused = value;
@@ -31,7 +31,7 @@ public class InGame : MonoBehaviour {
 		Eyelids eye = GetComponent<Eyelids>();
 		DrunkForce df = GetComponent<DrunkForce>();
 		df.enabled = true;
-		eye.pausing = false;
+		eye.enabled = true;
 		rigidbody.isKinematic = false;
 	}
 	
@@ -39,7 +39,7 @@ public class InGame : MonoBehaviour {
 		Eyelids eye = GetComponent<Eyelids>();
 		DrunkForce df = GetComponent<DrunkForce>();
 		df.enabled = true;
-		eye.pausing = false;
+		eye.enabled = true;
 		rigidbody.isKinematic = false;
 	}
 

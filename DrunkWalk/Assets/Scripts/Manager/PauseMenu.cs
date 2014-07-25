@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
 
 public class PauseMenu : Menu {
-	static public PauseMenu ins;
-
+	public GameManager GM;
 	public Texture2D backgroundTexture;
 	public Color backgroundColor;
 	public GUISkin skin;
@@ -14,7 +13,7 @@ public class PauseMenu : Menu {
 	private bool wasUp = false;
 
 	private Item[] items= new Item[] {
-		new Item("resume game", delegate () { GameManager.ins.UnPause(); }),
+		new Item("resume game", delegate () { noPause(); }),
 		new Item("restart the level", delegate () { Application.LoadLevel(Application.loadedLevel);}),
 		new Item("options", delegate () { Application.LoadLevel (Application.loadedLevel); }),
 		new Item("quit to title", delegate () { Application.Quit(); })
@@ -28,7 +27,13 @@ public class PauseMenu : Menu {
 		GUIMenu(idx, 200, 80, items, timer);
 	}
 
+	public static void noPause(){
+		GameManager GM = GameManager.ins;
+		GM.UnPause();
+	}
+
 	void Update () {
+		print (items[0]);
 		timer += Time.deltaTime;
 
 		bool isUp = Input.GetAxis("Vertical") > 0.8f,

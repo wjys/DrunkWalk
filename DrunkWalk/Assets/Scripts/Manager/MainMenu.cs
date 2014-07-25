@@ -19,7 +19,6 @@ public class MainMenu : Menu {
 
 	//Which menu?
 	public static bool menuSet;
-
 	public static int menuNum;
 
 	//THE MENU ITEM VISUALIZATION
@@ -34,6 +33,9 @@ public class MainMenu : Menu {
 	public static Quaternion newRot;
 
 	public bool lerping;
+
+	//Character Reel
+	public CharacterReel CR;
 
 	//Main
 	private Item[] items= new Item[] {
@@ -94,6 +96,8 @@ public class MainMenu : Menu {
 		charID = 0;
 
 		Menu1 ();
+
+		CR = GameObject.Find ("Characters").GetComponent<CharacterReel>();
 	}
 
 	void OnGUI () {
@@ -234,6 +238,7 @@ public class MainMenu : Menu {
 			if (menuNum == 2){
 				cidx += 1;
 				cidx %= citems.Length;
+				CR.charID = cidx;
 			} 
 
 			if (menuSet){
@@ -250,6 +255,7 @@ public class MainMenu : Menu {
 			if (menuNum == 2){
 				cidx += citems.Length - 1;
 				cidx %= citems.Length;
+				CR.charID = cidx;
 			}
 
 			if (menuSet){
