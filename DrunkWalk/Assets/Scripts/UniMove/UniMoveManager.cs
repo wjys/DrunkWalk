@@ -38,11 +38,10 @@ public class UniMoveManager : MonoBehaviour
 		rects[5].Set (0, 0, 0.5f, 0.5f);
 		rects[6].Set (0.5f, 0, 0.5f, 0.5f);
 
-		positions = new Vector3[3] { 	new Vector3 (-0.03585815f, 1.424898f, 3.941933f), 
+		positions = new Vector3[4] { 	new Vector3 (-0.03585815f, 1.424898f, 3.941933f), 
 										new Vector3 (2.383401f, 1.424898f, 3.366474f),
-										new Vector3 (-0.03585815f, 1.424898f, 3.941933f)};//, 
-										//new Vector3 (,1.424898,), 
-										//new Vector3 (,1.424898,)}
+										new Vector3 (-0.03585815f, 1.424898f, 3.941933f),
+										new Vector3 (-0.03585815f, 1.424898f, 3.941933f)};
 
 		rotations = new Quaternion (0, 0, 0, 0);
 
@@ -63,6 +62,7 @@ public class UniMoveManager : MonoBehaviour
 				UniMoveSetPlayers ();
 		} 
 		else {
+			setUI ();
 			UniMoveActivateComponents();
 			this.enabled = false; 
 		}
@@ -197,6 +197,7 @@ public class UniMoveManager : MonoBehaviour
 
 	private void createPlayers(){
 		players [moveCount] = Instantiate (player, positions [moveCount], rotations) as GameObject;
+		players [moveCount].name = "Head " + (moveCount + 1);
 		Camera[] cams = players [moveCount].GetComponentsInChildren<Camera> ();
 		foreach (Camera cam in cams){
 			cam.rect = (rects [moveCount]);
@@ -209,7 +210,7 @@ public class UniMoveManager : MonoBehaviour
 				cam.rect = (rects[4]);
 			}
 		}
-		if (moveCount >= 1) {
+		/*if (moveCount >= 1) {
 		GameObject ui;
 			foreach (Camera cam in cams){
 				if (cam.name.Equals("UICam")){
@@ -221,20 +222,36 @@ public class UniMoveManager : MonoBehaviour
 					break;
 				}
 			}
-			if (moveCount >= 2) {
-				cams = players[0].GetComponentsInChildren<Camera> ();
-				foreach (Camera cam in cams){
-					cam.rect = (rects[5]);
-				}
-				cams = players[1].GetComponentsInChildren<Camera> ();
-				foreach (Camera cam in cams){
-					cam.rect = (rects[6]);
-				}
+		}*/
+		if (moveCount >= 2) {
+			cams = players[0].GetComponentsInChildren<Camera> ();
+			foreach (Camera cam in cams){
+				cam.rect = (rects[5]);
+			}
+			cams = players[1].GetComponentsInChildren<Camera> ();
+			foreach (Camera cam in cams){
+				cam.rect = (rects[6]);
 			}
 		}
 		setPlayer = true;
 		createPlayer = false; 
 	}
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * NO ARG. NO RETURN.
+	 * set UICam layers and culling mask
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+	private void setUI(){
+		for (int i = 1; i < numPlayers; i++) {
+			GameObject ui = GameObject.Find ("/Head " + (i+1) + "/UICam");
+			ui.layer = 7+i;
+			foreach (Transform trans in ui.GetComponentsInChildren<Transform>()){
+				trans.gameObject.layer = 7+i;
+			}
+			Camera cam = ui.GetComponent<Camera>();
+			cam.cullingMask = 7;
+		}
+	}
+
 
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * NO ARG. NO RETURN.
