@@ -22,6 +22,7 @@ public class SetPivot : EditorWindow {
 	
 	void OnGUI() {
 		if(obj) {
+			if(mesh) {
 				p.x = EditorGUILayout.Slider("X", p.x, -1.0f, 1.0f);
 				p.y = EditorGUILayout.Slider("Y", p.y, -1.0f, 1.0f);
 				p.z = EditorGUILayout.Slider("Z", p.z, -1.0f, 1.0f);
@@ -39,6 +40,9 @@ public class SetPivot : EditorWindow {
 					last_p = p;
 				}
 				GUILayout.Label("Bounds " + mesh.bounds.ToString());
+			} else {
+				GUILayout.Label("Selected object does not have a Mesh specified.");
+			}
 		} else {
 			GUILayout.Label("No object selected in Hierarchy.");
 		}

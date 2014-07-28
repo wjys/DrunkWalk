@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: 5c8447ba68ad643c79298a9a01d502b1
 ModelImporter:
-  serializedVersion: 15
+  serializedVersion: 16
   fileIDToRecycleName:
     100000: //RootNode
     100002: coffee_table
@@ -105,24 +105,6 @@ ModelImporter:
     4300030: ID133
     4300032: ID139
     4300034: ID147
-    6400000: coffee_table
-    6400002: ID105
-    6400004: ID111
-    6400006: ID117
-    6400008: ID133
-    6400010: ID139
-    6400012: ID147
-    6400014: ID19
-    6400016: ID27
-    6400018: ID35
-    6400020: ID43
-    6400022: ID63
-    6400024: ID69
-    6400026: ID75
-    6400028: ID81
-    6400030: mug
-    6400032: plate
-    6400034: spoon
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -132,6 +114,7 @@ ModelImporter:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
     optimizeGameObjects: 0
+    motionNodeName: 
     animationCompression: 1
     animationRotationError: .5
     animationPositionError: .5
@@ -144,7 +127,7 @@ ModelImporter:
     lODScreenPercentages: []
     globalScale: .0399999991
     meshCompression: 0
-    addColliders: 1
+    addColliders: 0
     importBlendShapes: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
@@ -159,7 +142,7 @@ ModelImporter:
     normalSmoothAngle: 60
     splitTangentsAcrossUV: 1
     normalImportMode: 0
-    tangentImportMode: 1
+    tangentImportMode: 0
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
@@ -175,4 +158,5 @@ ModelImporter:
     rootMotionBoneName: 
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 2
+  additionalBone: 0
   userData: 
