@@ -102,6 +102,9 @@ public class DrunkMovement : InGame {
 	private bool trigger1;
 	private static float triggerInt;
 
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * START
+	 * -------------------------------------------------------------------------------------------------------------------------- */
 
 	void Start () {
 		UniMove = gameObject.GetComponent<UniMoveController> ();
@@ -132,12 +135,16 @@ public class DrunkMovement : InGame {
 		initX = UniMove.ax;	// calibrate ax
 		initZ = UniMove.az;	// calibrate az
 	}
-	
+
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * UPDATE
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+
 	void Update () {
 
-		setMoveColour ();
+		setMoveColour ();	// each move controller keeps its coloured light on during the game 
 
-		//print (triggerInt);
+
 		if (triggerInt == 1){
 			trigger1 = true;
 			triggerInt = 0;
@@ -147,24 +154,25 @@ public class DrunkMovement : InGame {
 
 		triggerInt = UniMove.Trigger;
 
+		resetY (); 		// keep the head's Y position constant
 
-		resetY (); 
-		
+		// restart level if press R
 		if (Input.GetKey("r"))
 			Application.LoadLevel (Application.loadedLevel);
-		
+
 		// IF THE PLAYER LEANS TOO MUCH, FALL AND LOSE
 		if (fallen) {
 			tapsToGetUp();
 			direction = -1;
 		}
 		else {  
-			transform.LookAt(target, Vector3.up); 
+			transform.LookAt(target, Vector3.up); 	// not used 
 			angleBlur ();
 			if (controller == (int) controlInput.mouse) 
 				mouse = Input.mousePosition;
+
 			direction = getLeanDirection(); 
-			fallen = isLeaningTooMuch (); 			
+			isLeaningTooMuch (); 			
 			moveHead (direction); 
 
 		}
@@ -173,14 +181,20 @@ public class DrunkMovement : InGame {
 
 		newPos = transform.position;
 	}
+
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * FIXED UPDATE
+	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	void FixedUpdate() {
 
+		// cam lerps back when you get up from falling 
 		if (camLerp == true){
-			transform.rotation = Quaternion.Lerp(transform.rotation, newRot, smooth * Time.deltaTime);//new Quaternion (transform.rotation.x, 0, transform.rotation.z, 0), smooth * Time.deltaTime);
+			transform.rotation = Quaternion.Lerp(transform.rotation, newRot, smooth * Time.deltaTime);
 			camLerp = false;
 		}
 
+		// feet lerping instead of snapping under head position
 		if (moveFeet == true){
 			rfeet.position = Vector3.Lerp (rfeet.position, newFeetPos, smooth * Time.deltaTime);
 		}
@@ -189,9 +203,9 @@ public class DrunkMovement : InGame {
 		currentFrame++; 
 		if (!fallen){
 			if (currentFrame >= delayFrame){
-				placeFeet ();
+				getNewFeetPos ();	// i.e. get position at feet y, but x/z coordinates of head
 				currentFrame = 0;
-				moveFeet = true;
+				moveFeet = true;	// lerp the feet to that new position
 			}
 		}
 		
@@ -323,16 +337,19 @@ public class DrunkMovement : InGame {
 	 * (3) otherwise return false
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
-	private bool isLeaningTooMuch(){ 
+	private void isLeaningTooMuch(){ 
 		
 		float x = Mathf.Abs (rfeet.position.x - transform.position.x);
 		float y = Mathf.Abs (rfeet.position.z - transform.position.z); 
 		radius = Mathf.Sqrt (x * x + y * y);
 		
 		if (radius >= maxRad) {
-			return true; 
+			print ("player " + id + " is leaning too much -> has fallen");
+			fallen = true;
+			//return true; 
 		}
-		return false; 
+		//fallen = false;
+		//return false; 
 	}
 
 
@@ -373,7 +390,7 @@ public class DrunkMovement : InGame {
 	 * AFTER DELAY, PLACE THE FEET DIRECTLY UNDER THE HEAD.
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
-	private void placeFeet (){
+	private void getNewFeetPos (){
 
 		newFeetPos = new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z);
 		//rfeet.MovePosition(new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z)); 
@@ -399,7 +416,7 @@ public class DrunkMovement : InGame {
 		rhead.constraints = RigidbodyConstraints.FreezeAll;
 		fallCt++; 
 		if (fallCt >= maxFallCt) {
-			GameManager.ins.playerStatus = GameState.PlayerStatus.Lost;
+			//GameManager.ins.playerStatus = GameState.PlayerStatus.Lost;
 		}
 	}
 
@@ -416,9 +433,9 @@ public class DrunkMovement : InGame {
 	public void tapsToGetUp(){
 
 		//Set Global Player State
-		if (GameManager.ins.playerStatus != GameState.PlayerStatus.Fallen){
-			GameManager.ins.playerStatus = GameState.PlayerStatus.Fallen;
-		}
+		//if (GameManager.ins.playerStatus != GameState.PlayerStatus.Fallen){
+		//	GameManager.ins.playerStatus = GameState.PlayerStatus.Fallen;
+		//}
 
 		//Disable maincam, enable fallcam
 		cam.enabled = false;
@@ -437,7 +454,7 @@ public class DrunkMovement : InGame {
 		/////////////////
 
 		//buttonTapped = (trigger1 = true);
-		buttonTapped = Input.anyKeyDown; 
+		buttonTapped = UniMove.GetButtonUp(PSMoveButton.Move); 
 		//buttonTapped = UniMove.Trigger;
 
 		// read button taps 
@@ -446,13 +463,15 @@ public class DrunkMovement : InGame {
 			tapCurrent++; 
 		}
 		if (tapCurrent >= tapsGetUp) {
+			fallen = false;
+			frozen = false;
 			//SUCCESSFULLY GOT UP
 
 			meAnim.SetBool("fallOver", false);
 			meAnim.SetBool("getUp", true);
-			if (GameManager.ins.playerStatus == GameState.PlayerStatus.Fallen){
-				GameManager.ins.playerStatus = GameState.PlayerStatus.Fine;
-            }
+			//if (GameManager.ins.playerStatus == GameState.PlayerStatus.Fallen){
+			//	GameManager.ins.playerStatus = GameState.PlayerStatus.Fine;
+            //}
 			//IF PLAYING FINE, GET BACK UP
 			if (meAnim.GetCurrentAnimatorStateInfo(0).IsName("Fine")){
 				GetUp();
@@ -489,7 +508,6 @@ public class DrunkMovement : InGame {
 
 		yield return new WaitForSeconds(0.5f);
 
-		frozen = false;
 		rhead.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY;
 
 		//UniMove.ax = initX;

@@ -16,7 +16,6 @@ public class Ouch : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	if (GameManager.ins.playerStatus == GameState.PlayerStatus.Fine){
 		if (collision.recoiled == true){
 			if (!displayed){
 				gameObject.guiText.enabled = true;
@@ -28,6 +27,6 @@ public class Ouch : MonoBehaviour {
 			gameObject.guiText.enabled = false;
 			displayed = false; 
 		}
-		}
+
 	}
 }

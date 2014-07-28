@@ -39,7 +39,6 @@ public class Eyelids : InGame {
 	private static bool gettingUp;
 	private static bool blinked;
 
-	public bool pausing;
 
 	// Use this for initialization
 	void Start () {
@@ -55,27 +54,30 @@ public class Eyelids : InGame {
 		sAccel = accel;
 		sWakeUp = wakeUp;
 
-		pausing = false;
+		Tap = gameObject.GetComponentInChildren<GUIText> ();
 
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (pausing == false){
-		if (gettingUp == true){
+		/*if (gettingUp){
 			speed = sSpeed;
 			accel = sAccel;
 			wakeUp = sWakeUp;
 		
-		} else {
-			//Player Fell
-			if (me.fallen){
-			
-			//Enable gui
-				Tap.enabled = true;
+		} */
+		if (me.fallen){
+			gettingUp = false; 
+			//print ("player " + me.id + " has fallen");
+		
+		//Enable gui
+			Tap.enabled = true;
 
 			//Drooping gets faster
 			speed += accel;
+			print ("accelerating the eyelids for player " + me.id);
+			print ("acelerationg = " + accel);
+			print ("speed = " + speed);
 
 			//Eyelids falling
 			topLids.transform.position = new Vector3 (topLids.transform.position.x, topLids.transform.position.y - speed, topLids.transform.position.z);
@@ -90,7 +92,7 @@ public class Eyelids : InGame {
 			if (TR.transform.rotation.z < 0){
 				TR.transform.rotation = new Quaternion (TR.transform.rotation.x, TR.transform.rotation.y, TR.transform.rotation.z + (speed * 0.01f), TR.transform.rotation.w);
 				TL.transform.rotation = new Quaternion (TL.transform.rotation.x, TL.transform.rotation.y, TL.transform.rotation.z - (speed * 0.01f), TR.transform.rotation.w);
-				}
+			}
 			
 
 			//Everytime you tap, eyelids flicker
@@ -112,20 +114,21 @@ public class Eyelids : InGame {
 			}
 			
 			if (blinkCnt >=3){
-				GameManager.ins.playerStatus = GameState.PlayerStatus.Lost;
+				//GameManager.ins.playerStatus = GameState.PlayerStatus.Lost;
 			}
 
 			if (topLids.transform.position.y >= (startPosUp.y-(3*blinkCnt))){
 					blinked = false;
 			}
 
-			//newPosUp = new Vector3 (startPosUp.x, -100, startPosUp.z);
-		} else if (GameManager.ins.playerStatus == GameState.PlayerStatus.Fine){
+		//newPosUp = new Vector3 (startPosUp.x, -100, startPosUp.z);
+		} 
+		else if (!me.fallen){
 			gettingUp = true;
-				Tap.enabled = false;
+			Tap.enabled = false;
+		
 		}
-		}
-		}
+
 	}
 
 	void FixedUpdate() {

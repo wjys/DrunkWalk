@@ -5,10 +5,8 @@ public class InGame : MonoBehaviour {
 
 	public bool paused {
 		set {
-			Eyelids eye = GetComponent<Eyelids>();
 			DrunkForce df = GetComponent<DrunkForce>();
 			df.enabled = false;
-			eye.enabled = false;
 			rigidbody.isKinematic = true;
 
 			_paused = value;
@@ -28,18 +26,15 @@ public class InGame : MonoBehaviour {
 		}
 	}
 	public virtual void GameUpdate () {
-		Eyelids eye = GetComponent<Eyelids>();
 		DrunkForce df = GetComponent<DrunkForce>();
 		df.enabled = true;
-		eye.enabled = true;
 		rigidbody.isKinematic = false;
 	}
 	
 	public virtual void GameLateUpdate () {
-		Eyelids eye = GetComponent<Eyelids>();
 		DrunkForce df = GetComponent<DrunkForce>();
 		df.enabled = true;
-		eye.enabled = true;
+
 		rigidbody.isKinematic = false;
 	}
 
