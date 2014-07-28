@@ -527,7 +527,7 @@ public class DrunkMovement : InGame {
 			UniMove.SetLED (Color.red);
 			break;
 		case 3:
-			UniMove.SetLED (Color.green);
+			UniMove.SetLED (Color.yellow);
 			break;
 		case 4:
 			UniMove.SetLED (Color.magenta);

@@ -141,17 +141,17 @@ public class Rotation : MonoBehaviour {
 		}
 		else if (dm.controller == (int) controlInput.move){
 			if (current == (int) Turn.idle){
-				print ("idle"); 
+				//print ("idle"); 
 				if (dm.direction == (int) Dir.left){
 					if (UniMove.gy >= boundLeft){
-						print ("start turning left"); 
+						//print ("start turning left"); 
 						rotated = true; 
 						return (int) Turn.left;
 					}
 				}
 				if (dm.direction == (int) Dir.right){
 					if (UniMove.gy <= boundRight){
-						print ("start turning right"); 
+						//print ("start turning right"); 
 						rotated = true; 
 						return (int) Turn.right; 
 					}
@@ -160,24 +160,24 @@ public class Rotation : MonoBehaviour {
 			}
 			if (current == (int) Turn.left){
 				if (UniMove.gy < boundRight && rotated){
-					print ("stop turning left"); 
+					//print ("stop turning left"); 
 					delaying = true; 
 					return (int) Turn.idle;
 				}
 				else {
-					print ("turning left"); 
+					//print ("turning left"); 
 					transform.localRotation = new Quaternion (transform.localRotation.x, transform.localRotation.y - rotInc, transform.localRotation.z, transform.localRotation.w); 
 					return (int) Turn.left; 
 				}
 			}
 			if (current == (int) Turn.right){
 				if (UniMove.gy > boundLeft && rotated){
-					print ("stop turning right"); 
+					//print ("stop turning right"); 
 					delaying = true; 
 					return (int) Turn.idle;
 				}
 				else {
-					print ("turning right"); 
+					//print ("turning right"); 
 					transform.localRotation = new Quaternion (transform.localRotation.x, transform.localRotation.y + rotInc, transform.localRotation.z, transform.localRotation.w); 
 					return (int) Turn.right;
 				}

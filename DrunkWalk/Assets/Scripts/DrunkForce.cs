@@ -164,7 +164,7 @@ public class DrunkForce : InGame {
 				camInc += camAcc;
 			}
 			transform.rotation = new Quaternion (transform.rotation.x + camInc, transform.rotation.y, transform.rotation.z, transform.rotation.w); */
-			print ("leaning forward"); 
+			//print ("leaning forward"); 
 			transform.localRotation = Quaternion.Lerp (transform.localRotation, 
 			                                           Quaternion.Euler	(Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.position.y - feet.transform.position.y))/(Mathf.Abs(transform.position.z - feet.transform.position.z))*2)), transform.localEulerAngles.y, transform.localEulerAngles.z), 
 			                                           Time.deltaTime * (smooth));
@@ -174,7 +174,7 @@ public class DrunkForce : InGame {
 				camInc -= camAcc;
 			}
 			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + rotInc, transform.rotation.z + camInc, transform.rotation.w); */
-			print ("leaning right"); 
+			//print ("leaning right"); 
 			transform.localRotation = Quaternion.Lerp (transform.localRotation, 
 			                                           Quaternion.Euler (transform.localEulerAngles.x, transform.localEulerAngles.y, -Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.position.y - feet.transform.position.y))/(Mathf.Abs(transform.position.x - feet.transform.position.x))))), 
 			                                           Time.deltaTime * smooth);
@@ -184,7 +184,7 @@ public class DrunkForce : InGame {
 				camInc += camAcc;
 			}
 			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y - rotInc, transform.rotation.z + camInc, transform.rotation.w); */
-			print ("leaning left"); 
+			//print ("leaning left"); 
 			transform.localRotation = Quaternion.Lerp (transform.localRotation, 
 			                                           Quaternion.Euler (transform.localEulerAngles.x, transform.localEulerAngles.y, Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.position.y - feet.transform.position.y))/(Mathf.Abs(transform.position.x - feet.transform.position.x))))), 
 			                                           Time.deltaTime * smooth);
@@ -194,7 +194,7 @@ public class DrunkForce : InGame {
 				camInc -= camAcc;
 			}
 			transform.rotation = new Quaternion (transform.rotation.x + camInc, transform.rotation.y, transform.rotation.z, transform.rotation.w);*/
-			print ("leaning back"); 
+			//print ("leaning back"); 
 			transform.localRotation = Quaternion.Lerp (transform.localRotation, 
 			                                           Quaternion.Euler (-Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.localPosition.y - feet.transform.localPosition.y))/(Mathf.Abs(transform.localPosition.z - feet.transform.localPosition.z))*2)),  transform.localEulerAngles.y, transform.localEulerAngles.z), 
 			                                           Time.deltaTime * (smooth));

@@ -61,10 +61,11 @@ public class UniMoveManager : MonoBehaviour
 	{
 		if (StopManager () == false) {
 			UniMoveSetID ();
-			if (createPlayer)
+			if (createPlayer){
 				createPlayers();
-			if (setPlayer)
+				print ("createPlayers() done, UniMoveSetPlayers() starting");
 				UniMoveSetPlayers ();
+			}
 		} 
 		else {
 			setUI ();
@@ -125,7 +126,7 @@ public class UniMoveManager : MonoBehaviour
 
 	private void UniMoveSetID(){
 		foreach (UniMoveController move in moves){
-			print (move.id);
+			//print (move.id);
 			if (move.id == 0){
 				if (move.GetButtonUp(PSMoveButton.Move)){
 					switch (moveCount){
@@ -143,7 +144,7 @@ public class UniMoveManager : MonoBehaviour
 						return;
 					case 2:
 						if (move.id == 0){
-							move.SetLED (Color.green);
+							move.SetLED (Color.yellow);
 							move.id = 3;
 							createPlayer = true;
 						}
@@ -197,7 +198,7 @@ public class UniMoveManager : MonoBehaviour
 				cams = players[i].GetComponentsInChildren<Camera>();
 				foreach (Camera cam in cams){
 					cam.rect = (rects [i+4]);
-					print (i + " " + cam.rect);
+					//print (i + " " + cam.rect);
 				}
 			}
 			break;
@@ -222,8 +223,6 @@ public class UniMoveManager : MonoBehaviour
 		default:
 			break;
 		}
-		setPlayer = true;
-		createPlayer = false; 
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -232,24 +231,29 @@ public class UniMoveManager : MonoBehaviour
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 
 	private void UniMoveSetPlayers(){ 
+		//print ("entered UniMoveSetPlayers()");
 		for(int i = 0; i < moves.Count; i++){
 			UniMoveController mv; 
+			//print ("checking move id" + moves[i].id);
 
 			if (moves[i].id > 0){
 				mv = players[moveCount].GetComponent<UniMoveController>();
 				if (mv == null){
 					UniMoveDisplay display = players[moveCount].GetComponent<UniMoveDisplay>();
 					if (moves[i].id == display.id){
+						//print ("adding move " + moves[i].id + " to player " + display.id);
 						mv = players[moveCount].AddComponent<UniMoveController>() as UniMoveController;
 						mv.Init (i); 
 						mv.id = display.id;
+						createPlayer = false;
+						moveCount++;
+						break;
 					}
-					setPlayer = false;
-					moveCount++;
-					break;
+					//print ("finished adding move to player");
 				}
 			}
 		}
+		//print ("exiting UniMoveSetPlayers()");
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
