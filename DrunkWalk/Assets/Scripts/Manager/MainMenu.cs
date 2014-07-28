@@ -70,7 +70,12 @@ public class MainMenu : Menu {
 	private int didx = 0;
 
 	private Item[] ditems = new Item[] {
-		new Item("DIFFICULTY STUFF", delegate () { ChooseLevel (); })
+		new Item("JACK & COKE", delegate () { ChooseLevel (); }),
+		new Item("BEER", delegate () { ChooseLevel (); }),
+		new Item("WHISKEY", delegate () { ChooseLevel (); }),
+		new Item("SANGRIA", delegate () { ChooseLevel (); }),
+		new Item("RESET", delegate () { ChooseLevel (); }),
+		new Item("LEAVE BAR", delegate () { ChooseLevel (); }),
 	};
 
 	//Level
@@ -84,21 +89,36 @@ public class MainMenu : Menu {
 
 
 	void Start() {
-		mMenuIns = Instantiate(mMenu) as GameObject;
-		mMenuIns.SetActive(true);
+		//If there's no instance of this, make one
+		if (mMenuIns == null){
+			mMenuIns = Instantiate(mMenu) as GameObject;
+			mMenuIns.SetActive(true);
+		}
+
+		//Find Camera
 		camObj = GameObject.FindGameObjectWithTag("MainCamera");
+
+		//New Camera Pos and Rot
 		newPos = new Vector3 (0,0,0);
 		newRot = new Quaternion (0,0,0,0);
 
+		//Current Menu is at the first one
 		menuNum = 1;
 		menuSet = false;
 
+		//Character is at the Guy
 		charID = 0;
 
 		Menu1 ();
 
+		//Get character reel
 		CR = GameObject.Find ("Characters").GetComponent<CharacterReel>();
 	}
+
+	/////////////////////////////////////////////////////////////////////////////////////
+	/////////////////
+	//SHOW LEVEL GUIS
+	/////////////////
 
 	void OnGUI () {
 		GUI.skin = skin;
@@ -117,6 +137,8 @@ public class MainMenu : Menu {
 			GUIMenu (lidx, 200, 80, litems, timer);}
 	}
 
+
+	/////////////////////////////////////////////////////////////////////////////////////
 	////////////
 	//START GAME
 	////////////
@@ -297,7 +319,6 @@ public class MainMenu : Menu {
 			if (!lerping){
 				lerping = true;
 				StartCoroutine("LerpCam");
-				print ("LERPING");
 			}
 		}
 
@@ -318,7 +339,6 @@ public class MainMenu : Menu {
 			if (!lerping){
 				lerping = true;
 				StartCoroutine("LerpCam");
-				print ("LERPING");
 			}
 		}
 
