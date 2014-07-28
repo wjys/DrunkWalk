@@ -214,9 +214,11 @@ public class MainMenu : Menu {
 		if (Input.GetButtonDown("Down") || justDown) {
 			//WENT DOWN
 			if (menuNum == 1) {
+				//DOWN IN MAINMENU
 				idx += 1;
 				idx %= items.Length;
 			} else if (menuSet) {
+				//DOWN IN SETTINGS
 				sidx += 1;
 				sidx %= sitems.Length;
 			}
@@ -226,11 +228,14 @@ public class MainMenu : Menu {
 		if (Input.GetButtonDown("Up") || justUp) {
 			//WENT UP
 			if (menuNum == 1) {
+				//UP IN MAINMENU
 				idx += items.Length - 1;
 				idx %= items.Length;
 			} else if (menuSet) {
+				//UP IN SETTINGS
 				sidx += sitems.Length - 1;
 				sidx %= sitems.Length;
+			} else if (menuNum == 3) {
 			}
 			timer = 0;
 		}
@@ -238,12 +243,15 @@ public class MainMenu : Menu {
 		if (Input.GetButtonDown ("Right") || justRight) {
 			//WENT RIGHT
 			if (menuNum == 2){
+				//IN CHARACTERS, GO RIGHT TO CHOOSE CHARACTER
 				cidx += 1;
 				cidx %= citems.Length;
+				//HIGHLIGHTED CHARACTER
 				CR.charID = cidx;
 			} 
 
 			if (menuSet){
+				//IF IN SETTINGS, GO RIGHT TO RAISE VOLUME
 				if (sidx == 0){
 					AudioManager.ins.GetComponent<AudioSource>().volume += 0.1f;
 				} else if (sidx == 1){
@@ -255,12 +263,15 @@ public class MainMenu : Menu {
 		if (Input.GetButtonDown ("Left") || justRight) {
 			//WENT LEFT
 			if (menuNum == 2){
+				//IN CHARACTERS, GO LEFT TO CHOOSE CHARACTER
 				cidx += citems.Length - 1;
 				cidx %= citems.Length;
+				//HIGHLIGHTED CHARACTER
 				CR.charID = cidx;
 			}
 
 			if (menuSet){
+				//IF IN SETTINGS, GO LEFT TO LOWER VOLUME
 				if (sidx == 0){
 					AudioManager.ins.GetComponent<AudioSource>().volume -= 0.1f;
 				} else if (sidx == 1){
