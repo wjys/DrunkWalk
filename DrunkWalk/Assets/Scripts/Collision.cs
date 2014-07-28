@@ -95,17 +95,15 @@ public class Collision : MonoBehaviour {
 		// }
 	}
 
-	void OnCollisionEnter (Collider col){
-		if (!recoiled){
-			print ("RECOILING");
-			setRecoilDir(col.ClosestPointOnBounds(transform.position), transform.position);  
-		}
-	}
-
 	//When colliding with something:
 	void OnTriggerEnter(Collider col) {
 
 		colliding = true;
+
+		if (!recoiled){
+			print ("RECOILING");
+			setRecoilDir(col.ClosestPointOnBounds(transform.position), transform.position);  
+		}
 
 		if (col.tag != "Trigger"){
 			df.stopWobble = true; 
