@@ -243,7 +243,10 @@ public class MainMenu : Menu {
 				//DOWN IN SETTINGS
 				sidx += 1;
 				sidx %= sitems.Length;
+			} else if (menuNum == 3){
+				//DOWN IN DIFF
 			}
+
 			timer = 0;
 		}
 
@@ -258,7 +261,9 @@ public class MainMenu : Menu {
 				sidx += sitems.Length - 1;
 				sidx %= sitems.Length;
 			} else if (menuNum == 3) {
+				//UP IN DIFF
 			}
+
 			timer = 0;
 		}
 
@@ -270,7 +275,9 @@ public class MainMenu : Menu {
 				cidx %= citems.Length;
 				//HIGHLIGHTED CHARACTER
 				CR.charID = cidx;
-			} 
+			} else if (menuNum == 3){
+				//RIGHT IN DIFF
+			}
 
 			if (menuSet){
 				//IF IN SETTINGS, GO RIGHT TO RAISE VOLUME
@@ -290,6 +297,8 @@ public class MainMenu : Menu {
 				cidx %= citems.Length;
 				//HIGHLIGHTED CHARACTER
 				CR.charID = cidx;
+			} else if (menuNum == 3){
+				//LEFT IN DIFF
 			}
 
 			if (menuSet){
