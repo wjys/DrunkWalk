@@ -19,7 +19,7 @@ public class Ouch : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (!dm.fallen){
-			if (collision.recoiled == true){
+			if (collision.recoiled){
 				if (!displayed){
 					gameObject.guiText.enabled = true;
 					ouchIndex = Random.Range (0,5);
@@ -31,6 +31,9 @@ public class Ouch : MonoBehaviour {
 				displayed = false; 
 			}
 		}
-
+		else {
+			gameObject.guiText.enabled = false;
+			displayed = false;
+		}
 	}
 }

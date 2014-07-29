@@ -85,7 +85,6 @@ public class DrunkMovement : InGame {
 	public int fallCt;
 	public int maxFallCt; 
 
-	private bool gettingUp;
 	private Quaternion newRot;
 	private Vector3 newPos;
 	
@@ -102,7 +101,7 @@ public class DrunkMovement : InGame {
 	public bool lidUp;
 	public bool switchViews;
 	public bool checkTaps;
-
+	public bool gettingUp;
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * START
 	 * (1) setup all the components of the head game object

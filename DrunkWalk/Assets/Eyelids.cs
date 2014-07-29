@@ -78,14 +78,18 @@ public class Eyelids : InGame {
 			wakeUp = sWakeUp;
 		
 		}
-
+		if (me.gettingUp) {
+			Tap.enabled = false;
+		}
 		if (me.fallen){
 			// (2a) stop resetting the values
 			gettingUp = false; 
 			//print ("player " + me.id + " has fallen");
 		
 			// (2b) enable gui
-			Tap.enabled = true;
+			if (!me.gettingUp){
+				Tap.enabled = true;
+			}
 
 			// (2d) Drooping gets faster
 			lidsDroop();
