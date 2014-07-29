@@ -43,9 +43,7 @@ public class GameManager : MonoBehaviour {
 		chosenChar = 0;
 
 		//Set Game Status
-		if (!game){
-			status = GameState.GameStatus.Splash;
-		} else {
+		if (game){
 			status = GameState.GameStatus.Game;
 		}
 
@@ -58,8 +56,10 @@ public class GameManager : MonoBehaviour {
 		}
 
 		//Menu Instances
-		mainMenuIns = Instantiate(mainMenu) as GameObject;
-		mainMenuIns.SetActive(false);
+		if (status == GameState.GameStatus.Splash){
+			mainMenuIns = Instantiate(mainMenu) as GameObject;
+			mainMenuIns.SetActive(false);
+		}
 
 		pauseMenuIns = Instantiate(pauseMenu) as GameObject;
 		pauseMenuIns.SetActive(false);

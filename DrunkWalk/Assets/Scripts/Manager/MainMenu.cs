@@ -37,6 +37,9 @@ public class MainMenu : Menu {
 	//Character Reel
 	public CharacterReel CR;
 
+	//Difficulty
+	public Difficulty Diff;
+
 	//Main
 	private Item[] items= new Item[] {
 		new Item("START", delegate () { ChooseCharacter (); }),
@@ -68,6 +71,7 @@ public class MainMenu : Menu {
 
 	//Difficulty
 	private int didx = 0;
+	private int totalDrunk = 0;
 
 	private Item[] ditems = new Item[] {
 		new Item("JACK & COKE", delegate () { ChooseLevel (); }),
@@ -113,6 +117,7 @@ public class MainMenu : Menu {
 
 		//Get character reel
 		CR = GameObject.Find ("Characters").GetComponent<CharacterReel>();
+		Diff = GameObject.Find ("Difficulty").GetComponent<Difficulty>();
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////
@@ -131,8 +136,8 @@ public class MainMenu : Menu {
 			GUIMenu(sidx, 200, 80, sitems, timer);}
 		//else if (menuNum == 2) {
 		//	GUIMenu (cidx, 200, 80, citems, timer);}
-		else if (menuNum == 3) {
-			GUIMenu (didx, 200, 80, ditems, timer);}
+		//else if (menuNum == 3) {
+		//	GUIMenu (didx, 200, 80, ditems, timer);}
 		else if (menuNum == 4) {
 			GUIMenu (lidx, 200, 80, litems, timer);}
 	}
@@ -211,12 +216,13 @@ public class MainMenu : Menu {
 
 
 	void FixedUpdate() {
+		//Cam Lerp
 		camObj.transform.position = Vector3.Lerp(camObj.transform.position, newPos, smooth * Time.deltaTime);
 		camObj.transform.rotation = Quaternion.Lerp(camObj.transform.rotation, newRot, smooth * Time.deltaTime);
 	}
 
 	void Update () {
-
+		print (Diff.drinkID[didx]);
 		timer += Time.deltaTime;
 
 		//GET INPUT
@@ -232,7 +238,6 @@ public class MainMenu : Menu {
 
 
 
-
 		if (Input.GetButtonDown("Down") || justDown) {
 			//WENT DOWN
 			if (menuNum == 1) {
@@ -245,6 +250,15 @@ public class MainMenu : Menu {
 				sidx %= sitems.Length;
 			} else if (menuNum == 3){
 				//DOWN IN DIFF
+				if (Diff.totalDrunk > 0){
+					if (Diff.drinkID[didx] > 0){
+						Diff.drinkID[didx] -= 1;
+						Diff.totalDrunk -= 1;
+					}
+				}
+				if (Diff.totalDrunk <= 0){
+					Diff.totalDrunk = 0;
+				}
 			}
 
 			timer = 0;
@@ -262,6 +276,15 @@ public class MainMenu : Menu {
 				sidx %= sitems.Length;
 			} else if (menuNum == 3) {
 				//UP IN DIFF
+				if (Diff.totalDrunk < 5){
+					if (Diff.drinkID[didx] < 5){
+						Diff.drinkID[didx] += 1;
+						Diff.totalDrunk += 1;
+					}
+				}
+				if (Diff.totalDrunk >= 5){
+					Diff.totalDrunk = 5;
+				}
 			}
 
 			timer = 0;
@@ -277,6 +300,9 @@ public class MainMenu : Menu {
 				CR.charID = cidx;
 			} else if (menuNum == 3){
 				//RIGHT IN DIFF
+				didx += 1;
+				didx %= ditems.Length;
+				Diff.currDrink = didx;
 			}
 
 			if (menuSet){
@@ -299,6 +325,9 @@ public class MainMenu : Menu {
 				CR.charID = cidx;
 			} else if (menuNum == 3){
 				//LEFT IN DIFF
+				didx += ditems.Length - 1;
+				didx %= ditems.Length;
+				Diff.currDrink = didx;
 			}
 
 			if (menuSet){

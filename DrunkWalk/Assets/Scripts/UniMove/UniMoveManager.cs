@@ -54,6 +54,9 @@ public class UniMoveManager : MonoBehaviour
 		UniMoveInit (); 
 		setPlayer = false; 
 
+		if (GameManager.ins.status == GameState.GameStatus.Tutorial){
+			positions = new Vector3[1] {	new Vector3 (0, 1.424898f, -6)};
+		}
 	}
 	
 	
