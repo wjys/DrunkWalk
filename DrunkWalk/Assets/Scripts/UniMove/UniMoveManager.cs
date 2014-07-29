@@ -276,6 +276,7 @@ public class UniMoveManager : MonoBehaviour
 			eyelids.me = GameObject.Find ("Head 1").GetComponent<DrunkMovement>();
 			comp.me =  GameObject.Find ("Head 1");
 			ouch.collision = GameObject.Find ("Head 1").GetComponent<Collision>();
+			ouch.dm = GameObject.Find ("Head 1").GetComponent<DrunkMovement>();
 
 			eyelids.enabled = true;
 			comp.enabled = true;
@@ -299,6 +300,7 @@ public class UniMoveManager : MonoBehaviour
 				eyelids.me = GameObject.Find ("Head " + i).GetComponent<DrunkMovement>();
 				comp.me =  GameObject.Find ("Head " + i);
 				ouch.collision = GameObject.Find ("Head " + i).GetComponent<Collision>();
+				ouch.dm = GameObject.Find ("Head " + i).GetComponent<DrunkMovement>();
 				
 				eyelids.enabled = true;
 				comp.enabled = true;
@@ -323,6 +325,7 @@ public class UniMoveManager : MonoBehaviour
 				eyelids.me = GameObject.Find ("Head " + i).GetComponent<DrunkMovement>();
 				comp.me =  GameObject.Find ("Head " + i);
 				ouch.collision = GameObject.Find ("Head " + i).GetComponent<Collision>();
+				ouch.dm = GameObject.Find ("Head " + i).GetComponent<DrunkMovement>();
 				
 				eyelids.enabled = true;
 				comp.enabled = true;

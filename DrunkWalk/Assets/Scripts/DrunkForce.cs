@@ -60,7 +60,11 @@ public class DrunkForce : InGame {
 	void Update () {
 		feet = dm.pfeet;
 		// check camera rotation lose condition
-		rotateFall (); 
+		if ((transform.localRotation.x > Quaternion.Euler (boundRotForward, 0, 0).x && transform.localRotation.x < Quaternion.Euler (boundRotBack, 0, 0).x)	||	
+		    (transform.localRotation.z > Quaternion.Euler (0, 0, boundRotRight).z && transform.localRotation.z < Quaternion.Euler(0, 0, boundRotLeft).z)){
+			Debug.Log("LOST BC OF ANGLE");
+			dm.fallen = true;
+		}
 
 		// camera wobble
 		if (!stopWobble) {
@@ -100,14 +104,6 @@ public class DrunkForce : InGame {
 
 
 	// head rotation too far = fall over
-
-	private void rotateFall(){
-		if ((transform.localEulerAngles.x > boundRotForward && transform.localEulerAngles.x < boundRotBack)	||	
-		    (transform.localEulerAngles.z > boundRotRight && transform.localEulerAngles.z < boundRotLeft)){
-			Debug.Log("LOST BC OF ANGLE");
-			dm.fallen = true;
-		}
-	}
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * DRUNKFORCE 
 	 * Depending on the (random) inputted direction, add a drunk force in the corresponding direction
