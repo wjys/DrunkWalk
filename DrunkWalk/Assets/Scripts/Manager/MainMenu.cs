@@ -71,14 +71,13 @@ public class MainMenu : Menu {
 
 	//Difficulty
 	private int didx = 0;
-	private int totalDrunk = 0;
 
 	private Item[] ditems = new Item[] {
-		new Item("JACK & COKE", delegate () { ChooseLevel (); }),
-		new Item("BEER", delegate () { ChooseLevel (); }),
-		new Item("WHISKEY", delegate () { ChooseLevel (); }),
-		new Item("SANGRIA", delegate () { ChooseLevel (); }),
-		new Item("RESET", delegate () { ChooseLevel (); }),
+		new Item("JACK & COKE", delegate () { Debug.Log ("Jack & Coke"); }),
+		new Item("BEER", delegate () { Debug.Log ("Beer"); }),
+		new Item("WHISKEY", delegate () { Debug.Log ("Whiskey"); }),
+		new Item("SANGRIA", delegate () { Debug.Log ("Sangria"); }),
+		new Item("RESET", delegate () { Debug.Log ("Reset Drunk"); }),
 		new Item("LEAVE BAR", delegate () { ChooseLevel (); }),
 	};
 
@@ -222,7 +221,6 @@ public class MainMenu : Menu {
 	}
 
 	void Update () {
-		print (Diff.drinkID[didx]);
 		timer += Time.deltaTime;
 
 		//GET INPUT
@@ -350,6 +348,12 @@ public class MainMenu : Menu {
 				citems[cidx].command();
 			} else if (menuNum == 3){
 				ditems[didx].command();
+				if (didx == 4){
+					Diff.totalDrunk = 0;
+					for (int i = 0; i < Diff.drinkID.Length; i++){
+						Diff.drinkID[i] = 0;
+					}
+				}
 			} else if (menuNum == 4){
 				litems[lidx].command();
 			}

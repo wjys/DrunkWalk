@@ -17,9 +17,10 @@ public class Difficulty : MonoBehaviour {
 	//Total drunk level
 	public int totalDrunk;
 	public GameObject tDBar;
-	public Vector3 tDBarScale;
+	private Vector3 tDBarScale;
 	public float tDBarfloat;
 	public float tDBarCap;
+	public float smooth;
 
 
 	// Use this for initialization
@@ -46,11 +47,11 @@ public class Difficulty : MonoBehaviour {
 		}
 
 		tDBarScale = tDBar.transform.localScale;
-		tDBarScale.y = totalDrunk;// / tDBarfloat * tDBarCap;
-		tDBar.transform.localScale = tDBarScale;
+		tDBarScale.y = totalDrunk / tDBarfloat * tDBarCap;
+		//tDBar.transform.localScale = tDBarScale;
 	}
 
 	void FixedUpdate () {
-		
+		tDBar.transform.localScale = Vector3.Lerp(tDBar.transform.localScale, tDBarScale, smooth * Time.deltaTime);
 	}
 }
