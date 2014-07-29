@@ -38,6 +38,7 @@ public class Eyelids : InGame {
 	
 	private static bool gettingUp;
 	private static bool blinked;
+	public bool resetValues;
 
 	// Use this for initialization
 	void Start () {
@@ -72,45 +73,7 @@ public class Eyelids : InGame {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 
 	void Update () {
-		if (gettingUp){
-			speed = sSpeed;
-			accel = sAccel;
-			wakeUp = sWakeUp;
-		
-		}
-		if (me.gettingUp) {
-			Tap.enabled = false;
-		}
-		if (me.fallen){
-			// (2a) stop resetting the values
-			gettingUp = false; 
-			//print ("player " + me.id + " has fallen");
-		
-			// (2b) enable gui
-			if (!me.gettingUp){
-				Tap.enabled = true;
-			}
 
-			// (2d) Drooping gets faster
-			lidsDroop();
-			
-			// (2e) Curlout
-			lidsCurlOut();
-
-			// (2f) Everytime you tap, eyelids flicker
-			lidsFlicker();
-			
-			// (2g) If blinked 3 times, pass out.
-			blinkCheck();
-
-		//newPosUp = new Vector3 (startPosUp.x, -100, startPosUp.z);
-		} 
-		// (3) reset values and turn off guitext
-		else if (!me.fallen){
-			gettingUp = true;
-			Tap.enabled = false;
-		
-		}
 
 	}
 
@@ -122,24 +85,58 @@ public class Eyelids : InGame {
 
 	void FixedUpdate() {
 		if (gettingUp){
-			//speed = sSpeed;
-			//accel = sAccel;
-			//wakeUp = sWakeUp;
-
 			//blinkCnt = 0;
-
 			lidCurl();
 
 			gettingUp = false;
 		}
 
 		if (blinked){
-
 			speed 	= sSpeed*(me.fallCt) + (0.0005f * blinkCnt);
 			accel 	= sAccel*(me.fallCt) + (0.0005f * blinkCnt);
 			wakeUp 	= sWakeUp*(me.fallCt) - (0.2f * blinkCnt);
 
 			lidCurl ();
+		}
+		if (me.gettingUp) {
+			Tap.enabled = false;
+			resetValues = false;
+		}
+		if (me.fallen){
+			// (2a) stop resetting the values
+			gettingUp = false; 
+			//print ("player " + me.id + " has fallen");
+			
+			// (2b) enable gui
+			if (!me.gettingUp){
+				Tap.enabled = true;
+			}
+			
+			// (2d) Drooping gets faster
+			lidsDroop();
+			
+			// (2e) Curlout
+			lidsCurlOut();
+			
+			// (2f) Everytime you tap, eyelids flicker
+			lidsFlicker();
+			
+			// (2g) If blinked 3 times, pass out.
+			blinkCheck();
+			
+			//newPosUp = new Vector3 (startPosUp.x, -100, startPosUp.z);
+		} 
+		// (3) reset values and turn off guitext
+		else if (!me.fallen){
+			gettingUp = true;
+			Tap.enabled = false;
+
+			if (!resetValues){
+				speed = sSpeed;
+				accel = sAccel;
+				wakeUp = sWakeUp;
+				resetValues = true;
+			}
 		}
 
 	}
@@ -150,7 +147,6 @@ public class Eyelids : InGame {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 
 	private void lidCurl(){
-
 		topLids.transform.position = Vector3.Lerp(topLids.transform.position, startPosUp, smooth * Time.deltaTime);
 		bottomLids.transform.position = Vector3.Lerp(bottomLids.transform.position, startPosDown, smooth * Time.deltaTime);
 
@@ -162,17 +158,13 @@ public class Eyelids : InGame {
 
 	private void lidsDroop(){
 		speed += accel;
-		//print ("accelerating the eyelids for player " + me.id);
-		//print ("acelerationg = " + accel);
-		//print ("speed = " + speed);
-		
+
 		//Eyelids falling
 		topLids.transform.position = new Vector3 (topLids.transform.position.x, topLids.transform.position.y - speed, topLids.transform.position.z);
 		bottomLids.transform.position = new Vector3 (bottomLids.transform.position.x, bottomLids.transform.position.y + speed, bottomLids.transform.position.z);
 	}
 
 	private void lidsCurlOut(){
-		
 		if (BR.transform.rotation.z > 0){
 			BR.transform.rotation = new Quaternion (BR.transform.rotation.x, BR.transform.rotation.y, BR.transform.rotation.z - (speed * 0.01f), BR.transform.rotation.w);
 			BL.transform.rotation = new Quaternion (BL.transform.rotation.x, BL.transform.rotation.y, BL.transform.rotation.z + (speed * 0.01f), BR.transform.rotation.w);
@@ -203,8 +195,10 @@ public class Eyelids : InGame {
 			blinked = true;
 		}
 		
-		if (blinkCnt >=3){
+		if (blinkCnt >=2){
 			//GameManager.ins.playerStatus = GameState.PlayerStatus.Lost;
+			//Tap.enabled = false;
+			//me.gameObject.SetActive(false);
 		}
 		
 		if (topLids.transform.position.y >= (startPosUp.y-(3*blinkCnt))){

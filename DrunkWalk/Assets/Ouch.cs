@@ -22,7 +22,7 @@ public class Ouch : MonoBehaviour {
 			if (collision.recoiled){
 				if (!displayed){
 					gameObject.guiText.enabled = true;
-					ouchIndex = Random.Range (0,5);
+					ouchIndex = Random.Range (0,ouches.Length);
 					ouchGui.text = ouches[ouchIndex];
 					displayed = true; 
 				}
