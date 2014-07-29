@@ -101,7 +101,7 @@ public class Collision : MonoBehaviour {
 		colliding = true;
 
 		if (!recoiled){
-			print ("RECOILING");
+			//print ("RECOILING");
 			setRecoilDir(col.ClosestPointOnBounds(transform.position), transform.position);  
 		}
 
@@ -115,34 +115,34 @@ public class Collision : MonoBehaviour {
 
 				rhead.constraints = RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY;
 
-				Debug.Log("Collision");
+				//Debug.Log("Collision");
 				//ouchAnim.SetTrigger("Ouch");
 				
 				//If collision is against a wall:
 				if (col.tag == "Wall") {
 					score -= 100;
-					Debug.Log("Wall Collision - " + score);
+					//Debug.Log("Wall Collision - " + score);
 					//df.stopWobble = true; 
 				}
 				else if (col.tag == "Box"){
 					score -= 200;
-					Debug.Log("Box Collision - " + score);
+					//Debug.Log("Box Collision - " + score);
 				}
 				else if (col.tag == "Cabinet"){
 					score -= 200;
-					Debug.Log("Cabinet Collision - " + score);
+					//Debug.Log("Cabinet Collision - " + score);
 				}
 				else if (col.tag == "Cat"){
 					score -= 250;
-					Debug.Log("Cat Collision - " + score);
+					//Debug.Log("Cat Collision - " + score);
 				}
 				else if (col.tag == "Table"){
 					score -= 300;
-					Debug.Log("Table Collision - " + score);
+					//Debug.Log("Table Collision - " + score);
 				}
 				else if (col.tag == "Chair"){
 					score -= 100;
-					Debug.Log("Chair Collision - " + score);
+					//Debug.Log("Chair Collision - " + score);
 				}
 				else if (col.tag == "Bed"){ // WIN STATE
 					Application.LoadLevel("Won"); 
@@ -157,7 +157,7 @@ public class Collision : MonoBehaviour {
 
 				//If not currently yelling:
 				if (yelling == false){
-					Debug.Log ("YELL");
+					//Debug.Log ("YELL");
 					//Yell();
 				} else if (yelling == true){
 					StopAllCoroutines();
@@ -175,7 +175,7 @@ public class Collision : MonoBehaviour {
 	void OnTriggerExit(Collider col) {
 		colliding = false;
 		dm.hitRumble = 0.0f;
-		Debug.Log("No Longer Colliding");
+		//Debug.Log("No Longer Colliding");
 		soundPlayed = false; 
 		recoiled = false; 
 		df.stopWobble = false; 
@@ -233,7 +233,7 @@ public class Collision : MonoBehaviour {
 		default:
 			break; 
 		}
-		print ("RECOILED!"); 
+		//print ("RECOILED!"); 
 	}
 
 	/*

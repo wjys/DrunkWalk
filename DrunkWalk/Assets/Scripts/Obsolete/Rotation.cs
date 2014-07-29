@@ -16,9 +16,10 @@ public class Rotation : MonoBehaviour {
 	private enum Dir { forward, right, left, back }; 	// to modify drunkDir
 	private enum Turn { left, right, idle }; 			// turn states
 	private bool feetPlaced; 
-	private int direction;
 
 	// -------- PUBLIC VARIABLES - TO SET IN INSPECTOR -------- 
+	public int direction;
+
 	public float camInc; 
 	public float rotInc; 
 
@@ -64,7 +65,7 @@ public class Rotation : MonoBehaviour {
 
 	void Update () {
 
-		feet 	= dm.pfeet;
+		feet = dm.pfeet;
 
 		if (!coll.colliding){
 			if (!dm.fallen){		// player is still standing
@@ -145,6 +146,7 @@ public class Rotation : MonoBehaviour {
 				if (dm.direction == (int) Dir.left){
 					if (UniMove.gy >= boundLeft){
 						//print ("start turning left"); 
+						//gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY;
 						rotated = true; 
 						return (int) Turn.left;
 					}
@@ -152,6 +154,7 @@ public class Rotation : MonoBehaviour {
 				if (dm.direction == (int) Dir.right){
 					if (UniMove.gy <= boundRight){
 						//print ("start turning right"); 
+						//gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY;
 						rotated = true; 
 						return (int) Turn.right; 
 					}

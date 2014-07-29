@@ -89,7 +89,7 @@ public class DrunkMovement : InGame {
 	private Quaternion newRot;
 	private Vector3 newPos;
 	
-	private static bool camLerp;
+	public bool camLerp;
 
 	// LERP FOOT???
 	private Vector3 newFeetPos;
@@ -99,107 +99,136 @@ public class DrunkMovement : InGame {
 	public float hitRumble;
 
 	//TRIGGER
-	private bool trigger1;
-	private static float triggerInt;
+	public bool lidUp;
+	public bool switchViews;
+	public bool checkTaps;
 
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * START
+	 * (1) setup all the components of the head game object
+	 * (2) place the feet under the head
+	 * (3) setup the variables (bools and integers)
+	 * (4) get the head's initial Y (for constant resettting)
+	 * (5) get the middle position of the screen (for mouse input)
+	 * (6) calibrate the move controller 
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 
 	void Start () {
+		// (1) setup all the components
 		UniMove = gameObject.GetComponent<UniMoveController> ();
 		pfeet = Instantiate (feet) as GameObject;
 		pfeet.name = "Feet " + id;
 		rfeet = pfeet.GetComponent<Rigidbody> ();
 		rhead = gameObject.GetComponent<Rigidbody> ();
 		meAnim = gameObject.GetComponent<Animator> ();
-		triggerInt = UniMove.Trigger;
 
-		trigger1 = false;
+		// (2) place feet under head
+		pfeet.transform.position = new Vector3 (transform.position.x, pfeet.transform.position.y, transform.position.z);
 
-		// Place feet under head
-		rfeet.MovePosition(new Vector3(transform.position.x, rfeet.position.y, transform.position.z));
-
-		//Bools
+		// (3) setup all hte variables
 		fallen = false;		
 		soundPlayed = false; 		
 		frozen = false; 
 		fallCt = 0;
 		headY = transform.position.y; 
 
-		//Mouse Start
+		// (4) get middle of the screen (for mouse)
 		halfWidth = Screen.width / 2; 
 		halfHeight = Screen.height / 2; 
 
-		//PSMove Start
+		// (5) calibrate the move controller 
 		initX = UniMove.ax;	// calibrate ax
 		initZ = UniMove.az;	// calibrate az
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * UPDATE
+	 * (1) set the lit up colour of the move controller of current player
+	 * (2) move trigger NOT REALLY WORKING?
+	 * (3) reset the y position of the head to keep it constant
+	 * (4) if the player has FALLEN, tapsToGetUp() 
+	 * (5) if the player has NOT fallen, 
+	 * 		(5a) blur the game depending on the player's radius/angle
+	 * 		(5b) if using the mouse, get the mouse position on screen
+	 * 		(5c) get the new direction in which the player/head is leaning 
+	 * 		(5d) move the player in the new direction gotten in (5c)
+	 * 		(5e) play the footstep sound depending on the radius of the player 
+	 * (6) update newPos (head's current position)
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 
 	void Update () {
-
-		setMoveColour ();	// each move controller keeps its coloured light on during the game 
-
-
-		if (triggerInt == 1){
-			trigger1 = true;
-			triggerInt = 0;
-		} else {
-			trigger1 = false;
-		}
-
-		triggerInt = UniMove.Trigger;
-
-		resetY (); 		// keep the head's Y position constant
+		print ("camLerp " + camLerp);
 
 		// restart level if press R
 		if (Input.GetKey("r"))
 			Application.LoadLevel (Application.loadedLevel);
 
-		// IF THE PLAYER LEANS TOO MUCH, FALL AND LOSE
+		// (1) each move keeps its coloured light on 
+		setMoveColour (); 
+
+		// (3) keep head Y position constant
+		resetY ();
+
 		if (fallen) {
-			tapsToGetUp();
+			// (4) player has fallen
+			if (!frozen){
+				stopRead ();
+			}
+			else if (switchViews) {
+				switchToFallCam();
+			}
+			else if (checkTaps){
+				tapsToGetUp();
+			}
+			else if (gettingUp){
+				GetUp();
+			}
 			direction = -1;
 		}
-		else {  
+		else { // (5) player hasn't fallen  
+
 			transform.LookAt(target, Vector3.up); 	// not used 
+
 			angleBlur ();
+
 			if (controller == (int) controlInput.mouse) 
 				mouse = Input.mousePosition;
 
+			// get player's move direction, move the player
 			direction = getLeanDirection(); 
 			isLeaningTooMuch (); 			
 			moveHead (direction); 
 
+			// (5e) play footstep sound
+			playFootstep(radius * 100);
 		}
-
-		playFootstep(radius * 100);
-
+		// (6)
 		newPos = transform.position;
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * FIXED UPDATE
+	 * (1) if camLerp (getting back up from falling), lerp the head rotation
+	 * (2) if moveFeet, then set the new feet lerp target to directly below the head 
+	 * (3) delay getting a new feet position after each new feet lerp position is set (below the head)
+	 * (4) play a random grunting sound after a certain delay
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	void FixedUpdate() {
 
-		// cam lerps back when you get up from falling 
-		if (camLerp == true){
+		// (1) cam lerps back when you get up from falling 
+		if (camLerp){
+			print ("entered cam lerp");
 			transform.rotation = Quaternion.Lerp(transform.rotation, newRot, smooth * Time.deltaTime);
-			camLerp = false;
+			
 		}
 
-		// feet lerping instead of snapping under head position
-		if (moveFeet == true){
-			rfeet.position = Vector3.Lerp (rfeet.position, newFeetPos, smooth * Time.deltaTime);
+		// (2) feet lerping instead of snapping under head position
+		if (moveFeet){
+			pfeet.transform.position = Vector3.Lerp (pfeet.transform.position, newFeetPos, smooth * Time.deltaTime);
 		}
 		
-		// DELAYING PLACE FEET AT HEAD'S XY POS
+		// (3) DELAYING PLACE FEET AT HEAD'S XZ POS
 		currentFrame++; 
 		if (!fallen){
 			if (currentFrame >= delayFrame){
@@ -209,7 +238,7 @@ public class DrunkMovement : InGame {
 			}
 		}
 		
-		// PLAY A GRUNT
+		// (4) play one of the random grunts at a delay	
 		if (!soundPlayed){
 			soundPlayed = true; 
 			playSound (clips [Random.Range (0, 5)]);
@@ -233,7 +262,7 @@ public class DrunkMovement : InGame {
 	
 
 	/* --------------------------------------------------------------------------------------------------------------------------
-	 * PARAM: angleBetween = the angle between the head/feet vector and the vertical vector
+	 * NO RETURN. NO ARGS.
 	 * The closer angleBetween is to 30.0f, the blurrier things get!
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
@@ -247,13 +276,15 @@ public class DrunkMovement : InGame {
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
-	 * (1) Check the current angle between the vector between the head rigidbody and the feed rigidboy with the vertical vector
-	 * (2) If the angle is at least 30 degrees, then you are leaning too much! (return true)
-	 * (3) otherwise return false
+	 * NO ARGS. RETURN: the integer (corresponding to the direction in the Dir enum)
+	 * (1) MOUSE: depending on the position of the mouse on the screen
+	 * (2) MOVE: depending on how the player is leaning (move's az = forward/back, move's ax = right/left)
+	 * (3) XBOX: depending on the the tilt of the left stick on the controller	
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	private int getLeanDirection(){
 
+		// (1) MOUSE 
 		if (controller == (int) controlInput.mouse) {
 			if (mouse.y < halfHeight) {	
 				if (Mathf.Abs(mouse.x - halfWidth) < Mathf.Abs(mouse.y - halfHeight)){ 
@@ -282,6 +313,7 @@ public class DrunkMovement : InGame {
 				}
 			}
 		}
+		// (2) MOVE
 		else if (controller == (int) controlInput.move){
 			if (UniMove.az <= boundBack + initZ) {
 				return (int) Dir.back;
@@ -297,6 +329,7 @@ public class DrunkMovement : InGame {
 			}
 			return (0);
 		}
+		// (3) XBOX 
 		else if (controller == (int) controlInput.xbox){
 
 			if (Input.GetAxis("LeftStickY") > 0.9f){
@@ -316,7 +349,9 @@ public class DrunkMovement : InGame {
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
-	 * Play the footsteps -> time between footsteps depend on the radius between the head and the feet 
+	 * NO RETURN. ARG: speed at which to play the footsteps
+	 * (1) increment the footstep timer by the amount of time between current and previous frames
+	 * (2) ????
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	private void playFootstep (float speed) {
@@ -331,25 +366,23 @@ public class DrunkMovement : InGame {
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
-	 * RETURN BOOL to fallen: true if isLeaningTooMuch. NO ARGS. 
-	 * (1) Check the current angle between the vector between the head rigidbody and the feed rigidboy with the vertical vector
-	 * (2) If the angle is at least 30 degrees, then you are leaning too much! (return true)
-	 * (3) otherwise return false
+	 * NO RETURN. NO ARGS.
+	 * (1) get the current radius between the feet and the head (hypotenuse given the differences in x and z of head and feet)
+	 * (2) if the radius is bigger than the max radius, the player falls (set fallen to true)
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	private void isLeaningTooMuch(){ 
-		
-		float x = Mathf.Abs (rfeet.position.x - transform.position.x);
-		float y = Mathf.Abs (rfeet.position.z - transform.position.z); 
+
+		// (1) get current radius
+		float x = Mathf.Abs (pfeet.transform.position.x - transform.position.x);
+		float y = Mathf.Abs (pfeet.transform.position.z - transform.position.z); 
 		radius = Mathf.Sqrt (x * x + y * y);
-		
+
+		// (2) check if player has fallen (radius is too big)
 		if (radius >= maxRad) {
-			print ("player " + id + " is leaning too much -> has fallen");
+			//print ("player " + id + " is leaning too much -> has fallen");
 			fallen = true;
-			//return true; 
 		}
-		//fallen = false;
-		//return false; 
 	}
 
 
@@ -387,19 +420,18 @@ public class DrunkMovement : InGame {
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * NO ARGS. NO RETURN.
-	 * AFTER DELAY, PLACE THE FEET DIRECTLY UNDER THE HEAD.
+	 * after a certain delay, set the new target position to lerp the feet (under the head)
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	private void getNewFeetPos (){
 
-		newFeetPos = new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z);
-		//rfeet.MovePosition(new Vector3 (rhead.position.x, rfeet.position.y, rhead.position.z)); 
+		newFeetPos = new Vector3 (rhead.position.x, pfeet.transform.position.y, rhead.position.z);
 		moveFeet = false;
 
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
-	 * WHAT HAPPENS WHEN YOU FALL - P1 
+	 * WHAT HAPPENS WHEN YOU FALL - PART 1 
 	 * stopRead(): no arg, no return
 	 * 		(1) saves the position and rotation of the player before falls, 
 	 * 		(2) freezes player movement and rotation
@@ -408,16 +440,38 @@ public class DrunkMovement : InGame {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	private void stopRead(){
-		fallenPos = transform.position; 
-		fallenRot = transform.rotation; 
-		currentFrame = 0; 
-		frozen = true;
-
+		// (2) freeze player rigidbody movement and rotation
 		rhead.constraints = RigidbodyConstraints.FreezeAll;
+
+		// (3)-(4), increment number of times player fallen and check if the player has lost
 		fallCt++; 
 		if (fallCt >= maxFallCt) {
 			//GameManager.ins.playerStatus = GameState.PlayerStatus.Lost;
 		}
+
+		// (1) save the position/rotation of player before fallen
+		fallenPos = transform.position; 
+		fallenRot = transform.rotation; 
+
+		//Set Global Player State
+		//if (GameManager.ins.playerStatus != GameState.PlayerStatus.Fallen){
+		//	GameManager.ins.playerStatus = GameState.PlayerStatus.Fallen;
+		//}
+
+		currentFrame = 0; 
+		frozen = true;
+		switchViews = true;
+	}
+
+	private void switchToFallCam(){
+		// (2) disable maincam, enable fallcam
+		cam.enabled = false;
+		fallCam.enabled = true;
+		
+		// (3) play fallover Anim
+		meAnim.SetBool("fallOver", true);
+		checkTaps = true;
+		switchViews = false;
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -427,99 +481,87 @@ public class DrunkMovement : InGame {
 	 * 		(2) switch to the fall camera
 	 * 		(3) play the fall over animation
 	 * 		(4) stopRead() if hasn't already been stopped (i.e. if frozen is false)
-	 * 		(5) 
+	 * 		(5) check button taps to get up
+	 * 		(6) get up if tapped enough buttons or lose if run out of time to tap buttons
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 
 	public void tapsToGetUp(){
 
-		//Set Global Player State
-		//if (GameManager.ins.playerStatus != GameState.PlayerStatus.Fallen){
-		//	GameManager.ins.playerStatus = GameState.PlayerStatus.Fallen;
-		//}
-
-		//Disable maincam, enable fallcam
-		cam.enabled = false;
-		fallCam.enabled = true;
-
-		//Play fallover Anim
-		meAnim.SetBool("fallOver", true);
-
-		//At this point, no movement should be read
-		if (!frozen){
-			stopRead (); 
-		}
-
-		/////////////////
-		//[TAP TO GET UP]
-		/////////////////
-
-		//buttonTapped = (trigger1 = true);
-		buttonTapped = UniMove.GetButtonUp(PSMoveButton.Move); 
-		//buttonTapped = UniMove.Trigger;
-
-		// read button taps 
-		if (buttonTapped) {
-			//print ("TAPPED");
-			tapCurrent++; 
-		}
-		if (tapCurrent >= tapsGetUp) {
-			fallen = false;
-			frozen = false;
-			//SUCCESSFULLY GOT UP
-
-			meAnim.SetBool("fallOver", false);
-			meAnim.SetBool("getUp", true);
-			//if (GameManager.ins.playerStatus == GameState.PlayerStatus.Fallen){
-			//	GameManager.ins.playerStatus = GameState.PlayerStatus.Fine;
-            //}
-			//IF PLAYING FINE, GET BACK UP
-			if (meAnim.GetCurrentAnimatorStateInfo(0).IsName("Fine")){
-				GetUp();
+		// (5) check if tapping trigger
+		if (!buttonTapped) {
+			if (UniMove.Trigger == 1.0f){
+				tapCurrent++;
+				lidUp = true;
+				buttonTapped = true; 
 			}
+		}
+		else {
+			lidUp = false;
+			if (UniMove.Trigger == 0.0f){
+				buttonTapped = false;
+			}
+		}
+
+		// (6) get up if tapped enough or lose if not enough and waited too long
+		if (tapCurrent >= tapsGetUp) {
+			checkTaps = false; 
+			gettingUp = true;
 		} // LOST
 		else if (currentFrame >= frameFall){
 			//GameManager.ins.playerStatus = GameState.PlayerStatus.Lost;
 		}
 	}
 
-	/////////////////
-	//GETTING UP/////
-	/////////////////
+
+
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * WHAT HAPPENS WHEN YOU FALL - PART 3: REDEMPTION
+	 * GetUp(): no arg, no return
+	 * 		(1) switch back to main camera
+	 * 		(2) reset the head (lerp) and feet (snap) positions 
+	 * 		(3) start the backToOrigin coroutine
+	 * -------------------------------------------------------------------------------------------------------------------------- */
 
 	private void GetUp(){
-		cam.enabled = true;
-		fallCam.enabled = false;
-
-		newPos = fallenPos;
-
-		//RESET POSITION
-		transform.position = Vector3.Lerp(transform.position, newPos, smooth * Time.deltaTime);
-		rfeet.position = new Vector3 (fallenPos.x, rfeet.position.y, fallenPos.z);
-		StartCoroutine(backToOrigin());
-
-		//Set Global Player State
 		
+		meAnim.SetBool("fallOver", false);
+		meAnim.SetBool("getUp", true);
+		//if (GameManager.ins.playerStatus == GameState.PlayerStatus.Fallen){
+		//	GameManager.ins.playerStatus = GameState.PlayerStatus.Fine;
+		//}
+		
+		if (meAnim.GetCurrentAnimatorStateInfo(0).IsName("Fine")){
+
+			// (1) switch from fall cam to main cam
+			cam.enabled = true;
+			fallCam.enabled = false;
+
+			// (2) reset the head/feet positions
+			newPos = fallenPos;
+			pfeet.transform.position = new Vector3 (fallenPos.x, pfeet.transform.position.y, fallenPos.z);
+			transform.position = Vector3.Lerp(transform.position, newPos, smooth * Time.deltaTime);
+
+			newRot = new Quaternion(0.0f, fallenRot.y, 0.0f, fallenRot.w); 
+
+			StartCoroutine (ResetVariables());
+			//Set Global Player State
+		}
 	}
 
-	public IEnumerator backToOrigin () {
-		newRot = new Quaternion(0.0f, fallenRot.y, 0.0f, fallenRot.w);
-		gettingUp = true;
+	IEnumerator ResetVariables(){
 		camLerp = true;
-
-		yield return new WaitForSeconds(0.5f);
-
+		yield return new WaitForSeconds (1.0f);
+		camLerp = false;
 		rhead.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY;
-
-		//UniMove.ax = initX;
-		//UniMove.az = initZ;
-
 		tapCurrent = 0; 
-		gettingUp = false;
 		fallen = false;
-		//newRot = transform.rotation;
+		gettingUp = false;
+		frozen = false;
+		
+		newRot = transform.rotation;
 
 	}
-	
+
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * PLAY SELECTED GRUNT SOUND
 	 * -------------------------------------------------------------------------------------------------------------------------- */
