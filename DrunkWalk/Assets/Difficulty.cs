@@ -48,7 +48,6 @@ public class Difficulty : MonoBehaviour {
 
 		tDBarScale = tDBar.transform.localScale;
 		tDBarScale.y = totalDrunk / tDBarfloat * tDBarCap;
-		//tDBar.transform.localScale = tDBarScale;
 	}
 
 	void FixedUpdate () {
