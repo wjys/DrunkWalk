@@ -8,18 +8,34 @@ public class Ouch : MonoBehaviour {
 	public GUIText ouchGui;
 	public Collision collision;
 	public bool displayed; 
+	public SpriteRenderer win;
 
 	public DrunkMovement dm;
 
 	// Use this for initialization
 	void Start () {
 		displayed = false; 
+		win = gameObject.GetComponent<SpriteRenderer> ();
+		win.enabled = false;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		if (collision.reachedBed) {
+			GameObject.Find ("UICam " + dm.id).GetComponentInChildren<CameraBG>().enabled = true;
+			SpriteRenderer[] sprites = GameObject.Find ("UICam " + dm.id).GetComponentsInChildren<SpriteRenderer>();
+			foreach (SpriteRenderer sprite in sprites){
+				sprite.enabled = false;
+			}
+			GameObject.Find ("UICam " + dm.id).camera.clearFlags = CameraClearFlags.Skybox;
+			gameObject.guiText.enabled = false;
+			win.enabled = true;
+			dm.gameObject.SetActive(false);
+			this.enabled = false;
+		}
+
 		if (!dm.fallen){
-			if (collision.recoiled){
+			if (collision.recoiled && !collision.reachedBed){
 				if (!displayed){
 					gameObject.guiText.enabled = true;
 					ouchIndex = Random.Range (0,ouches.Length);

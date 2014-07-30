@@ -18,7 +18,7 @@ public class Collision : MonoBehaviour {
 	public AudioClip hitit;
 	public AudioSource source;
 	private bool soundPlayed; 
-	private bool reachedBed; 
+	public bool reachedBed; 
 
 	public float currentSoundTime = 0.0f; 
 	public float delaySound = 1.0f; 
@@ -145,7 +145,7 @@ public class Collision : MonoBehaviour {
 					//Debug.Log("Chair Collision - " + score);
 				}
 				else if (col.tag == "Bed"){ // WIN STATE
-					Application.LoadLevel("Won"); 
+					//Application.LoadLevel("Won"); 
 					reachedBed = true; 
 					soundPlayed = true; 
 					audio.PlayOneShot (clips[Random.Range(5, 8)]); 

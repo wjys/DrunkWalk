@@ -71,6 +71,7 @@ public class DrunkMovement : InGame {
 	
 	// GET RBs' Y COORDS SO THAT THE PLAYER DOESN'T FLOAT OVER BED
 	private float headY;
+	private Vector3 initHead; 
 
 	// GET BACK UP ONCE FALLEN
 	public bool fallen;
@@ -129,6 +130,7 @@ public class DrunkMovement : InGame {
 		soundPlayed = false; 		
 		frozen = false; 
 		fallCt = 0;
+		initHead = transform.position;
 		headY = transform.position.y; 
 
 		// (4) get middle of the screen (for mouse)
@@ -156,7 +158,15 @@ public class DrunkMovement : InGame {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 
 	void Update () {
-		print ("camLerp " + camLerp);
+		//print ("camLerp " + camLerp);
+
+
+		if (UniMove.GetButtonUp(PSMoveButton.Circle)){
+			transform.position = initHead;
+			transform.rotation = new Quaternion (0,0,0, transform.rotation.w);
+			rhead.angularVelocity = Vector3.zero;
+			pfeet.transform.position = new Vector3 (initHead.x, pfeet.transform.position.y, initHead.z);
+		}
 
 		// restart level if press R
 		if (Input.GetKey("r"))
@@ -217,7 +227,7 @@ public class DrunkMovement : InGame {
 
 		// (1) cam lerps back when you get up from falling 
 		if (camLerp){
-			print ("entered cam lerp");
+			//print ("entered cam lerp");
 			transform.rotation = Quaternion.Lerp(transform.rotation, newRot, smooth * Time.deltaTime);
 			
 		}

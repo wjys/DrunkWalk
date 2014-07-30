@@ -36,12 +36,16 @@ public class Eyelids : InGame {
 	private static float sAccel;
 	private static float sWakeUp;
 	
-	private static bool gettingUp;
-	private static bool blinked;
+	private bool gettingUp;
+	public bool blinked;
+	private bool curled;
 	public bool resetValues;
+	private SpriteRenderer po;
+	private GameObject compass;
 
 	// Use this for initialization
 	void Start () {
+		setSprites ();
 		startPosUp = topLids.transform.position;
 		startPosDown = bottomLids.transform.position;
 
@@ -90,14 +94,6 @@ public class Eyelids : InGame {
 
 			gettingUp = false;
 		}
-
-		if (blinked){
-			speed 	= sSpeed*(me.fallCt) + (0.0005f * blinkCnt);
-			accel 	= sAccel*(me.fallCt) + (0.0005f * blinkCnt);
-			wakeUp 	= sWakeUp*(me.fallCt) - (0.2f * blinkCnt);
-
-			lidCurl ();
-		}
 		if (me.gettingUp) {
 			Tap.enabled = false;
 			resetValues = false;
@@ -110,19 +106,31 @@ public class Eyelids : InGame {
 			// (2b) enable gui
 			if (!me.gettingUp){
 				Tap.enabled = true;
+
+				if (!blinked && !curled){
+					// (2d) Drooping gets faster
+					lidsDroop();
+					
+					// (2e) Curlout
+					lidsCurlOut();
+					
+					// (2f) Everytime you tap, eyelids flicker
+					lidsFlicker();
+					
+					// (2g) If blinked 3 times, pass out.
+					blinkCheck();
+				}
+				else if (curled){
+					lidCurl ();
+					StartCoroutine(resetLids());
+				}
+				else if (blinked) {
+					LoseScreen();
+				}
 			}
-			
-			// (2d) Drooping gets faster
-			lidsDroop();
-			
-			// (2e) Curlout
-			lidsCurlOut();
-			
-			// (2f) Everytime you tap, eyelids flicker
-			lidsFlicker();
-			
-			// (2g) If blinked 3 times, pass out.
-			blinkCheck();
+			else {
+				lidCurl ();
+			}
 			
 			//newPosUp = new Vector3 (startPosUp.x, -100, startPosUp.z);
 		} 
@@ -141,6 +149,19 @@ public class Eyelids : InGame {
 
 	}
 
+	void setSprites(){
+		SpriteRenderer[] sprs = gameObject.GetComponentsInChildren<SpriteRenderer>();
+		foreach (SpriteRenderer sprite in sprs){
+			if (sprite.gameObject.name.Equals("PassedOut")){
+				po = sprite;
+				break;
+			}
+		}
+		po.enabled = false;
+
+		compass = GameObject.Find ("/UICam " + me.id + "/Compass");
+	}
+
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * NO ARG. NO RETURN.
 	 * revert the lids back to their original position ("open eye"/unfallen);
@@ -156,6 +177,11 @@ public class Eyelids : InGame {
 		TL.transform.rotation = Quaternion.Lerp (TL.transform.rotation, startRotTL, smooth * Time.deltaTime);
 	}
 
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * NO ARG. NO RETURN.
+	 * make the lids fall with an acceleration
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+
 	private void lidsDroop(){
 		speed += accel;
 
@@ -163,6 +189,11 @@ public class Eyelids : InGame {
 		topLids.transform.position = new Vector3 (topLids.transform.position.x, topLids.transform.position.y - speed, topLids.transform.position.z);
 		bottomLids.transform.position = new Vector3 (bottomLids.transform.position.x, bottomLids.transform.position.y + speed, bottomLids.transform.position.z);
 	}
+
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * NO ARG. NO RETURN.
+	 * each lid of the 4 lid parts will curl/rotate out
+	 * -------------------------------------------------------------------------------------------------------------------------- */
 
 	private void lidsCurlOut(){
 		if (BR.transform.rotation.z > 0){
@@ -175,6 +206,11 @@ public class Eyelids : InGame {
 			TL.transform.rotation = new Quaternion (TL.transform.rotation.x, TL.transform.rotation.y, TL.transform.rotation.z - (speed * 0.01f), TR.transform.rotation.w);
 		}
 	}
+
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * NO ARG. NO RETURN.
+	 * each trigger tap causes the eyelids to flicker back out instead of close but then accelerate faster back down
+	 * -------------------------------------------------------------------------------------------------------------------------- */
 
 	private void lidsFlicker(){
 		if (me.lidUp){
@@ -189,20 +225,50 @@ public class Eyelids : InGame {
 		}
 	}
 
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * NO ARG. NO RETURN.
+	 * check how much the player has blinked
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+
 	private void blinkCheck(){
 		if (topLids.transform.position.y <= (startPosUp.y-(7+blinkCnt)) && blinkCnt < 3){
 			blinkCnt += 1;
+			speed 	= sSpeed*(me.fallCt) + (0.0005f * blinkCnt);
+			accel 	= sAccel*(me.fallCt) + (0.0005f * blinkCnt);
+			wakeUp 	= sWakeUp*(me.fallCt) - (0.2f * blinkCnt);
+			curled = true;
+		}
+		
+		if (blinkCnt >= 3){
+			curled = false;
+			//GameManager.ins.playerStatus = GameState.PlayerStatus.Lost;
 			blinked = true;
 		}
 		
-		if (blinkCnt >=2){
-			//GameManager.ins.playerStatus = GameState.PlayerStatus.Lost;
-			//Tap.enabled = false;
-			//me.gameObject.SetActive(false);
-		}
-		
-		if (topLids.transform.position.y >= (startPosUp.y-(3*blinkCnt))){
+		/*if (topLids.transform.position.y >= (startPosUp.y-(3*blinkCnt))){
 			blinked = false;
-		}
+		}*/
+	}
+
+	IEnumerator resetLids(){
+		yield return new WaitForSeconds (1.0f);
+		curled = false;
+	}
+
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * NO ARG. NO RETURN.
+	 * (1) close guitext ("tap to get up")
+	 * (2) turn on lose screen
+	 * (3) disactivate feet and head
+	 * (4) stop this script
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+
+	private void LoseScreen(){
+		Tap.enabled = false;	
+		compass.SetActive(false);
+		po.enabled = true;
+		me.pfeet.SetActive(false);
+		me.gameObject.SetActive(false);
+		this.enabled = false;
 	}
 }
