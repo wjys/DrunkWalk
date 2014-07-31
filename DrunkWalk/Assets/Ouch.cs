@@ -35,7 +35,7 @@ public class Ouch : MonoBehaviour {
 			GameObject gm = GameObject.Find ("GameManager");
 			GameManager manager = gm.GetComponent<GameManager>();
 			manager.winners[manager.winnerIndex] = dm.id;
-			if (manager.winners == 0){
+			if (manager.winnerIndex == 0){
 				manager.winner = dm.id;
 			}
 			manager.winnerIndex++;
