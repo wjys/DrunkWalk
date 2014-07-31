@@ -39,6 +39,11 @@ public class GameManager : MonoBehaviour {
 	public int winner;
 	public int numOfPlayers;
 
+	public int winnerIndex;
+	public int loserIndex;
+	public int[] winners;
+	public int[] losers;
+
 	void Awake () {
 		//Setup instance
 		DontDestroyOnLoad(this);
@@ -72,11 +77,15 @@ public class GameManager : MonoBehaviour {
 
 	void Start () {
 		numOfPlayers = GetComponent<UniMoveManager>().numPlayers;
+		winnerIndex = 0;
+		loserIndex = 0;
+		winners = new int[numOfPlayers];
+		losers = new int[numOfPlayers];
 	}
 
 
 	void Update () {
-	
+		CheckWinLose ();
 	if (playerStatus == GameState.PlayerStatus.Lost){
 			//LOST
 			Application.LoadLevel("Lost");
@@ -142,5 +151,16 @@ public class GameManager : MonoBehaviour {
 	public void UnMenu() {
 		menu = false;
 		mainMenuIns.SetActive (menu);
+	}
+
+	private void CheckWinLose(){
+		if (winnerIndex + loserIndex == numOfPlayers) {
+			if (winnerIndex >= loserIndex){
+				Application.LoadLevel ("Won");
+			}
+			else {
+				Application.LoadLevel ("Lost");
+			}
+		}
 	}
 }
