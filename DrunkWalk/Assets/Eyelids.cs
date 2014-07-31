@@ -269,6 +269,12 @@ public class Eyelids : InGame {
 		po.enabled = true;
 		me.pfeet.SetActive(false);
 		me.gameObject.SetActive(false);
+
+		GameObject gm = GameObject.Find ("GameManager");
+		GameManager manager = gm.GetComponent<GameManager> ();
+		manager.losers [manager.loserIndex] = me.id;
+		manager.loserIndex++;
+
 		this.enabled = false;
 	}
 }

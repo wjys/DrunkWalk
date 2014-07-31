@@ -31,6 +31,15 @@ public class Ouch : MonoBehaviour {
 			gameObject.guiText.enabled = false;
 			win.enabled = true;
 			dm.gameObject.SetActive(false);
+
+			GameObject gm = GameObject.Find ("GameManager");
+			GameManager manager = gm.GetComponent<GameManager>();
+			manager.winners[manager.winnerIndex] = dm.id;
+			if (manager.winners == 0){
+				manager.winner = dm.id;
+			}
+			manager.winnerIndex++;
+
 			this.enabled = false;
 		}
 

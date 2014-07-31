@@ -30,9 +30,7 @@ public class GameManager : MonoBehaviour {
 	public static int chosenChar;
 
 	//Difficulty
-	private GameObject DiffObj;
-	public int JnCInt, BeerInt, WhiskeyInt, SangriaInt;
-	public int totalDiff;
+	public static int diffInt;
 
 	//Level
 	public static int levelInt;
@@ -40,6 +38,11 @@ public class GameManager : MonoBehaviour {
 	//Winner
 	public int winner;
 	public int numOfPlayers;
+
+	public int winnerIndex;
+	public int loserIndex;
+	public int[] winners;
+	public int[] losers;
 
 	void Awake () {
 		//Setup instance
@@ -74,17 +77,19 @@ public class GameManager : MonoBehaviour {
 
 	void Start () {
 		numOfPlayers = GetComponent<UniMoveManager>().numPlayers;
-		DiffObj = GameObject.Find ("Difficulty");
+		winnerIndex = 0;
+		loserIndex = 0;
+		winners = new int[numOfPlayers];
+		losers = new int[numOfPlayers];
 	}
 
 
 	void Update () {
-
-	
-		if (playerStatus == GameState.PlayerStatus.Lost){
+		CheckWinLose ();
+	if (playerStatus == GameState.PlayerStatus.Lost){
 			//LOST
 			Application.LoadLevel("Lost");
-		}
+	}
 
 		//Pause Menu in Game, Main menu in Splash
 		if (status == GameState.GameStatus.Game){
@@ -109,13 +114,6 @@ public class GameManager : MonoBehaviour {
 				Debug.Log ("MENU");
         	}*/
 			Menu ();
-
-			JnCInt = DiffObj.GetComponent<Difficulty>().drinkID[0];
-			BeerInt = DiffObj.GetComponent<Difficulty>().drinkID[1];
-			WhiskeyInt = DiffObj.GetComponent<Difficulty>().drinkID[2];
-			SangriaInt = DiffObj.GetComponent<Difficulty>().drinkID[3];
-
-			totalDiff = DiffObj.GetComponent<Difficulty>().totalDrunk;
         }
 	}
 
@@ -153,5 +151,16 @@ public class GameManager : MonoBehaviour {
 	public void UnMenu() {
 		menu = false;
 		mainMenuIns.SetActive (menu);
+	}
+
+	private void CheckWinLose(){
+		if (winnerIndex + loserIndex == numOfPlayers) {
+			if (winnerIndex >= loserIndex){
+				Application.LoadLevel ("Won");
+			}
+			else {
+				Application.LoadLevel ("Lost");
+			}
+		}
 	}
 }
