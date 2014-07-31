@@ -22,9 +22,11 @@ public class UniMoveManager : MonoBehaviour
 	{
 		if (numPlayers < 4) {
 			int num = numPlayers+1;
-			while (num <= 4){
-				GameObject.Find ("UICam " + num).SetActive(false);
-				num++;
+			if (GameManager.ins.status != GameState.GameStatus.Splash){
+				while (num <= 4){
+					GameObject.Find ("UICam " + num).SetActive(false);
+					num++;
+				}
 			}
 		}
 		players = new GameObject[numPlayers];
@@ -71,9 +73,11 @@ public class UniMoveManager : MonoBehaviour
 			}
 		} 
 		else {
-			setUI ();
-			UniMoveActivateComponents();
-			this.enabled = false; 
+			if (GameManager.ins.status != GameState.GameStatus.Splash){
+				setUI ();
+				UniMoveActivateComponents();
+				this.enabled = false;
+			}
 		}
 	}
 	

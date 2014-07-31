@@ -127,7 +127,7 @@ public class MainMenu : Menu {
 	void OnGUI () {
 		GUI.skin = skin;
 		GUI.color = backgroundColor;
-		GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), backgroundTexture);
+		//GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), backgroundTexture);
 		GUI.color = Color.white;
 		if (menuNum == 1) {
 			GUIMenu(idx, 200, 80, items, timer);}
@@ -156,8 +156,6 @@ public class MainMenu : Menu {
 	public static void Menu1 (){
 		menuNum = 1;
 		menuSet = false;
-		newPos = new Vector3 (0,0,0);
-		newRot = new Quaternion(0,0,0,0);
 	}
 
 	//////////
@@ -418,22 +416,23 @@ public class MainMenu : Menu {
 		//CHARACTER
 		if (menuNum == 2){
 			newPos = new Vector3(0,25,0);
-			newRot = new Quaternion (0, 0, 0, 0);
+			newRot = new Quaternion (0, 0, 0, 1);
 		}
 
 		//MAIN
 		if (menuNum == 1){
 			newPos = new Vector3(0,0,0);
-			newRot = new Quaternion (0, 0, 0, 0);
+			newRot = new Quaternion (0, 0, 0, 1);
 		}
 
 		if (menuNum == 0){
-			newPos = new Vector3(0,0,0);
-			newRot = new Quaternion (0, 0, 0, 0);
+			newPos = new Vector3 (25,0,0);
+			newRot = new Quaternion(0,0,0,0);
 		}
 
 		if (menuSet){
-			newPos = new Vector3(25,0,0);
+			newPos = new Vector3 (25,0,0);
+			newRot = new Quaternion(0,0,0,0);
 		}
 
 		yield return new WaitForSeconds(0.001f);
