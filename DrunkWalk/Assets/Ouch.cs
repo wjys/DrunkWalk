@@ -15,7 +15,7 @@ public class Ouch : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		displayed = false; 
-		win = gameObject.GetComponent<SpriteRenderer> ();
+		win = gameObject.GetComponentInChildren<SpriteRenderer> ();
 		win.enabled = false;
 	}
 	
@@ -38,7 +38,7 @@ public class Ouch : MonoBehaviour {
 			if (manager.winnerIndex == 0){
 				manager.winner = dm.id;
 			}
-			manager.winnerIndex++;
+			//manager.winnerIndex++;
 
 			this.enabled = false;
 		}
