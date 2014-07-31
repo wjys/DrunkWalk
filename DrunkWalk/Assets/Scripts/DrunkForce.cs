@@ -60,11 +60,11 @@ public class DrunkForce : InGame {
 	void Update () {
 		feet = dm.pfeet;
 		// check camera rotation lose condition
-		if ((transform.localRotation.x > Quaternion.Euler (boundRotForward, 0, 0).x && transform.localRotation.x < Quaternion.Euler (boundRotBack, 0, 0).x)	||	
-		    (transform.localRotation.z > Quaternion.Euler (0, 0, boundRotRight).z && transform.localRotation.z < Quaternion.Euler(0, 0, boundRotLeft).z)){
+		/*if ((transform.localEulerAngles.x > boundRotForward && transform.localEulerAngles.x < boundRotBack)	||	
+		    (transform.localEulerAngles.z > boundRotRight && transform.localEulerAngles.z < boundRotLeft)){
 			Debug.Log("LOST BC OF ANGLE");
 			dm.fallen = true;
-		}
+		}*/
 
 		// camera wobble
 		if (!stopWobble) {
@@ -162,7 +162,7 @@ public class DrunkForce : InGame {
 			transform.rotation = new Quaternion (transform.rotation.x + camInc, transform.rotation.y, transform.rotation.z, transform.rotation.w); */
 			//print ("leaning forward"); 
 			transform.localRotation = Quaternion.Lerp (transform.localRotation, 
-			                                           Quaternion.Euler	(Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.position.y - feet.transform.position.y))/(Mathf.Abs(transform.position.z - feet.transform.position.z))*2)), transform.localEulerAngles.y, transform.localEulerAngles.z), 
+			                                           Quaternion.Euler	(Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.position.y - feet.transform.position.y))/(Mathf.Abs(transform.position.z - feet.transform.position.z))*4)), transform.localEulerAngles.y, transform.localEulerAngles.z), 
 			                                           Time.deltaTime * (smooth));
 			break;
 		case (int) Dir.right:
@@ -172,7 +172,7 @@ public class DrunkForce : InGame {
 			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + rotInc, transform.rotation.z + camInc, transform.rotation.w); */
 			//print ("leaning right"); 
 			transform.localRotation = Quaternion.Lerp (transform.localRotation, 
-			                                           Quaternion.Euler (transform.localEulerAngles.x, transform.localEulerAngles.y, -Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.position.y - feet.transform.position.y))/(Mathf.Abs(transform.position.x - feet.transform.position.x))))), 
+			                                           Quaternion.Euler (transform.localEulerAngles.x, transform.localEulerAngles.y, -Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.position.y - feet.transform.position.y))/(Mathf.Abs(transform.position.x - feet.transform.position.x)))*1.5f)), 
 			                                           Time.deltaTime * smooth);
 			break;
 		case (int) Dir.left:
@@ -182,7 +182,7 @@ public class DrunkForce : InGame {
 			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y - rotInc, transform.rotation.z + camInc, transform.rotation.w); */
 			//print ("leaning left"); 
 			transform.localRotation = Quaternion.Lerp (transform.localRotation, 
-			                                           Quaternion.Euler (transform.localEulerAngles.x, transform.localEulerAngles.y, Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.position.y - feet.transform.position.y))/(Mathf.Abs(transform.position.x - feet.transform.position.x))))), 
+			                                           Quaternion.Euler (transform.localEulerAngles.x, transform.localEulerAngles.y, Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.position.y - feet.transform.position.y))/(Mathf.Abs(transform.position.x - feet.transform.position.x)))*1.5f)), 
 			                                           Time.deltaTime * smooth);
 			break;
 		case (int) Dir.back:
@@ -192,7 +192,7 @@ public class DrunkForce : InGame {
 			transform.rotation = new Quaternion (transform.rotation.x + camInc, transform.rotation.y, transform.rotation.z, transform.rotation.w);*/
 			//print ("leaning back"); 
 			transform.localRotation = Quaternion.Lerp (transform.localRotation, 
-			                                           Quaternion.Euler (-Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.localPosition.y - feet.transform.localPosition.y))/(Mathf.Abs(transform.localPosition.z - feet.transform.localPosition.z))*2)),  transform.localEulerAngles.y, transform.localEulerAngles.z), 
+			                                           Quaternion.Euler (-Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.localPosition.y - feet.transform.localPosition.y))/(Mathf.Abs(transform.localPosition.z - feet.transform.localPosition.z))*3)),  transform.localEulerAngles.y, transform.localEulerAngles.z), 
 			                                           Time.deltaTime * (smooth));
 			break;
 		default:

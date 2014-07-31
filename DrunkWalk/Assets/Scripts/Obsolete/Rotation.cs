@@ -22,6 +22,7 @@ public class Rotation : MonoBehaviour {
 
 	public float camInc; 
 	public float rotInc; 
+	public float rotRate;
 
 	public float minAngle;
 	public float maxAngle; 
@@ -127,14 +128,22 @@ public class Rotation : MonoBehaviour {
 			if (dm.direction == (int) Dir.left){
 				if (Input.GetMouseButton(0)){	// left mouse button
 					rotated = true; 
-					transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y - rotInc, transform.rotation.z, transform.rotation.w); 
+					transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y - rotInc*rotRate, transform.rotation.z, transform.rotation.w); 
+					if (rotRate >= 1){
+						rotRate = 1;
+					}
+					else rotRate += 0.1f;
 					return (int) Turn.left; 
 				}	
 			}
 			if (dm.direction == (int) Dir.right){
 				if (Input.GetMouseButton(1)){	// right mouse button
 					rotated = true; 
-					transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + rotInc, transform.rotation.z, transform.rotation.w);  
+					transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + rotInc*rotRate, transform.rotation.z, transform.rotation.w);  
+					if (rotRate >= 1){
+						rotRate = 1;
+					}
+					else rotRate += 0.1f;
 					return (int) Turn.right; 
 				}
 			}
@@ -142,6 +151,7 @@ public class Rotation : MonoBehaviour {
 		}
 		else if (dm.controller == (int) controlInput.move){
 			if (current == (int) Turn.idle){
+				rotRate = 0;
 				//print ("idle"); 
 				if (dm.direction == (int) Dir.left){
 					if (UniMove.gy >= boundLeft){
@@ -169,7 +179,11 @@ public class Rotation : MonoBehaviour {
 				}
 				else {
 					//print ("turning left"); 
-					transform.localRotation = new Quaternion (transform.localRotation.x, transform.localRotation.y - rotInc, transform.localRotation.z, transform.localRotation.w); 
+					transform.localRotation = new Quaternion (transform.localRotation.x, transform.localRotation.y - rotInc*rotRate, transform.localRotation.z, transform.localRotation.w); 
+					if (rotRate >= 1){
+						rotRate = 1;
+					}
+					else rotRate += 0.05f;
 					return (int) Turn.left; 
 				}
 			}
@@ -181,7 +195,11 @@ public class Rotation : MonoBehaviour {
 				}
 				else {
 					//print ("turning right"); 
-					transform.localRotation = new Quaternion (transform.localRotation.x, transform.localRotation.y + rotInc, transform.localRotation.z, transform.localRotation.w); 
+					transform.localRotation = new Quaternion (transform.localRotation.x, transform.localRotation.y + rotInc*rotRate, transform.localRotation.z, transform.localRotation.w); 
+					if (rotRate >= 1){
+						rotRate = 1;
+					}
+					else rotRate += 0.05f;
 					return (int) Turn.right;
 				}
 			}
