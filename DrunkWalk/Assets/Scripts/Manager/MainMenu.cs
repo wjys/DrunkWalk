@@ -403,20 +403,25 @@ public class MainMenu : Menu {
 	}
 
 	public IEnumerator LerpCam() {
+		//LEVEL/MODE
 		if (menuNum == 4){
-			newPos = new Vector3(50, 25, 0);
+			newPos = new Vector3(0, 25, 0);
+			newRot = new Quaternion(0, 1, 0, 3.72529e-07f);
 		}
 
+		//DIFFICULTY
 		if (menuNum == 3){
-			newPos = new Vector3(25,25,0);
-			newRot = new Quaternion (0, 0, 0, 0);
+			newPos = new Vector3(0,25,0);
+			newRot = new Quaternion (0, 0.7071071f, 0, 0.7071066f);
 		}
 
+		//CHARACTER
 		if (menuNum == 2){
 			newPos = new Vector3(0,25,0);
 			newRot = new Quaternion (0, 0, 0, 0);
 		}
 
+		//MAIN
 		if (menuNum == 1){
 			newPos = new Vector3(0,0,0);
 			newRot = new Quaternion (0, 0, 0, 0);
