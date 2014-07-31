@@ -35,6 +35,9 @@ public class GameManager : MonoBehaviour {
 	//Level
 	public static int levelInt;
 
+	//Winner
+	public int winner;
+	public int numOfPlayers;
 
 	void Awake () {
 		//Setup instance
@@ -68,6 +71,7 @@ public class GameManager : MonoBehaviour {
 
 
 	void Start () {
+		numOfPlayers = GetComponent<UniMoveManager>().numPlayers;
 	}
 
 

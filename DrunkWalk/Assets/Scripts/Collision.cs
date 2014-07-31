@@ -145,7 +145,7 @@ public class Collision : MonoBehaviour {
 					//Debug.Log("Chair Collision - " + score);
 				}
 				else if (col.tag == "Bed"){ // WIN STATE
-					//Application.LoadLevel("Won"); 
+					//Application.LoadLevel("Won");
 					reachedBed = true; 
 					soundPlayed = true; 
 					audio.PlayOneShot (clips[Random.Range(5, 8)]); 

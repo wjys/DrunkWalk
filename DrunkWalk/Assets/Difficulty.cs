@@ -22,6 +22,10 @@ public class Difficulty : MonoBehaviour {
 	public float tDBarCap;
 	public float smooth;
 
+	//Winner
+	public int winner;
+	public int numOfPlayers;
+
 
 	// Use this for initialization
 	void Start () {
