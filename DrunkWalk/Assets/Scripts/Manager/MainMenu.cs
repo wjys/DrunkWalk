@@ -60,7 +60,6 @@ public class MainMenu : Menu {
 
 	//Characters
 	private int cidx = 0;
-	public int charID;
 
 	private Item[] citems = new Item[] {
 		new Item("THAT GUY", delegate () { Difficulty (1); }),
@@ -108,9 +107,6 @@ public class MainMenu : Menu {
 		//Current Menu is at the first one
 		menuNum = 1;
 		menuSet = false;
-
-		//Character is at the Guy
-		charID = 0;
 
 		Menu1 ();
 
