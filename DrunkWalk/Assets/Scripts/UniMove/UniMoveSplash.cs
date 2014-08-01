@@ -2,16 +2,25 @@
 using System;
 using System.Collections.Generic;
 
+// INITS THE MOVE CONTROLLERS AND MANAGES THEM
+// GENERATES MULTI MARKERS WITH APPROPRIATE CONTROLLER ASSIGNED TO EACH
+
 public class UniMoveSplash : MonoBehaviour 
 {
 	// We save a list of Move controllers.
 	public List<UniMoveController> moves = new List<UniMoveController>();
 	public int numPlayers;
+	public MainMenu main;
 
+	public GameObject multiMarker;
+	public int multiMarkerCt;
+	public bool allMultiMarkersMade;
+	
 	void Start() 
 	{
 		numPlayers = 0; 
 		UniMoveInit (); 
+		main = GameObject.Find ("MainMenu").GetComponent<MainMenu> ();
 	}
 	
 	
@@ -19,9 +28,27 @@ public class UniMoveSplash : MonoBehaviour
 	{
 		setMoveColour ();
 		UniMoveSetID ();
-		if (numPlayers > 1) {
-			// DISPLAY MULTIPLAYER MENU OPTION
-			print ("DISPLAY MULTIPLAYER OPTION");
+		if (main.menuNumPublic == 1){
+			if (numPlayers > 1) {
+				// DISPLAY MULTIPLAYER MENU OPTION
+				print ("DISPLAY MULTIPLAYER OPTION");
+		}
+		// MULTI CHARACTER SELECT
+		if (main.menuNumPublic == 5) {
+			if (!allMultiMarkersMade){
+				foreach (UniMoveController move in moves){
+					if (move.id != 0){
+						GameObject mark = Instantiate (multiMarker) as GameObject;
+						mark.GetComponent<MultiMarker>().id = move.id;
+						mark.GetComponent<MultiMarker>().name = "MultiMarker " + move.id;
+						multiMarkerCt++;
+					}
+					if (multiMarkerCt == numPlayers){
+						allMultiMarkersMade = true;
+						break;
+					}
+				}
+			}
 		}
 		/* if (levelSelect){
 		 * 		if (UniMoveAllPlayersIn()){
@@ -37,11 +64,12 @@ public class UniMoveSplash : MonoBehaviour
 			this.enabled = false;
 		}
 	}
+	}
 	
-	void HandleControllerDisconnected (object sender, EventArgs e)
+	/*void HandleControllerDisconnected (object sender, EventArgs e)
 	{
 		// TODO: Remove this disconnected controller from the list and maybe give an update to the player
-	}
+	}*/
 	
 	
 	
@@ -77,7 +105,7 @@ public class UniMoveSplash : MonoBehaviour
 			{
 				moves.Add(move);
 				
-				move.OnControllerDisconnected += HandleControllerDisconnected;
+				//move.OnControllerDisconnected += HandleControllerDisconnected;
 				
 			}
 		}
