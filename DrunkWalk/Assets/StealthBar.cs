@@ -18,8 +18,7 @@ public class StealthBar : MonoBehaviour {
 		}
 	}
 	
-	// Update is called once per frame
 	void Update () {
-	
+
 	}
 }

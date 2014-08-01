@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour {
 	//This
 	static public GameManager ins;
 
-	//Game State
+	//Global Variables
 	public GameState.GameStatus status;
 	public GameState.GameMode mode;
 
@@ -36,6 +36,13 @@ public class GameManager : MonoBehaviour {
 
 	//Level
 	public static int levelInt;
+
+	/*
+	 * STUFF TO DO ABOUT LEVELS:
+	 * Once we ENTER the game, WHICHEVER LEVEL IT IS depending on the MODE--
+	 * 		STEALTH : Instantiate a prefab of extra objects
+	 * 		PARTY : Instantiate bed in a random location
+	 */
 
 	//Winner
 	public int winner;
@@ -111,12 +118,6 @@ public class GameManager : MonoBehaviour {
            	    	UnPause();
            		}
            	}
-
-
-
-
-
-
 
 		} else if (status == GameState.GameStatus.Splash) {
         	/*if (Input.GetKeyDown("m")){
