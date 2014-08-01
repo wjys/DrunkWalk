@@ -5,6 +5,7 @@ public class Compass : MonoBehaviour {
 
 	public GameObject bed;
 	public GameObject me;
+	public Transform bedSpriteScale;
 
 	// COMPASS OBJECTS
 	public GameObject compassBed;
@@ -13,12 +14,21 @@ public class Compass : MonoBehaviour {
 	public Quaternion rot;
 	public float angle; 
 	private float initX; 
+
+	// BED SCALE VARS
+	public float maxScaleRad;
+	public float minBedScale;
+
+
 	// Use this for initialization
 	void Start () { 
+		GetScaleRate ();
+		GetBedSprite ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		scaleBed ();
 		compassCheck (); 
 		compassObjects ();
 	}
@@ -49,6 +59,41 @@ public class Compass : MonoBehaviour {
 			}
 			if (rot.y < 0){
 				compassBar.transform.localPosition = new Vector3 (compassBound*(angle/90.0f), compassBar.transform.localPosition.y, compassBar.transform.localPosition.z);
+			}
+		}
+	}
+
+	private void scaleBed(){
+		float headX = me.transform.position.x;
+		float headZ = me.transform.position.z;
+		float bedX = bed.transform.position.x;
+		float bedZ = bed.transform.position.z;
+		
+		float r = Mathf.Sqrt (((bedX - headX) * (bedX - headX)) + ((bedZ - headZ) * (bedZ - headZ)));
+		float ratio = maxScaleRad / r;
+
+		if (ratio >= 1) {
+			ratio = 1;
+		}
+		bedSpriteScale.localScale = new Vector3 (ratio, ratio, ratio);
+	}
+
+	private void GetScaleRate(){
+		float headX = me.transform.position.x;
+		float headZ = me.transform.position.z;
+		float bedX = bed.transform.position.x;
+		float bedZ = bed.transform.position.z;
+		
+		float r = Mathf.Sqrt (((bedX - headX) * (bedX - headX)) + ((bedZ - headZ) * (bedZ - headZ)));	
+		maxScaleRad = r * minBedScale;
+	}
+
+	private void GetBedSprite(){
+		Transform[] trans = gameObject.GetComponentsInChildren<Transform> ();
+		foreach (Transform t in trans) {
+			if (t.name.Equals ("BedScale")){
+				bedSpriteScale = t;
+				break;
 			}
 		}
 	}
