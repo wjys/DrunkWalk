@@ -18,6 +18,7 @@ public class Compass : MonoBehaviour {
 	// BED SCALE VARS
 	public float maxScaleRad;
 	public float minBedScale;
+	public float smooth;
 
 
 	// Use this for initialization
@@ -31,6 +32,15 @@ public class Compass : MonoBehaviour {
 		scaleBed ();
 		compassCheck (); 
 		compassObjects ();
+	}
+
+	void FixedUpdate(){
+		if (bedSpriteScale.localScale.x >= 0.75f){
+			bedSpriteScale.localPosition = Vector3.Lerp (bedSpriteScale.localPosition, new Vector3 (bedSpriteScale.localPosition.x, 0.0f, bedSpriteScale.localPosition.z), smooth * Time.deltaTime);
+		}
+		else {
+			bedSpriteScale.localPosition = Vector3.Lerp (bedSpriteScale.localPosition, new Vector3 (bedSpriteScale.localPosition.x, 0.02f, bedSpriteScale.localPosition.z), smooth * Time.deltaTime);
+		}
 	}
 
 	private void compassCheck(){
@@ -96,5 +106,6 @@ public class Compass : MonoBehaviour {
 				break;
 			}
 		}
+		bedSpriteScale.localPosition = new Vector3(bedSpriteScale.localPosition.x, 0.02f, bedSpriteScale.localPosition.z);
 	}
 }
