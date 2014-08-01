@@ -1,18 +1,44 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+//THE COLLISION MANAGER
+//ALSO MANAGES SCORING SYSTEM FOR SINGLE PLAYER SCOREATTACK & STEALTH
+
 public class Collision : MonoBehaviour {
 
-	//Overall Score
+	////////////////
+	//SCORE ATTACK
+	////////////////
+
+	// Overall Score
 	public static int score;
 
-	//Hurt Sound
-	public GameObject[] ouch;
-	public Animator ouchAnim;
+	// Score Delay
+	private float currentScoreTime = 0.0f;
+	public float delayScore = 1.0f; 
 
-	private static bool yelling = false;
+	///////////
+	//STEALTH
+	///////////
+	
+	// Parents Awareness Level 
+	public static int parents;
 
-	// sound stuff 
+	// Stealth Bar Gameobject
+	public StealthBar stealthBar;
+
+	// Delay before parents decrease
+	private float currentPTime = 0.0f;
+	public float delayP = 2.0f;
+
+	///////////////////////////////////////////////////////////////////	
+
+	// Player Components
+	public DrunkMovement dm;
+	public DrunkForce df; 
+	public Rigidbody rhead; 
+
+	// Sounds
 	public AudioClip[] clips; 
 	public AudioClip[] hitclips; 
 	public AudioClip hitit;
@@ -20,48 +46,72 @@ public class Collision : MonoBehaviour {
 	private bool soundPlayed; 
 	public bool reachedBed; 
 
-	public float currentSoundTime = 0.0f; 
-	public float delaySound = 1.0f; 
+	// Sound Delay
+	private float currentSoundTime = 0.0f; 
+	public float delaySound = 1.0f;
 
-	public float currentCollTime = 0.0f;
-	public float delayCollision = 1.0f; 
-
-	public float currentScoreTime = 0.0f;
-	public float delayScore = 1.0f; 
-
+	// Collision Bools
 	private bool collided;
 	public bool colliding;
 
-	//RECOIL STUFF
+	// Collision Delay
+	private float currentCollTime = 0.0f;
+	public float delayCollision = 1.0f; 
+
+	//Recoil
 	public int recoilDir; 
 	public bool recoiled; 
 	private enum Dir { forward, right, left, back }; 
 	public float recoilF; 
 
-	// TO PREVENT CAM WOBBLE WHEN HIT A WALL
-	public DrunkMovement dm;
-	public DrunkForce df; 
-	public Rigidbody rhead; 
-
-	//RUMBLE
+	// Rumble
 	public float rumbleAmt;
 
-	// Use this for initialization
-	void Start () {
-		colliding = false;
-		source.volume = 0.5f;
-		score = 10000;
+	//NOT USED//////////////////////////////////////////
+	// Hurt Sound Obj
+	public GameObject[] ouch;
+	public Animator ouchAnim;
+	private static bool yelling = false;
 
-		soundPlayed = false; 
-		reachedBed = false; 
+
+	void Start () {
+		//NOT COLLIDING
+		colliding = false;
 		collided = false; 
+
+		//NOT RECOILING
 		recoiled = false; 
+
+		//SOUND SETUP
+		source.volume = 0.5f;
+		soundPlayed = false; 
+
+		//INITIAL SCORE
+		score = 10000;
+		parents = 0;
+
+		//REACHED BED
+		reachedBed = false; 
+
+		//GET STEALTH BAR
+		stealthBar = GameObject.Find ("UICam " + dm.id).GetComponentsInChildren<StealthBar>();
 	}
 	
 	// Update is called once per frame
-	void Update () {	
-		if (score <= 0) {
-			Application.LoadLevel ("Lost"); 
+	void Update () {
+		//SCORE ATTACK
+		if (GameManager.ins.mode == GameState.GameMode.ScoreAttack){
+			if (score <= 0) {
+				//LOSE
+				Debug.Log ("SCORE = 0");
+			}
+		} 
+		//STEALTH
+		else if (GameManager.ins.mode == GameState.GameMode.Stealth){
+			if (parents >= 100){
+				//LOSE
+				Debug.Log ("PARENTS WOKE UP");
+			}
 		}
 	}
 
@@ -78,21 +128,18 @@ public class Collision : MonoBehaviour {
 			currentCollTime = 0.0f; 
 		}
 
-		currentScoreTime += Time.deltaTime;
+		score --;
+		/*currentScoreTime += Time.deltaTime;
 		if (currentScoreTime >= delayScore){
-			score -= 5; 
+			score -= 10; 
 			currentScoreTime = 0.0f; 
-		}
+		}*/
 	}
 
 	void OnGUI () {
-		//GUI.Box(new Rect(10,10,100,23), "Score: " + score);
-		// if (GameOver){
-		// 	GUI.Box(new Rect(670,300,100,25), "GAME OVER");
-		// 	if (Input.GetKeyDown ("space")) {  
-  //   			Application.LoadLevel (0);  
-  // 			}  
-		// }
+		if (GameManager.ins.mode == GameState.GameMode.ScoreAttack){
+			GUI.Box(new Rect(10,10,100,23), "Score: " + score);
+		}
 	}
 
 	//When colliding with something:
@@ -100,29 +147,48 @@ public class Collision : MonoBehaviour {
 
 		colliding = true;
 
-		if (!recoiled){
-			//print ("RECOILING");
-			setRecoilDir(col.ClosestPointOnBounds(transform.position), transform.position);  
-		}
-
+		//IF THE THING IS SOLID
 		if (col.tag != "Trigger"){
+
+			//RECOIL
+			if (!recoiled){
+
+				//IF THE THING IS A WALL OR A BIG OBJECT
+				if (col.tag == "Wall" || col.tag == "Furniture"){
+					print ("RECOIL");
+					setRecoilDir(col.ClosestPointOnBounds(transform.position), transform.position);
+				}
+            }
+
+			//STOP WOBBLE
 			df.stopWobble = true; 
+
+			//COLLIDED
 			if (!collided){
-				//Yell();
+
+				//PLAY HITTING SOUND
 				audio.PlayOneShot (hitit);
 
+				//RUMBLE
 				dm.hitRumble = rumbleAmt;
 
+				//CONSTRAIN RIGIDBODY
 				rhead.constraints = RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY;
 
-				//Debug.Log("Collision");
-				//ouchAnim.SetTrigger("Ouch");
-				
+				//WIN STATE
+				if (col.tag == "Bed"){
+					//Application.LoadLevel("Won");
+					reachedBed = true; 
+					soundPlayed = true; 
+					audio.PlayOneShot (clips[Random.Range(5, 8)]); 
+                }
+
+				if (GameManager.ins.mode == GameState.GameMode.Stealth){
+				}
 				//If collision is against a wall:
 				if (col.tag == "Wall") {
 					score -= 100;
 					//Debug.Log("Wall Collision - " + score);
-					//df.stopWobble = true; 
 				}
 				else if (col.tag == "Box"){
 					score -= 200;
@@ -144,16 +210,6 @@ public class Collision : MonoBehaviour {
 					score -= 100;
 					//Debug.Log("Chair Collision - " + score);
 				}
-				else if (col.tag == "Bed"){ // WIN STATE
-					//Application.LoadLevel("Won");
-					reachedBed = true; 
-					soundPlayed = true; 
-					audio.PlayOneShot (clips[Random.Range(5, 8)]); 
-				}
-		/*		else if (col.tag == "Floor"){
-					score -= 500;
-					Debug.Log("Floor Collision - " + score);
-				}*/
 
 				//If not currently yelling:
 				if (yelling == false){
@@ -175,19 +231,19 @@ public class Collision : MonoBehaviour {
 	void OnTriggerExit(Collider col) {
 		colliding = false;
 		dm.hitRumble = 0.0f;
-		//Debug.Log("No Longer Colliding");
 		soundPlayed = false; 
 		recoiled = false; 
 		df.stopWobble = false; 
 	}
 
+	//PLAY GRUNT
 	private void playGrunt(AudioClip clip){
-		
 		audio.pitch = Random.value * 0.1f + 0.95f;
 		audio.volume = Random.value * 0.3f + 0.7f;
 		audio.PlayOneShot(clip); 
 	}
 
+	//SET THE DIRECTION OF RECOIL
 	private void setRecoilDir(Vector3 colPos, Vector3 playerPos){
 		recoiled = true; 
 		//print ("collision pos " + colPos + ", player pos    " + playerPos); 
@@ -209,6 +265,7 @@ public class Collision : MonoBehaviour {
 		}
 	}
 
+	//SET THE FORCE WITH WHICH TO RECOIL
 	private void recoilForce(int direction){
 		df.recoiled = true; 
 		switch (direction) {
@@ -233,7 +290,6 @@ public class Collision : MonoBehaviour {
 		default:
 			break; 
 		}
-		//print ("RECOILED!"); 
 	}
 
 	/*

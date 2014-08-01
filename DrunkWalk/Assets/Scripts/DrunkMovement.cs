@@ -125,7 +125,7 @@ public class DrunkMovement : InGame {
 		// (2) place feet under head
 		pfeet.transform.position = new Vector3 (transform.position.x, pfeet.transform.position.y, transform.position.z);
 
-		// (3) setup all hte variables
+		// (3) setup all the variables
 		fallen = false;		
 		soundPlayed = false; 		
 		frozen = false; 
@@ -154,6 +154,7 @@ public class DrunkMovement : InGame {
 	 * 		(5c) get the new direction in which the player/head is leaning 
 	 * 		(5d) move the player in the new direction gotten in (5c)
 	 * 		(5e) play the footstep sound depending on the radius of the player 
+	 * 		(5f) rumble when hit
 	 * (6) update newPos (head's current position)
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 
@@ -210,6 +211,9 @@ public class DrunkMovement : InGame {
 
 			// (5e) play footstep sound
 			playFootstep(radius * 100);
+
+			// (5f) rumble when hit
+			UniMove.SetRumble (hitRumble);
 		}
 		// (6)
 		newPos = transform.position;
