@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour {
 
 	//Game State
 	public GameState.GameStatus status;
-	public GameState.PlayerStatus playerStatus;
+	public GameState.GameMode mode;
 
 	//Menu Assets
 	public GUISkin skin;
@@ -45,6 +45,10 @@ public class GameManager : MonoBehaviour {
 	public int loserIndex;
 	public int[] winners;
 	public int[] losers;
+
+	public bool SingleWin;
+	public bool SingleLose;
+	public bool MultiGO;
 
 	void Awake () {
 		//Setup instance
@@ -92,11 +96,6 @@ public class GameManager : MonoBehaviour {
 
 		CheckWinLose ();
 
-	if (playerStatus == GameState.PlayerStatus.Lost){
-			//LOST
-			Application.LoadLevel("Lost");
-	}
-
 		//Pause Menu in Game, Main menu in Splash
 		if (status == GameState.GameStatus.Game){
 		 	if (Input.GetKeyDown("p")){
@@ -110,6 +109,13 @@ public class GameManager : MonoBehaviour {
            	    	UnPause();
            		}
            	}
+
+
+
+
+
+
+
 		} else if (status == GameState.GameStatus.Splash) {
         	/*if (Input.GetKeyDown("m")){
         		if (!menu) {
@@ -167,12 +173,20 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private void CheckWinLose(){
-		if (winnerIndex + loserIndex == numOfPlayers) {
-			if (winnerIndex >= loserIndex){
-				Application.LoadLevel ("Won");
+		if (mode == GameState.GameMode.ScoreAttack || mode == GameState.GameMode.Stealth){
+			if (winner == 1){
+				SingleWin = true;
 			}
-			else {
-				Application.LoadLevel ("Lost");
+		}
+
+		if (mode == GameState.GameMode.Party || mode == GameState.GameMode.Race){
+			if (winnerIndex + loserIndex == numOfPlayers-1) {
+				if (winnerIndex >= loserIndex){
+					Application.LoadLevel ("Won");
+				}
+				else {
+					Application.LoadLevel ("Lost");
+				}
 			}
 		}
 	}

@@ -8,8 +8,7 @@ public class MainMenu : Menu {
 	public Texture2D backgroundTexture;
 	public Color backgroundColor;
 	public GUISkin skin;
-
-	private int idx = 0;
+	
 	private float timer = 0;
 
 	private bool wasDown = false;
@@ -40,16 +39,18 @@ public class MainMenu : Menu {
 	//Difficulty
 	public Difficulty Diff;
 
-	//Main
+	//Main (1)
+	private int idx = 0;
+
 	private Item[] items= new Item[] {
 		new Item("START", delegate () { ChooseCharacter (); }),
-		new Item("MULTIPLAYER", delegate () { Difficulty (-1); }),
+		new Item("MULTIPLAYER", delegate () { MultiplayerChar (); }),
 		new Item("SET UP", delegate () { Settings (); }),
 		new Item("CALIBRATE", delegate () { Calibrate (); }),
 		new Item("EXIT", delegate () { Application.Quit(); })
 	};
 
-	//Settings
+	//Settings (set)
 	private int sidx = 0;
 
 	private Item[] sitems = new Item[] {
@@ -58,7 +59,7 @@ public class MainMenu : Menu {
 		new Item("CONTROLLER", delegate () { Debug.Log ("CONTROLLER"); })
 	};
 
-	//Characters
+	//Characters (2)
 	private int cidx = 0;
 
 	private Item[] citems = new Item[] {
@@ -68,7 +69,7 @@ public class MainMenu : Menu {
 		new Item("WOLF", delegate () { Difficulty (4); }),
 	};
 
-	//Difficulty
+	//Difficulty (3)
 	private int didx = 0;
 
 	private Item[] ditems = new Item[] {
@@ -80,12 +81,31 @@ public class MainMenu : Menu {
 		new Item("LEAVE BAR", delegate () { ChooseLevel (); }),
 	};
 
-	//Level
+	//SingleLevel (4)
 	private int lidx = 0;
 
 	private Item[] litems = new Item[] {
-		new Item("LEVEL STUFF", delegate () { StartGame(); })
+		new Item("", delegate () { StartGame(); })
 	};
+
+	///////////////////
+	//MULTIPLAYER MENUS
+	///////////////////
+	
+	//MultiCharacter (5)
+	private int mcidx = 0;
+	
+	private Item[] mcitems = new Item[] {
+		new Item("", delegate () {Debug.Log ("MULTI CHARACTERS"); })
+	};
+	
+	//MultiMode (6)
+	private int mlidx = 0;
+	
+	private Item[] mlitems = new Item[] {
+		new Item("", delegate () {Debug.Log ("MULTI LEVELS"); })
+	};
+
 
 	///////////////////////////////////////////////////////////////////
 
@@ -135,6 +155,10 @@ public class MainMenu : Menu {
 		//	GUIMenu (didx, 200, 80, ditems, timer);}
 		else if (menuNum == 4) {
 			GUIMenu (lidx, 200, 80, litems, timer);}
+		else if (menuNum == 5){
+			GUIMenu (mcidx, 200, 80, mcitems, timer);}
+		else if (menuNum == 6){
+			GUIMenu (mlidx, 200, 80, mlitems, timer);}
 	}
 
 
@@ -196,6 +220,24 @@ public class MainMenu : Menu {
 
 		menuSet = false;
 		menuNum = 4;
+	}
+
+	/////////////
+	///MULTI CHAR
+	/////////////
+
+	public static void MultiplayerChar(){
+		menuSet = false;
+		menuNum = 5;
+	}
+
+	//////////////
+	///MULTI LEVEL
+	//////////////
+	
+	public static void MultiplayerLevel(){
+		menuSet = false;
+		menuNum = 6;
 	}
 
 
