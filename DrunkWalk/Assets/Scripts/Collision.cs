@@ -94,23 +94,31 @@ public class Collision : MonoBehaviour {
 		reachedBed = false; 
 
 		//GET STEALTH BAR
-		stealthBar = GameObject.Find ("UICam " + dm.id).GetComponentsInChildren<StealthBar>();
+		stealthBar = GameObject.Find ("UICam " + dm.id).GetComponentInChildren<StealthBar>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
+
+		Debug.Log ("" + parents);
 		//SCORE ATTACK
 		if (GameManager.ins.mode == GameState.GameMode.ScoreAttack){
 			if (score <= 0) {
 				//LOSE
 				Debug.Log ("SCORE = 0");
 			}
-		} 
+		}
 		//STEALTH
 		else if (GameManager.ins.mode == GameState.GameMode.Stealth){
 			if (parents >= 100){
 				//LOSE
 				Debug.Log ("PARENTS WOKE UP");
+			} else if (parents < 100 && parents > 0 && !collided){
+				currentScoreTime += Time.deltaTime;
+				if (currentScoreTime >= delayScore){
+					parents --;
+					currentScoreTime = 0.0f;
+				}
 			}
 		}
 	}
@@ -129,11 +137,11 @@ public class Collision : MonoBehaviour {
 		}
 
 		score --;
-		/*currentScoreTime += Time.deltaTime;
-		if (currentScoreTime >= delayScore){
-			score -= 10; 
-			currentScoreTime = 0.0f; 
-		}*/
+
+		if (GameManager.ins.mode == GameState.GameMode.Stealth){
+			//LERP NOISELEVEL TO THE NEW POSITION
+		}
+
 	}
 
 	void OnGUI () {
@@ -185,9 +193,11 @@ public class Collision : MonoBehaviour {
 
 				if (GameManager.ins.mode == GameState.GameMode.Stealth){
 				}
+
 				//If collision is against a wall:
 				if (col.tag == "Wall") {
 					score -= 100;
+					parents += 50;
 					//Debug.Log("Wall Collision - " + score);
 				}
 				else if (col.tag == "Box"){
