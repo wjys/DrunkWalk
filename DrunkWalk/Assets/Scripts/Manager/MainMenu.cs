@@ -19,6 +19,7 @@ public class MainMenu : Menu {
 	//Which menu?
 	public static bool menuSet;
 	public static int menuNum;
+	public int menuNumPublic;
 
 	//THE MENU ITEM VISUALIZATION
 	private GameObject mMenuIns;
@@ -257,6 +258,7 @@ public class MainMenu : Menu {
 	}
 
 	void Update () {
+		menuNumPublic = menuNum;
 		timer += Time.deltaTime;
 
 		//GET INPUT

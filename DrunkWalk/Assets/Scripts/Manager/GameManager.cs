@@ -72,10 +72,12 @@ public class GameManager : MonoBehaviour {
 		//Menu Instances
 		if (status == GameState.GameStatus.Splash){
 			mainMenuIns = Instantiate(mainMenu) as GameObject;
+			mainMenuIns.name = "MainMenu";
 			mainMenuIns.SetActive(false);
 		}
 
 		pauseMenuIns = Instantiate(pauseMenu) as GameObject;
+		pauseMenuIns.name = "PauseMenu";
 		pauseMenuIns.SetActive(false);
 	}
 
