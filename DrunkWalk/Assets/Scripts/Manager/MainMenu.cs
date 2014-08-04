@@ -40,6 +40,9 @@ public class MainMenu : Menu {
 	//Difficulty
 	public Difficulty Diff;
 
+	//Levels
+	public GameObject Lev;
+
 	//Main (1)
 	private int idx = 0;
 
@@ -97,14 +100,18 @@ public class MainMenu : Menu {
 	private int mcidx = 0;
 	
 	private Item[] mcitems = new Item[] {
-		new Item("", delegate () {Debug.Log ("MULTI CHARACTERS"); })
+		new Item("ZACH", delegate () {Debug.Log ("ZACH"); }),
+		new Item("ANNA", delegate () {Debug.Log ("ANNA"); }),
+		new Item("ANH CHI", delegate () {Debug.Log ("ANHCHI"); }),
+		new Item("WINNIE", delegate () {Debug.Log ("WINNIE"); })
 	};
 	
 	//MultiMode (6)
 	private int mlidx = 0;
 	
 	private Item[] mlitems = new Item[] {
-		new Item("", delegate () {Debug.Log ("MULTI LEVELS"); })
+		new Item("RACE", delegate () {Debug.Log ("RACE"); }),
+		new Item("PARTY", delegate () {Debug.Log ("PARTY"); })
 	};
 
 
@@ -131,14 +138,15 @@ public class MainMenu : Menu {
 
 		Menu1 ();
 
-		//Get character reel
+		//Get World Components
 		CR = GameObject.Find ("Characters").GetComponent<CharacterReel>();
 		Diff = GameObject.Find ("Difficulty").GetComponent<Difficulty>();
+		Lev = GameObject.Find ("Levels");
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////
 	/////////////////
-	//SHOW LEVEL GUIS
+	//SHOW MENU GUIS
 	/////////////////
 
 	void OnGUI () {
@@ -229,7 +237,7 @@ public class MainMenu : Menu {
 
 	public static void MultiplayerChar(){
 		menuSet = false;
-		menuNum = 5;
+		menuNum = 6;
 	}
 
 	//////////////
@@ -441,6 +449,14 @@ public class MainMenu : Menu {
 	}
 
 	public IEnumerator LerpCam() {
+		//MULTIPLAYER LEVELS
+		if (menuNum == 6){
+			newPos = new Vector3 (0, -25, 0);
+			newRot = new Quaternion (0, 1, 0, -2.980232e-08f);
+
+			Lev.transform.position = new Vector3(Lev.transform.position.x, -25, Lev.transform.position.z);
+		}
+
 		//MULTIPLAYER CHARACTERS
 		if (menuNum == 5){
 			newPos = new Vector3(0, -25, 0);

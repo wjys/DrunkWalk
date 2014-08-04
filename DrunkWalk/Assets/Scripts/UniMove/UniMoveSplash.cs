@@ -15,11 +15,18 @@ public class UniMoveSplash : MonoBehaviour
 	public GameObject multiMarker;
 	public int multiMarkerCt;
 	public bool allMultiMarkersMade;
-	
+
+	public Transform[] handle;
+	private Vector3[] newHandle;
+
+	public float smooth;
+
 	void Start() 
 	{
 		numPlayers = 0; 
 		UniMoveInit (); 
+		handle = new Transform[4];
+		newHandle = new Vector3[4];
 		//main = GameObject.Find ("MainMenu").GetComponent<MainMenu> ();
 	}
 	
@@ -33,7 +40,7 @@ public class UniMoveSplash : MonoBehaviour
 		UniMoveSetID ();
 		if (main.menuNumPublic == 1){
 			print ("in main menu");
-			if (numPlayers > 1) {
+            if (numPlayers > 1) {
 				// DISPLAY MULTIPLAYER MENU OPTION
 				print ("DISPLAY MULTIPLAYER OPTION");
 			}
@@ -50,6 +57,7 @@ public class UniMoveSplash : MonoBehaviour
 						mark.GetComponent<MultiMarker>().name = "MultiMarker " + move.id;
 						mark.GetComponent<MultiMarker>().UniMove = move;
 						mark.GetComponent<MultiMarker>().spriteID = move.id-1;
+
 						multiMarkerCt++;
 					}
 					if (multiMarkerCt == numPlayers){
@@ -64,7 +72,17 @@ public class UniMoveSplash : MonoBehaviour
 			this.enabled = false;
 		}
 	}
-	
+
+	void FixedUpdate (){
+		foreach (UniMoveController move in moves){
+			if (move.id !=0){
+				handle[move.id-1] = GameObject.Find ("HANDLE"+move.id).transform;
+				newHandle[move.id-1] = new Vector3 (handle[move.id-1].position.x, -2.2f, handle[move.id-1].position.z);
+				handle[move.id-1].position = Vector3.Lerp (handle[move.id-1].position, newHandle[move.id-1], smooth * Time.deltaTime);
+            }
+        }
+    }
+    
 	/*void HandleControllerDisconnected (object sender, EventArgs e)
 	{
 		// TODO: Remove this disconnected controller from the list and maybe give an update to the player
