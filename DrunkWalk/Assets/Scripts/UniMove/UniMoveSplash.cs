@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 // INITS THE MOVE CONTROLLERS AND MANAGES THEM
@@ -20,6 +21,7 @@ public class UniMoveSplash : MonoBehaviour
 	private Vector3[] newHandle;
 
 	public float smooth;
+	public bool movePaired;
 
 	void Start() 
 	{
@@ -38,6 +40,11 @@ public class UniMoveSplash : MonoBehaviour
 		}
 		setMoveColour ();
 		UniMoveSetID ();
+		if (multiMarkerCt < numPlayers){
+			allMultiMarkersMade = false;
+			movePaired = false;
+		}
+
 		if (main.menuNumPublic == 1){
 			print ("in main menu");
             if (numPlayers > 1) {
@@ -48,28 +55,7 @@ public class UniMoveSplash : MonoBehaviour
 		// MULTI CHARACTER SELECT
 		if (main.menuNumPublic == 5) {
 			print ("multi char select");
-			if (!allMultiMarkersMade){
-				foreach (UniMoveController move in moves){
-					if (move.id != 0){
-							print ("move id != 0 so make a marker");
-						if ((GameObject.Find ("MultiMarker " + move.id)) != null){
-							(GameObject.Find ("MultiMarker " + move.id)).SetActive(true);
-						}
-						else {
-							GameObject mark = Instantiate (multiMarker) as GameObject;
-							mark.GetComponent<MultiMarker>().id = move.id;
-							mark.GetComponent<MultiMarker>().name = "MultiMarker " + move.id;
-                            mark.GetComponent<MultiMarker>().UniMove = move;
-                            mark.GetComponent<MultiMarker>().spriteID = move.id-1;
-                            multiMarkerCt++;
-                        }
-                    }
-                    if (multiMarkerCt == numPlayers){
-                        allMultiMarkersMade = true;
-                        break;
-					}
-				}
-			}
+			TurnOnMarkerComponents();
 		}
 		if (UniMoveAllPlayersIn ()) {
 			setGame ();
@@ -149,21 +135,25 @@ public class UniMoveSplash : MonoBehaviour
 						move.SetLED (Color.cyan);
 						move.id = 1;
 						numPlayers = 1;
+						createMarker (move);
 						return;
 					case 1:
 						move.SetLED (Color.magenta);
 						move.id = 2;
 						numPlayers = 2;
+						createMarker (move);
 						return;
 					case 2:
 						move.SetLED (Color.yellow);
 						move.id = 3;
 						numPlayers = 3;
+						createMarker (move);
 						return;
 					case 3:
 						move.SetLED (Color.green);
 						move.id = 4; 
 						numPlayers = 4;
+						createMarker (move);
 						return;
 					default:
 						return;
@@ -173,6 +163,35 @@ public class UniMoveSplash : MonoBehaviour
 		}
 	}
 
+	private void createMarker(UniMoveController move){
+		if (move.id > multiMarkerCt) {
+			GameObject mark = Instantiate (multiMarker) as GameObject;
+			mark.GetComponent<MultiMarker>().id = move.id;
+			mark.GetComponent<MultiMarker>().name = "MultiMarker " + move.id;
+			mark.GetComponent<MultiMarker>().UniMove = move;
+			mark.GetComponent<MultiMarker>().spriteID = move.id-1;
+			multiMarkerCt++;
+			allMultiMarkersMade = true;
+		}
+	}
+
+	private void TurnOnMarkerComponents(){
+		for (int i = 1; i <= numPlayers; i++){
+			print ("getting move " + i);
+			GameObject marker = GameObject.Find ("MultiMarker " + i);
+			if (!marker.GetComponent<SpriteRenderer>().enabled){
+				marker.GetComponent<SpriteRenderer>().enabled = true;
+			}
+		}
+		for (int i = 1; i <= numPlayers; i++){
+			print ("getting move " + i);
+			GameObject marker = GameObject.Find ("MultiMarker " + i); 
+			if (!marker.GetComponent<MultiMarker>().enabled){
+				marker.GetComponent<MultiMarker>().enabled = true;
+			}
+		}
+	}
+	
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * NO ARG. RETURN BOOL: true if ready to move on to level select
 	 * if there are 4 players in or if all 2+ players are holding move button, move on to next game state/level select
