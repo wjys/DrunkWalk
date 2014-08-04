@@ -164,8 +164,8 @@ public class MainMenu : Menu {
 		//	GUIMenu (didx, 200, 80, ditems, timer);}
 		else if (menuNum == 4) {
 			GUIMenu (lidx, 200, 80, litems, timer);}
-		else if (menuNum == 5){
-			GUIMenu (mcidx, 200, 80, mcitems, timer);}
+		//else if (menuNum == 5){
+		//	GUIMenu (mcidx, 200, 80, mcitems, timer);}
 		else if (menuNum == 6){
 			GUIMenu (mlidx, 200, 80, mlitems, timer);}
 	}
@@ -237,7 +237,7 @@ public class MainMenu : Menu {
 
 	public static void MultiplayerChar(){
 		menuSet = false;
-		menuNum = 6;
+		menuNum = 5;
 	}
 
 	//////////////

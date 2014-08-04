@@ -78,11 +78,13 @@ public class UniMoveSplash : MonoBehaviour
 	}
 
 	void FixedUpdate (){
+
+		// LIL UNIMOVES POP UP
 		foreach (UniMoveController move in moves){
 			if (move.id !=0){
 				handle[move.id-1] = GameObject.Find ("HANDLE"+move.id).transform;
-				newHandle[move.id-1] = new Vector3 (handle[move.id-1].position.x, -2.2f, handle[move.id-1].position.z);
-				handle[move.id-1].position = Vector3.Lerp (handle[move.id-1].position, newHandle[move.id-1], smooth * Time.deltaTime);
+				//newHandle[move.id-1] = new Vector3 (handle[move.id-1].position.x, -2.2f, handle[move.id-1].position.z);
+				handle[move.id-1].position = Vector3.Lerp (handle[move.id-1].position, new Vector3 (handle[move.id-1].position.x, -2.2f, handle[move.id-1].position.z), smooth * Time.deltaTime);
             }
         }
     }
