@@ -23,19 +23,23 @@ public class MultiMarker : MonoBehaviour {
 	// -------- CHARACTER SELECTION STUFF
 	private int currentChar;
 	private int previousChar;
-	private enum characters { zach, ana, anhchi, winnie };
+	private enum characters { multi, zach, ana, anhchi, winnie };
 
 	// -------- MARKER POSITION STUFF
 	public float smooth;
-	public Vector3[] charPositions;
+	public Transform[] charPositions;
 	private float markerY;
 	public float[] markerYs;
 	
-	private Vector3 newPos;		// position to lerp to
+	public Vector3 newPos;		// position to lerp to
 
 	// -------- BOOLS
 	private bool switchingCharacters;
 	public bool charSelected;
+
+	// --------- SPRITES
+	public int spriteID;
+	public Sprite[] markerSprites;
 
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * START: 
@@ -50,6 +54,9 @@ public class MultiMarker : MonoBehaviour {
 		currentChar = (int) characters.zach;
 		previousChar = (int) characters.zach;
 		charSelected = false;
+
+		charPositions = GameObject.Find ("MultiCharacters").GetComponentsInChildren<Transform>();
+		transform.position = new Vector3 (charPositions[currentChar].position.x, markerY, charPositions[currentChar].position.z);
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -66,6 +73,7 @@ public class MultiMarker : MonoBehaviour {
 
 		// AT MULTI CHARACTER SELECT
 		if (main.menuNumPublic == 5) {
+			gameObject.GetComponent<SpriteRenderer>().sprite = markerSprites[spriteID];
 			if (!charSelected){
 				if (!switchingCharacters){
 					selectCharacter();
@@ -190,7 +198,7 @@ public class MultiMarker : MonoBehaviour {
 
 	private void moveMarker(int current){
 		if (previousChar != currentChar){
-			newPos = new Vector3 (charPositions[current].x, markerY, charPositions[current].z);
+			newPos = new Vector3 (charPositions[current].position.x, markerY, charPositions[current].position.z);
 			previousChar = currentChar;
 			switchingCharacters = true;
 		}

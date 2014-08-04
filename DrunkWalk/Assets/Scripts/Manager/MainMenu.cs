@@ -441,6 +441,12 @@ public class MainMenu : Menu {
 	}
 
 	public IEnumerator LerpCam() {
+		//MULTIPLAYER CHARACTERS
+		if (menuNum == 5){
+			newPos = new Vector3(0, -25, 0);
+			newRot = new Quaternion(0,0,0,0);
+		}
+
 		//LEVEL/MODE
 		if (menuNum == 4){
 			newPos = new Vector3(0, 25, 0);
@@ -470,6 +476,7 @@ public class MainMenu : Menu {
 			newRot = new Quaternion(0,0,0,0);
 		}
 
+		//SETTING
 		if (menuSet){
 			newPos = new Vector3 (25,0,0);
 			newRot = new Quaternion(0,0,0,0);

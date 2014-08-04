@@ -49,6 +49,7 @@ public class UniMoveSplash : MonoBehaviour
 						mark.GetComponent<MultiMarker>().id = move.id;
 						mark.GetComponent<MultiMarker>().name = "MultiMarker " + move.id;
 						mark.GetComponent<MultiMarker>().UniMove = move;
+						mark.GetComponent<MultiMarker>().spriteID = move.id-1;
 						multiMarkerCt++;
 					}
 					if (multiMarkerCt == numPlayers){
