@@ -36,7 +36,7 @@ public class MultiMarker : MonoBehaviour {
 	// -------- BOOLS
 	public bool switchingCharacters;
 	public bool charSelected;
-	public bool startMove;
+	public static bool startMove;
 
 	// --------- SPRITES
 	public int spriteID;
@@ -55,10 +55,13 @@ public class MultiMarker : MonoBehaviour {
 		currentChar = (int) characters.zach;
 		previousChar = (int) characters.zach;
 		charSelected = false;
+		startMove = false;
 
 		charPositions = GameObject.Find ("MultiCharacters").GetComponentsInChildren<Transform>();
 		transform.position = new Vector3 (charPositions[currentChar].position.x, markerY, charPositions[currentChar].position.z); 
 		newPos = new Vector3 (charPositions[currentChar].position.x, markerY, charPositions[currentChar].position.z); 
+		gameObject.GetComponent<SpriteRenderer>().sprite = markerSprites[spriteID];
+		SetMarkerColor ();
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -73,12 +76,11 @@ public class MultiMarker : MonoBehaviour {
 	
 	void Update () {
 		// AT MULTI CHARACTER SELECT
-		if (transform.position.y == markerY ){
-			startMove = true;
+		if (!startMove){
+			StartCoroutine (beginCheck());
 		}
 		if (startMove){
 			if (main.menuNumPublic == 5) {
-				gameObject.GetComponent<SpriteRenderer>().sprite = markerSprites[spriteID];
 				if (!charSelected){
 					if (!switchingCharacters){
 						selectCharacter();
@@ -87,7 +89,6 @@ public class MultiMarker : MonoBehaviour {
 						moveMarker (currentChar);
 					}
 					else {
-						print ("coroutine");
 						StartCoroutine(snapToPos());
 					}
 				}
@@ -97,7 +98,9 @@ public class MultiMarker : MonoBehaviour {
 			}
 			// AT MULTI MODE/LEVEL SELECT
 			else {
-				this.gameObject.SetActive (false);
+				this.gameObject.GetComponent<SpriteRenderer>().enabled = false;
+				startMove = false;
+				this.enabled = false;
 			}
 		}
 	}
@@ -108,7 +111,6 @@ public class MultiMarker : MonoBehaviour {
 
 	void FixedUpdate(){
 		if (startMove){
-			print ("lerping");
 			transform.position = Vector3.Lerp (transform.position, newPos, smooth*Time.deltaTime);
 		}
 	}
@@ -120,11 +122,9 @@ public class MultiMarker : MonoBehaviour {
 	private int getMoveTilt(){
 
 		if (UniMove.ax < MoveBoundRight) {
-			print ("tilting right");
 			return (int) Dir.right; 
 		}
 		if (UniMove.ax > MoveBoundLeft) {
-			print ("tilting left");
 			return (int) Dir.left; 
 		}
 		return (int) Dir.idle;
@@ -224,6 +224,11 @@ public class MultiMarker : MonoBehaviour {
 		}
 	}
 
+	IEnumerator beginCheck(){
+		yield return new WaitForSeconds(2.0f);
+		startMove = true;
+	}
+
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * GET MARKER HEIGHT: depending on the player id, set the height at which the marker should stay
 	 * -------------------------------------------------------------------------------------------------------------------------- */
@@ -246,4 +251,23 @@ public class MultiMarker : MonoBehaviour {
 			return;
 		}
 	}
+
+	private void SetMarkerColor(){
+		SpriteRenderer renderer = gameObject.GetComponent<SpriteRenderer>();
+		switch (UniMove.id){
+		case 1:
+			renderer.color = Color.cyan;
+			break;
+		case 2:
+			renderer.color = Color.magenta;
+			break;
+		case 3:
+			renderer.color = Color.yellow;
+			break;
+		case 4:
+			renderer.color = Color.green;
+			break;
+		}
+	}
+
 }
