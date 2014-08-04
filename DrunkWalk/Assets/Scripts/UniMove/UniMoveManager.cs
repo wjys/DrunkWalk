@@ -144,7 +144,7 @@ public class UniMoveManager : MonoBehaviour
 						return;
 					case 1:
 						if (move.id == 0){
-							move.SetLED (Color.red);
+							move.SetLED (Color.magenta);
 							move.id = 2;
 							createPlayer = true;
 						}
@@ -158,7 +158,7 @@ public class UniMoveManager : MonoBehaviour
 						return;
 					case 3:
 						if (move.id == 0){
-							move.SetLED (Color.magenta);
+							move.SetLED (Color.green);
 							move.id = 4; 
 							createPlayer = true;
 						}

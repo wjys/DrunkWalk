@@ -37,6 +37,7 @@ public class Collision : MonoBehaviour {
 	public DrunkMovement dm;
 	public DrunkForce df; 
 	public Rigidbody rhead; 
+	public UniMoveController move;
 
 	// Sounds
 	public AudioClip[] clips; 
@@ -75,6 +76,8 @@ public class Collision : MonoBehaviour {
 
 
 	void Start () {
+		move = dm.GetComponent<UniMoveController>();
+
 		//NOT COLLIDING
 		colliding = false;
 		collided = false; 
@@ -154,6 +157,8 @@ public class Collision : MonoBehaviour {
 	void OnTriggerEnter(Collider col) {
 
 		colliding = true;
+		dm.colliding = true;
+		move.SetLED(Color.red);
 
 		//IF THE THING IS SOLID
 		if (col.tag != "Trigger"){
@@ -239,6 +244,7 @@ public class Collision : MonoBehaviour {
 	}
 	//When not:
 	void OnTriggerExit(Collider col) {
+		dm.colliding = false;
 		colliding = false;
 		dm.hitRumble = 0.0f;
 		soundPlayed = false; 

@@ -103,6 +103,7 @@ public class DrunkMovement : InGame {
 	public bool switchViews;
 	public bool checkTaps;
 	public bool gettingUp;
+	public bool colliding;
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * START
 	 * (1) setup all the components of the head game object
@@ -130,6 +131,7 @@ public class DrunkMovement : InGame {
 		soundPlayed = false; 		
 		frozen = false; 
 		fallCt = 0;
+		colliding = false;
 		initHead = transform.position;
 		headY = transform.position.y; 
 
@@ -178,7 +180,9 @@ public class DrunkMovement : InGame {
 			Application.LoadLevel (Application.loadedLevel);
 
 		// (1) each move keeps its coloured light on 
-		setMoveColour (); 
+		if (!colliding){
+			setMoveColour (); 
+		}
 
 		// (3) keep head Y position constant
 		resetY ();
@@ -601,13 +605,13 @@ public class DrunkMovement : InGame {
 			UniMove.SetLED (Color.cyan);
 			break;
 		case 2:
-			UniMove.SetLED (Color.red);
+			UniMove.SetLED (Color.magenta);
 			break;
 		case 3:
 			UniMove.SetLED (Color.yellow);
 			break;
 		case 4:
-			UniMove.SetLED (Color.magenta);
+			UniMove.SetLED (Color.green);
 			break;
 		default:
 			break;

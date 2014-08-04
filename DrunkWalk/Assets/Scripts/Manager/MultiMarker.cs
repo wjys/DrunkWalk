@@ -21,8 +21,8 @@ public class MultiMarker : MonoBehaviour {
 	public float MoveBoundLeft;
 
 	// -------- CHARACTER SELECTION STUFF
-	private int currentChar;
-	private int previousChar;
+	public int currentChar;
+	public int previousChar;
 	private enum characters { multi, zach, ana, anhchi, winnie };
 
 	// -------- MARKER POSITION STUFF
@@ -34,8 +34,9 @@ public class MultiMarker : MonoBehaviour {
 	public Vector3 newPos;		// position to lerp to
 
 	// -------- BOOLS
-	private bool switchingCharacters;
+	public bool switchingCharacters;
 	public bool charSelected;
+	public bool startMove;
 
 	// --------- SPRITES
 	public int spriteID;
@@ -56,7 +57,8 @@ public class MultiMarker : MonoBehaviour {
 		charSelected = false;
 
 		charPositions = GameObject.Find ("MultiCharacters").GetComponentsInChildren<Transform>();
-		transform.position = new Vector3 (charPositions[currentChar].position.x, markerY, charPositions[currentChar].position.z);
+		transform.position = new Vector3 (charPositions[currentChar].position.x, markerY, charPositions[currentChar].position.z); 
+		newPos = new Vector3 (charPositions[currentChar].position.x, markerY, charPositions[currentChar].position.z); 
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -70,29 +72,33 @@ public class MultiMarker : MonoBehaviour {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	void Update () {
-
 		// AT MULTI CHARACTER SELECT
-		if (main.menuNumPublic == 5) {
-			gameObject.GetComponent<SpriteRenderer>().sprite = markerSprites[spriteID];
-			if (!charSelected){
-				if (!switchingCharacters){
-					selectCharacter();
-					direction = getMoveTilt ();
-					getCharacter (currentChar);
-					moveMarker (currentChar);
+		if (transform.position.y == markerY ){
+			startMove = true;
+		}
+		if (startMove){
+			if (main.menuNumPublic == 5) {
+				gameObject.GetComponent<SpriteRenderer>().sprite = markerSprites[spriteID];
+				if (!charSelected){
+					if (!switchingCharacters){
+						selectCharacter();
+						direction = getMoveTilt ();
+						getCharacter (currentChar);
+						moveMarker (currentChar);
+					}
+					else {
+						print ("coroutine");
+						StartCoroutine(snapToPos());
+					}
 				}
 				else {
-					StartCoroutine(snapToPos());
+					unselectCharacter ();
 				}
 			}
+			// AT MULTI MODE/LEVEL SELECT
 			else {
-				unselectCharacter ();
+				this.gameObject.SetActive (false);
 			}
-		}
-
-		// AT MULTI MODE/LEVEL SELECT
-		else {
-			this.gameObject.SetActive (false);
 		}
 	}
 
@@ -101,7 +107,10 @@ public class MultiMarker : MonoBehaviour {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 
 	void FixedUpdate(){
-		transform.position = Vector3.Lerp (transform.position, newPos, smooth*Time.deltaTime);
+		if (startMove){
+			print ("lerping");
+			transform.position = Vector3.Lerp (transform.position, newPos, smooth*Time.deltaTime);
+		}
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -209,8 +218,10 @@ public class MultiMarker : MonoBehaviour {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 
 	IEnumerator snapToPos(){
-		yield return new WaitForSeconds(0.5f);
-		switchingCharacters = false;
+		yield return new WaitForSeconds(1.0f);
+		if (transform.position.x >= newPos.x - 0.05f && transform.position.x <= newPos.x + 0.05f){
+			switchingCharacters = false;
+		}
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
