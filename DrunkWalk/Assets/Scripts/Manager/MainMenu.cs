@@ -119,7 +119,7 @@ public class MainMenu : Menu {
 		}
 
 		//Find Camera
-		camObj = GameObject.FindGameObjectWithTag("MainCamera");
+		camObj = GameObject.Find("SplashCam");
 
 		//New Camera Pos and Rot
 		newPos = new Vector3 (0,0,0);

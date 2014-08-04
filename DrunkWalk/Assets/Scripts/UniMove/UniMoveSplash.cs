@@ -44,13 +44,18 @@ public class UniMoveSplash : MonoBehaviour
 			if (!allMultiMarkersMade){
 				foreach (UniMoveController move in moves){
 					if (move.id != 0){
-							print ("move id != 0 so make a marker");
-						GameObject mark = Instantiate (multiMarker) as GameObject;
-						mark.GetComponent<MultiMarker>().id = move.id;
-						mark.GetComponent<MultiMarker>().name = "MultiMarker " + move.id;
-						mark.GetComponent<MultiMarker>().UniMove = move;
-						mark.GetComponent<MultiMarker>().spriteID = move.id-1;
-						multiMarkerCt++;
+						print ("move id != 0 so make a marker");
+						if ((GameObject.Find ("MultiMarker " + move.id)) != null){
+							(GameObject.Find ("MultiMarker " + move.id)).SetActive(true);
+						}
+						else {
+							GameObject mark = Instantiate (multiMarker) as GameObject;
+							mark.GetComponent<MultiMarker>().id = move.id;
+							mark.GetComponent<MultiMarker>().name = "MultiMarker " + move.id;
+							mark.GetComponent<MultiMarker>().UniMove = move;
+							mark.GetComponent<MultiMarker>().spriteID = move.id-1;
+							multiMarkerCt++;
+						}
 					}
 					if (multiMarkerCt == numPlayers){
 						allMultiMarkersMade = true;
