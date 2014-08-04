@@ -31,6 +31,9 @@ public class Collision : MonoBehaviour {
 	private float currentPTime = 0.0f;
 	public float delayP = 2.0f;
 
+	//Lerp the Stealth Bar Level
+	public float smooth;
+
 	///////////////////////////////////////////////////////////////////	
 
 	// Player Components
@@ -91,6 +94,8 @@ public class Collision : MonoBehaviour {
 
 		//INITIAL SCORE
 		score = 10000;
+
+		//INITIAL PARENTS LEVEL
 		parents = 0;
 
 		//REACHED BED
@@ -142,7 +147,11 @@ public class Collision : MonoBehaviour {
 		score --;
 
 		if (GameManager.ins.mode == GameState.GameMode.Stealth){
-			//LERP NOISELEVEL TO THE NEW POSITION
+			stealthBar.noiseLevel.transform.position = Vector3.Lerp (stealthBar.noiseLevel.transform.position, 
+			                                                         new Vector3 (stealthBar.noiseLevel.transform.position.x, (parents * 0.0625f)-3.05f, stealthBar.noiseLevel.transform.position.z), smooth * Time.deltaTime);
+			if (stealthBar.noiseLevel.transform.position.y >= 2.72f){
+				stealthBar.noiseLevel.transform.position = new Vector3(stealthBar.noiseLevel.transform.position.x, 2.72f, stealthBar.noiseLevel.transform.position.z);
+			}
 		}
 
 	}
@@ -197,6 +206,7 @@ public class Collision : MonoBehaviour {
                 }
 
 				if (GameManager.ins.mode == GameState.GameMode.Stealth){
+					stealthBar.noiseIcon.GetComponent<SpriteRenderer>().sprite = stealthBar.noiseIcons[1];
 				}
 
 				//If collision is against a wall:
@@ -250,8 +260,12 @@ public class Collision : MonoBehaviour {
 		soundPlayed = false; 
 		recoiled = false; 
 		df.stopWobble = false; 
-	}
 
+		if (GameManager.ins.mode == GameState.GameMode.Stealth){
+			stealthBar.noiseIcon.GetComponent<SpriteRenderer>().sprite = stealthBar.noiseIcons[0];
+        }
+    }
+    
 	//PLAY GRUNT
 	private void playGrunt(AudioClip clip){
 		audio.pitch = Random.value * 0.1f + 0.95f;

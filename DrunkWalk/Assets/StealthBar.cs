@@ -3,6 +3,7 @@ using System.Collections;
 
 public class StealthBar : MonoBehaviour {
 	public GameObject alarm, noiseIcon, noiseLevel;
+	public Sprite[] noiseIcons;
 
 	void Start () {
 		Transform[] trans = gameObject.GetComponentsInChildren<Transform>();
