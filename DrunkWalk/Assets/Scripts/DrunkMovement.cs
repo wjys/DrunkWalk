@@ -161,6 +161,10 @@ public class DrunkMovement : InGame {
 	void Update () {
 		//print ("camLerp " + camLerp);
 
+		if (GameManager.ins.status == GameState.GameStatus.Splash){
+			cam.enabled = false;
+		}
+
 
 		if (UniMove.GetButtonUp(PSMoveButton.Circle)){
 			transform.position = initHead;

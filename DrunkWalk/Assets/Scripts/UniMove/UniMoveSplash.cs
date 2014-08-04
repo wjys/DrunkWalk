@@ -20,12 +20,15 @@ public class UniMoveSplash : MonoBehaviour
 	{
 		numPlayers = 0; 
 		UniMoveInit (); 
-		main = GameObject.Find ("MainMenu").GetComponent<MainMenu> ();
+		//main = GameObject.Find ("MainMenu").GetComponent<MainMenu> ();
 	}
 	
 	
 	void Update() 
 	{
+		if (main == null){
+			main = GameObject.Find ("MainMenu").GetComponent<MainMenu> ();
+		}
 		setMoveColour ();
 		UniMoveSetID ();
 		if (main.menuNumPublic == 1){
