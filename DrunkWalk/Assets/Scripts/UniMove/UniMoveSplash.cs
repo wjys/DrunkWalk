@@ -151,7 +151,7 @@ public class UniMoveSplash : MonoBehaviour
 						numPlayers = 1;
 						return;
 					case 1:
-						move.SetLED (Color.red);
+						move.SetLED (Color.magenta);
 						move.id = 2;
 						numPlayers = 2;
 						return;
@@ -161,7 +161,7 @@ public class UniMoveSplash : MonoBehaviour
 						numPlayers = 3;
 						return;
 					case 3:
-						move.SetLED (Color.magenta);
+						move.SetLED (Color.green);
 						move.id = 4; 
 						numPlayers = 4;
 						return;
@@ -213,13 +213,13 @@ public class UniMoveSplash : MonoBehaviour
 				move.SetLED (Color.cyan);
 				break;
 			case 2:
-				move.SetLED (Color.red);
+				move.SetLED (Color.magenta);
 				break;
 			case 3:
 				move.SetLED (Color.yellow);
 				break;
 			case 4:
-				move.SetLED (Color.magenta);
+				move.SetLED (Color.green);
 				break;
 			default:
 				break;
