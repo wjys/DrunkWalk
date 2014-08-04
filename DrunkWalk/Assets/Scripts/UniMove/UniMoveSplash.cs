@@ -32,18 +32,23 @@ public class UniMoveSplash : MonoBehaviour
 		setMoveColour ();
 		UniMoveSetID ();
 		if (main.menuNumPublic == 1){
+			print ("in main menu");
 			if (numPlayers > 1) {
 				// DISPLAY MULTIPLAYER MENU OPTION
 				print ("DISPLAY MULTIPLAYER OPTION");
+			}
 		}
 		// MULTI CHARACTER SELECT
 		if (main.menuNumPublic == 5) {
+			print ("multi char select");
 			if (!allMultiMarkersMade){
 				foreach (UniMoveController move in moves){
 					if (move.id != 0){
+							print ("move id != 0 so make a marker");
 						GameObject mark = Instantiate (multiMarker) as GameObject;
 						mark.GetComponent<MultiMarker>().id = move.id;
 						mark.GetComponent<MultiMarker>().name = "MultiMarker " + move.id;
+						mark.GetComponent<MultiMarker>().UniMove = move;
 						multiMarkerCt++;
 					}
 					if (multiMarkerCt == numPlayers){
@@ -53,20 +58,10 @@ public class UniMoveSplash : MonoBehaviour
 				}
 			}
 		}
-		/* if (levelSelect){
-		 * 		if (UniMoveAllPlayersIn()){
-		 * 			// change the game state i.e. leaving splash screen
-		 * 			// Application.LoadLevel(SOMELEVEL);
-		 * 			setGame();
-		 * 			this.enabled = false;
-		 * 		}
-		 * }
-		 */
 		if (UniMoveAllPlayersIn ()) {
 			setGame ();
 			this.enabled = false;
 		}
-	}
 	}
 	
 	/*void HandleControllerDisconnected (object sender, EventArgs e)

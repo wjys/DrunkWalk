@@ -8,7 +8,6 @@ public class MultiMarker : MonoBehaviour {
 
 	// -------- OBJECTS AND COMPONENTS TO GET/RECEIVE
 	public UniMoveController UniMove;
-	public GameObject marker;
 	public MainMenu main;
 
 	// -------- PRIVATE VARIABLES
@@ -23,6 +22,7 @@ public class MultiMarker : MonoBehaviour {
 
 	// -------- CHARACTER SELECTION STUFF
 	private int currentChar;
+	private int previousChar;
 	private enum characters { zach, ana, anhchi, winnie };
 
 	// -------- MARKER POSITION STUFF
@@ -48,6 +48,7 @@ public class MultiMarker : MonoBehaviour {
 		main = GameObject.Find ("MainMenu").GetComponent<MainMenu>();
 		getMarkerHeight ();
 		currentChar = (int) characters.zach;
+		previousChar = (int) characters.zach;
 		charSelected = false;
 	}
 
@@ -102,9 +103,11 @@ public class MultiMarker : MonoBehaviour {
 	private int getMoveTilt(){
 
 		if (UniMove.ax < MoveBoundRight) {
+			print ("tilting right");
 			return (int) Dir.right; 
 		}
 		if (UniMove.ax > MoveBoundLeft) {
+			print ("tilting left");
 			return (int) Dir.left; 
 		}
 		return (int) Dir.idle;
@@ -186,8 +189,11 @@ public class MultiMarker : MonoBehaviour {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 
 	private void moveMarker(int current){
-		newPos = new Vector3 (charPositions[current].x, markerY, charPositions[current].z);
-		switchingCharacters = true;
+		if (previousChar != currentChar){
+			newPos = new Vector3 (charPositions[current].x, markerY, charPositions[current].z);
+			previousChar = currentChar;
+			switchingCharacters = true;
+		}
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
