@@ -23,12 +23,15 @@ public class UniMoveSplash : MonoBehaviour
 	public float smooth;
 	public bool movePaired;
 
+	public Color[] markerColors;
+
 	void Start() 
 	{
 		numPlayers = 0; 
 		UniMoveInit (); 
 		handle = new Transform[4];
 		newHandle = new Vector3[4];
+		markerColors = new Color[4];
 		//main = GameObject.Find ("MainMenu").GetComponent<MainMenu> ();
 	}
 	
@@ -136,25 +139,25 @@ public class UniMoveSplash : MonoBehaviour
 				if (move.GetButtonUp(PSMoveButton.Move)){
 					switch (numPlayers){
 					case 0:
-						move.SetLED (Color.cyan);
+						move.SetLED (markerColors[0]);
 						move.id = 1;
 						numPlayers = 1;
 						createMarker (move);
 						return;
 					case 1:
-						move.SetLED (Color.magenta);
+						move.SetLED (markerColors[1]);
 						move.id = 2;
 						numPlayers = 2;
 						createMarker (move);
 						return;
 					case 2:
-						move.SetLED (Color.yellow);
+						move.SetLED (markerColors[2]);
 						move.id = 3;
 						numPlayers = 3;
 						createMarker (move);
 						return;
 					case 3:
-						move.SetLED (Color.green);
+						move.SetLED (markerColors[4]);
 						move.id = 4; 
 						numPlayers = 4;
 						createMarker (move);

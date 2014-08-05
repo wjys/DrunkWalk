@@ -41,6 +41,7 @@ public class MultiMarker : MonoBehaviour {
 	// --------- SPRITES
 	public int spriteID;
 	public Sprite[] markerSprites;
+	public Color[] markerColors;
 
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * START: 
@@ -62,6 +63,8 @@ public class MultiMarker : MonoBehaviour {
 		newPos = new Vector3 (charPositions[currentChar].position.x, markerY, charPositions[currentChar].position.z); 
 		gameObject.GetComponent<SpriteRenderer>().sprite = markerSprites[spriteID];
 		SetMarkerColor ();
+
+		markerColors = new Color[4];
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -94,6 +97,8 @@ public class MultiMarker : MonoBehaviour {
 				}
 				else {
 					unselectCharacter ();
+					SpriteRenderer renderer = gameObject.GetComponent<SpriteRenderer>();
+					renderer.color = Color.white;
 				}
 			}
 			// AT MULTI MODE/LEVEL SELECT
@@ -256,16 +261,16 @@ public class MultiMarker : MonoBehaviour {
 		SpriteRenderer renderer = gameObject.GetComponent<SpriteRenderer>();
 		switch (UniMove.id){
 		case 1:
-			renderer.color = Color.cyan;
+			renderer.color = markerColors[0];
 			break;
 		case 2:
-			renderer.color = Color.magenta;
+			renderer.color = markerColors[1];
 			break;
 		case 3:
-			renderer.color = Color.yellow;
+			renderer.color = markerColors[2];
 			break;
 		case 4:
-			renderer.color = Color.green;
+			renderer.color = markerColors[3];
 			break;
 		}
 	}
