@@ -23,6 +23,7 @@ public class Ouch : MonoBehaviour {
 	void Update () {
 		reachingBed ();
 		reachingCouch ();
+		reachingTub ();
 		if (!dm.fallen){
 			if (collision.recoiled && !collision.reachedBed){
 				if (!displayed){
@@ -110,4 +111,36 @@ public class Ouch : MonoBehaviour {
 			}
 		}
 	}
+		private void reachingTub(){
+			if (GameManager.ins.mode == GameState.GameMode.Party){
+				if (collision.reachedCouch){
+					GameObject tub = GameObject.Find ("Tub");
+					BoxCollider tubTrigger = tub.GetComponent<BoxCollider>();
+					
+					if (tubTrigger.enabled){
+						//couchTrigger.enabled = false;
+						
+						GameObject.Find ("UICam " + dm.id).GetComponentInChildren<CameraBG>().enabled = true;
+						SpriteRenderer[] sprites = GameObject.Find ("UICam " + dm.id).GetComponentsInChildren<SpriteRenderer>();
+						foreach (SpriteRenderer sprite in sprites){
+							sprite.enabled = false;
+						}
+						GameObject.Find ("UICam " + dm.id).camera.clearFlags = CameraClearFlags.Skybox;
+						gameObject.guiText.enabled = false;
+						win.enabled = true;
+						dm.gameObject.SetActive(false);
+						
+						GameObject gm = GameObject.Find ("GameManager");
+						GameManager manager = gm.GetComponent<GameManager>();
+						manager.winners[manager.winnerIndex] = dm.id;
+						if (manager.winnerIndex == 0){
+							manager.winner = dm.id;
+						}
+						manager.winnerIndex++;
+						
+						this.enabled = false;
+					}
+				}
+			}
+		}
 }
