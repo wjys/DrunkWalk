@@ -61,11 +61,12 @@ public class UniMoveGame : MonoBehaviour {
 		else {
 			if (StopManager() == false){
 				createPlayers ();
+				UniMoveSetPlayers();
 			}
-			else {
+			if (StopManager ()){
 				setUI();
 				UniMoveActivateComponents();
-				this.enabled = false;
+				//this.enabled = false;
 			}
 		}
 	}
@@ -221,6 +222,37 @@ public class UniMoveGame : MonoBehaviour {
 				ui.gameObject.SetActive(true);
 			}
 		}
+	}
+
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * NO ARG. NO RETURN.
+	 * set the UniMove controller to the player (add component to the player)
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+	
+	private void UniMoveSetPlayers(){ 
+		//print ("entered UniMoveSetPlayers()");
+		int moveCount = 0;
+		for(int i = 0; i < moves.Length; i++){
+			UniMoveController mv; 
+			//print ("checking move id" + moves[i].id);
+			
+			if (moves[i].id > 0){
+				mv = players[moveCount].GetComponent<UniMoveController>();
+				if (mv == null){
+					UniMoveDisplay display = players[moveCount].GetComponent<UniMoveDisplay>();
+					if (moves[i].id == display.id){
+						//print ("adding move " + moves[i].id + " to player " + display.id);
+						mv = players[moveCount].AddComponent<UniMoveController>() as UniMoveController;
+						mv.Init (i); 
+						mv.id = display.id;
+						createPlayer = false;
+						moveCount++; 
+					}
+					//print ("finished adding move to player");
+				}
+			}
+		}
+		//print ("exiting UniMoveSetPlayers()");
 	}
 	
 	
