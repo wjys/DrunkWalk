@@ -35,31 +35,35 @@ public class UniMoveSplash : MonoBehaviour
 	
 	void Update() 
 	{
-		if (main == null){
-			main = GameObject.Find ("MainMenu").GetComponent<MainMenu> ();
-		}
-		setMoveColour ();
-		UniMoveSetID ();
-		if (multiMarkerCt < numPlayers){
-			allMultiMarkersMade = false;
-			movePaired = false;
-		}
-
-		if (main.menuNumPublic == 1){
-			print ("in main menu");
-            if (numPlayers > 1) {
-				// DISPLAY MULTIPLAYER MENU OPTION
-				print ("DISPLAY MULTIPLAYER OPTION");
+		if (GameManager.ins.status == GameState.GameStatus.Splash){
+			if (main == null){
+				main = GameObject.Find ("MainMenu").GetComponent<MainMenu> ();
 			}
-		}
-		// MULTI CHARACTER SELECT
-		if (main.menuNumPublic == 5) {
-			print ("multi char select");
-			TurnOnMarkerComponents();
-		}
-		if (UniMoveAllPlayersIn ()) {
-			setGame ();
-			this.enabled = false;
+			setMoveColour ();
+			UniMoveSetID ();
+			if (multiMarkerCt < numPlayers){
+				allMultiMarkersMade = false;
+				movePaired = false;
+			}
+
+			if (main.menuNumPublic == 1){
+				print ("in main menu");
+	            if (numPlayers > 1) {
+					// DISPLAY MULTIPLAYER MENU OPTION
+					print ("DISPLAY MULTIPLAYER OPTION");
+				}
+			}
+			// MULTI CHARACTER SELECT
+			if (main.menuNumPublic == 5) {
+				TurnOnMarkerComponents();
+			}
+			if (UniMoveAllPlayersIn ()) {
+				GameManager.ins.mode = GameState.GameMode.Race;
+				GameManager.ins.status = GameState.GameStatus.Game;
+				Application.LoadLevel ("WastedMulti");
+				setGame ();
+				this.enabled = false;
+			}
 		}
 	}
 
@@ -177,14 +181,12 @@ public class UniMoveSplash : MonoBehaviour
 
 	private void TurnOnMarkerComponents(){
 		for (int i = 1; i <= numPlayers; i++){
-			print ("getting move " + i);
 			GameObject marker = GameObject.Find ("MultiMarker " + i);
 			if (!marker.GetComponent<SpriteRenderer>().enabled){
 				marker.GetComponent<SpriteRenderer>().enabled = true;
 			}
 		}
 		for (int i = 1; i <= numPlayers; i++){
-			print ("getting move " + i);
 			GameObject marker = GameObject.Find ("MultiMarker " + i); 
 			if (!marker.GetComponent<MultiMarker>().enabled){
 				marker.GetComponent<MultiMarker>().enabled = true;
@@ -254,6 +256,7 @@ public class UniMoveSplash : MonoBehaviour
 	private void setGame(){
 		UniMoveGame gm = gameObject.GetComponent<UniMoveGame> ();
 		gm.numPlayers = numPlayers;
+		gm.players = new GameObject[numPlayers];
 
 		gm.enabled = true;
 	}

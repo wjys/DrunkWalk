@@ -34,13 +34,13 @@ public class UniMoveManager : MonoBehaviour
 		// CAMERA VIEWPORT
 		rects = new Rect[7];
 		
-		rects[0].Set (0.0f, 0.5f, 0.5f, 0.5f);	// multiplayer - p1
-		rects[1].Set (0.5f, 0.5f, 0.5f, 0.5f);	// multiplayer - p2
-		rects[2].Set (0.0f, 0.0f, 0.5f, 0.5f);	// multiplayer - p3
-		rects[3].Set (0.5f, 0.0f, 0.5f, 0.5f);	// multiplayer - p4
+		rects[0].Set (-0.002f, 0.504f, 0.5f, 0.5f);	// multiplayer - p1
+		rects[1].Set (0.502f, 0.504f, 0.5f, 0.5f);	// multiplayer - p2
+		rects[2].Set (-0.002f, -0.004f, 0.5f, 0.5f);	// multiplayer - p3
+		rects[3].Set (0.502f, -0.004f, 0.5f, 0.5f);	// multiplayer - p4
 		
-		rects[4].Set (0.0f, 0.0f, 0.5f, 1.0f);	// two players - p1
-		rects[5].Set (0.5f, 0.0f, 0.5f, 1.0f);	// two players - p2
+		rects[4].Set (-0.002f, 0.0f, 0.5f, 1.0f);	// two players - p1
+		rects[5].Set (0.502f, 0.0f, 0.5f, 1.0f);	// two players - p2
 		
 		rects[6].Set (0.0f, 0.0f, 1.0f, 1.0f);	// single player - full screen
 		

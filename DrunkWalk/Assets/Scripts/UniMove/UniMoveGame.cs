@@ -11,7 +11,6 @@ public class UniMoveGame : MonoBehaviour {
 	public int playerCount; 
 	public int numPlayers;
 	private bool createPlayer;
-	private bool setPlayer;
 	
 	private Rect[] rects; 
 	
@@ -20,26 +19,24 @@ public class UniMoveGame : MonoBehaviour {
 	
 	void Start() 
 	{
+		createPlayer = false;
 		playerCount = 0;
-		players = new GameObject[numPlayers - 1];
 		moves = gameObject.GetComponents<UniMoveController> ();
 		/*if (numPlayers <= 4) {
 			for (int num = 1; num <= 4; num++){
 				GameObject.Find ("UICam " + num).SetActive(false);
 			}
 		}*/
-		players = new GameObject[numPlayers];
-		
 		// CAMERA VIEWPORT
 		rects = new Rect[7];
 		
-		rects[0].Set (0.0f, 0.5f, 0.5f, 0.5f);	// multiplayer - p1
-		rects[1].Set (0.5f, 0.5f, 0.5f, 0.5f);	// multiplayer - p2
-		rects[2].Set (0.0f, 0.0f, 0.5f, 0.5f);	// multiplayer - p3
-		rects[3].Set (0.5f, 0.0f, 0.5f, 0.5f);	// multiplayer - p4
+		rects[0].Set (-0.002f, 0.504f, 0.5f, 0.5f);	// multiplayer - p1
+		rects[1].Set (0.502f, 0.504f, 0.5f, 0.5f);	// multiplayer - p2
+		rects[2].Set (-0.002f, -0.004f, 0.5f, 0.5f);	// multiplayer - p3
+		rects[3].Set (0.502f, -0.004f, 0.5f, 0.5f);	// multiplayer - p4
 		
-		rects[4].Set (0.0f, 0.0f, 0.5f, 1.0f);	// two players - p1
-		rects[5].Set (0.5f, 0.0f, 0.5f, 1.0f);	// two players - p2
+		rects[4].Set (-0.002f, 0.0f, 0.5f, 1.0f);	// two players - p1
+		rects[5].Set (0.502f, 0.0f, 0.5f, 1.0f);	// two players - p2
 		
 		rects[6].Set (0.0f, 0.0f, 1.0f, 1.0f);	// single player - full screen
 		
@@ -50,9 +47,7 @@ public class UniMoveGame : MonoBehaviour {
 										new Vector3 (2.383401f, 1.424898f, 3.366474f)};
 		
 		rotations = new Quaternion (0, 0, 0, 0);
-		
-		setPlayer = false; 
-		
+		createPlayer = true;
 //		if (GameManager.ins.status == GameState.GameStatus.Tutorial){
 //			positions = new Vector3[1] { new Vector3 (0, 1.424898f, -6) };
 //		}
@@ -61,13 +56,17 @@ public class UniMoveGame : MonoBehaviour {
 	
 	void Update() 
 	{
-		if (StopManager () == false) {
-			createPlayers();
-		} 
+		if (!createPlayer){
+		}
 		else {
-			setUI ();
-			UniMoveActivateComponents();
-			this.enabled = false;
+			if (StopManager() == false){
+				createPlayers ();
+			}
+			else {
+				setUI();
+				UniMoveActivateComponents();
+				this.enabled = false;
+			}
 		}
 	}
 
@@ -79,60 +78,63 @@ public class UniMoveGame : MonoBehaviour {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	private void createPlayers(){
-		players [playerCount] = Instantiate (player, positions [playerCount], rotations) as GameObject;
-		
-		// SET UP THE ID OF THE HEAD AND COMPONENTS
-		players [playerCount].name = "Head " + (playerCount + 1);
-		players [playerCount].GetComponent<DrunkMovement> ().id = playerCount + 1;
-		players [playerCount].GetComponent<UniMoveDisplay> ().id = playerCount + 1; 
-		
-		// SET UP THE CAMERAS (ON HEAD'S CHILDREN)
-		Camera[] cams;
-		
-		switch (playerCount) {
+		print ("create players!");
+		while (playerCount < numPlayers){
+			players [playerCount] = Instantiate (player, positions [playerCount], rotations) as GameObject;
 			
-		// 1 player
-		case 0:
-			cams = players [playerCount].GetComponentsInChildren<Camera> ();
-			foreach (Camera cam in cams){
-				cam.rect = (rects[6]);
-			}
-			playerCount++;
-			return;
+			// SET UP THE ID OF THE HEAD AND COMPONENTS
+			players [playerCount].name = "Head " + (playerCount + 1);
+			players [playerCount].GetComponent<DrunkMovement> ().id = playerCount + 1;
+			players [playerCount].GetComponent<UniMoveDisplay> ().id = playerCount + 1; 
+
+			// SET UP THE CAMERAS (ON HEAD'S CHILDREN)
+			Camera[] cams;
 			
-			// 2 players
-		case 1:
-			for (int i = 0; i <= playerCount; i++){
-				cams = players[i].GetComponentsInChildren<Camera>();
+			switch (playerCount) {
+				
+			// 1 player
+			case 0:
+				cams = players [playerCount].GetComponentsInChildren<Camera> ();
 				foreach (Camera cam in cams){
-					cam.rect = (rects [i+4]);
-					//print (i + " " + cam.rect);
+					cam.rect = (rects[6]);
 				}
-			}
-			playerCount++;
-			return;
-			
-			// 3 players
-		case 2:
-			for (int i = 0; i <= playerCount; i++){
-				cams = players[i].GetComponentsInChildren<Camera>();
+				playerCount++;
+				break;
+				
+				// 2 players
+			case 1:
+				for (int i = 0; i <= playerCount; i++){
+					cams = players[i].GetComponentsInChildren<Camera>();
+					foreach (Camera cam in cams){
+						cam.rect = (rects [i+4]);
+						//print (i + " " + cam.rect);
+					}
+				}
+				playerCount++;
+				break;
+				
+				// 3 players
+			case 2:
+				for (int i = 0; i <= playerCount; i++){
+					cams = players[i].GetComponentsInChildren<Camera>();
+					foreach (Camera cam in cams){
+						cam.rect = (rects [i]);
+					}
+				}
+				playerCount++;
+				break;
+				
+				// 4 players
+			case 3:
+				cams = players [playerCount].GetComponentsInChildren<Camera> ();
 				foreach (Camera cam in cams){
-					cam.rect = (rects [i]);
+					cam.rect = (rects[3]);
 				}
+				playerCount++;
+				break;
+			default:
+				break;
 			}
-			playerCount++;
-			return;
-			
-			// 4 players
-		case 3:
-			cams = players [playerCount].GetComponentsInChildren<Camera> ();
-			foreach (Camera cam in cams){
-				cam.rect = (rects[3]);
-			}
-			playerCount++;
-			return;
-		default:
-			return;
 		}
 	}
 
@@ -142,6 +144,7 @@ public class UniMoveGame : MonoBehaviour {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	private void setUI(){
+		print ("set ui!");
 		Camera ui;
 		
 		// SINGLE PLAYER MODE
@@ -227,6 +230,7 @@ public class UniMoveGame : MonoBehaviour {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	private void UniMoveActivateComponents(){
+		print ("activate components!");
 		for (int i = 0; i < numPlayers; i++) {
 			UniMoveController mv = players [i].GetComponent<UniMoveController> ();
 			
@@ -246,6 +250,7 @@ public class UniMoveGame : MonoBehaviour {
 	
 	private bool StopManager(){
 		if (playerCount >= numPlayers){
+			print ("all heads created");
 			return true;
 		}
 		return false; 

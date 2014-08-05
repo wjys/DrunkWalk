@@ -21,28 +21,8 @@ public class Ouch : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (collision.reachedBed) {
-			GameObject.Find ("UICam " + dm.id).GetComponentInChildren<CameraBG>().enabled = true;
-			SpriteRenderer[] sprites = GameObject.Find ("UICam " + dm.id).GetComponentsInChildren<SpriteRenderer>();
-			foreach (SpriteRenderer sprite in sprites){
-				sprite.enabled = false;
-			}
-			GameObject.Find ("UICam " + dm.id).camera.clearFlags = CameraClearFlags.Skybox;
-			gameObject.guiText.enabled = false;
-			win.enabled = true;
-			dm.gameObject.SetActive(false);
-
-			GameObject gm = GameObject.Find ("GameManager");
-			GameManager manager = gm.GetComponent<GameManager>();
-			manager.winners[manager.winnerIndex] = dm.id;
-			if (manager.winnerIndex == 0){
-				manager.winner = dm.id;
-			}
-			manager.winnerIndex++;
-
-			this.enabled = false;
-		}
-
+		reachingBed ();
+		reachingCouch ();
 		if (!dm.fallen){
 			if (collision.recoiled && !collision.reachedBed){
 				if (!displayed){
@@ -59,6 +39,75 @@ public class Ouch : MonoBehaviour {
 		else {
 			gameObject.guiText.enabled = false;
 			displayed = false;
+		}
+	}
+
+	private void reachingBed(){
+		if (collision.reachedBed) {
+			GameObject bed = GameObject.Find ("BedObj");
+			BoxCollider bedTrigger = bed.GetComponent<BoxCollider>();
+			
+			if (GameManager.ins.mode == GameState.GameMode.Party){
+				if (bedTrigger.enabled){
+					bedTrigger.enabled = false;
+					
+					GameObject.Find ("CouchObj").GetComponent<BoxCollider>().enabled = true;
+				}
+				else return;
+			}
+			
+			GameObject.Find ("UICam " + dm.id).GetComponentInChildren<CameraBG>().enabled = true;
+			SpriteRenderer[] sprites = GameObject.Find ("UICam " + dm.id).GetComponentsInChildren<SpriteRenderer>();
+			foreach (SpriteRenderer sprite in sprites){
+				sprite.enabled = false;
+			}
+			GameObject.Find ("UICam " + dm.id).camera.clearFlags = CameraClearFlags.Skybox;
+			gameObject.guiText.enabled = false;
+			win.enabled = true;
+			dm.gameObject.SetActive(false);
+			
+			GameObject gm = GameObject.Find ("GameManager");
+			GameManager manager = gm.GetComponent<GameManager>();
+			manager.winners[manager.winnerIndex] = dm.id;
+			if (manager.winnerIndex == 0){
+				manager.winner = dm.id;
+			}
+			manager.winnerIndex++;
+			
+			this.enabled = false;
+		}
+	}
+
+	private void reachingCouch(){
+		if (GameManager.ins.mode == GameState.GameMode.Party){
+			if (collision.reachedCouch){
+				GameObject couch = GameObject.Find ("CouchObj");
+				BoxCollider couchTrigger = couch.GetComponent<BoxCollider>();
+
+				if (couchTrigger.enabled){
+					//couchTrigger.enabled = false;
+
+					GameObject.Find ("UICam " + dm.id).GetComponentInChildren<CameraBG>().enabled = true;
+					SpriteRenderer[] sprites = GameObject.Find ("UICam " + dm.id).GetComponentsInChildren<SpriteRenderer>();
+					foreach (SpriteRenderer sprite in sprites){
+						sprite.enabled = false;
+					}
+					GameObject.Find ("UICam " + dm.id).camera.clearFlags = CameraClearFlags.Skybox;
+					gameObject.guiText.enabled = false;
+					win.enabled = true;
+					dm.gameObject.SetActive(false);
+					
+					GameObject gm = GameObject.Find ("GameManager");
+					GameManager manager = gm.GetComponent<GameManager>();
+					manager.winners[manager.winnerIndex] = dm.id;
+					if (manager.winnerIndex == 0){
+						manager.winner = dm.id;
+					}
+					manager.winnerIndex++;
+					
+					this.enabled = false;
+				}
+			}
 		}
 	}
 }
