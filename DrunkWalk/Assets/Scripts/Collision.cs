@@ -211,6 +211,10 @@ public class Collision : MonoBehaviour {
 					reachedCouch = true;
 				}
 
+				if (col.tag == "Tub"){
+					reachedCouch = true;
+				}
+
 				if (GameManager.ins.mode == GameState.GameMode.Stealth){
 					stealthBar.noiseIcon.GetComponent<SpriteRenderer>().sprite = stealthBar.noiseIcons[1];
 				}
