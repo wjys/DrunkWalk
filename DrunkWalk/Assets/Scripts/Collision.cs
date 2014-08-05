@@ -49,6 +49,8 @@ public class Collision : MonoBehaviour {
 	public AudioSource source;
 	private bool soundPlayed; 
 	public bool reachedBed; 
+	public bool reachedCouch;
+	public bool reachedTub;
 
 	// Sound Delay
 	private float currentSoundTime = 0.0f; 
@@ -204,6 +206,10 @@ public class Collision : MonoBehaviour {
 					soundPlayed = true; 
 					audio.PlayOneShot (clips[Random.Range(5, 8)]); 
                 }
+
+				if (col.tag == "Couch"){
+					reachedCouch = true;
+				}
 
 				if (GameManager.ins.mode == GameState.GameMode.Stealth){
 					stealthBar.noiseIcon.GetComponent<SpriteRenderer>().sprite = stealthBar.noiseIcons[1];
