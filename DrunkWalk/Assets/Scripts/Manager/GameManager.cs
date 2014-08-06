@@ -102,11 +102,11 @@ public class GameManager : MonoBehaviour {
 
 
 	void Update () {
-		print ("Scene " + Application.loadedLevelName);
-		CheckWinLose ();
+		print ("Scene: " + Application.loadedLevelName);
 
 		//Pause Menu in Game, Main menu in Splash
 		if (status == GameState.GameStatus.Game){
+			CheckWinLose ();
 		 	if (Input.GetKeyDown("p")){
           	 	if (!paused) {
 					if (pauseMenuIns == null){
@@ -182,8 +182,9 @@ public class GameManager : MonoBehaviour {
 			}
 		}
 
-		//if (mode == GameState.GameMode.Party || mode == GameState.GameMode.Race){
+		if (mode == GameState.GameMode.Party || mode == GameState.GameMode.Race){
 			if (winnerIndex + loserIndex == numOfPlayers ){//&& (winnerIndex > 0 || loserIndex > 0)) {
+				status = GameState.GameStatus.End;
 				if (winnerIndex >= loserIndex){
 					Application.LoadLevel ("Won");
 					GameObject.Find ("/Winner").GetComponent<GUIText>().text = "Player " + winner + " is the best";
@@ -192,6 +193,6 @@ public class GameManager : MonoBehaviour {
 					Application.LoadLevel ("Lost");
 				}
 			}
-		//}
+		}
 	}
 }

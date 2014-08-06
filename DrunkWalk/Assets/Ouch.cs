@@ -45,7 +45,7 @@ public class Ouch : MonoBehaviour {
 
 	private void reachingBed(){
 		if (collision.reachedBed) {
-			GameObject bed = GameObject.Find ("BedObj");
+			GameObject bed = GameObject.Find ("BedObjmulti");
 			BoxCollider bedTrigger = bed.GetComponent<BoxCollider>();
 			
 			if (GameManager.ins.mode == GameState.GameMode.Party){
@@ -67,7 +67,7 @@ public class Ouch : MonoBehaviour {
 			win.enabled = true;
 			dm.gameObject.SetActive(false);
 			
-			GameObject gm = GameObject.Find ("GameManager");
+			GameObject gm = GameObject.Find ("_GameManager");
 			GameManager manager = gm.GetComponent<GameManager>();
 			manager.winners[manager.winnerIndex] = dm.id;
 			if (manager.winnerIndex == 0){
