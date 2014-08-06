@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour {
 
 	//Level
 	public static int levelInt;
+	public int track;
 
 	/*
 	 * STUFF TO DO ABOUT LEVELS:
@@ -91,11 +92,6 @@ public class GameManager : MonoBehaviour {
 
 
 	void Start () {
-		numOfPlayers = GetComponent<UniMoveManager>().numPlayers;
-		winnerIndex = 0;
-		loserIndex = 0;
-		winners = new int[numOfPlayers];
-		losers = new int[numOfPlayers];
 
 		DiffObj = GameObject.Find ("Difficulty");
 	}
@@ -106,6 +102,7 @@ public class GameManager : MonoBehaviour {
 
 		//Pause Menu in Game, Main menu in Splash
 		if (status == GameState.GameStatus.Game){
+			track = 1;
 			CheckWinLose ();
 		 	if (Input.GetKeyDown("p")){
           	 	if (!paused) {
@@ -120,6 +117,17 @@ public class GameManager : MonoBehaviour {
            	}
 
 		} else if (status == GameState.GameStatus.Splash) {
+			if (track != 0){
+				// LOOPED
+			}
+			mainMenuIns.SetActive(true);
+			GameObject gm = GameObject.Find ("GameManager");
+			if (gm != null){
+				//Destroy (GameObject.Find ("_GameManager"));
+				//Destroy (GameObject.Find ("_GameState"));
+				Destroy (gm);
+			}
+			UpdateNumPlayers();
         	/*if (Input.GetKeyDown("m")){
         		if (!menu) {
         			Menu();
@@ -185,6 +193,7 @@ public class GameManager : MonoBehaviour {
 		if (mode == GameState.GameMode.Party || mode == GameState.GameMode.Race){
 			if (winnerIndex + loserIndex == numOfPlayers ){//&& (winnerIndex > 0 || loserIndex > 0)) {
 				status = GameState.GameStatus.End;
+				gameObject.GetComponent<EndScreen>().enabled = true;
 				if (winnerIndex >= loserIndex){
 					Application.LoadLevel ("Won");
 					GameObject.Find ("/Winner").GetComponent<GUIText>().text = "Player " + winner + " is the best";
@@ -194,5 +203,13 @@ public class GameManager : MonoBehaviour {
 				}
 			}
 		}
+	}
+
+	private void UpdateNumPlayers(){
+		numOfPlayers = GetComponent<UniMoveSplash>().numPlayers;
+		winnerIndex = 0;
+		loserIndex = 0;
+		winners = new int[numOfPlayers];
+		losers = new int[numOfPlayers];
 	}
 }

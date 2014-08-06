@@ -8,6 +8,7 @@ public class UniMoveGame : MonoBehaviour {
 	public GameObject[] players;
 	public GameObject player; 
 	public UniMoveController[] moves;
+	public int[] moveInitIDs;
 	public int playerCount; 
 	public int numPlayers;
 	private bool createPlayer;
@@ -21,7 +22,7 @@ public class UniMoveGame : MonoBehaviour {
 	{
 		createPlayer = false;
 		playerCount = 0;
-		moves = gameObject.GetComponents<UniMoveController> ();
+		//moves = gameObject.GetComponents<UniMoveController> ();
 		/*if (numPlayers <= 4) {
 			for (int num = 1; num <= 4; num++){
 				GameObject.Find ("UICam " + num).SetActive(false);
@@ -48,6 +49,7 @@ public class UniMoveGame : MonoBehaviour {
 		
 		rotations = new Quaternion (0, 0, 0, 0);
 		createPlayer = true;
+		gameObject.name = "GameManager";
 //		if (GameManager.ins.status == GameState.GameStatus.Tutorial){
 //			positions = new Vector3[1] { new Vector3 (0, 1.424898f, -6) };
 //		}
@@ -66,7 +68,7 @@ public class UniMoveGame : MonoBehaviour {
 			if (StopManager ()){
 				setUI();
 				UniMoveActivateComponents();
-				//this.enabled = false;
+				this.enabled = false;
 			}
 		}
 	}
@@ -87,6 +89,8 @@ public class UniMoveGame : MonoBehaviour {
 			players [playerCount].name = "Head " + (playerCount + 1);
 			players [playerCount].GetComponent<DrunkMovement> ().id = playerCount + 1;
 			players [playerCount].GetComponent<UniMoveDisplay> ().id = playerCount + 1; 
+
+
 
 			// SET UP THE CAMERAS (ON HEAD'S CHILDREN)
 			Camera[] cams;
@@ -231,11 +235,12 @@ public class UniMoveGame : MonoBehaviour {
 	
 	private void UniMoveSetPlayers(){ 
 		//print ("entered UniMoveSetPlayers()");
-		int moveCount = 0;
+		/*int moveCount = 0;
 		for(int i = 0; i < moves.Length; i++){
 			UniMoveController mv; 
 			//print ("checking move id" + moves[i].id);
-			
+
+
 			if (moves[i].id > 0){
 				mv = players[moveCount].GetComponent<UniMoveController>();
 				if (mv == null){
@@ -245,11 +250,20 @@ public class UniMoveGame : MonoBehaviour {
 						mv = players[moveCount].AddComponent<UniMoveController>() as UniMoveController;
 						mv.Init (i); 
 						mv.id = display.id;
-						createPlayer = false;
+						//createPlayer = false;
 						moveCount++; 
 					}
 					//print ("finished adding move to player");
 				}
+			}
+		}*/
+		for (int i = 0; i < numPlayers; i++){
+			UniMoveController mv = players[i].GetComponent<UniMoveController>();
+			if (mv == null){
+				UniMoveDisplay disp = players[i].GetComponent<UniMoveDisplay>();
+				mv = players[i].AddComponent<UniMoveController>() as UniMoveController;
+				mv.Init (moveInitIDs[i]);
+				mv.id = disp.id;
 			}
 		}
 		//print ("exiting UniMoveSetPlayers()");

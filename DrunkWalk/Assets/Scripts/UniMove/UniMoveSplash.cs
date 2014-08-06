@@ -10,6 +10,7 @@ public class UniMoveSplash : MonoBehaviour
 {
 	// We save a list of Move controllers.
 	public List<UniMoveController> moves = new List<UniMoveController>();
+	public UniMoveController[] UniMoves;
 	public int numPlayers;
 	public MainMenu main;
 
@@ -29,6 +30,7 @@ public class UniMoveSplash : MonoBehaviour
 	{
 		numPlayers = 0; 
 		UniMoveInit (); 
+		UniMoves = new UniMoveController[moves.Count];
 		handle = new Transform[4];
 		newHandle = new Vector3[4];
 		markerColors = new Color[4];
@@ -38,6 +40,11 @@ public class UniMoveSplash : MonoBehaviour
 	
 	void Update() 
 	{
+		if (gameObject.GetComponent<GameManager>().track != 0 && gameObject.GetComponent<GameManager>().track != 1){
+			foreach (UniMoveController move in moves){
+//				createMarker ();
+			}
+		}
 		if (GameManager.ins.status == GameState.GameStatus.Splash){
 			if (main == null){
 				main = GameObject.Find ("MainMenu").GetComponent<MainMenu> ();
@@ -63,7 +70,7 @@ public class UniMoveSplash : MonoBehaviour
 			if (UniMoveAllPlayersIn ()) {
 				GameManager.ins.mode = GameState.GameMode.Race;
 				GameManager.ins.status = GameState.GameStatus.Game;
-				Application.LoadLevel ("WastedMulti");
+				Application.LoadLevel ("WastedEasy");
 				setGame ();
 				this.enabled = false;
 			}
@@ -143,24 +150,28 @@ public class UniMoveSplash : MonoBehaviour
 						move.id = 1;
 						numPlayers = 1;
 						createMarker (move);
+						UniMoves[0] = move;
 						return;
 					case 1:
 						move.SetLED (markerColors[1]);
 						move.id = 2;
 						numPlayers = 2;
 						createMarker (move);
+						UniMoves[1] = move;
 						return;
 					case 2:
 						move.SetLED (markerColors[2]);
 						move.id = 3;
 						numPlayers = 3;
 						createMarker (move);
+						UniMoves[2] = move;
 						return;
 					case 3:
-						move.SetLED (markerColors[4]);
+						move.SetLED (markerColors[3]);
 						move.id = 4; 
 						numPlayers = 4;
 						createMarker (move);
+						UniMoves[3] = move;
 						return;
 					default:
 						return;
@@ -205,10 +216,6 @@ public class UniMoveSplash : MonoBehaviour
 	private bool UniMoveAllPlayersIn(){
 		bool holdMove = true;
 		if (numPlayers > 1){
-			if (numPlayers == 4) {
-				return true;
-			}
-
 			foreach (UniMoveController move in moves) {
 				if (move.id != 0){
 					if (!move.GetButton (PSMoveButton.Move)){
@@ -260,6 +267,17 @@ public class UniMoveSplash : MonoBehaviour
 		UniMoveGame gm = gameObject.GetComponent<UniMoveGame> ();
 		gm.numPlayers = numPlayers;
 		gm.players = new GameObject[numPlayers];
+		gm.moves = new UniMoveController[numPlayers];
+		gm.moveInitIDs = new int[numPlayers];
+		for (int i = 0; i < numPlayers; i++){
+			for (int j = 0; j < moves.Count; j++){
+				if (moves[j].id == i+1){
+					gm.moves[i] = moves[j];
+					gm.moveInitIDs[i] = j;
+					break;
+				}
+			}
+		}
 
 		gm.enabled = true;
 	}

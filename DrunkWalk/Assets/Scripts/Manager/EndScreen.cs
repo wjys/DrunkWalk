@@ -14,6 +14,9 @@ public class EndScreen : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if (GameManager.ins.status != GameState.GameStatus.End){
+			this.enabled = false;
+		}
 		if (!soundPlayed) {
 			if (Application.loadedLevelName.Equals("Lost")) {
 				audio.clip = clips[Random.Range (0,4)];
@@ -26,8 +29,9 @@ public class EndScreen : MonoBehaviour {
 			soundPlayed = true; 
 		}
 		
-		if (Input.anyKey)
+		if (Input.anyKey){
 			GameManager.ins.status = GameState.GameStatus.Splash;
 			Application.LoadLevel ("Splash"); 
+		}
 	}
 }
