@@ -58,15 +58,15 @@ public class DrunkForce : InGame {
 		rhead = gameObject.GetComponent<Rigidbody> ();
 		dm = gameObject.GetComponent<DrunkMovement> ();
 		stopWobble = false; 
-
-		if (GameManager.ins.mode == GameState.GameMode.ScoreAttack || GameManager.ins.mode == GameState.GameMode.Stealth || GameManager.ins.status == GameState.GameStatus.Tutorial){
-			smooth = 0.1f;
-		}	else if (GameManager.ins.mode == GameState.GameMode.Race || GameManager.ins.mode == GameState.GameMode.Party){
-			smooth = 0.01f;
-		}
 	}
 	
 	void Update () {
+		if (GameManager.ins.mode == GameState.GameMode.ScoreAttack || GameManager.ins.mode == GameState.GameMode.Stealth || GameManager.ins.status == GameState.GameStatus.Tutorial){
+			smooth = 0.1f;
+		}	else if (GameManager.ins.mode == GameState.GameMode.Race || GameManager.ins.mode == GameState.GameMode.Party){
+			smooth = 0.09f;
+		}
+
 		feet = dm.pfeet;
 		// check camera rotation lose condition
 		/*if ((transform.localEulerAngles.x > boundRotForward && transform.localEulerAngles.x < boundRotBack)	||	
