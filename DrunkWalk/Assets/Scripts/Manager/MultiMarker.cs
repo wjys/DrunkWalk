@@ -9,6 +9,7 @@ public class MultiMarker : MonoBehaviour {
 	// -------- OBJECTS AND COMPONENTS TO GET/RECEIVE
 	public UniMoveController UniMove;
 	public MainMenu main;
+	public GameManager manager;
 
 	// -------- PRIVATE VARIABLES
 
@@ -51,20 +52,27 @@ public class MultiMarker : MonoBehaviour {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 
 	void Start () {
+		manager = GameObject.Find ("GameManager").GetComponent<GameManager>();
 		main = GameObject.Find ("MainMenu").GetComponent<MainMenu>();
 		getMarkerHeight ();
-		currentChar = (int) characters.zach;
-		previousChar = (int) characters.zach;
-		charSelected = false;
-		startMove = false;
 
+		if (manager.track == 0){
+			currentChar = (int) characters.zach;
+			previousChar = (int) characters.zach;
+			charSelected = false;
+			startMove = false;
+			SetMarkerColor ();
+		}
+		else {
+			currentChar = manager.multiChosenChar[id-1];
+			previousChar = manager.multiChosenChar[id-1];
+			charSelected = true;
+			startMove = true;
+		}
 		charPositions = GameObject.Find ("MultiCharacters").GetComponentsInChildren<Transform>();
 		transform.position = new Vector3 (charPositions[currentChar].position.x, markerY, charPositions[currentChar].position.z); 
 		newPos = new Vector3 (charPositions[currentChar].position.x, markerY, charPositions[currentChar].position.z); 
 		gameObject.GetComponent<SpriteRenderer>().sprite = markerSprites[spriteID];
-		SetMarkerColor ();
-
-		markerColors = new Color[4];
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -85,6 +93,9 @@ public class MultiMarker : MonoBehaviour {
 		if (startMove){
 			if (main.menuNumPublic == 5) {
 				if (!charSelected){
+					if (gameObject.GetComponent<SpriteRenderer>().color == Color.white){
+						SetMarkerColor ();
+					}
 					if (!switchingCharacters){
 						selectCharacter();
 						direction = getMoveTilt ();
@@ -96,6 +107,7 @@ public class MultiMarker : MonoBehaviour {
 					}
 				}
 				else {
+					manager.multiChosenChar[id-1] = currentChar;
 					unselectCharacter ();
 					SpriteRenderer renderer = gameObject.GetComponent<SpriteRenderer>();
 					renderer.color = Color.white;
@@ -259,7 +271,7 @@ public class MultiMarker : MonoBehaviour {
 
 	private void SetMarkerColor(){
 		SpriteRenderer renderer = gameObject.GetComponent<SpriteRenderer>();
-		switch (UniMove.id){
+		switch (id){
 		case 1:
 			renderer.color = markerColors[0];
 			break;
