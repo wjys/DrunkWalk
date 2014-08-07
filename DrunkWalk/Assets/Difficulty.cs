@@ -42,6 +42,10 @@ public class Difficulty : MonoBehaviour {
 		drinkID[3] = 0;
 
 		drinkName = new string[4] {"Jack & Coke", "Beer", "Whiskey", "Sangria"};
+
+		if (GM == null){
+			GM = GameObject.Find ("_GameManager").GetComponent<GameManager>();
+		}
 	}
 	
 	// Update is called once per frame
