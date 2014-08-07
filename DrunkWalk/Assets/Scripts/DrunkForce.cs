@@ -31,7 +31,7 @@ public class DrunkForce : InGame {
 	public float drunkInc;	// amount by which we increment/multiply the toppling force
 	
 	// CAMERA PARAMS
-	public float smooth; 
+	private float smooth; 
 	//public float camInc; 	// cam wobble amount
 	//public float camAcc;    // cam wobble acceleration
 	//public float camHiCap; 	// cam wobble high-cap
@@ -58,6 +58,12 @@ public class DrunkForce : InGame {
 		rhead = gameObject.GetComponent<Rigidbody> ();
 		dm = gameObject.GetComponent<DrunkMovement> ();
 		stopWobble = false; 
+
+		if (GameManager.ins.mode == GameState.GameMode.ScoreAttack || GameManager.ins.mode == GameState.GameMode.Stealth || GameManager.ins.status == GameState.GameStatus.Tutorial){
+			smooth = 0.1f;
+		}	else if (GameManager.ins.mode == GameState.GameMode.Race || GameManager.ins.mode == GameState.GameMode.Party){
+			smooth = 0.01f;
+		}
 	}
 	
 	void Update () {
@@ -163,7 +169,7 @@ public class DrunkForce : InGame {
 				camInc += camAcc;
 			}
 			transform.rotation = new Quaternion (transform.rotation.x + camInc, transform.rotation.y, transform.rotation.z, transform.rotation.w); */
-			//print ("leaning forward"); 
+			//print ("leaning forward");
 			transform.localRotation = Quaternion.Lerp (transform.localRotation, 
 			                                           Quaternion.Euler	(Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.position.y - feet.transform.position.y))/(Mathf.Abs(transform.position.z - feet.transform.position.z)))*FWobble), transform.localEulerAngles.y, transform.localEulerAngles.z), 
 			                                		   Time.deltaTime * (smooth));
