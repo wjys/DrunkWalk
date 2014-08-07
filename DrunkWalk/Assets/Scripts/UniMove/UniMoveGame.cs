@@ -7,6 +7,8 @@ public class UniMoveGame : MonoBehaviour {
 
 	public GameObject[] players;
 	public GameObject player; 
+	public GameObject[] ui;
+	public GUIText countdown;
 	public UniMoveController[] moves;
 	public int[] moveInitIDs;
 	public int playerCount; 
@@ -24,14 +26,19 @@ public class UniMoveGame : MonoBehaviour {
 	public GameObject BedObj;
 	public int bedIndex;
 	public bool bedSpawned;
+	public bool startGame;
+	public int ctdown;
+	public bool countingDown;
 
 	public GameObject bedTarget;
 
 	
 	void Start() 
 	{
+		countdown = GameObject.Find ("Countdown").guiText;
 		createPlayer = false;
 		playerCount = 0;
+		ctdown = 4;
 		//moves = gameObject.GetComponents<UniMoveController> ();
 		/*if (numPlayers <= 4) {
 			for (int num = 1; num <= 4; num++){
@@ -86,9 +93,20 @@ public class UniMoveGame : MonoBehaviour {
 			}
 			if (StopManager ()){
 				if (bedSpawned == true){
-					setUI();
-					UniMoveActivateComponents();
-					this.enabled = false;
+					if (!startGame){
+						if (!countingDown){
+							setUI();
+							countingDown = true;
+						}
+						else {
+							CountdownToGame();
+						}
+					}
+					else {
+						UniMoveActivateComponents();
+						countdown.enabled = false;
+						this.enabled = false;
+					}
 				}
 			}
 		}
@@ -162,6 +180,57 @@ public class UniMoveGame : MonoBehaviour {
 				break;
 			}
 		}
+	}
+
+	private void CountdownToGame(){
+		if (ctdown == 4){
+			StartCoroutine (beginCountdown());
+		}
+		else if (ctdown == 3){
+			StartCoroutine (_nullto3());
+		}
+		else if (ctdown == 2){
+			StartCoroutine (_3to2());
+		}
+		else if (ctdown == 1){
+			StartCoroutine (_2to1());
+		}
+		else if (ctdown == 0){
+			StartCoroutine (_1toGo());
+		}
+		else {
+			startGame = true;
+		}
+	}
+	IEnumerator beginCountdown(){
+		yield return new WaitForSeconds(1.0f);
+		for (int i = 1; i <= numPlayers; i++){
+			GameObject ui = GameObject.Find ("Intro " + i);
+			ui.SetActive (false);
+		}
+		ctdown = 3;
+	}
+	IEnumerator _nullto3(){
+		countdown.text = ctdown.ToString();
+		countdown.enabled = true;
+		yield return new WaitForSeconds(1.0f);
+		ctdown = 2;
+	}
+
+	IEnumerator _3to2(){
+		countdown.text = ctdown.ToString ();
+		yield return new WaitForSeconds(1.0f);
+		ctdown = 1;
+	}
+	IEnumerator _2to1(){
+		countdown.text = ctdown.ToString ();
+		yield return new WaitForSeconds(1.0f);
+		ctdown = 0;
+	}
+	IEnumerator _1toGo(){
+		countdown.text = "GO!";
+		yield return new WaitForSeconds(1.0f);
+		ctdown = -1;
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -316,8 +385,7 @@ public class UniMoveGame : MonoBehaviour {
 		}
 		//print ("exiting UniMoveSetPlayers()");
 	}
-	
-	
+
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * NO ARG. NO RETURN.
 	 * when all the players have been set, activate the player components
