@@ -109,13 +109,14 @@ public class MainMenu : Menu {
 	///////////////////
 	
 	//MultiCharacter (5)
-	private int mcidx = 0;
+	public int mcidx = 0;
 	
-	private Item[] mcitems = new Item[] {
+	public Item[] mcitems = new Item[] {
 		new Item("ZACH", delegate () {MultiplayerLevel(); }),
 		new Item("ANNA", delegate () {Debug.Log ("ANNA"); }),
 		new Item("ANH CHI", delegate () {Debug.Log ("ANHCHI"); }),
-		new Item("WINNIE", delegate () {Debug.Log ("WINNIE"); })
+		new Item("WINNIE", delegate () {Debug.Log ("WINNIE"); }),
+		new Item("BACK TO MULTI CHAR", delegate () { MultiplayerChar (); })
 	};
 	
 	//MultiMode (6)

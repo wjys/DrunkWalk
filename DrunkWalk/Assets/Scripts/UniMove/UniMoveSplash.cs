@@ -18,6 +18,7 @@ public class UniMoveSplash : MonoBehaviour
 	public GameObject multiMarker;
 	public int multiMarkerCt;
 	public bool allMultiMarkersMade;
+	public int selectedMarkers;
 
 	public Transform[] handle;
 	private Vector3[] newHandle;
@@ -37,6 +38,7 @@ public class UniMoveSplash : MonoBehaviour
 			handle = new Transform[4];
 			newHandle = new Vector3[4];
 			markerColors = new Color[4];
+			selectedMarkers = 0;
 		}
 	}
 	
@@ -66,14 +68,21 @@ public class UniMoveSplash : MonoBehaviour
 			// MULTI CHARACTER SELECT
 			if (main.menuNumPublic == 5) {
 				TurnOnMarkerComponents();
+
+				if (selectedMarkers == numPlayers){
+					main.mcitems[0].command();
+				}
+
 			}
-			if (UniMoveAllPlayersIn ()) {
-				setNumPlayers();
-				GameManager.ins.mode = GameState.GameMode.Race;
-				GameManager.ins.status = GameState.GameStatus.Game;
-				Application.LoadLevel ("WastedEasy");
-				setGame ();
-				this.enabled = false;
+			if (main.menuNumPublic == 6){
+				if (UniMoveAllPlayersIn ()) {
+					setNumPlayers();
+					GameManager.ins.mode = GameState.GameMode.Race;
+					GameManager.ins.status = GameState.GameStatus.Game;
+					Application.LoadLevel ("WastedEasy");
+					setGame ();
+					this.enabled = false;
+				}
 			}
 		}
 	}
@@ -272,14 +281,11 @@ public class UniMoveSplash : MonoBehaviour
 		for (int i = 0; i < numPlayers; i++){
 			for (int j = 0; j < moves.Count; j++){
 				if (moves[j].id == i+1){
-					gm.moves[i] = moves[j];
 					gm.moveInitIDs[i] = j;
 					break;
 				}
 			}
 		}
-
-		gm.enabled = true;
 	}
 
 	private void setNumPlayers(){
