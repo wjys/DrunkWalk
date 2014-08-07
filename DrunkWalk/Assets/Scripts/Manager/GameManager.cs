@@ -152,9 +152,9 @@ public class GameManager : MonoBehaviour {
 				gameObject.name = "GameManager";
 				GameObject.Find ("_GameState").name = "GameState";
 			}
-			mainMenuIns.SetActive(true);
-
-			UpdateNumPlayers();
+			if (!mainMenuIns.activeSelf){
+				mainMenuIns.SetActive(true);
+			}
 
         	/*if (Input.GetKeyDown("m")){
         		if (!menu) {

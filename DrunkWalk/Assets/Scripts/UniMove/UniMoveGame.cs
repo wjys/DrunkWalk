@@ -49,7 +49,6 @@ public class UniMoveGame : MonoBehaviour {
 		
 		rotations = new Quaternion (0, 0, 0, 0);
 		createPlayer = true;
-		gameObject.name = "GameManager";
 //		if (GameManager.ins.status == GameState.GameStatus.Tutorial){
 //			positions = new Vector3[1] { new Vector3 (0, 1.424898f, -6) };
 //		}

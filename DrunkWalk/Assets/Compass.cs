@@ -23,6 +23,7 @@ public class Compass : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () { 
+		bedSpriteScale = bed.transform;
 		GetScaleRate ();
 		GetBedSprite ();
 	}

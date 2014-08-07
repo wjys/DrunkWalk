@@ -68,6 +68,7 @@ public class UniMoveSplash : MonoBehaviour
 				TurnOnMarkerComponents();
 			}
 			if (UniMoveAllPlayersIn ()) {
+				setNumPlayers();
 				GameManager.ins.mode = GameState.GameMode.Race;
 				GameManager.ins.status = GameState.GameStatus.Game;
 				Application.LoadLevel ("WastedEasy");
@@ -267,7 +268,6 @@ public class UniMoveSplash : MonoBehaviour
 		UniMoveGame gm = gameObject.GetComponent<UniMoveGame> ();
 		gm.numPlayers = numPlayers;
 		gm.players = new GameObject[numPlayers];
-		gm.moves = new UniMoveController[numPlayers];
 		gm.moveInitIDs = new int[numPlayers];
 		for (int i = 0; i < numPlayers; i++){
 			for (int j = 0; j < moves.Count; j++){
@@ -280,5 +280,13 @@ public class UniMoveSplash : MonoBehaviour
 		}
 
 		gm.enabled = true;
+	}
+
+	private void setNumPlayers(){
+		manager.numOfPlayers = numPlayers;
+		manager.winnerIndex = 0;
+		manager.loserIndex = 0;
+		manager.winners = new int[numPlayers];
+		manager.losers = new int[numPlayers];
 	}
 }
