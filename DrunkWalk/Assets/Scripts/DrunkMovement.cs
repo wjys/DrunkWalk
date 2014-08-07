@@ -70,7 +70,7 @@ public class DrunkMovement : InGame {
 	public float stepDiff;
 	
 	// GET RBs' Y COORDS SO THAT THE PLAYER DOESN'T FLOAT OVER BED
-	private float headY;
+	public float headY;
 	private Vector3 initHead; 
 
 	// GET BACK UP ONCE FALLEN
@@ -133,7 +133,7 @@ public class DrunkMovement : InGame {
 		fallCt = 0;
 		colliding = false;
 		initHead = transform.position;
-		headY = transform.position.y; 
+		//headY = transform.position.y; 
 
 		// (4) get middle of the screen (for mouse)
 		halfWidth = Screen.width / 2; 

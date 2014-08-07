@@ -16,7 +16,14 @@ public class UniMoveGame : MonoBehaviour {
 	
 	private Vector3[] positions; 
 	private Quaternion rotations;
-	
+
+	//BED STUFF
+	public Transform[] Spawners;
+	public GameObject Bed;
+	public GameObject BedObj;
+	public int bedIndex;
+	public bool bedSpawned;
+
 	void Start() 
 	{
 		createPlayer = false;
@@ -48,6 +55,11 @@ public class UniMoveGame : MonoBehaviour {
 		
 		rotations = new Quaternion (0, 0, 0, 0);
 		createPlayer = true;
+
+		Spawners = new Transform[10];
+		Spawners = GameObject.Find ("BedSpawner").GetComponentsInChildren<Transform>();
+		bedSpawned = false;
+
 //		if (GameManager.ins.status == GameState.GameStatus.Tutorial){
 //			positions = new Vector3[1] { new Vector3 (0, 1.424898f, -6) };
 //		}
@@ -59,6 +71,11 @@ public class UniMoveGame : MonoBehaviour {
 		if (!createPlayer){
 		}
 		else {
+
+			if (GameManager.ins.mode == GameState.GameMode.Party){
+				setBed();
+			}
+
 			if (StopManager() == false){
 				createPlayers ();
 				UniMoveSetPlayers();
@@ -136,6 +153,24 @@ public class UniMoveGame : MonoBehaviour {
 			default:
 				break;
 			}
+		}
+	}
+
+	/*--------
+	 * SET RANDOM BED LOCATION
+	 * --------*/
+
+	private void setBed(){
+		print ("Bed Loc");
+
+		if (!bedSpawned){
+			bedIndex = Random.Range (0,Spawners.Length);
+			if (BedObj == null){
+				BedObj = Instantiate (Bed, Spawners [bedIndex].position, Spawners[bedIndex].rotation) as GameObject;
+			} else {
+				Destroy(GameObject.Find ("BedSpawner"));
+			}
+			bedSpawned = false;
 		}
 	}
 
