@@ -22,8 +22,8 @@ public class Ouch : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		reachingBed ();
-		//reachingCouch ();
-		//reachingTub ();
+		reachingCouch ();
+		reachingTub ();
 		if (!dm.fallen){
 			if (collision.recoiled && !collision.reachedBed){
 				if (!displayed){

@@ -115,6 +115,7 @@ public class GameManager : MonoBehaviour {
 
 		//Pause Menu in Game, Main menu in Splash
 		if (status == GameState.GameStatus.End){
+			GameObject.Find ("Winner").GetComponent<GUIText>().text = "Player " + winner + " is the best";
 			endScript.enabled = true;
 			playing = false;
 		}
@@ -222,7 +223,6 @@ public class GameManager : MonoBehaviour {
 				gameObject.GetComponent<EndScreen>().enabled = true;
 				if (winnerIndex != 0){
 					Application.LoadLevel ("Won");
-					GameObject.Find ("Winner").GetComponent<GUIText>().text = "Player " + winner + " is the best";
 				}
 				else {
 					Application.LoadLevel ("Lost");
