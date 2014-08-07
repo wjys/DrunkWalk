@@ -25,6 +25,8 @@ public class UniMoveGame : MonoBehaviour {
 	public int bedIndex;
 	public bool bedSpawned;
 
+	public GameObject bedTarget;
+
 	
 	void Start() 
 	{
@@ -182,7 +184,7 @@ public class UniMoveGame : MonoBehaviour {
 			
 			eyelids.me = GameObject.Find ("Head 1").GetComponent<DrunkMovement>();
 			comp.me =  GameObject.Find ("Head 1");
-			comp.bed = GameObject.Find ("BedObj");
+			comp.bed = GameObject.Find ("BedTarget");
 			comp.bedSpriteScale = comp.bed.transform;
 			ouch.collision = GameObject.Find ("Head 1").GetComponent<Collision>();
 			ouch.dm = GameObject.Find ("Head 1").GetComponent<DrunkMovement>();
@@ -208,7 +210,7 @@ public class UniMoveGame : MonoBehaviour {
 				
 				eyelids.me = GameObject.Find ("Head " + i).GetComponent<DrunkMovement>();
 				comp.me =  GameObject.Find ("Head " + i);
-				comp.bed = GameObject.Find ("BedObj");
+				comp.bed = GameObject.Find ("BedTarget");
 				comp.bedSpriteScale = comp.bed.transform;
 				ouch.collision = GameObject.Find ("Head " + i).GetComponent<Collision>();
 				ouch.dm = GameObject.Find ("Head " + i).GetComponent<DrunkMovement>();
@@ -263,7 +265,9 @@ public class UniMoveGame : MonoBehaviour {
 			
 			if (BedObj == null){
 				BedObj = Instantiate (Bed, Spawners [bedIndex].position, Spawners[bedIndex].rotation) as GameObject;
-				BedObj.name = "BedObj";
+				bedTarget = GameObject.Find("BedTarget");
+				bedTarget.transform.position = BedObj.transform.position;
+				//BedObj.name = "BedObj";
 			} else {
 				Debug.Log("DESTROY BED SPAWNER");
 				Destroy(GameObject.Find ("BedSpawner"));
