@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: 1c1e03f4e6aa5e1478f2a8cf99142768
 ModelImporter:
-  serializedVersion: 15
+  serializedVersion: 16
   fileIDToRecycleName:
     100000: Bed
     100002: //RootNode
@@ -118,6 +118,7 @@ ModelImporter:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
     optimizeGameObjects: 0
+    motionNodeName: 
     animationCompression: 1
     animationRotationError: .5
     animationPositionError: .5
@@ -128,7 +129,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: .0500000007
+    globalScale: .0199999996
     meshCompression: 0
     addColliders: 1
     importBlendShapes: 1
@@ -161,4 +162,5 @@ ModelImporter:
     rootMotionBoneName: 
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 2
+  additionalBone: 0
   userData: 
