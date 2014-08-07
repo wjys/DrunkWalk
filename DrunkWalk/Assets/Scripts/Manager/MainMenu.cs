@@ -16,6 +16,8 @@ public class MainMenu : Menu {
 	private bool wasRight = false;
 	private bool wasLeft = false;
 
+	public static bool multi;
+
 	//Which menu?
 	public static bool menuSet;
 	public static int menuNum;
@@ -50,7 +52,6 @@ public class MainMenu : Menu {
 		new Item("START", delegate () { ChooseCharacter (); }),
 		new Item("MULTIPLAYER", delegate () { MultiplayerChar (); }),
 		new Item("SET UP", delegate () { Settings (); }),
-		new Item("CALIBRATE", delegate () { Calibrate (); }),
 		new Item("EXIT", delegate () { Application.Quit(); })
 	};
 
@@ -89,7 +90,18 @@ public class MainMenu : Menu {
 	private int lidx = 0;
 
 	private Item[] litems = new Item[] {
-		new Item("", delegate () { StartGame(); })
+		new Item("TUTORIAL", delegate () { Modes (0); }),
+		new Item("EASY", delegate () { Modes (1); }),
+		new Item("MEDIUM", delegate () { Modes (2); }),
+		new Item("HARD", delegate () { Modes (3); })
+	};
+
+	//SingleMode (7)
+	private int midx = 0;
+
+	private Item[] mitems = new Item[] {
+		new Item("SCOREATTACK", delegate () { StartGame (0); }),
+		new Item("STEALTH", delegate () { StartGame (1); })
 	};
 
 	///////////////////
@@ -100,7 +112,7 @@ public class MainMenu : Menu {
 	private int mcidx = 0;
 	
 	private Item[] mcitems = new Item[] {
-		new Item("ZACH", delegate () {Debug.Log ("ZACH"); }),
+		new Item("ZACH", delegate () {MultiplayerLevel(); }),
 		new Item("ANNA", delegate () {Debug.Log ("ANNA"); }),
 		new Item("ANH CHI", delegate () {Debug.Log ("ANHCHI"); }),
 		new Item("WINNIE", delegate () {Debug.Log ("WINNIE"); })
@@ -110,8 +122,8 @@ public class MainMenu : Menu {
 	private int mlidx = 0;
 	
 	private Item[] mlitems = new Item[] {
-		new Item("RACE", delegate () {Debug.Log ("RACE"); }),
-		new Item("PARTY", delegate () {Debug.Log ("PARTY"); })
+		new Item("RACE", delegate () { StartGame (2); }),
+		new Item("PARTY", delegate () { StartGame (3); })
 	};
 
 
@@ -141,7 +153,10 @@ public class MainMenu : Menu {
 		//Get World Components
 		CR = GameObject.Find ("Characters").GetComponent<CharacterReel>();
 		Diff = GameObject.Find ("Difficulty").GetComponent<Difficulty>();
-		Lev = GameObject.Find ("Levels");
+		Lev = GameObject.Find ("Level");
+
+		//Set multiplayer to false
+		multi = false;
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////
@@ -164,22 +179,52 @@ public class MainMenu : Menu {
 		//	GUIMenu (didx, 200, 80, ditems, timer);}
 		else if (menuNum == 4) {
 			GUIMenu (lidx, 200, 80, litems, timer);}
-		//else if (menuNum == 5){
-		//	GUIMenu (mcidx, 200, 80, mcitems, timer);}
+		else if (menuNum == 5){
+			GUIMenu (mcidx, 200, 80, mcitems, timer);}
 		else if (menuNum == 6){
 			GUIMenu (mlidx, 200, 80, mlitems, timer);}
+		else if (menuNum == 7){
+			GUIMenu (midx, 200, 80, mitems, timer);}
 	}
-
 
 	/////////////////////////////////////////////////////////////////////////////////////
 	////////////
-	//START GAME
+	//START GAME    1
 	////////////
 
-	public static void StartGame(){
+	public static void StartGame(int mode){
 		GameManager.ins.game = true;
-		GameManager.ins.status = GameState.GameStatus.Game;
-		Application.LoadLevel ("WastedMouse");
+
+		//TUTORIAL PORTAL
+		if (mode == 4){
+			Application.LoadLevel ("WastedTut");
+			GameManager.ins.status = GameState.GameStatus.Tutorial;
+		}
+		//SCORE PORTAL
+		else if (mode == 0){
+			Application.LoadLevel ("WastedEasy");
+			GameManager.ins.status = GameState.GameStatus.Game;
+			GameManager.ins.mode = GameState.GameMode.ScoreAttack;
+		}
+		//STEALTH PORTAL
+		else if (mode == 1){
+			//Application.LoadLevel (GameManager.chosenLevel);
+			Application.LoadLevel ("WastedEasy");
+			GameManager.ins.status = GameState.GameStatus.Game;
+			GameManager.ins.mode = GameState.GameMode.ScoreAttack;
+		}
+		//RACE PORTAL
+		else if (mode == 2){
+			Application.LoadLevel ("WastedMulti");
+			GameManager.ins.status = GameState.GameStatus.Game;
+			GameManager.ins.mode = GameState.GameMode.Race;
+		}
+		//PARTY PORTAL
+		else if (mode == 3){
+			Application.LoadLevel("WastedParty");
+			GameManager.ins.status = GameState.GameStatus.Game;
+			GameManager.ins.mode = GameState.GameMode.Party;
+		}
 	}
 
 	public static void Menu1 (){
@@ -188,7 +233,7 @@ public class MainMenu : Menu {
 	}
 
 	//////////
-	//SETTINGS
+	//SETTINGS    set
 	//////////
 	
 	public static void Settings(){
@@ -200,7 +245,7 @@ public class MainMenu : Menu {
 	}
 
 	///////////////////////
-	///CUSTOMIZE CHARACTER
+	///CUSTOMIZE CHARACTER    2
 	//////////////////////
 
 	public static void ChooseCharacter(){
@@ -208,10 +253,12 @@ public class MainMenu : Menu {
 
 		menuSet = false;
 		menuNum = 2;
+
+		multi = false;
 	}
 
 	/////////////
-	///DIFFICULTY
+	///DIFFICULTY    3
 	/////////////
 
 	public static void Difficulty(int characterName){
@@ -219,43 +266,67 @@ public class MainMenu : Menu {
 
 		menuSet = false;
 		menuNum = 3;
+
+		multi = false;
 	}
 
 	///////////////
-	///CHOOSE LEVEL
+	///CHOOSE LEVEL   4
 	///////////////
 	
 	public static void ChooseLevel(){
+		GameManager.ins.JncInt = 0;
+		GameManager.ins.BeerInt = 0;
+		GameManager.ins.WhiskeyInt = 0;
+		GameManager.ins.SangriaInt = 0;
 
 		menuSet = false;
 		menuNum = 4;
 	}
 
 	/////////////
-	///MULTI CHAR
+	///MULTI CHAR   5
 	/////////////
 
 	public static void MultiplayerChar(){
+		//SET EACH PLAYER'S MULTIPLAYER
+		GameManager.ins.JncInt = 0;
+		GameManager.ins.BeerInt = 0;
+		GameManager.ins.WhiskeyInt = 0;
+		GameManager.ins.SangriaInt = 0;
+
 		menuSet = false;
 		menuNum = 5;
+
+		multi = true;
 	}
 
 	//////////////
-	///MULTI LEVEL
+	///MULTI LEVEL   6
 	//////////////
 	
 	public static void MultiplayerLevel(){
+		//SET MULTIPLAYER
 		menuSet = false;
 		menuNum = 6;
+
+		multi = true;
 	}
 
+	////////
+	///MODES    7
+	////////
 
-	/////////////
-	///CALIBRATE
-	/////////////
+	public static void Modes(int level) {
+		multi = false;
+		//GameManager.ins.levelNum = level;
 
-	public static void Calibrate(){
+		if (level == 0){
+			StartGame(4);
+		}
 
+		menuSet = false;
+		menuNum = 7;
 	}
 
 
@@ -303,6 +374,22 @@ public class MainMenu : Menu {
 				if (Diff.totalDrunk <= 0){
 					Diff.totalDrunk = 0;
 				}
+			} else if (menuNum == 4) {
+				//DOWN IN SETTINGS
+				lidx += 1;
+				lidx %= litems.Length;
+			} else if (menuNum == 7) {
+				//DOWN IN SETTINGS
+				midx += 1;
+				midx %= mitems.Length;
+			} else if (menuNum == 5) {
+				//DOWN IN SETTINGS
+				mcidx += 1;
+				mcidx %= mcitems.Length;
+			} else if (menuNum == 6) {
+				//DOWN IN SETTINGS
+				mlidx += 1;
+				mlidx %= mlitems.Length;
 			}
 
 			timer = 0;
@@ -329,6 +416,18 @@ public class MainMenu : Menu {
 				if (Diff.totalDrunk >= 5){
 					Diff.totalDrunk = 5;
 				}
+			} else if (menuNum == 4){
+				lidx += litems.Length-1;
+				lidx %= litems.Length;
+			} else if (menuNum == 7){
+				midx += mitems.Length-1;
+				midx %= mitems.Length;
+			} else if (menuNum == 5){
+				mcidx += mcitems.Length-1;
+				mcidx %= mcitems.Length;
+			} else if (menuNum == 6){
+				mlidx += mlitems.Length-1;
+				mlidx %= mlitems.Length;
 			}
 
 			timer = 0;
@@ -402,6 +501,12 @@ public class MainMenu : Menu {
 				}
 			} else if (menuNum == 4){
 				litems[lidx].command();
+			} else if (menuNum == 5){
+				mcitems[mcidx].command();
+			} else if (menuNum == 6){
+				mlitems[mlidx].command();
+			} else if (menuNum == 7){
+				mitems[midx].command();
 			}
 
 			if (!lerping){
@@ -413,15 +518,20 @@ public class MainMenu : Menu {
 		if (Input.GetButtonDown("Cancel")) {
 			//CANCELLED
 			if (menuNum == 1){
-				GameManager.ins.UnMenu();
+				//GameManager.ins.UnMenu();
 			} else if (menuNum == 4){
 				menuNum = 3;
 			} else if (menuNum == 3){
 				menuNum = 2;
+			} else if (menuNum == 6){
+				menuNum = 5;
+			} else if (menuNum == 7){
+				menuNum = 4;
 			} else {
 				menuNum = 1;
 				menuSet = false;
 				newPos = new Vector3 (0,0,0);
+				newRot = new Quaternion (0,0,0,0);
 			}
 
 			if (!lerping){
@@ -449,6 +559,12 @@ public class MainMenu : Menu {
 	}
 
 	public IEnumerator LerpCam() {
+		//MODES
+		if (menuNum == 7){
+			newPos = new Vector3 (0, 25, 0);
+			newRot = new Quaternion (0, 1, 0, 3.72529e-07f);
+		}
+
 		//MULTIPLAYER LEVELS
 		if (menuNum == 6){
 			newPos = new Vector3 (0, -25, 0);
