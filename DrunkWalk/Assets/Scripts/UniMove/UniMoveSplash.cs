@@ -13,6 +13,7 @@ public class UniMoveSplash : MonoBehaviour
 	public UniMoveController[] UniMoves;
 	public int numPlayers;
 	public MainMenu main;
+	public GameManager manager;
 
 	public GameObject multiMarker;
 	public int multiMarkerCt;
@@ -22,38 +23,37 @@ public class UniMoveSplash : MonoBehaviour
 	private Vector3[] newHandle;
 
 	public float smooth;
-	public bool movePaired;
 
 	public Color[] markerColors;
 
 	void Start() 
-	{
-		numPlayers = 0; 
-		UniMoveInit (); 
-		UniMoves = new UniMoveController[moves.Count];
-		handle = new Transform[4];
-		newHandle = new Vector3[4];
-		markerColors = new Color[4];
-		//main = GameObject.Find ("MainMenu").GetComponent<MainMenu> ();
+	{ 
+		manager = gameObject.GetComponent<GameManager>();
+		if (manager.track == 0){
+
+			numPlayers = 0;
+			UniMoveInit ();
+			UniMoves = new UniMoveController[moves.Count];
+			handle = new Transform[4];
+			newHandle = new Vector3[4];
+			markerColors = new Color[4];
+		}
 	}
 	
 	
 	void Update() 
 	{
-		if (gameObject.GetComponent<GameManager>().track != 0 && gameObject.GetComponent<GameManager>().track != 1){
-			foreach (UniMoveController move in moves){
-//				createMarker ();
-			}
-		}
 		if (GameManager.ins.status == GameState.GameStatus.Splash){
+			setMoveColour ();
+
 			if (main == null){
 				main = GameObject.Find ("MainMenu").GetComponent<MainMenu> ();
 			}
-			setMoveColour ();
+
 			UniMoveSetID ();
+
 			if (multiMarkerCt < numPlayers){
 				allMultiMarkersMade = false;
-				movePaired = false;
 			}
 
 			if (main.menuNumPublic == 1){
