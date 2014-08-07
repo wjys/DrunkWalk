@@ -153,22 +153,22 @@ public class Rotation : MonoBehaviour {
 			if (current == (int) Turn.idle){
 				rotRate = 0;
 				//print ("idle"); 
-				if (dm.direction == (int) Dir.left){
+				//if (dm.direction == (int) Dir.left){
 					if (UniMove.gy >= boundLeft){
 						//print ("start turning left"); 
 						//gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY;
 						rotated = true; 
 						return (int) Turn.left;
 					}
-				}
-				if (dm.direction == (int) Dir.right){
+				//}
+				//if (dm.direction == (int) Dir.right){
 					if (UniMove.gy <= boundRight){
 						//print ("start turning right"); 
 						//gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY;
 						rotated = true; 
 						return (int) Turn.right; 
 					}
-				}
+				//}
 				return (int) Turn.idle; 
 			}
 			if (current == (int) Turn.left){

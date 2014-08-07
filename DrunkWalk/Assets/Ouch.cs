@@ -45,7 +45,7 @@ public class Ouch : MonoBehaviour {
 
 	private void reachingBed(){
 		if (collision.reachedBed) {
-			GameObject bed = GameObject.Find ("BedObj");
+			GameObject bed = GameObject.Find ("BedObjmulti");
 			BoxCollider bedTrigger = bed.GetComponent<BoxCollider>();
 			
 			if (GameManager.ins.mode == GameState.GameMode.Party){

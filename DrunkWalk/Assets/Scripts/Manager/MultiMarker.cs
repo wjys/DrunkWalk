@@ -223,7 +223,7 @@ public class MultiMarker : MonoBehaviour {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 
 	IEnumerator snapToPos(){
-		yield return new WaitForSeconds(1.0f);
+		yield return new WaitForSeconds(0.5f);
 		if (transform.position.x >= newPos.x - 0.05f && transform.position.x <= newPos.x + 0.05f){
 			switchingCharacters = false;
 		}
