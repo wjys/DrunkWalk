@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour {
 	private bool paused = false;
 	private bool menu = false;
 	public bool game;
+	private bool playing;
 
 	//Character
 	public static int chosenChar;
@@ -114,15 +115,14 @@ public class GameManager : MonoBehaviour {
 
 		//Pause Menu in Game, Main menu in Splash
 		if (status == GameState.GameStatus.End){
-			gameScript.enabled = false;
-			splashScript.enabled = false;
 			endScript.enabled = true;
+			playing = false;
 		}
 		else if (status == GameState.GameStatus.Game){
-			endScript.enabled = false;
-			gameScript.enabled = true;
-			splashScript.enabled = false;
-
+			if (!gameScript.enabled && !playing){
+				gameScript.enabled = true;
+				playing = true;
+			}
 			if (track != 1){
 				track = 1;
 			}
@@ -141,8 +141,6 @@ public class GameManager : MonoBehaviour {
 
 		} else if (status == GameState.GameStatus.Splash) {
 			splashScript.enabled = true;
-			gameScript.enabled = false;
-			endScript.enabled = false;
 
 			if (track != 0){
 				Destroy (GameObject.Find ("_GameManager"));

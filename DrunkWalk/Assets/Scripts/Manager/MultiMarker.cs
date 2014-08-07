@@ -10,6 +10,7 @@ public class MultiMarker : MonoBehaviour {
 	public UniMoveController UniMove;
 	public MainMenu main;
 	public GameManager manager;
+	public UniMoveSplash splash;
 
 	// -------- PRIVATE VARIABLES
 
@@ -54,6 +55,7 @@ public class MultiMarker : MonoBehaviour {
 	void Start () {
 		manager = GameObject.Find ("GameManager").GetComponent<GameManager>();
 		main = GameObject.Find ("MainMenu").GetComponent<MainMenu>();
+		splash = GameObject.Find ("GameManager").GetComponent<UniMoveSplash>();
 		getMarkerHeight ();
 
 		if (manager.track == 0){
@@ -91,7 +93,7 @@ public class MultiMarker : MonoBehaviour {
 			StartCoroutine (beginCheck());
 		}
 		if (startMove){
-			if (main.menuNumPublic == 5) {
+			if (main.menuNumPublic == 5 || main.menuNumPublic == 6) {
 				if (!charSelected){
 					if (gameObject.GetComponent<SpriteRenderer>().color == Color.white){
 						SetMarkerColor ();
@@ -114,10 +116,9 @@ public class MultiMarker : MonoBehaviour {
 				}
 			}
 			// AT MULTI MODE/LEVEL SELECT
-			else {
+			if (main.menuNumPublic != 5){
 				this.gameObject.GetComponent<SpriteRenderer>().enabled = false;
-				startMove = false;
-				this.enabled = false;
+				//this.enabled = false;
 			}
 		}
 	}
@@ -158,7 +159,10 @@ public class MultiMarker : MonoBehaviour {
 		bool circle 	= UniMove.GetButtonUp (PSMoveButton.Circle);
 
 		if (cross || square || triangle || circle){
+			splash.selectedMarkers--;
 			charSelected = false;
+
+
 		}
 	}
 
@@ -168,6 +172,7 @@ public class MultiMarker : MonoBehaviour {
 
 	private void selectCharacter(){
 		if (UniMove.GetButtonUp(PSMoveButton.Move)){
+			splash.selectedMarkers++;
 			charSelected = true;
 		}
 	}
