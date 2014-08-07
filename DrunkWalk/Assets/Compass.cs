@@ -23,8 +23,6 @@ public class Compass : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () { 
-		bed = GameObject.Find("BedObj");
-		bedSpriteScale = bed.transform;
 		GetScaleRate ();
 		GetBedSprite ();
 	}
