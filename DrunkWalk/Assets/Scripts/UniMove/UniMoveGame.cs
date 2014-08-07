@@ -83,11 +83,9 @@ public class UniMoveGame : MonoBehaviour {
 				UniMoveSetPlayers();
 			}
 			if (StopManager ()){
-				setUI();
-				UniMoveActivateComponents();
-				if (bedSpawned == false) {
-					this.enabled = true;
-				} else if (bedSpawned == true){
+				if (bedSpawned == true){
+					setUI();
+					UniMoveActivateComponents();
 					this.enabled = false;
 				}
 			}

@@ -10,7 +10,6 @@ public class UniMoveSplash : MonoBehaviour
 {
 	// We save a list of Move controllers.
 	public List<UniMoveController> moves = new List<UniMoveController>();
-	public UniMoveController[] UniMoves;
 	public int numPlayers;
 	public MainMenu main;
 	public GameManager manager;
@@ -24,6 +23,7 @@ public class UniMoveSplash : MonoBehaviour
 	private Vector3[] newHandle;
 
 	public float smooth;
+	public bool remadeMarkers;
 
 	public Color[] markerColors;
 
@@ -34,7 +34,6 @@ public class UniMoveSplash : MonoBehaviour
 
 			numPlayers = 0;
 			UniMoveInit ();
-			UniMoves = new UniMoveController[moves.Count];
 			handle = new Transform[4];
 			newHandle = new Vector3[4];
 			markerColors = new Color[4];
@@ -51,7 +50,14 @@ public class UniMoveSplash : MonoBehaviour
 			if (main == null){
 				main = GameObject.Find ("MainMenu").GetComponent<MainMenu> ();
 			}
-
+			if (manager.track != 0 && !remadeMarkers){
+				foreach (UniMoveController move in moves){
+					if (move.id > 0){
+						createMarker (move);
+					}
+				}
+				remadeMarkers = true;
+			}
 			UniMoveSetID ();
 
 			if (multiMarkerCt < numPlayers){
@@ -81,6 +87,7 @@ public class UniMoveSplash : MonoBehaviour
 					GameManager.ins.status = GameState.GameStatus.Game;
 					Application.LoadLevel ("WastedParty");
 					setGame ();
+					remadeMarkers = false;
 					this.enabled = false;
 				}
 			}
@@ -160,28 +167,24 @@ public class UniMoveSplash : MonoBehaviour
 						move.id = 1;
 						numPlayers = 1;
 						createMarker (move);
-						UniMoves[0] = move;
 						return;
 					case 1:
 						move.SetLED (markerColors[1]);
 						move.id = 2;
 						numPlayers = 2;
 						createMarker (move);
-						UniMoves[1] = move;
 						return;
 					case 2:
 						move.SetLED (markerColors[2]);
 						move.id = 3;
 						numPlayers = 3;
 						createMarker (move);
-						UniMoves[2] = move;
 						return;
 					case 3:
 						move.SetLED (markerColors[3]);
 						move.id = 4; 
 						numPlayers = 4;
 						createMarker (move);
-						UniMoves[3] = move;
 						return;
 					default:
 						return;
