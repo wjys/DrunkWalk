@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Ouch : MonoBehaviour {
 
+	public GameManager gm;
 	public string[] ouches;
 	public int ouchIndex;
 	public GUIText ouchGui;
@@ -14,16 +15,26 @@ public class Ouch : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		displayed = false; 
+		displayed = false;
+		gm = GameObject.Find ("GameManager").GetComponent<GameManager>();
 		win = gameObject.GetComponentInChildren<SpriteRenderer> ();
 		win.enabled = false;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		reachingBed ();
-		reachingCouch ();
-		reachingTub ();
+		if (gm.winnerIndex == 0){
+			reachingBed ();
+		}
+		else if (gm.winnerIndex == 1){
+			reachingCouch ();
+		}
+		else if (gm.winnerIndex == 2){
+			reachingTub ();
+		}
+		else if (gm.winnerIndex == 3){
+			GameManager.ins.status = GameState.GameStatus.End;
+		}
 		if (!dm.fallen){
 			if (collision.recoiled && !collision.reachedBed){
 				if (!displayed){
@@ -45,17 +56,6 @@ public class Ouch : MonoBehaviour {
 
 	private void reachingBed(){
 		if (collision.reachedBed) {
-			GameObject bed = GameObject.Find ("BedObj");
-			BoxCollider bedTrigger = bed.GetComponent<BoxCollider>();
-			
-			if (GameManager.ins.mode == GameState.GameMode.Party){
-				if (bedTrigger.enabled){
-					bedTrigger.enabled = false;
-					
-					GameObject.Find ("CouchObj").GetComponent<BoxCollider>().enabled = true;
-				}
-				else return;
-			}
 			
 			GameObject.Find ("UICam " + dm.id).GetComponentInChildren<CameraBG>().enabled = true;
 			SpriteRenderer[] sprites = GameObject.Find ("UICam " + dm.id).GetComponentsInChildren<SpriteRenderer>();
@@ -82,65 +82,51 @@ public class Ouch : MonoBehaviour {
 	private void reachingCouch(){
 		if (GameManager.ins.mode == GameState.GameMode.Party){
 			if (collision.reachedCouch){
-				GameObject couch = GameObject.Find ("CouchObj");
-				BoxCollider couchTrigger = couch.GetComponent<BoxCollider>();
-
-				if (couchTrigger.enabled){
-					//couchTrigger.enabled = false;
-
-					GameObject.Find ("UICam " + dm.id).GetComponentInChildren<CameraBG>().enabled = true;
-					SpriteRenderer[] sprites = GameObject.Find ("UICam " + dm.id).GetComponentsInChildren<SpriteRenderer>();
-					foreach (SpriteRenderer sprite in sprites){
-						sprite.enabled = false;
-					}
-					GameObject.Find ("UICam " + dm.id).camera.clearFlags = CameraClearFlags.Skybox;
-					gameObject.guiText.enabled = false;
-					win.enabled = true;
-					dm.gameObject.SetActive(false);
-					
-					GameObject gm = GameObject.Find ("GameManager");
-					GameManager manager = gm.GetComponent<GameManager>();
-					manager.winners[manager.winnerIndex] = dm.id;
-					if (manager.winnerIndex == 0){
-						manager.winner = dm.id;
-					}
-					manager.winnerIndex++;
-					
-					this.enabled = false;
+				GameObject.Find ("UICam " + dm.id).GetComponentInChildren<CameraBG>().enabled = true;
+				SpriteRenderer[] sprites = GameObject.Find ("UICam " + dm.id).GetComponentsInChildren<SpriteRenderer>();
+				foreach (SpriteRenderer sprite in sprites){
+					sprite.enabled = false;
 				}
+				GameObject.Find ("UICam " + dm.id).camera.clearFlags = CameraClearFlags.Skybox;
+				gameObject.guiText.enabled = false;
+				win.enabled = true;
+				dm.gameObject.SetActive(false);
+				
+				GameObject gm = GameObject.Find ("GameManager");
+				GameManager manager = gm.GetComponent<GameManager>();
+				manager.winners[manager.winnerIndex] = dm.id;
+				if (manager.winnerIndex == 0){
+					manager.winner = dm.id;
+				}
+				manager.winnerIndex++;
+				
+				this.enabled = false;
 			}
 		}
 	}
-		private void reachingTub(){
-			if (GameManager.ins.mode == GameState.GameMode.Party){
-				if (collision.reachedCouch){
-					GameObject tub = GameObject.Find ("TubObj");
-					BoxCollider tubTrigger = tub.GetComponent<BoxCollider>();
-					
-					if (tubTrigger.enabled){
-						//couchTrigger.enabled = false;
-						
-						GameObject.Find ("UICam " + dm.id).GetComponentInChildren<CameraBG>().enabled = true;
-						SpriteRenderer[] sprites = GameObject.Find ("UICam " + dm.id).GetComponentsInChildren<SpriteRenderer>();
-						foreach (SpriteRenderer sprite in sprites){
-							sprite.enabled = false;
-						}
-						GameObject.Find ("UICam " + dm.id).camera.clearFlags = CameraClearFlags.Skybox;
-						gameObject.guiText.enabled = false;
-						win.enabled = true;
-						dm.gameObject.SetActive(false);
-						
-						GameObject gm = GameObject.Find ("GameManager");
-						GameManager manager = gm.GetComponent<GameManager>();
-						manager.winners[manager.winnerIndex] = dm.id;
-						if (manager.winnerIndex == 0){
-							manager.winner = dm.id;
-						}
-						manager.winnerIndex++;
-						
-						this.enabled = false;
-					}
+	private void reachingTub(){
+		if (GameManager.ins.mode == GameState.GameMode.Party){
+			if (collision.reachedCouch){
+				GameObject.Find ("UICam " + dm.id).GetComponentInChildren<CameraBG>().enabled = true;
+				SpriteRenderer[] sprites = GameObject.Find ("UICam " + dm.id).GetComponentsInChildren<SpriteRenderer>();
+				foreach (SpriteRenderer sprite in sprites){
+					sprite.enabled = false;
 				}
+				GameObject.Find ("UICam " + dm.id).camera.clearFlags = CameraClearFlags.Skybox;
+				gameObject.guiText.enabled = false;
+				win.enabled = true;
+				dm.gameObject.SetActive(false);
+				
+				GameObject gm = GameObject.Find ("GameManager");
+				GameManager manager = gm.GetComponent<GameManager>();
+				manager.winners[manager.winnerIndex] = dm.id;
+				if (manager.winnerIndex == 0){
+					manager.winner = dm.id;
+				}
+				manager.winnerIndex++;
+				
+				this.enabled = false;
 			}
 		}
+	}
 }

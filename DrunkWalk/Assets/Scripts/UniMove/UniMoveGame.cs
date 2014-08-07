@@ -203,7 +203,7 @@ public class UniMoveGame : MonoBehaviour {
 		}
 	}
 	IEnumerator beginCountdown(){
-		yield return new WaitForSeconds(1.0f);
+		yield return new WaitForSeconds(2.0f);
 		for (int i = 1; i <= numPlayers; i++){
 			GameObject ui = GameObject.Find ("Intro " + i);
 			ui.SetActive (false);
@@ -306,7 +306,7 @@ public class UniMoveGame : MonoBehaviour {
 				
 				eyelids.me = GameObject.Find ("Head " + i).GetComponent<DrunkMovement>();
 				comp.me =  GameObject.Find ("Head " + i);
-				comp.bed = GameObject.Find ("BedObj");
+				comp.bed = GameObject.Find ("BedTarget");
 				comp.bedSpriteScale = comp.bed.transform;
 				ouch.collision = GameObject.Find ("Head " + i).GetComponent<Collision>();
 				ouch.dm = GameObject.Find ("Head " + i).GetComponent<DrunkMovement>();

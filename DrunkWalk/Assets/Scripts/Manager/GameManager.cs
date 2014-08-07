@@ -115,8 +115,13 @@ public class GameManager : MonoBehaviour {
 
 		//Pause Menu in Game, Main menu in Splash
 		if (status == GameState.GameStatus.End){
+			if (mode == GameState.GameMode.Party){
+				gameObject.GetComponent<PartyManager>().enabled = false;
+			}
+
 			GameObject.Find ("Winner").GetComponent<GUIText>().text = "Player " + winner + " is the best";
 			endScript.enabled = true;
+
 			playing = false;
 		}
 		else if (status == GameState.GameStatus.Game){
@@ -128,6 +133,13 @@ public class GameManager : MonoBehaviour {
 				track = 1;
 			}
 			CheckWinLose ();
+
+			if (mode == GameState.GameMode.Party){
+				if (gameObject.GetComponent<PartyManager>() == null){
+					gameObject.AddComponent<PartyManager>();
+				}
+			}
+
 		 	if (Input.GetKeyDown("p")){
           	 	if (!paused) {
 					if (pauseMenuIns == null){
