@@ -85,7 +85,11 @@ public class UniMoveGame : MonoBehaviour {
 			if (StopManager ()){
 				setUI();
 				UniMoveActivateComponents();
-				this.enabled = false;
+				if (bedSpawned == false) {
+					this.enabled = true;
+				} else if (bedSpawned == true){
+					this.enabled = false;
+				}
 			}
 		}
 	}
@@ -258,6 +262,7 @@ public class UniMoveGame : MonoBehaviour {
 			} else {
 				Debug.Log("DESTROY BED SPAWNER");
 				Destroy(GameObject.Find ("BedSpawner"));
+				bedSpawned = true;
 			}
 		}
 	}
