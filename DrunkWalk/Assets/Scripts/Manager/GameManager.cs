@@ -88,7 +88,7 @@ public class GameManager : MonoBehaviour {
 		if (status == GameState.GameStatus.Splash){
 			mainMenuIns = Instantiate(mainMenu) as GameObject;
 			mainMenuIns.name = "MainMenu";
-			mainMenuIns.SetActive(false);
+			//mainMenuIns.SetActive(false);
 		}
 
 		pauseMenuIns = Instantiate(pauseMenu) as GameObject;

@@ -77,9 +77,9 @@ public class UniMoveSplash : MonoBehaviour
 			if (main.menuNumPublic == 6){
 				if (UniMoveAllPlayersIn ()) {
 					setNumPlayers();
-					GameManager.ins.mode = GameState.GameMode.Race;
+					GameManager.ins.mode = GameState.GameMode.Party;
 					GameManager.ins.status = GameState.GameStatus.Game;
-					Application.LoadLevel ("WastedEasy");
+					Application.LoadLevel ("WastedParty");
 					setGame ();
 					this.enabled = false;
 				}
