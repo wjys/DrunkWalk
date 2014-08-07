@@ -202,6 +202,7 @@ public class Collision : MonoBehaviour {
 				//WIN STATE
 				if (col.tag == "Bed"){
 					//Application.LoadLevel("Won");
+					Debug.Log ("REACHING BED?");
 					reachedBed = true; 
 					soundPlayed = true; 
 					audio.PlayOneShot (clips[Random.Range(5, 8)]); 
