@@ -106,10 +106,8 @@ public class DrunkMovement : InGame {
 	public bool colliding;
 
 	//ANIMATION
-	//public Animator meAnim;
-	//public Animation[] fallAnims;
-	//public Animation[] getUpAnims;
-	//public Animation[] walkAnims;
+	public GameObject model;
+	public Animator modelAnim;
 
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * START
@@ -149,6 +147,20 @@ public class DrunkMovement : InGame {
 		// (5) calibrate the move controller 
 		initX = UniMove.ax;	// calibrate ax
 		initZ = UniMove.az;	// calibrate az
+
+		// (7) get animator of model
+		Transform[] trans = gameObject.GetComponentsInChildren<Transform>();
+
+		foreach (Transform t in trans){
+			if (t.gameObject.name.Equals ("Model")){
+				model = t.gameObject;
+			}
+		}
+
+		modelAnim = model.GetComponent<Animator>();
+
+		modelAnim.SetBool("Falling", false);
+		modelAnim.SetBool ("GetUp", false);
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -426,19 +438,23 @@ public class DrunkMovement : InGame {
 		switch (direction) {
 			
 		case (int) Dir.forward:	
-			rhead.AddForce (hinc*transform.forward);  
+			rhead.AddForce (hinc*transform.forward);
+			modelAnim.SetInteger("Direction", 1);
 			break;
 			
 		case (int) Dir.right:
 			rhead.AddForce (hinc*transform.right); 
+			modelAnim.SetInteger("Direction", 3);
 			break;
 			
 		case (int) Dir.left:
 			rhead.AddForce (-hinc*transform.right); 
+			modelAnim.SetInteger("Direction", 2);
 			break;
 			
 		case (int) Dir.back:
 			rhead.AddForce (-hinc*transform.forward); 
+			modelAnim.SetInteger("Direction", 4);
 			break; 
 			
 		default:
@@ -489,6 +505,9 @@ public class DrunkMovement : InGame {
 		currentFrame = 0; 
 		frozen = true;
 		switchViews = true;
+
+		//(5) Stop model animator
+		//modelAnim.enabled = false;
 	}
 
 	private void switchToFallCam(){
@@ -500,6 +519,10 @@ public class DrunkMovement : InGame {
 		meAnim.SetBool("fallOver", true);
 		checkTaps = true;
 		switchViews = false;
+
+		// (4) make model fallover
+		modelAnim.SetBool ("Falling", true);
+		modelAnim.SetBool ("GetUp", false);
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -554,6 +577,8 @@ public class DrunkMovement : InGame {
 		
 		meAnim.SetBool("fallOver", false);
 		meAnim.SetBool("getUp", true);
+		modelAnim.SetBool ("Falling", false);
+		modelAnim.SetBool ("GetUp", true);
 		//if (GameManager.ins.playerStatus == GameState.PlayerStatus.Fallen){
 		//	GameManager.ins.playerStatus = GameState.PlayerStatus.Fine;
 		//}
