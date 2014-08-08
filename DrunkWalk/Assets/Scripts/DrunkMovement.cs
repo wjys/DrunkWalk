@@ -91,7 +91,7 @@ public class DrunkMovement : InGame {
 	
 	public bool camLerp;
 
-	// LERP FOOT???
+	//LERP FOOT
 	private Vector3 newFeetPos;
 	private bool moveFeet;
 
@@ -104,6 +104,13 @@ public class DrunkMovement : InGame {
 	public bool checkTaps;
 	public bool gettingUp;
 	public bool colliding;
+
+	//ANIMATION
+	//public Animator meAnim;
+	//public Animation[] fallAnims;
+	//public Animation[] getUpAnims;
+	//public Animation[] walkAnims;
+
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * START
 	 * (1) setup all the components of the head game object
@@ -161,8 +168,8 @@ public class DrunkMovement : InGame {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 
 	void Update () {
-		//print ("camLerp " + camLerp);
 
+		//If in splash, disable cam
 		if (GameManager.ins.status == GameState.GameStatus.Splash){
 			cam.enabled = false;
 		}
