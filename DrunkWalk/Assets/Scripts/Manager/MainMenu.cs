@@ -369,8 +369,13 @@ public class MainMenu : Menu {
 			if (!stopMove){
 				if (menuNum == 1) {
 					//DOWN IN MAINMENU
-					idx += 1;
-					idx %= items.Length;
+					if (idx == 0 && GameManager.ins.GetComponent<UniMoveSplash>().numPlayers < 2){
+						idx += 2;
+					}
+					else {
+						idx += 1;
+						idx %= items.Length;
+					}
 
 				} else if (menuSet) {
 					//DOWN IN SETTINGS
@@ -423,8 +428,13 @@ public class MainMenu : Menu {
 			if (!stopMove){
 				if (menuNum == 1) {
 					//UP IN MAINMENU
-					idx += items.Length - 1;
-					idx %= items.Length;
+					if (GameManager.ins.GetComponent<UniMoveSplash>().numPlayers < 2 && idx == 2){
+						idx -= 2;
+					}
+					else {
+						idx += items.Length - 1;
+						idx %= items.Length;
+					}
 				} else if (menuSet) {
 					//UP IN SETTINGS
 					sidx += sitems.Length - 1;
@@ -531,7 +541,7 @@ public class MainMenu : Menu {
 			}
 		}
 
-		if (Input.GetButtonDown("Confirm") || movePressed) {
+		if (Input.GetButtonDown("Confirm") || movePressed || GameManager.ins.GetComponent<UniMoveSplash>().UniMoveAllPlayersIn()) {
 			//CONFIRMED
 			if (menuNum == 1) {
 				items[idx].command();
@@ -552,8 +562,14 @@ public class MainMenu : Menu {
 			} else if (menuNum == 5){
 				mcitems[mcidx].command();
 			} else if (menuNum == 6){
+				UniMoveSplash splash = GameManager.ins.GetComponent<UniMoveSplash>();
+				splash.setNumPlayers();
+				splash.setGame ();
 				mlitems[mlidx].command();
 			} else if (menuNum == 7){
+				UniMoveSplash splash = GameManager.ins.GetComponent<UniMoveSplash>();
+				splash.setNumPlayers();
+				splash.setGame ();
 				mitems[midx].command();
 			}
 

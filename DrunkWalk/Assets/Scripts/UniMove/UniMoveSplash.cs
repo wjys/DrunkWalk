@@ -80,13 +80,6 @@ public class UniMoveSplash : MonoBehaviour
 				allMultiMarkersMade = false;
 			}
 
-			if (main.menuNumPublic == 1){
-				print ("in main menu");
-	            if (numPlayers > 1) {
-					// DISPLAY MULTIPLAYER MENU OPTION
-					print ("DISPLAY MULTIPLAYER OPTION");
-				}
-			}
 			// MULTI CHARACTER SELECT
 			if (main.menuNumPublic == 5) {
 				TurnOnMarkerComponents();
@@ -95,19 +88,6 @@ public class UniMoveSplash : MonoBehaviour
 					main.mcitems[0].command();
 				}
 
-			}
-			if (main.menuNumPublic == 6){
-				print ("level select menu");
-				if (UniMoveAllPlayersIn ()) {
-					print ("all players in!");
-					setNumPlayers();
-					GameManager.ins.game = true;
-					GameManager.ins.mode = GameState.GameMode.Party;
-					Application.LoadLevel ("WastedParty");
-					setGame ();
-					remadeMarkers = false;
-					this.enabled = false;
-				}
 			}
 			menuActions ();
 		}
@@ -250,7 +230,7 @@ public class UniMoveSplash : MonoBehaviour
 	 * if there are 4 players in or if all 2+ players are holding move button, move on to next game state/level select
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 
-	private bool UniMoveAllPlayersIn(){
+	public bool UniMoveAllPlayersIn(){
 		bool holdMove = true;
 		if (numPlayers > 1){
 			foreach (UniMoveController move in moves) {
@@ -300,7 +280,7 @@ public class UniMoveSplash : MonoBehaviour
 	 * SET NECESSARY VARIABLES FOR THE GAME IN THE UNIMOVEGAME MANAGER SCRIPT
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
-	private void setGame(){
+	public void setGame(){
 		print ("reset game move settings");
 		UniMoveGame gm = gameObject.GetComponent<UniMoveGame> ();
 		gm.numPlayers = numPlayers;
@@ -316,7 +296,7 @@ public class UniMoveSplash : MonoBehaviour
 		}
 	}
 
-	private void setNumPlayers(){
+	public void setNumPlayers(){
 		print ("reset players/winners/losers in GameManager");
 		manager.numOfPlayers = numPlayers;
 		manager.winnerIndex = 0;

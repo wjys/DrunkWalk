@@ -340,7 +340,7 @@ public class UniMoveGame : MonoBehaviour {
 				bedTarget.transform.position = BedObj.transform.position;
 				//BedObj.name = "BedObj";
 			} else {
-				Debug.Log("DESTROY BED SPAWNER");
+				//Debug.Log("DESTROY BED SPAWNER");
 				Destroy(GameObject.Find ("BedSpawner"));
 				bedSpawned = true;
 			}
@@ -358,29 +358,6 @@ public class UniMoveGame : MonoBehaviour {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	private void UniMoveSetPlayers(){ 
-		//print ("entered UniMoveSetPlayers()");
-		/*int moveCount = 0;
-		for(int i = 0; i < moves.Length; i++){
-			UniMoveController mv; 
-			//print ("checking move id" + moves[i].id);
-
-
-			if (moves[i].id > 0){
-				mv = players[moveCount].GetComponent<UniMoveController>();
-				if (mv == null){
-					UniMoveDisplay display = players[moveCount].GetComponent<UniMoveDisplay>();
-					if (moves[i].id == display.id){
-						//print ("adding move " + moves[i].id + " to player " + display.id);
-						mv = players[moveCount].AddComponent<UniMoveController>() as UniMoveController;
-						mv.Init (i); 
-						mv.id = display.id;
-						//createPlayer = false;
-						moveCount++; 
-					}
-					//print ("finished adding move to player");
-				}
-			}
-		}*/
 		for (int i = 0; i < numPlayers; i++){
 			UniMoveController mv = players[i].GetComponent<UniMoveController>();
 			if (mv == null){
@@ -399,7 +376,7 @@ public class UniMoveGame : MonoBehaviour {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	private void UniMoveActivateComponents(){
-		print ("activate components!");
+		//print ("activate components!");
 		for (int i = 0; i < numPlayers; i++) {
 			UniMoveController mv = players [i].GetComponent<UniMoveController> ();
 			
@@ -419,7 +396,7 @@ public class UniMoveGame : MonoBehaviour {
 	
 	private bool StopManager(){
 		if (playerCount >= numPlayers){
-			print ("all heads created");
+			//print ("all heads created");
 			return true;
 		}
 		return false; 
@@ -436,7 +413,7 @@ public class UniMoveGame : MonoBehaviour {
 	}
 
 	private void getVariables(){
-		print ("reset game move settings");
+		//print ("reset game move settings");
 		UniMoveSplash splash = gameObject.GetComponent<UniMoveSplash> ();
 		numPlayers = numPlayers;
 		players = new GameObject[numPlayers];
