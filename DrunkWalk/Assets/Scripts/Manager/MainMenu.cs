@@ -127,6 +127,17 @@ public class MainMenu : Menu {
 		new Item("PARTY", delegate () { StartGame (3); })
 	};
 
+	// for navigating through using the move controllers
+	public bool cancelSelection;
+	public bool movePressed;
+	public bool tiltL;
+	public bool tiltR;
+	public bool tiltF;
+	public bool tiltB;
+	public bool flipped;
+
+	public bool stopMove;
+	public float corDelay;
 
 	///////////////////////////////////////////////////////////////////
 
@@ -148,7 +159,6 @@ public class MainMenu : Menu {
 		//Current Menu is at the first one
 		menuNum = 1;
 		menuSet = false;
-
 		Menu1 ();
 
 		//Get World Components
@@ -263,7 +273,7 @@ public class MainMenu : Menu {
 	/////////////
 
 	public static void Difficulty(int characterName){
-		GameManager.chosenChar = characterName;
+		GameManager.ins.chosenChar = characterName;
 
 		menuSet = false;
 		menuNum = 3;
@@ -347,144 +357,181 @@ public class MainMenu : Menu {
 		     isRight = Input.GetAxis ("Horizontal") > 0.8f,
 			 isLeft = Input.GetAxis ("Horizontal") < -0.8f;
 
-		bool justUp = isUp && !wasUp,
-			 justDown = isDown && !wasDown,
-			 justRight = isRight && !wasRight,
-			 justLeft = isLeft && !wasLeft;
+		bool justUp = (isUp && !wasUp),
+			 justDown = (isDown && !wasDown),
+			 justRight = (isRight && !wasRight),
+			 justLeft = (isLeft && !wasLeft);
 
 
 
-		if (Input.GetButtonDown("Down") || justDown) {
+		if (Input.GetButtonDown("Down") || justDown || tiltF) {
 			//WENT DOWN
-			if (menuNum == 1) {
-				//DOWN IN MAINMENU
-				idx += 1;
-				idx %= items.Length;
-			} else if (menuSet) {
-				//DOWN IN SETTINGS
-				sidx += 1;
-				sidx %= sitems.Length;
-			} else if (menuNum == 3){
-				//DOWN IN DIFF
-				if (Diff.totalDrunk > 0){
-					if (Diff.drinkID[didx] > 0){
-						Diff.drinkID[didx] -= 1;
-						Diff.totalDrunk -= 1;
-					}
-				}
-				if (Diff.totalDrunk <= 0){
-					Diff.totalDrunk = 0;
-				}
-			} else if (menuNum == 4) {
-				//DOWN IN SETTINGS
-				lidx += 1;
-				lidx %= litems.Length;
-			} else if (menuNum == 7) {
-				//DOWN IN SETTINGS
-				midx += 1;
-				midx %= mitems.Length;
-			} else if (menuNum == 5) {
-				//DOWN IN SETTINGS
-				mcidx += 1;
-				mcidx %= mcitems.Length;
-			} else if (menuNum == 6) {
-				//DOWN IN SETTINGS
-				mlidx += 1;
-				mlidx %= mlitems.Length;
-			}
+			if (!stopMove){
+				if (menuNum == 1) {
+					//DOWN IN MAINMENU
+					idx += 1;
+					idx %= items.Length;
 
-			timer = 0;
+				} else if (menuSet) {
+					//DOWN IN SETTINGS
+					sidx += 1;
+					sidx %= sitems.Length;
+				} else if (menuNum == 3){
+					//DOWN IN DIFF
+					if (Diff.totalDrunk > 0){
+						if (Diff.drinkID[didx] > 0){
+							Diff.drinkID[didx] -= 1;
+							Diff.totalDrunk -= 1;
+						}
+					}
+					if (Diff.totalDrunk <= 0){
+						Diff.totalDrunk = 0;
+					}
+				} else if (menuNum == 4) {
+					//DOWN IN SETTINGS
+					lidx += 1;
+					lidx %= litems.Length;
+				} else if (menuNum == 7) {
+					//DOWN IN SETTINGS
+					midx += 1;
+					midx %= mitems.Length;
+				} else if (menuNum == 5) {
+					//DOWN IN SETTINGS
+					mcidx += 1;
+					mcidx %= mcitems.Length;
+				} else if (menuNum == 6) {
+					//DOWN IN SETTINGS
+					mlidx += 1;
+					mlidx %= mlitems.Length;
+				}
+				if (tiltF){
+					stopMove = true;
+					if (menuNum != 3){
+						corDelay = 1.0f;
+					}
+					else {
+						corDelay = 0.2f;
+					}
+					StartCoroutine (resumeMove());
+				}
+				timer = 0;
+			}
 		}
 
-		if (Input.GetButtonDown("Up") || justUp) {
+		if (Input.GetButtonDown("Up") || justUp || tiltB) {
 			//WENT UP
-			if (menuNum == 1) {
-				//UP IN MAINMENU
-				idx += items.Length - 1;
-				idx %= items.Length;
-			} else if (menuSet) {
-				//UP IN SETTINGS
-				sidx += sitems.Length - 1;
-				sidx %= sitems.Length;
-			} else if (menuNum == 3) {
-				//UP IN DIFF
-				if (Diff.totalDrunk < 5){
-					if (Diff.drinkID[didx] < 5){
-						Diff.drinkID[didx] += 1;
-						Diff.totalDrunk += 1;
+			if (!stopMove){
+				if (menuNum == 1) {
+					//UP IN MAINMENU
+					idx += items.Length - 1;
+					idx %= items.Length;
+				} else if (menuSet) {
+					//UP IN SETTINGS
+					sidx += sitems.Length - 1;
+					sidx %= sitems.Length;
+				} else if (menuNum == 3) {
+					//UP IN DIFF
+					if (Diff.totalDrunk < 5){
+						if (Diff.drinkID[didx] < 5){
+							Diff.drinkID[didx] += 1;
+							Diff.totalDrunk += 1;
+						}
+					}
+					if (Diff.totalDrunk >= 5){
+						Diff.totalDrunk = 5;
+					}
+				} else if (menuNum == 4){
+					lidx += litems.Length-1;
+					lidx %= litems.Length;
+				} else if (menuNum == 7){
+					midx += mitems.Length-1;
+					midx %= mitems.Length;
+				} else if (menuNum == 5){
+					mcidx += mcitems.Length-1;
+					mcidx %= mcitems.Length;
+				} else if (menuNum == 6){
+					mlidx += mlitems.Length-1;
+					mlidx %= mlitems.Length;
+				}
+				if (tiltB){
+					stopMove = true;
+					if (menuNum != 3){
+						corDelay = 1.0f;
+					}
+					else {
+						corDelay = 0.2f;
+					}
+					StartCoroutine (resumeMove());
+				}
+				timer = 0;
+			}
+		}
+
+		if (Input.GetButtonDown ("Right") || justRight || tiltR) {
+			//WENT RIGHT
+			if (!stopMove){
+				if (tiltR){
+					stopMove = true;
+					corDelay = 0.5f;
+					StartCoroutine (resumeMove());
+				}
+				if (menuNum == 2){
+					//IN CHARACTERS, GO RIGHT TO CHOOSE CHARACTER
+					cidx += 1;
+					cidx %= citems.Length;
+					//HIGHLIGHTED CHARACTER
+					CR.charID = cidx;
+				} else if (menuNum == 3){
+					//RIGHT IN DIFF
+					didx += 1;
+					didx %= ditems.Length;
+					Diff.currDrink = didx;
+				}
+
+				if (menuSet){
+					//IF IN SETTINGS, GO RIGHT TO RAISE VOLUME
+					if (sidx == 0){
+						AudioManager.ins.GetComponent<AudioSource>().volume += 0.1f;
+					} else if (sidx == 1){
+						AudioManager.ins.GetComponent<AudioSource>().volume += 0.1f;
 					}
 				}
-				if (Diff.totalDrunk >= 5){
-					Diff.totalDrunk = 5;
-				}
-			} else if (menuNum == 4){
-				lidx += litems.Length-1;
-				lidx %= litems.Length;
-			} else if (menuNum == 7){
-				midx += mitems.Length-1;
-				midx %= mitems.Length;
-			} else if (menuNum == 5){
-				mcidx += mcitems.Length-1;
-				mcidx %= mcitems.Length;
-			} else if (menuNum == 6){
-				mlidx += mlitems.Length-1;
-				mlidx %= mlitems.Length;
-			}
-
-			timer = 0;
-		}
-
-		if (Input.GetButtonDown ("Right") || justRight) {
-			//WENT RIGHT
-			if (menuNum == 2){
-				//IN CHARACTERS, GO RIGHT TO CHOOSE CHARACTER
-				cidx += 1;
-				cidx %= citems.Length;
-				//HIGHLIGHTED CHARACTER
-				CR.charID = cidx;
-			} else if (menuNum == 3){
-				//RIGHT IN DIFF
-				didx += 1;
-				didx %= ditems.Length;
-				Diff.currDrink = didx;
-			}
-
-			if (menuSet){
-				//IF IN SETTINGS, GO RIGHT TO RAISE VOLUME
-				if (sidx == 0){
-					AudioManager.ins.GetComponent<AudioSource>().volume += 0.1f;
-				} else if (sidx == 1){
-					AudioManager.ins.GetComponent<AudioSource>().volume += 0.1f;
-				}
 			}
 		}
 
-		if (Input.GetButtonDown ("Left") || justRight) {
+		if (Input.GetButtonDown ("Left") || justLeft || tiltL) {
 			//WENT LEFT
-			if (menuNum == 2){
-				//IN CHARACTERS, GO LEFT TO CHOOSE CHARACTER
-				cidx += citems.Length - 1;
-				cidx %= citems.Length;
-				//HIGHLIGHTED CHARACTER
-				CR.charID = cidx;
-			} else if (menuNum == 3){
-				//LEFT IN DIFF
-				didx += ditems.Length - 1;
-				didx %= ditems.Length;
-				Diff.currDrink = didx;
-			}
+			if (!stopMove){
+				if (tiltL){
+					stopMove = true;
+					corDelay = 1.0f;
+					StartCoroutine (resumeMove());
+				}
+				if (menuNum == 2){
+					//IN CHARACTERS, GO LEFT TO CHOOSE CHARACTER
+					cidx += citems.Length - 1;
+					cidx %= citems.Length;
+					//HIGHLIGHTED CHARACTER
+					CR.charID = cidx;
+				} else if (menuNum == 3){
+					//LEFT IN DIFF
+					didx += ditems.Length - 1;
+					didx %= ditems.Length;
+					Diff.currDrink = didx;
+				}
 
-			if (menuSet){
-				//IF IN SETTINGS, GO LEFT TO LOWER VOLUME
-				if (sidx == 0){
-					AudioManager.ins.GetComponent<AudioSource>().volume -= 0.1f;
-				} else if (sidx == 1){
-					AudioManager.ins.GetComponent<AudioSource>().volume -= 0.1f;
+				if (menuSet){
+					//IF IN SETTINGS, GO LEFT TO LOWER VOLUME
+					if (sidx == 0){
+						AudioManager.ins.GetComponent<AudioSource>().volume -= 0.1f;
+					} else if (sidx == 1){
+						AudioManager.ins.GetComponent<AudioSource>().volume -= 0.1f;
+					}
 				}
 			}
 		}
 
-		if (Input.GetButtonDown("Confirm")) {
+		if (Input.GetButtonDown("Confirm") || movePressed) {
 			//CONFIRMED
 			if (menuNum == 1) {
 				items[idx].command();
@@ -516,7 +563,7 @@ public class MainMenu : Menu {
 			}
 		}
 
-		if (Input.GetButtonDown("Cancel")) {
+		if (Input.GetButtonDown("Cancel") | cancelSelection) {
 			//CANCELLED
 			if (menuNum == 1){
 				//GameManager.ins.UnMenu();
@@ -617,5 +664,10 @@ public class MainMenu : Menu {
 
 		yield return new WaitForSeconds(0.001f);
 		lerping = false;
+	}
+
+	IEnumerator resumeMove(){
+		yield return new WaitForSeconds (corDelay);
+		stopMove = false;
 	}
 }

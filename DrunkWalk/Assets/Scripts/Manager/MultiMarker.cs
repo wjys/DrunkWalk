@@ -115,11 +115,6 @@ public class MultiMarker : MonoBehaviour {
 					renderer.color = Color.white;
 				}
 			}
-			// AT MULTI MODE/LEVEL SELECT
-			if (main.menuNumPublic != 5){
-				this.gameObject.GetComponent<SpriteRenderer>().enabled = false;
-				//this.enabled = false;
-			}
 		}
 	}
 

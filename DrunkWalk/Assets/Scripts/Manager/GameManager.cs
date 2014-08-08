@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour {
 	private bool playing;
 
 	//Character
-	public static int chosenChar;
+	public int chosenChar;
 	public int[] multiChosenChar;
 
 	//Difficulty
@@ -111,63 +111,107 @@ public class GameManager : MonoBehaviour {
 
 
 	void Update () {
-		print ("Scene: " + Application.loadedLevelName);
+		//print ("Scene: " + Application.loadedLevelName);
 
 		//Pause Menu in Game, Main menu in Splash
 		if (status == GameState.GameStatus.End){
-			if (mode == GameState.GameMode.Party){
-				gameObject.GetComponent<PartyManager>().enabled = false;
-			}
 
-			GameObject.Find ("Winner").GetComponent<GUIText>().text = "Player " + winner + " is the best";
-			endScript.enabled = true;
-
-			playing = false;
-		}
-		else if (status == GameState.GameStatus.Game){
-			if (!gameScript.enabled && !playing){
-				gameScript.enabled = true;
-				playing = true;
-			}
-			if (track != 1){
-				track = 1;
-			}
-			CheckWinLose ();
-
-			if (mode == GameState.GameMode.Party){
-				if (gameObject.GetComponent<PartyManager>() == null){
-					gameObject.AddComponent<PartyManager>();
+			// switch to SPLASH status
+			if (Application.loadedLevelName.Equals ("Splash")){
+				if (status != GameState.GameStatus.Splash){
+					status = GameState.GameStatus.Splash;
 				}
 			}
 
-		 	if (Input.GetKeyDown("p")){
-          	 	if (!paused) {
-					if (pauseMenuIns == null){
-						pauseMenuIns = Instantiate (pauseMenu) as GameObject;
-						pauseMenuIns.SetActive (true);
-					}
-           	    	Pause();
-          	 	} else {
-           	    	UnPause();
-           		}
-           	}
+			else if (Application.loadedLevelName.Equals ("Won") || Application.loadedLevelName.Equals("Lost")){
+				if (gameScript.enabled){
+					gameScript.enabled = false;
+				}
+				if (splashScript.enabled){
+					splashScript.enabled = false;
+				}
+				if (!endScript.enabled){
+					endScript.enabled = true;
+				}
+				if (Application.loadedLevelName.Equals ("Won")){
+					GameObject.Find ("Winner").GetComponent<GUIText>().text = "Player " + winner + " is the best";
+				}
+			}
+
+			else {
+				status = GameState.GameStatus.Game;
+			}
+
+			if (playing) playing = false;
+		}
+		else if (status == GameState.GameStatus.Game){
+
+			if (Application.loadedLevelName.Equals ("Splash")){
+				if (status != GameState.GameStatus.Splash){
+					status = GameState.GameStatus.Splash;
+				}
+			}
+
+			else if (Application.loadedLevelName.Equals ("Won") || Application.loadedLevelName.Equals("Lost")){
+				status = GameState.GameStatus.End;
+			}
+
+			else {
+				if (!gameScript.enabled && !playing){
+					gameScript.enabled = true;
+					playing = true;
+				}
+				if (splashScript.enabled){
+					splashScript.enabled = false;
+				}
+				if (endScript.enabled){
+					endScript.enabled = false;
+				}
+
+				if (track != 1){
+					track = 1;
+				}
+				CheckWinLose ();
+
+			 	if (Input.GetKeyDown("p")){
+	          	 	if (!paused) {
+						if (pauseMenuIns == null){
+							pauseMenuIns = Instantiate (pauseMenu) as GameObject;
+							pauseMenuIns.SetActive (true);
+						}
+	           	    	Pause();
+	          	 	} else {
+	           	    	UnPause();
+	           		}
+	           	}
+			}
 
 		} else if (status == GameState.GameStatus.Splash) {
-			splashScript.enabled = true;
 
-			if (track != 0){
-				Destroy (GameObject.Find ("_GameManager"));
-				Destroy (GameObject.Find ("_GameState"));
-			}
-			else {
-				gameObject.name = "GameManager";
-				GameObject.Find ("_GameState").name = "GameState";
-			}
-			if (!mainMenuIns.activeSelf){
-				mainMenuIns.SetActive(true);
-			}
+			if (Application.loadedLevelName.Equals("Splash")){
+				if (endScript.enabled || gameScript.enabled){
+					endScript.enabled = false;
+					gameScript.enabled = false;
+				}
+				if (!splashScript.enabled){
+					splashScript.enabled = true;
+				}
 
-        	/*if (Input.GetKeyDown("m")){
+				if (track != 0){
+					Destroy (GameObject.Find ("_GameManager"));
+					Destroy (GameObject.Find ("_GameState"));
+				}
+				else {
+					if (!gameObject.name.Equals("GameManager")){
+						gameObject.name = "GameManager";
+						GameObject.Find ("_GameState").name = "GameState";
+					}
+				}
+				if (!mainMenuIns.activeSelf){
+					mainMenuIns.SetActive(true);
+				}
+				
+				/*if (Input.GetKeyDown("m")){
         		if (!menu) {
         			Menu();
         		} else {
@@ -175,14 +219,22 @@ public class GameManager : MonoBehaviour {
         		}
 				Debug.Log ("MENU");
         	}*/
-			//Menu ();
+				//Menu ();
+				
+				JncInt = DiffObj.GetComponent<Difficulty>().drinkID[0];
+				BeerInt = DiffObj.GetComponent<Difficulty>().drinkID[1];
+				WhiskeyInt = DiffObj.GetComponent<Difficulty>().drinkID[2];
+				SangriaInt = DiffObj.GetComponent<Difficulty>().drinkID[3];
+				
+				diffInt = DiffObj.GetComponent<Difficulty>().totalDrunk;
 
-			JncInt = DiffObj.GetComponent<Difficulty>().drinkID[0];
-			BeerInt = DiffObj.GetComponent<Difficulty>().drinkID[1];
-			WhiskeyInt = DiffObj.GetComponent<Difficulty>().drinkID[2];
-			SangriaInt = DiffObj.GetComponent<Difficulty>().drinkID[3];
-
-			diffInt = DiffObj.GetComponent<Difficulty>().totalDrunk;
+			}
+			else if (Application.loadedLevelName.Equals ("Won") || Application.loadedLevel.Equals ("Lost")){
+				status = GameState.GameStatus.End;
+			}
+			else {
+				status = GameState.GameStatus.Game;
+			}
         }
 	}
 
