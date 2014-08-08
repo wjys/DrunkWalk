@@ -13,6 +13,18 @@ public class UniMoveSplash : MonoBehaviour
 	public int numPlayers;
 	public MainMenu main;
 	public GameManager manager;
+	public UniMoveController p1;
+	public UniMoveController p2;
+	public UniMoveController p3;
+	public UniMoveController p4;
+
+	// move input bounds
+	public float moveBoundRight;
+	public float moveBoundLeft;
+	public float moveBoundFront;
+	public float moveBoundBack;
+	public float moveBoundFlipped;
+	public bool joinedGame;
 
 	public GameObject multiMarker;
 	public int multiMarkerCt;
@@ -51,8 +63,12 @@ public class UniMoveSplash : MonoBehaviour
 				main = GameObject.Find ("MainMenu").GetComponent<MainMenu> ();
 			}
 			if (manager.track != 0 && !remadeMarkers){
+				if (multiMarkerCt > 0){
+					multiMarkerCt = 0;
+				}
 				foreach (UniMoveController move in moves){
 					if (move.id > 0){
+						print ("making marker " + move.id + " after looping back to menu");
 						createMarker (move);
 					}
 				}
@@ -81,16 +97,19 @@ public class UniMoveSplash : MonoBehaviour
 
 			}
 			if (main.menuNumPublic == 6){
+				print ("level select menu");
 				if (UniMoveAllPlayersIn ()) {
+					print ("all players in!");
 					setNumPlayers();
+					GameManager.ins.game = true;
 					GameManager.ins.mode = GameState.GameMode.Party;
-					GameManager.ins.status = GameState.GameStatus.Game;
 					Application.LoadLevel ("WastedParty");
 					setGame ();
 					remadeMarkers = false;
 					this.enabled = false;
 				}
 			}
+			menuActions ();
 		}
 	}
 
@@ -167,24 +186,29 @@ public class UniMoveSplash : MonoBehaviour
 						move.id = 1;
 						numPlayers = 1;
 						createMarker (move);
+						p1 = move;
+						StartCoroutine (startRead ());
 						return;
 					case 1:
 						move.SetLED (markerColors[1]);
 						move.id = 2;
 						numPlayers = 2;
 						createMarker (move);
+						p2 = move;
 						return;
 					case 2:
 						move.SetLED (markerColors[2]);
 						move.id = 3;
 						numPlayers = 3;
 						createMarker (move);
+						p3 = move;
 						return;
 					case 3:
 						move.SetLED (markerColors[3]);
 						move.id = 4; 
 						numPlayers = 4;
 						createMarker (move);
+						p4 = move;
 						return;
 					default:
 						return;
@@ -195,7 +219,7 @@ public class UniMoveSplash : MonoBehaviour
 	}
 
 	private void createMarker(UniMoveController move){
-		if (move.id > multiMarkerCt) {
+		if (move.id > 0) {
 			GameObject mark = Instantiate (multiMarker) as GameObject;
 			mark.GetComponent<MultiMarker>().id = move.id;
 			mark.GetComponent<MultiMarker>().name = "MultiMarker " + move.id;
@@ -277,6 +301,7 @@ public class UniMoveSplash : MonoBehaviour
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	private void setGame(){
+		print ("reset game move settings");
 		UniMoveGame gm = gameObject.GetComponent<UniMoveGame> ();
 		gm.numPlayers = numPlayers;
 		gm.players = new GameObject[numPlayers];
@@ -292,10 +317,147 @@ public class UniMoveSplash : MonoBehaviour
 	}
 
 	private void setNumPlayers(){
+		print ("reset players/winners/losers in GameManager");
 		manager.numOfPlayers = numPlayers;
 		manager.winnerIndex = 0;
 		manager.loserIndex = 0;
 		manager.winners = new int[numPlayers];
 		manager.losers = new int[numPlayers];
+	}
+	private void menuActions(){
+		if (main.menuNumPublic < 5){
+			if (p1 != null){
+				if (p1.ax > moveBoundRight)	main.tiltR = true;
+				else main.tiltR = false;
+
+				if (p1.ax < moveBoundLeft) main.tiltL = true;
+				else main.tiltL = false;
+
+				if (p1.az > moveBoundFront) main.tiltF = true;
+				else main.tiltF = false;
+
+				if (p1.az < moveBoundBack) main.tiltB = true;
+				else main.tiltB = false;
+
+				if (p1.ay < moveBoundFront && p1.az < moveBoundBack) main.flipped = true;
+				else main.flipped = false;
+
+				if (joinedGame){
+					if (p1.GetButtonUp(PSMoveButton.Move)) main.movePressed = true;
+					else main.movePressed = false;
+				}
+
+				if (p1.GetButtonUp(PSMoveButton.Circle) || p1.GetButtonUp (PSMoveButton.Cross) || p1.GetButtonUp(PSMoveButton.Square) || p1.GetButtonUp (PSMoveButton.Triangle))
+					main.cancelSelection = true;
+				else main.cancelSelection = false;
+
+			}
+		}
+		else {
+			switch (numPlayers){
+			case 1:
+				if (p1.ax > moveBoundRight)	main.tiltR = true;
+				else main.tiltR = false;
+				
+				if (p1.ax < moveBoundLeft) main.tiltL = true;
+				else main.tiltL = false;
+				
+				if (p1.az > moveBoundFront) main.tiltF = true;
+				else main.tiltF = false;
+				
+				if (p1.az < moveBoundBack) main.tiltB = true;
+				else main.tiltB = false;
+
+				if (joinedGame){
+					if (p1.GetButtonUp(PSMoveButton.Move)) main.movePressed = true;
+					else main.movePressed = false;
+				}
+				
+				if (p1.GetButtonUp(PSMoveButton.Circle) || p1.GetButtonUp (PSMoveButton.Cross) || p1.GetButtonUp(PSMoveButton.Square) || p1.GetButtonUp (PSMoveButton.Triangle))
+					main.cancelSelection = true;
+				else main.cancelSelection = false;
+				break;
+			case 2:
+				if (p1.ax > moveBoundRight || p2.ax > moveBoundRight)	main.tiltR = true;
+				else main.tiltR = false;
+				
+				if (p1.ax < moveBoundLeft || p2.ax < moveBoundLeft) main.tiltL = true;
+				else main.tiltL = false;
+				
+				if (p1.az > moveBoundFront || p2.az > moveBoundFront) main.tiltF = true;
+				else main.tiltF = false;
+				
+				if (p1.az < moveBoundBack || p2.az < moveBoundBack) main.tiltB = true;
+				else main.tiltB = false;
+
+				if (joinedGame){
+					if ((p1.GetButtonUp(PSMoveButton.Move) && p2.GetButtonUp(PSMoveButton.Move)))
+						main.movePressed = true;
+					else main.movePressed = false;
+				}
+				
+				if ((p1.GetButtonUp(PSMoveButton.Circle) || p1.GetButtonUp (PSMoveButton.Cross) || p1.GetButtonUp(PSMoveButton.Square) || p1.GetButtonUp (PSMoveButton.Triangle)) &&
+				    (p2.GetButtonUp(PSMoveButton.Circle) || p2.GetButtonUp (PSMoveButton.Cross) || p2.GetButtonUp(PSMoveButton.Square) || p2.GetButtonUp (PSMoveButton.Triangle)))
+					main.cancelSelection = true;
+				else main.cancelSelection = false;
+				break;
+			case 3:
+				if (p1.ax > moveBoundRight || p2.ax > moveBoundRight || p3.ax > moveBoundRight)	main.tiltR = true;
+				else main.tiltR = false;
+				
+				if (p1.ax < moveBoundLeft || p2.ax < moveBoundLeft || p3.ax < moveBoundLeft) main.tiltL = true;
+				else main.tiltL = false;
+				
+				if (p1.az > moveBoundFront || p2.az > moveBoundFront || p3.az > moveBoundFront) main.tiltF = true;
+				else main.tiltF = false;
+				
+				if (p1.az < moveBoundBack || p2.az < moveBoundBack || p3.az < moveBoundBack) main.tiltB = true;
+				else main.tiltB = false;
+				
+				if (joinedGame){
+					if (p1.GetButtonUp(PSMoveButton.Move) && p2.GetButtonUp(PSMoveButton.Move) && p3.GetButtonUp (PSMoveButton.Move)) 
+							main.movePressed = true;
+					else main.movePressed = false;
+				}
+				
+				if ((p1.GetButtonUp(PSMoveButton.Circle) || p1.GetButtonUp (PSMoveButton.Cross) || p1.GetButtonUp(PSMoveButton.Square) || p1.GetButtonUp (PSMoveButton.Triangle)) &&
+				    (p2.GetButtonUp(PSMoveButton.Circle) || p2.GetButtonUp (PSMoveButton.Cross) || p2.GetButtonUp(PSMoveButton.Square) || p2.GetButtonUp (PSMoveButton.Triangle)) && 
+				    (p3.GetButtonUp(PSMoveButton.Circle) || p3.GetButtonUp (PSMoveButton.Cross) || p3.GetButtonUp(PSMoveButton.Square) || p3.GetButtonUp (PSMoveButton.Triangle)))
+					main.cancelSelection = true;
+				else main.cancelSelection = false;
+				break;
+
+			case 4:
+				if (p1.ax > moveBoundRight || p2.ax > moveBoundRight || p3.ax > moveBoundRight || p4.ax > moveBoundRight)	main.tiltR = true;
+				else main.tiltR = false;
+				
+				if (p1.ax < moveBoundLeft || p2.ax < moveBoundLeft || p3.ax < moveBoundLeft || p4.ax < moveBoundLeft) main.tiltL = true;
+				else main.tiltL = false;
+				
+				if (p1.az > moveBoundFront || p2.az > moveBoundFront || p3.az > moveBoundFront || p4.az > moveBoundFront) main.tiltF = true;
+				else main.tiltF = false;
+				
+				if (p1.az < moveBoundBack || p2.az < moveBoundBack || p3.az < moveBoundBack || p4.az < moveBoundBack) main.tiltB = true;
+				else main.tiltB = false;
+				
+				if (joinedGame){
+					if (p1.GetButtonUp(PSMoveButton.Move) && p2.GetButtonUp(PSMoveButton.Move) && p3.GetButtonUp (PSMoveButton.Move) && p4.GetButtonUp (PSMoveButton.Move)) 
+						main.movePressed = true;
+					else main.movePressed = false;
+				}
+				
+				if ((p1.GetButtonUp(PSMoveButton.Circle) || p1.GetButtonUp (PSMoveButton.Cross) || p1.GetButtonUp(PSMoveButton.Square) || p1.GetButtonUp (PSMoveButton.Triangle)) &&
+				    (p2.GetButtonUp(PSMoveButton.Circle) || p2.GetButtonUp (PSMoveButton.Cross) || p2.GetButtonUp(PSMoveButton.Square) || p2.GetButtonUp (PSMoveButton.Triangle)) && 
+				    (p3.GetButtonUp(PSMoveButton.Circle) || p3.GetButtonUp (PSMoveButton.Cross) || p3.GetButtonUp(PSMoveButton.Square) || p3.GetButtonUp (PSMoveButton.Triangle)) &&
+				    (p4.GetButtonUp(PSMoveButton.Circle) || p4.GetButtonUp (PSMoveButton.Cross) || p4.GetButtonUp(PSMoveButton.Square) || p4.GetButtonUp (PSMoveButton.Triangle)))
+					main.cancelSelection = true;
+				else main.cancelSelection = false;
+				break;
+			}
+		}
+	}
+	IEnumerator startRead(){
+		yield return new WaitForSeconds (1.0f);
+		joinedGame = true;
 	}
 }

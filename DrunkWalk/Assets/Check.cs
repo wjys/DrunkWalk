@@ -10,6 +10,6 @@ public class Check : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		gameObject.guiText.text = "CHARACTER" + GameManager.chosenChar;
+		//gameObject.guiText.text = "CHARACTER" + GameManager.chosenChar;
 	}
 }
