@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour {
 	public UniMoveSplash splashScript;
 	public UniMoveGame gameScript;
 	public EndScreen endScript;
+	public UniMoveController[] moves;
 
 	//Bools
 	private bool paused = false;
@@ -111,6 +112,10 @@ public class GameManager : MonoBehaviour {
 
 
 	void Update () {
+		if (gameObject.GetComponent<UniMoveController>() != null){
+			moves = gameObject.GetComponents<UniMoveController>();
+			setMoveColors();
+		}
 		//print ("Scene: " + Application.loadedLevelName);
 
 		//Pause Menu in Game, Main menu in Splash
@@ -333,5 +338,28 @@ public class GameManager : MonoBehaviour {
 		loserIndex = 0;
 		winners = new int[numOfPlayers];
 		losers = new int[numOfPlayers];
+	}
+
+	private void setMoveColors(){
+		foreach (UniMoveController move in moves){
+			if (move.id > 0){
+				switch (move.id){
+				case 1:
+					move.SetLED(Color.cyan);
+					break;
+				case 2:
+					move.SetLED(Color.magenta);
+					break;
+				case 3:
+					move.SetLED(Color.yellow);
+					break;
+				case 4:
+					move.SetLED(Color.green);
+					break;
+				default:
+					break;
+				}
+			}
+		}
 	}
 }
