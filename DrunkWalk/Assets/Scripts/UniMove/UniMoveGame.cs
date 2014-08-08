@@ -73,9 +73,9 @@ public class UniMoveGame : MonoBehaviour {
 			bedSpawned = true;
 		}
 
-//		if (GameManager.ins.status == GameState.GameStatus.Tutorial){
-//			positions = new Vector3[1] { new Vector3 (0, 1.424898f, -6) };
-//		}
+		if (GameManager.ins.status == GameState.GameStatus.Tutorial){
+			positions = new Vector3[1] { new Vector3 (0, 1.424898f, -6) };
+		}
 	}
 	
 	
