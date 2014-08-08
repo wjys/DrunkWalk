@@ -577,6 +577,7 @@ public class DrunkMovement : InGame {
 		
 		meAnim.SetBool("fallOver", false);
 		meAnim.SetBool("getUp", true);
+
 		modelAnim.SetBool ("Falling", false);
 		modelAnim.SetBool ("GetUp", true);
 		//if (GameManager.ins.playerStatus == GameState.PlayerStatus.Fallen){

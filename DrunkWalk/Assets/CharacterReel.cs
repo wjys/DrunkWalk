@@ -8,6 +8,9 @@ public class CharacterReel : MonoBehaviour {
 
 	public GameObject[] chars;
 
+	//Idle Animations
+	//public Animator charAnim;
+
 	// Use this for initialization
 	void Start () {
 		charID = 0;
