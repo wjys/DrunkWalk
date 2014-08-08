@@ -64,9 +64,14 @@ public class UniMoveGame : MonoBehaviour {
 		
 		rotations = new Quaternion (0, 0, 0, 0);
 
-		Spawners = new Transform[12];
-		Spawners = GameObject.Find ("BedSpawner").GetComponentsInChildren<Transform>();
-		bedSpawned = false;
+		if (GameManager.ins.mode == GameState.GameMode.Party){
+			Spawners = new Transform[12];
+			Spawners = GameObject.Find ("BedSpawner").GetComponentsInChildren<Transform>();
+			bedSpawned = false;
+		}
+		else {
+			bedSpawned = true;
+		}
 
 //		if (GameManager.ins.status == GameState.GameStatus.Tutorial){
 //			positions = new Vector3[1] { new Vector3 (0, 1.424898f, -6) };
@@ -376,7 +381,7 @@ public class UniMoveGame : MonoBehaviour {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	private void UniMoveActivateComponents(){
-		//print ("activate components!");
+		print ("activate components!");
 		for (int i = 0; i < numPlayers; i++) {
 			UniMoveController mv = players [i].GetComponent<UniMoveController> ();
 			
@@ -396,7 +401,7 @@ public class UniMoveGame : MonoBehaviour {
 	
 	private bool StopManager(){
 		if (playerCount >= numPlayers){
-			//print ("all heads created");
+			print ("all heads created");
 			return true;
 		}
 		return false; 
@@ -413,7 +418,7 @@ public class UniMoveGame : MonoBehaviour {
 	}
 
 	private void getVariables(){
-		//print ("reset game move settings");
+		print ("reset game move settings");
 		UniMoveSplash splash = gameObject.GetComponent<UniMoveSplash> ();
 		numPlayers = numPlayers;
 		players = new GameObject[numPlayers];
