@@ -37,24 +37,19 @@ public class UniMoveGame : MonoBehaviour {
 		countdown = GameObject.Find ("Countdown").guiText;
 		playerCount = 0;
 		ctdown = 4;
-		//moves = gameObject.GetComponents<UniMoveController> ();
-		/*if (numPlayers <= 4) {
-			for (int num = 1; num <= 4; num++){
-				GameObject.Find ("UICam " + num).SetActive(false);
-			}
-		}*/
+
 		// CAMERA VIEWPORT
 		rects = new Rect[7];
 		
-		rects[0].Set (-0.002f, 0.504f, 0.5f, 0.5f);	// multiplayer - p1
-		rects[1].Set (0.502f, 0.504f, 0.5f, 0.5f);	// multiplayer - p2
+		rects[0].Set (-0.002f, 0.504f, 0.5f, 0.5f);		// multiplayer - p1
+		rects[1].Set (0.502f, 0.504f, 0.5f, 0.5f);		// multiplayer - p2
 		rects[2].Set (-0.002f, -0.004f, 0.5f, 0.5f);	// multiplayer - p3
-		rects[3].Set (0.502f, -0.004f, 0.5f, 0.5f);	// multiplayer - p4
+		rects[3].Set (0.502f, -0.004f, 0.5f, 0.5f);		// multiplayer - p4
 		
-		rects[4].Set (-0.002f, 0.0f, 0.5f, 1.0f);	// two players - p1
-		rects[5].Set (0.502f, 0.0f, 0.5f, 1.0f);	// two players - p2
+		rects[4].Set (-0.002f, 0.0f, 0.5f, 1.0f);		// two players - p1
+		rects[5].Set (0.502f, 0.0f, 0.5f, 1.0f);		// two players - p2
 		
-		rects[6].Set (0.0f, 0.0f, 1.0f, 1.0f);	// single player - full screen
+		rects[6].Set (0.0f, 0.0f, 1.0f, 1.0f);			// single player - full screen
 		
 		
 		positions = new Vector3[4] { 	new Vector3 (-1.10f, 1.424898f, 3.941933f),
@@ -63,7 +58,8 @@ public class UniMoveGame : MonoBehaviour {
 										new Vector3 (2.383401f, 1.424898f, 3.366474f)};
 		
 		rotations = new Quaternion (0, 0, 0, 0);
-
+	
+		// if PARTY mode, get the bed spawn locations
 		if (GameManager.ins.mode == GameState.GameMode.Party){
 			Spawners = new Transform[12];
 			Spawners = GameObject.Find ("BedSpawner").GetComponentsInChildren<Transform>();
@@ -73,12 +69,24 @@ public class UniMoveGame : MonoBehaviour {
 			bedSpawned = true;
 		}
 
+		// if TUTORIAL level, instantiate player at a different position
 		if (GameManager.ins.status == GameState.GameStatus.Tutorial){
 			positions = new Vector3[1] { new Vector3 (0, 1.424898f, -6) };
 		}
 	}
 	
-	
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * UPDATE:
+	 * (0) if there are no players, get the setup variables from UniMoveSplash
+	 * (1) if PARTY mode: spawn the bed (otherwise, bed is already in the level!)
+	 * (2) create the players and assign the move controllers to the right players
+	 * (3) check if same number of heads created as numPlayers && if there is a bed in the levle
+	 * (4) set the UICams
+	 * (5) countdown to begin the game (CALIBRATION?)
+	 * (6) activate the player/head components (allow them to move, etc.)
+	 * (7) reset the variables for UniMoveGame (this script)
+	 * (8) disable the script while the game is played
+	 * -------------------------------------------------------------------------------------------------------------------------- */
 	void Update() 
 	{
 		if (numPlayers == 0){
@@ -91,6 +99,7 @@ public class UniMoveGame : MonoBehaviour {
 					setBed();
 				}
 			}
+			else bedSpawned = true;
 
 			if (StopManager() == false){
 				createPlayers ();
@@ -119,7 +128,7 @@ public class UniMoveGame : MonoBehaviour {
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
-	 * NO ARG. NO RETURN.
+	 * CREATE PLAYERS (HEADS)
 	 * instantiate the player:
 	 * (1) set up the viewport rect of the player cameras
 	 * (2) set the appropriate ID to the player 
@@ -187,7 +196,10 @@ public class UniMoveGame : MonoBehaviour {
 			}
 		}
 	}
-
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * COUNTDOWN TO GAME & COROUTINES 
+	 * change out the guitext for the countdown and different delays for each 
+	 * -------------------------------------------------------------------------------------------------------------------------- */
 	private void CountdownToGame(){
 		if (ctdown == 4){
 			StartCoroutine (beginCountdown());
@@ -219,28 +231,28 @@ public class UniMoveGame : MonoBehaviour {
 	IEnumerator _nullto3(){
 		countdown.text = ctdown.ToString();
 		countdown.enabled = true;
-		yield return new WaitForSeconds(1.0f);
+		yield return new WaitForSeconds(0.7f);
 		ctdown = 2;
 	}
 
 	IEnumerator _3to2(){
 		countdown.text = ctdown.ToString ();
-		yield return new WaitForSeconds(1.0f);
+		yield return new WaitForSeconds(0.7f);
 		ctdown = 1;
 	}
 	IEnumerator _2to1(){
 		countdown.text = ctdown.ToString ();
-		yield return new WaitForSeconds(1.0f);
+		yield return new WaitForSeconds(0.7f);
 		ctdown = 0;
 	}
 	IEnumerator _1toGo(){
 		countdown.text = "GO!";
-		yield return new WaitForSeconds(1.0f);
+		yield return new WaitForSeconds(0.7f);
 		ctdown = -1;
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
-	 * NO ARG. NO RETURN.
+	 * SET UI
 	 * set UICam viewports and assign the scripts the children's components call
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
@@ -330,9 +342,9 @@ public class UniMoveGame : MonoBehaviour {
 		}
 	}
 
-	/*--------
-	 * SET RANDOM BED LOCATION
-	 * --------*/
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * SET BED: spawn the bed at a random spawner position
+	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	private void setBed(){
 		if (Spawners != null){
@@ -358,8 +370,8 @@ public class UniMoveGame : MonoBehaviour {
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
-	 * NO ARG. NO RETURN.
-	 * set the UniMove controller to the player (add component to the player)
+	 * UNIMOVE SET PLAYERS
+	 * set the UniMove controller to the player (add component to the player and initialize it)
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	private void UniMoveSetPlayers(){ 
@@ -376,7 +388,7 @@ public class UniMoveGame : MonoBehaviour {
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
-	 * NO ARG. NO RETURN.
+	 * ACTIVATE HEAD/PLAYER COMPONENTS
 	 * when all the players have been set, activate the player components
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
@@ -398,14 +410,22 @@ public class UniMoveGame : MonoBehaviour {
 			}
 		}
 	}
-	
+
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * STOP MANAGER: if there as many heads created as there are moves/players joined in the game
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+
 	private bool StopManager(){
 		if (playerCount >= numPlayers){
-			print ("all heads created");
+			//print ("all heads created");
 			return true;
 		}
 		return false; 
 	}
+
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * RESET VARIABLES: of the script in case loop back to menu
+	 * -------------------------------------------------------------------------------------------------------------------------- */
 
 	private void resetVariables(){
 		startGame = false;
@@ -416,6 +436,10 @@ public class UniMoveGame : MonoBehaviour {
 		ctdown = 4;
 		bedIndex = 0;
 	}
+
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * GET VARIABLES: if numPlayers 0, get variables from UniMoveSplash
+	 * -------------------------------------------------------------------------------------------------------------------------- */
 
 	private void getVariables(){
 		print ("reset game move settings");

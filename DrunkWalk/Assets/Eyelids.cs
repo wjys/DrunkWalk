@@ -89,7 +89,7 @@ public class Eyelids : InGame {
 
 	void FixedUpdate() {
 		if (gettingUp){
-			//blinkCnt = 0;
+			blinkCnt = 0;
 			lidCurl();
 
 			gettingUp = false;
