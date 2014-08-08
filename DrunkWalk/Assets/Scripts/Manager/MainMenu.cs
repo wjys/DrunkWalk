@@ -227,8 +227,10 @@ public class MainMenu : Menu {
 		//RACE PORTAL
 		else if (mode == 2){
 			Application.LoadLevel ("WastedMulti");
+			//Application.LoadLevel("WastedParty");
 			GameManager.ins.status = GameState.GameStatus.Game;
 			GameManager.ins.mode = GameState.GameMode.Race;
+			//GameManager.ins.mode = GameState.GameMode.Party;
 		}
 		//PARTY PORTAL
 		else if (mode == 3){
