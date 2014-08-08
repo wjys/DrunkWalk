@@ -236,6 +236,31 @@ public class GameManager : MonoBehaviour {
 				status = GameState.GameStatus.Game;
 			}
         }
+		else if (status == GameState.GameStatus.Tutorial){
+			if (Application.loadedLevelName.Equals ("Splash")){
+				if (status != GameState.GameStatus.Splash){
+					status = GameState.GameStatus.Splash;
+				}
+			}
+			
+			else if (Application.loadedLevelName.Equals ("Won") || Application.loadedLevelName.Equals("Lost")){
+				status = GameState.GameStatus.End;
+			}
+			
+			else {
+				if (!gameScript.enabled && !playing){
+					gameScript.enabled = true;
+					playing = true;
+				}
+				if (splashScript.enabled){
+					splashScript.enabled = false;
+				}
+				if (endScript.enabled){
+					endScript.enabled = false;
+				}
+			}
+			CheckWinLose ();
+		}
 	}
 
 
@@ -291,6 +316,13 @@ public class GameManager : MonoBehaviour {
 				else {
 					Application.LoadLevel ("Lost");
 				}
+			}
+		}
+
+		if (status == GameState.GameStatus.Tutorial){
+			if (loserIndex == 1){
+				status = GameState.GameStatus.End;
+				Application.LoadLevel ("Lost");
 			}
 		}
 	}

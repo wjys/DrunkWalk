@@ -560,6 +560,11 @@ public class MainMenu : Menu {
 					}
 				}
 			} else if (menuNum == 4){
+				if (lidx == 0){
+					UniMoveSplash splash = GameManager.ins.GetComponent<UniMoveSplash>();
+					splash.setNumPlayers();
+					splash.setGame ();
+				}
 				litems[lidx].command();
 			} else if (menuNum == 5){
 				mcitems[mcidx].command();
