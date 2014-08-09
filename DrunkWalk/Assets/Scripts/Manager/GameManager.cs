@@ -69,6 +69,12 @@ public class GameManager : MonoBehaviour {
 	void Awake () {
 		//Setup instance
 		DontDestroyOnLoad(this);
+
+		if (GameObject.Find ("GameManager") != null){
+			Destroy (this.gameObject);
+		}
+
+
 		ins = this;
 		chosenChar = 0;
 
@@ -212,6 +218,7 @@ public class GameManager : MonoBehaviour {
 						GameObject.Find ("_GameState").name = "GameState";
 					}
 				}
+			
 				if (!mainMenuIns.activeSelf){
 					mainMenuIns.SetActive(true);
 				}

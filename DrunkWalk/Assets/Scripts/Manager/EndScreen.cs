@@ -35,8 +35,8 @@ public class EndScreen : MonoBehaviour {
 
 		if (Input.anyKey){
 			Application.LoadLevel ("Splash"); 
-			Destroy (GameObject.Find ("GameState"));
-			Destroy (this.gameObject);
+			//Destroy (GameObject.Find ("GameState"));
+			//Destroy (this.gameObject);
 			this.enabled = false;
 		}
 	}

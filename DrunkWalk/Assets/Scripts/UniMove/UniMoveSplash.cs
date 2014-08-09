@@ -28,7 +28,6 @@ public class UniMoveSplash : MonoBehaviour
 
 	public GameObject multiMarker;
 	public int multiMarkerCt;
-	public bool allMultiMarkersMade;
 	public int selectedMarkers;
 
 	public Transform[] handle;
@@ -59,17 +58,24 @@ public class UniMoveSplash : MonoBehaviour
 
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * UPDATE:
-	 * (1) 
+	 * (0) only do things if we're in the splash scene 
+	 * (1) get access to running MainMenu script
+	 * (2) remake the markers if looping through menu again
+	 * (3) constantly check if another player joins in if less than 4 players currently in the game
+	 * (4) turn on markers if in multiplayer character select menu
+	 * (5) if all moves/players have selected a character, move on to multiplayer mode select
+	 * (6) also constantly read input from players to navigate through menu (menuActions)
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	void Update() 
 	{
 		if (GameManager.ins.status == GameState.GameStatus.Splash){
-			setMoveColour ();
 
 			if (main == null){
 				main = GameObject.Find ("MainMenu").GetComponent<MainMenu> ();
 			}
+
+			// create move marker objects
 			if (manager.track != 0 && !remadeMarkers){
 				if (multiMarkerCt > 0){
 					multiMarkerCt = 0;
@@ -82,10 +88,21 @@ public class UniMoveSplash : MonoBehaviour
 				}
 				remadeMarkers = true;
 			}
-			UniMoveSetID ();
 
-			if (multiMarkerCt < numPlayers){
-				allMultiMarkersMade = false;
+			if (((main.menuNumPublic < 5 && main.menuNumPublic != 1) || main.menuNumPublic == 7) && numPlayers > 1){
+				numPlayers = 1;
+			}
+
+			// keep checking if a new player joins the game
+			if (p1 == null || ((main.menuNumPublic == 1 || (main.menuNumPublic >= 5 && main.menuNumPublic != 7)) && numPlayers < 4)){
+				if (numPlayers == 1 && p2 != null){
+					foreach (UniMoveController move in moves){
+						if (move.id > 0 && move.id != 1){
+							numPlayers++;
+						}
+					}
+				}
+				UniMoveSetID ();
 			}
 
 			// MULTI CHARACTER SELECT
@@ -95,18 +112,25 @@ public class UniMoveSplash : MonoBehaviour
 				if (selectedMarkers == numPlayers){
 					main.mcitems[0].command();
 				}
+				else {
+					main.mcitems[4].command();
+				}
 
 			}
 			menuActions ();
 		}
 	}
 
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * FIXED UPDATE: lerp the lil move controllers to be displayed when a player joins in
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+
 	void FixedUpdate (){
 
 		// LIL UNIMOVES POP UP
 		if (GameManager.ins.status == GameState.GameStatus.Splash){
 			foreach (UniMoveController move in moves){
-				if (move.id !=0){
+				if (move.id != 0){
 					handle[move.id-1] = GameObject.Find ("HANDLE"+move.id).transform;
 					//newHandle[move.id-1] = new Vector3 (handle[move.id-1].position.x, -2.2f, handle[move.id-1].position.z);
 					handle[move.id-1].position = Vector3.Lerp (handle[move.id-1].position, new Vector3 (handle[move.id-1].position.x, -2.2f, handle[move.id-1].position.z), smooth * Time.deltaTime);
@@ -114,17 +138,9 @@ public class UniMoveSplash : MonoBehaviour
 	        }
 		}
     }
-    
-	/*void HandleControllerDisconnected (object sender, EventArgs e)
-	{
-		// TODO: Remove this disconnected controller from the list and maybe give an update to the player
-	}*/
-	
-	
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
-	 * NO ARG. NO RETURN.
-	 * API Code to initialize the move controllers within this manager 
+	 * UNIMOVE INIT: API Code to initialize the move controllers within this manager 
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	private void UniMoveInit(){
@@ -161,8 +177,7 @@ public class UniMoveSplash : MonoBehaviour
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
-	 * NO ARG. NO RETURN.
-	 * when a player taps the Move button on their controller, set the ID on the move controller to the first available player
+	 * UNIMOVE SET ID: when a player taps the Move button, set the ID on the move controller to the first available ID
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	private void UniMoveSetID(){
@@ -208,6 +223,10 @@ public class UniMoveSplash : MonoBehaviour
 		}
 	}
 
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * CREATE MARKER: instantiate from marker prefab
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+
 	private void createMarker(UniMoveController move){
 		if (move.id > 0) {
 			GameObject mark = Instantiate (multiMarker) as GameObject;
@@ -216,9 +235,12 @@ public class UniMoveSplash : MonoBehaviour
 			mark.GetComponent<MultiMarker>().UniMove = move;
 			mark.GetComponent<MultiMarker>().spriteID = move.id-1;
 			multiMarkerCt++;
-			allMultiMarkersMade = true;
 		}
 	}
+
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * TURN ON MARKER COMPONENTS: activate marker sprites (show the marker)
+	 * -------------------------------------------------------------------------------------------------------------------------- */
 
 	private void TurnOnMarkerComponents(){
 		for (int i = 1; i <= numPlayers; i++){
@@ -236,7 +258,7 @@ public class UniMoveSplash : MonoBehaviour
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
-	 * NO ARG. RETURN BOOL: true if ready to move on to level select
+	 * UNIMOVE ALL PLAYERS IN. RETURN BOOL: true if ready to move on to level select
 	 * if there are 4 players in or if all 2+ players are holding move button, move on to next game state/level select
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 
@@ -259,35 +281,7 @@ public class UniMoveSplash : MonoBehaviour
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
-	 * SET MOVE CONTROLLER COLOUR
-	 * -------------------------------------------------------------------------------------------------------------------------- */
-	
-	private void setMoveColour(){
-		foreach (UniMoveController move in moves){
-			switch (move.id) {
-			case 0:
-				break;
-			case 1:
-				move.SetLED (Color.cyan);
-				break;
-			case 2:
-				move.SetLED (Color.magenta);
-				break;
-			case 3:
-				move.SetLED (Color.yellow);
-				break;
-			case 4:
-				move.SetLED (Color.green);
-				break;
-			default:
-				break;
-
-			}
-		}
-	}
-
-	/* --------------------------------------------------------------------------------------------------------------------------
-	 * SET NECESSARY VARIABLES FOR THE GAME IN THE UNIMOVEGAME MANAGER SCRIPT
+	 * SET GAME: set variables for the game in UniMoveGame
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	public void setGame(){
@@ -306,6 +300,10 @@ public class UniMoveSplash : MonoBehaviour
 		}
 	}
 
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * SET NUM PLAYERS: when all players ready, reset #players, winners/losers and indeces in GameManager
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+
 	public void setNumPlayers(){
 		print ("reset players/winners/losers in GameManager");
 		manager.numOfPlayers = numPlayers;
@@ -314,6 +312,11 @@ public class UniMoveSplash : MonoBehaviour
 		manager.winners = new int[numPlayers];
 		manager.losers = new int[numPlayers];
 	}
+
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * MENU ACTIONS: inputs to navigate through the menu with the move controller
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+
 	private void menuActions(){
 		if (main.menuNumPublic < 5){
 			if (p1 != null){
@@ -435,7 +438,7 @@ public class UniMoveSplash : MonoBehaviour
 						main.movePressed = true;
 					else main.movePressed = false;
 				}
-				
+
 				if ((p1.GetButtonUp(PSMoveButton.Circle) || p1.GetButtonUp (PSMoveButton.Cross) || p1.GetButtonUp(PSMoveButton.Square) || p1.GetButtonUp (PSMoveButton.Triangle)) &&
 				    (p2.GetButtonUp(PSMoveButton.Circle) || p2.GetButtonUp (PSMoveButton.Cross) || p2.GetButtonUp(PSMoveButton.Square) || p2.GetButtonUp (PSMoveButton.Triangle)) && 
 				    (p3.GetButtonUp(PSMoveButton.Circle) || p3.GetButtonUp (PSMoveButton.Cross) || p3.GetButtonUp(PSMoveButton.Square) || p3.GetButtonUp (PSMoveButton.Triangle)) &&
@@ -446,8 +449,13 @@ public class UniMoveSplash : MonoBehaviour
 			}
 		}
 	}
+
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * START READ COROUTINE: when a player joins in, don't let move confirm in menu (DELAY)
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+
 	IEnumerator startRead(){
-		yield return new WaitForSeconds (1.0f);
+		yield return new WaitForSeconds (0.5f);
 		joinedGame = true;
 	}
 }
