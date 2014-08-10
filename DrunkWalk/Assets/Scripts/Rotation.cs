@@ -74,7 +74,8 @@ public class Rotation : MonoBehaviour {
 					direction = turnHead(direction);
 				}
 				else {
-					delayRotation (); 
+					//delayRotation (); 
+					StartCoroutine(delayRot ());
 				}
 			}
 		}
@@ -96,6 +97,14 @@ public class Rotation : MonoBehaviour {
 			rotated = false; 
 		}
 		currentFrame++;
+	}
+
+	IEnumerator delayRot(){
+		yield return new WaitForSeconds (1.0f);
+		currentFrame = 0;
+		delaying = false; 
+		feetPlaced = false;
+		rotated = false; 
 	}
 
 	// NOT USED? PLACE FEET BEFORE ROTATION

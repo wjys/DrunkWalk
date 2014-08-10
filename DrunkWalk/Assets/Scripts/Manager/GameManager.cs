@@ -218,6 +218,13 @@ public class GameManager : MonoBehaviour {
 						GameObject.Find ("_GameState").name = "GameState";
 					}
 				}
+
+				if (mainMenuIns == null){
+					if (GameObject.Find ("MainMenu") != null){
+						mainMenuIns = GameObject.Find ("MainMenu");
+					}
+					ins = this;
+				}
 			
 				if (!mainMenuIns.activeSelf){
 					mainMenuIns.SetActive(true);
@@ -231,14 +238,18 @@ public class GameManager : MonoBehaviour {
         		}
 				Debug.Log ("MENU");
         	}*/
-				//Menu ();
-				
-				JncInt = DiffObj.GetComponent<Difficulty>().drinkID[0];
-				BeerInt = DiffObj.GetComponent<Difficulty>().drinkID[1];
-				WhiskeyInt = DiffObj.GetComponent<Difficulty>().drinkID[2];
-				SangriaInt = DiffObj.GetComponent<Difficulty>().drinkID[3];
-				
-				diffInt = DiffObj.GetComponent<Difficulty>().totalDrunk;
+				//Menu ()
+				if (DiffObj == null){
+					DiffObj = GameObject.Find ("Difficulty");
+				}
+				else {
+					JncInt = DiffObj.GetComponent<Difficulty>().drinkID[0];
+					BeerInt = DiffObj.GetComponent<Difficulty>().drinkID[1];
+					WhiskeyInt = DiffObj.GetComponent<Difficulty>().drinkID[2];
+					SangriaInt = DiffObj.GetComponent<Difficulty>().drinkID[3];
+					
+					diffInt = DiffObj.GetComponent<Difficulty>().totalDrunk;
+				}
 
 			}
 			else if (Application.loadedLevelName.Equals ("Won") || Application.loadedLevel.Equals ("Lost")){
