@@ -179,9 +179,6 @@ public class GameManager : MonoBehaviour {
 					endScript.enabled = false;
 				}
 
-				if (track != 1){
-					track = 1;
-				}
 				CheckWinLose ();
 
 			 	if (Input.GetKeyDown("p")){

@@ -29,6 +29,8 @@ public class UniMoveGame : MonoBehaviour {
 	public int ctdown;
 	public bool countingDown;
 
+	public bool setGMTrack;
+
 	public GameObject bedTarget;
 
 	
@@ -89,6 +91,28 @@ public class UniMoveGame : MonoBehaviour {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	void Update() 
 	{
+		if (!setGMTrack){
+			if (GameManager.ins.track != 0){
+				if (GameManager.ins.status != GameState.GameStatus.Tutorial){
+					// if TUTORIAL level, instantiate player at a different position
+					if (GameManager.ins.status == GameState.GameStatus.Tutorial){
+						positions = new Vector3[1] { new Vector3 (0, 1.424898f, -6) };
+					}
+				}
+				else {
+					positions = new Vector3[4] { 	new Vector3 (-1.10f, 1.424898f, 3.941933f),
+													new Vector3 (-0.03585815f, 1.424898f, 3.941933f),
+													new Vector3 (1.16f, 1.424898f, 3.941933f), 
+													new Vector3 (2.383401f, 1.424898f, 3.366474f)};
+				}
+				setGMTrack = true;
+			}
+			else {
+				GameManager.ins.track = 1;
+				setGMTrack = true;
+			}
+		}
+
 		if (numPlayers == 0){
 			getVariables();
 		}
