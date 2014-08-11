@@ -171,9 +171,15 @@ public class DrunkForce : InGame {
 			}
 			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + rotInc, transform.rotation.z + camInc, transform.rotation.w); */
 			//print ("leaning right"); 
-			transform.localRotation = Quaternion.Lerp (transform.localRotation, 
-			                                           Quaternion.Euler (transform.localEulerAngles.x, transform.localEulerAngles.y, -Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.position.y - feet.transform.position.y))/(Mathf.Abs(transform.position.x - feet.transform.position.x)))*1.5f)), 
-			                                           Time.deltaTime * smooth);
+
+			if (transform.localRotation.z <= -0.13f){
+				transform.localRotation = new Quaternion (transform.localRotation.x, transform.localRotation.y, -0.11f, transform.localRotation.w);
+			}
+			else {
+				transform.localRotation = Quaternion.Lerp (transform.localRotation, 
+				                                           Quaternion.Euler (transform.localEulerAngles.x, transform.localEulerAngles.y, -Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.position.y - feet.transform.position.y))/(Mathf.Abs(transform.position.x - feet.transform.position.x)))*1.5f)), 
+				                                           Time.deltaTime * smooth);
+			}
 			break;
 		case (int) Dir.left:
 			/*if (!camHiCapped){
@@ -181,9 +187,16 @@ public class DrunkForce : InGame {
 			}
 			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y - rotInc, transform.rotation.z + camInc, transform.rotation.w); */
 			//print ("leaning left"); 
-			transform.localRotation = Quaternion.Lerp (transform.localRotation, 
-			                                           Quaternion.Euler (transform.localEulerAngles.x, transform.localEulerAngles.y, Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.position.y - feet.transform.position.y))/(Mathf.Abs(transform.position.x - feet.transform.position.x)))*1.5f)), 
-			                                           Time.deltaTime * smooth);
+			if (transform.localRotation.z >= 0.13f){
+				transform.localRotation = new Quaternion (transform.localRotation.x, transform.localRotation.y, 0.11f, transform.localRotation.w);
+			}
+			else {
+				transform.localRotation = Quaternion.Lerp (transform.localRotation, 
+				                                           Quaternion.Euler (transform.localEulerAngles.x, transform.localEulerAngles.y, Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.position.y - feet.transform.position.y))/(Mathf.Abs(transform.position.x - feet.transform.position.x)))*1.5f)), 
+				                                           Time.deltaTime * smooth);
+			}
+			print ("lean right " + transform.localRotation.z);
+
 			break;
 		case (int) Dir.back:
 			/*if (!camLoCapped){
