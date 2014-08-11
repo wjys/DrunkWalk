@@ -137,7 +137,7 @@ public class MainMenu : Menu {
 	public bool flipped;
 
 	public bool stopMove;
-	public bool readyStart;
+	public bool stopConfirm;
 	public float corDelay;
 
 	///////////////////////////////////////////////////////////////////
@@ -170,7 +170,6 @@ public class MainMenu : Menu {
 		//Set multiplayer to false
 		multi = false;
 
-		readyStart = false;
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////
@@ -571,12 +570,12 @@ public class MainMenu : Menu {
 				}
 				litems[lidx].command();
 			} else if (menuNum == 5){
-				stopMove = true;
+				stopConfirm = true;
 				corDelay = 0.3f;
-				StartCoroutine(resumeMove ());
+				StartCoroutine(resumeConfirm ());
 				mcitems[mcidx].command();
 			} else if (menuNum == 6){
-				if (!stopMove){
+				if (!stopConfirm){
 					UniMoveSplash splash = GameManager.ins.GetComponent<UniMoveSplash>();
 					splash.setNumPlayers();
 					splash.setGame ();
@@ -590,7 +589,6 @@ public class MainMenu : Menu {
 			}
 
 			if (!lerping){
-				print ("LERP CONFIRM");
 				lerping = true;
 				StartCoroutine(LerpCam ());
 			}
@@ -616,7 +614,6 @@ public class MainMenu : Menu {
 			}
 
 			if (!lerping){
-				print ("LERP CANCEL");
 				lerping = true;
 				StartCoroutine(LerpCam());
 			}
@@ -655,7 +652,6 @@ public class MainMenu : Menu {
 
 		//MULTIPLAYER CHARACTERS
 		if (menuNum == 5){
-			print ("LERP CAM NUM 5");
 			newPos = new Vector3(0, -25, 0);
 			newRot = new Quaternion(0,0,0,1);
 			Lev.transform.position = new Vector3(Lev.transform.position.x, -25, Lev.transform.position.z);
@@ -703,5 +699,10 @@ public class MainMenu : Menu {
 	IEnumerator resumeMove(){
 		yield return new WaitForSeconds (corDelay);
 		stopMove = false;
+	}
+
+	IEnumerator resumeConfirm(){
+		yield return new WaitForSeconds (corDelay);
+		stopConfirm = false;
 	}
 }
