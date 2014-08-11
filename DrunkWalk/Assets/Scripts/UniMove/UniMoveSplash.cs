@@ -114,12 +114,7 @@ public class UniMoveSplash : MonoBehaviour
 					//main.LerpCam();
 				}
 			}
-			if (main.menuNumPublic == 6) {
-				if (selectedMarkers < numPlayers) {
-					main.mcitems[4].command();
-				}
 
-			}
 			menuActions ();
 		}
 	}

@@ -603,6 +603,7 @@ public class DrunkMovement : InGame {
 
 	IEnumerator ResetVariables(){
 		camLerp = true;
+		rhead.angularVelocity = new Vector3 (0, 0, 0);
 		yield return new WaitForSeconds (1.0f);
 		camLerp = false;
 		rhead.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY;
