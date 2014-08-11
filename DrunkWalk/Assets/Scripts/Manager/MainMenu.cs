@@ -116,7 +116,8 @@ public class MainMenu : Menu {
 		new Item("ANNA", delegate () {Debug.Log ("ANNA"); }),
 		new Item("ANH CHI", delegate () {Debug.Log ("ANHCHI"); }),
 		new Item("WINNIE", delegate () {Debug.Log ("WINNIE"); }),
-		new Item("BACK TO MULTI CHAR", delegate () { MultiplayerChar (); })
+		new Item("BACK TO MULTI CHAR", delegate () { MultiplayerChar (); }),
+		new Item("BACK TO MAIN", delegate () { Menu1 (); })
 	};
 	
 	//MultiMode (6)
@@ -351,6 +352,7 @@ public class MainMenu : Menu {
 
 	void Update () {
 		menuNumPublic = menuNum;
+		print ("menuNum " + menuNum);
 		timer += Time.deltaTime;
 
 		//GET INPUT
@@ -582,7 +584,7 @@ public class MainMenu : Menu {
 
 			if (!lerping){
 				lerping = true;
-				StartCoroutine("LerpCam");
+				StartCoroutine(LerpCam ());
 			}
 		}
 
@@ -607,7 +609,7 @@ public class MainMenu : Menu {
 
 			if (!lerping){
 				lerping = true;
-				StartCoroutine("LerpCam");
+				StartCoroutine(LerpCam());
 			}
 		}
 
@@ -640,12 +642,11 @@ public class MainMenu : Menu {
 		if (menuNum == 6){
 			newPos = new Vector3 (0, -25, 0);
 			newRot = new Quaternion (0, 1, 0, -2.980232e-08f);
-
-			Lev.transform.position = new Vector3(Lev.transform.position.x, -25, Lev.transform.position.z);
 		}
 
 		//MULTIPLAYER CHARACTERS
 		if (menuNum == 5){
+			Lev.transform.position = new Vector3(Lev.transform.position.x, -25, Lev.transform.position.z);
 			newPos = new Vector3(0, -25, 0);
 			newRot = new Quaternion(0,0,0,0);
 		}
@@ -664,6 +665,7 @@ public class MainMenu : Menu {
 
 		//CHARACTER
 		if (menuNum == 2){
+			Lev.transform.position = new Vector3(Lev.transform.position.x, 25, Lev.transform.position.z);
 			newPos = new Vector3(0,25,0);
 			newRot = new Quaternion (0, 0, 0, 1);
 		}
@@ -675,8 +677,7 @@ public class MainMenu : Menu {
 		}
 
 		if (menuNum == 0){
-			newPos = new Vector3 (25,0,0);
-			newRot = new Quaternion(0,0,0,0);
+			menuNum = 1;
 		}
 
 		//SETTING
