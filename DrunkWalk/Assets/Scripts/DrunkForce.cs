@@ -99,6 +99,9 @@ public class DrunkForce : InGame {
 			transform.rotation = Quaternion.Lerp (transform.rotation, new Quaternion(transform.rotation.x, 0, 0, transform.rotation.w), 0.5f*Time.deltaTime);
 			recoiled = false; 
 		}
+		if (stopWobble){
+			transform.rotation = Quaternion.Lerp(transform.rotation, new Quaternion(transform.rotation.x, transform.rotation.y, 0, transform.rotation.w), 0.5f * Time.deltaTime);
+		}
 	}
 
 
