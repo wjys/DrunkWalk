@@ -167,6 +167,7 @@ public class MultiMarker : MonoBehaviour {
 
 	private void selectCharacter(){
 		if (UniMove.GetButtonUp(PSMoveButton.Move)){
+			GameManager.ins.GetComponent<GameManager>().multiChosenChar[splash.selectedMarkers] = currentChar;
 			splash.selectedMarkers++;
 			charSelected = true;
 		}

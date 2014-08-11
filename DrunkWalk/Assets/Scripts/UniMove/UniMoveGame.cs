@@ -6,7 +6,10 @@ using System.Collections;
 public class UniMoveGame : MonoBehaviour {
 
 	public GameObject[] players;
-	public GameObject player; 
+	public GameObject Zach;
+	public GameObject Ana;
+	public GameObject AnhChi;
+	public GameObject Winnie; 
 	public GameObject[] ui;
 	public GUIText countdown;
 	public UniMoveController[] moves;
@@ -161,7 +164,43 @@ public class UniMoveGame : MonoBehaviour {
 	private void createPlayers(){
 		print ("create players!");
 		while (playerCount < numPlayers){
-			players [playerCount] = Instantiate (player, positions [playerCount], rotations) as GameObject;
+
+			if (numPlayers > 1){
+				switch (GameManager.ins.GetComponent<GameManager>().multiChosenChar[playerCount]){
+				case 0:
+					players [playerCount] = Instantiate (Zach, positions [playerCount], rotations) as GameObject;
+					break;
+				case 1:
+					players [playerCount] = Instantiate (Ana, positions [playerCount], rotations) as GameObject;
+					break;
+				case 2:
+					players [playerCount] = Instantiate (AnhChi, positions [playerCount], rotations) as GameObject;
+					break;
+				case 3:
+					players [playerCount] = Instantiate (Winnie, positions [playerCount], rotations) as GameObject;
+					break;
+				default: 
+					break;
+				}
+			}
+			else {
+				switch (GameManager.ins.GetComponent<GameManager>().chosenChar){
+				case 0:
+					players [playerCount] = Instantiate (Zach, positions [playerCount], rotations) as GameObject;
+					break;
+				case 1:
+					players [playerCount] = Instantiate (Ana, positions [playerCount], rotations) as GameObject;
+					break;
+				case 2:
+					players [playerCount] = Instantiate (AnhChi, positions [playerCount], rotations) as GameObject;
+					break;
+				case 3:
+					players [playerCount] = Instantiate (Winnie, positions [playerCount], rotations) as GameObject;
+					break;
+				default: 
+					break;
+				}
+			}
 			
 			// SET UP THE ID OF THE HEAD AND COMPONENTS
 			players [playerCount].name = "Head " + (playerCount + 1);
