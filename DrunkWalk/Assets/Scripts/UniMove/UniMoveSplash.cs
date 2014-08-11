@@ -110,9 +110,12 @@ public class UniMoveSplash : MonoBehaviour
 				TurnOnMarkerComponents();
 
 				if (selectedMarkers == numPlayers){
-					main.mcitems[0].command();
+					//main.mcitems[0].command();
+					//main.LerpCam();
 				}
-				else {
+			}
+			if (main.menuNumPublic == 6) {
+				if (selectedMarkers < numPlayers) {
 					main.mcitems[4].command();
 				}
 
