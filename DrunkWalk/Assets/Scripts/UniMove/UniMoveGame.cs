@@ -297,8 +297,8 @@ public class UniMoveGame : MonoBehaviour {
 			
 			eyelids.me = GameObject.Find ("Head 1").GetComponent<DrunkMovement>();
 			comp.me =  GameObject.Find ("Head 1");
-			comp.bed = GameObject.Find ("BedTarget");
-			comp.bedSpriteScale = comp.bed.transform;
+			comp.target = GameObject.Find ("BedTarget");
+			comp.spriteScale = comp.target.transform;
 			ouch.collision = GameObject.Find ("Head 1").GetComponent<Collision>();
 			ouch.dm = GameObject.Find ("Head 1").GetComponent<DrunkMovement>();
 			
@@ -323,11 +323,19 @@ public class UniMoveGame : MonoBehaviour {
 				
 				eyelids.me = GameObject.Find ("Head " + i).GetComponent<DrunkMovement>();
 				comp.me =  GameObject.Find ("Head " + i);
-				comp.bed = GameObject.Find ("BedTarget");
-				comp.bedSpriteScale = comp.bed.transform;
+				comp.target = GameObject.Find ("BedTarget");
+				comp.spriteScale = comp.target.transform;
 				ouch.collision = GameObject.Find ("Head " + i).GetComponent<Collision>();
 				ouch.dm = GameObject.Find ("Head " + i).GetComponent<DrunkMovement>();
-				
+
+				if (GameManager.ins.mode == GameState.GameMode.Party){
+					comp.couch = GameObject.Find ("CouchObj");
+					comp.tubs = new GameObject[4];
+					for (int j = 0; j < 4; j++){
+						comp.tubs[j] = GameObject.Find ("TubObj " + i);
+					}
+				}
+
 				eyelids.enabled = true;
 				comp.enabled = true;
 				ouch.enabled = true;
@@ -350,10 +358,18 @@ public class UniMoveGame : MonoBehaviour {
 				
 				eyelids.me = GameObject.Find ("Head " + i).GetComponent<DrunkMovement>();
 				comp.me =  GameObject.Find ("Head " + i);
-				comp.bed = GameObject.Find ("BedTarget");
-				comp.bedSpriteScale = comp.bed.transform;
+				comp.target = GameObject.Find ("BedTarget");
+				comp.spriteScale = comp.target.transform;
 				ouch.collision = GameObject.Find ("Head " + i).GetComponent<Collision>();
 				ouch.dm = GameObject.Find ("Head " + i).GetComponent<DrunkMovement>();
+
+				if (GameManager.ins.mode == GameState.GameMode.Party){
+					comp.couch = GameObject.Find ("CouchObj");
+					comp.tubs = new GameObject[4];
+					for (int j = 0; j < 4; j++){
+						comp.tubs[j] = GameObject.Find ("TubObj " + i);
+					}
+				}
 				
 				eyelids.enabled = true;
 				comp.enabled = true;
