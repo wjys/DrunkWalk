@@ -323,6 +323,10 @@ public class GameManager : MonoBehaviour {
 		if (mode == GameState.GameMode.ScoreAttack || mode == GameState.GameMode.Stealth){
 			if (winner == 1){
 				SingleWin = true;
+				Application.LoadLevel ("Won");
+			}
+			else if (loserIndex != 0){
+				Application.LoadLevel ("Lost");
 			}
 		}
 

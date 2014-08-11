@@ -31,6 +31,9 @@ public class Rotation : MonoBehaviour {
 	public float boundLeft;		// unimove gy bound turning left
 	public float boundRight; 	// unimove gy bound turning right
 
+	public float tiltLeft;
+	public float tiltRight;
+
 	public int rotateDelay; 	// for delay after move rotation (in number of frames)
 	public int currentFrame;
 		
@@ -65,6 +68,13 @@ public class Rotation : MonoBehaviour {
 
 
 	void Update () {
+			
+		if (coll.colliding){
+			direction = (int) Turn.idle;
+		}
+		if (dm.fallen){
+			direction = (int) Turn.idle;
+		}
 
 		feet = dm.pfeet;
 
@@ -162,22 +172,22 @@ public class Rotation : MonoBehaviour {
 			if (current == (int) Turn.idle){
 				rotRate = 0;
 				//print ("idle"); 
-				//if (dm.direction == (int) Dir.left){
+				if (UniMove.ax >= tiltLeft){
 					if (UniMove.gy >= boundLeft){
 						//print ("start turning left"); 
 						//gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY;
 						rotated = true; 
 						return (int) Turn.left;
 					}
-				//}
-				//if (dm.direction == (int) Dir.right){
+				}
+				if (UniMove.ax <= tiltRight){
 					if (UniMove.gy <= boundRight){
 						//print ("start turning right"); 
 						//gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY;
 						rotated = true; 
 						return (int) Turn.right; 
 					}
-				//}
+				}
 				return (int) Turn.idle; 
 			}
 			if (current == (int) Turn.left){
