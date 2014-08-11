@@ -15,7 +15,9 @@ public class ExitTrigger : MonoBehaviour {
 
 	public void OnTriggerEnter(Collider other){
 		if (other.tag == "Me"){
-			print ("Went through door");
+			Application.LoadLevel ("Splash"); 
+			Destroy (GameObject.Find ("GameState"));
+			Destroy (GameObject.Find ("GameManager"));
 		}
 	}
 }

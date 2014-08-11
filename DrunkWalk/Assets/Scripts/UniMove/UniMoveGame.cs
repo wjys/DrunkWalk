@@ -273,6 +273,9 @@ public class UniMoveGame : MonoBehaviour {
 		countdown.text = "GO!";
 		yield return new WaitForSeconds(0.7f);
 		ctdown = -1;
+		if (GameManager.ins.status == GameState.GameStatus.Tutorial){
+			GameObject.Find ("Tutorial").GetComponent<Tutorial>().enabled = true;
+		}
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -281,7 +284,6 @@ public class UniMoveGame : MonoBehaviour {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	private void setUI(){
-		print ("set ui!");
 		Camera ui;
 		
 		// SINGLE PLAYER MODE
