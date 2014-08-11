@@ -1,0 +1,212 @@
+fileFormatVersion: 2
+guid: 670b879eb89b84321b3df7d5b809da71
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: WoulfHead
+    21300002: WoulfLimb
+    21300004: WoulfEar
+    21300006: WoulfFluff
+    21300008: WoulfEye1
+    21300010: WoulfEye2
+    21300012: WoulfEye3
+    21300014: WoulfPupil1
+    21300016: WoulfPupil2
+    21300018: WoulfBar
+    21300020: WoulfHandR
+    21300022: WoulfHandL
+    21300024: WoulfSprite_12
+    21300026: WoulfBand
+    21300028: WoulfScar
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: .25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  seamlessCubemap: 0
+  textureFormat: -3
+  maxTextureSize: 4096
+  textureSettings:
+    filterMode: 2
+    aniso: 1
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: .5, y: .5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: WoulfHead
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 4862
+        width: 1445
+        height: 1453
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: WoulfLimb
+      rect:
+        serializedVersion: 2
+        x: 297
+        y: 1880
+        width: 1122
+        height: 2597
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: WoulfEar
+      rect:
+        serializedVersion: 2
+        x: 1637
+        y: 5021
+        width: 853
+        height: 1131
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: WoulfFluff
+      rect:
+        serializedVersion: 2
+        x: 2709
+        y: 5088
+        width: 863
+        height: 972
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: WoulfEye1
+      rect:
+        serializedVersion: 2
+        x: 3764
+        y: 5055
+        width: 720
+        height: 678
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: WoulfEye2
+      rect:
+        serializedVersion: 2
+        x: 4543
+        y: 5113
+        width: 703
+        height: 628
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: WoulfEye3
+      rect:
+        serializedVersion: 2
+        x: 5297
+        y: 5029
+        width: 703
+        height: 788
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: WoulfPupil1
+      rect:
+        serializedVersion: 2
+        x: 6201
+        y: 5297
+        width: 502
+        height: 536
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: WoulfPupil2
+      rect:
+        serializedVersion: 2
+        x: 6871
+        y: 5423
+        width: 293
+        height: 360
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: WoulfBar
+      rect:
+        serializedVersion: 2
+        x: 8177
+        y: 1177
+        width: 226
+        height: 4924
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: WoulfHandR
+      rect:
+        serializedVersion: 2
+        x: 5514
+        y: 984
+        width: 1131
+        height: 1884
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: WoulfHandL
+      rect:
+        serializedVersion: 2
+        x: 6754
+        y: 1286
+        width: 1231
+        height: 2068
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: WoulfSprite_12
+      rect:
+        serializedVersion: 2
+        x: 1554
+        y: 1076
+        width: 3583
+        height: 3476
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: WoulfBand
+      rect:
+        serializedVersion: 2
+        x: 6200
+        y: 4133
+        width: 1374
+        height: 595
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: WoulfScar
+      rect:
+        serializedVersion: 2
+        x: 5330
+        y: 3271
+        width: 511
+        height: 1348
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+  spritePackingTag: 
+  userData: 
