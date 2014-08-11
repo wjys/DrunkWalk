@@ -145,7 +145,15 @@ public class GameManager : MonoBehaviour {
 					endScript.enabled = true;
 				}
 				if (Application.loadedLevelName.Equals ("Won")){
-					GameObject.Find ("Winner").GetComponent<GUIText>().text = "Player " + winner + " is the best";
+					GUIText winText = GameObject.Find ("Winner").GetComponent<GUIText>();
+					SpriteRenderer winSprite = GameObject.Find ("ZZZ").GetComponent<SpriteRenderer>();
+					if (SingleWin){
+						winText.enabled = false;
+						winSprite.enabled = true;
+					}
+					else {
+						GameObject.Find ("Winner").GetComponent<GUIText>().text = "Player " + winner + " is the best";
+					}
 				}
 			}
 
@@ -246,6 +254,10 @@ public class GameManager : MonoBehaviour {
 					SangriaInt = DiffObj.GetComponent<Difficulty>().drinkID[3];
 					
 					diffInt = DiffObj.GetComponent<Difficulty>().totalDrunk;
+				}
+
+				if (SingleWin){
+					SingleWin = false;
 				}
 
 			}
