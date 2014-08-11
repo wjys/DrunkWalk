@@ -191,9 +191,14 @@ public class DrunkForce : InGame {
 			}
 			transform.rotation = new Quaternion (transform.rotation.x + camInc, transform.rotation.y, transform.rotation.z, transform.rotation.w);*/
 			//print ("leaning back"); 
-			transform.localRotation = Quaternion.Lerp (transform.localRotation, 
-			                                           Quaternion.Euler (-Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.localPosition.y - feet.transform.localPosition.y))/(Mathf.Abs(transform.localPosition.z - feet.transform.localPosition.z))*2)),  transform.localEulerAngles.y, transform.localEulerAngles.z), 
-			                                           Time.deltaTime * (smooth));
+			if (transform.localRotation.x <= -0.1f){
+				transform.localRotation = new Quaternion (-0.1f, transform.localRotation.y, transform.localRotation.z, transform.localRotation.w);
+			}
+			else {
+				transform.localRotation = Quaternion.Lerp (transform.localRotation, 
+			    	                                       Quaternion.Euler (-Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.localPosition.y - feet.transform.localPosition.y))/(Mathf.Abs(transform.localPosition.z - feet.transform.localPosition.z)))*0.5f),  transform.localEulerAngles.y, transform.localEulerAngles.z), 
+			        	                                   Time.deltaTime * (smooth));
+			}
 			break;
 		default:
 			break; 

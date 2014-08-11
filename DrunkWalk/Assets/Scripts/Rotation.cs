@@ -199,8 +199,8 @@ public class Rotation : MonoBehaviour {
 				else {
 					//print ("turning left"); 
 					transform.localRotation = new Quaternion (transform.localRotation.x, transform.localRotation.y - rotInc*rotRate, transform.localRotation.z, transform.localRotation.w); 
-					if (rotRate >= 1){
-						rotRate = 1;
+					if (rotRate >= 0.8f){
+						rotRate = 0.8f;
 					}
 					else rotRate += 0.05f;
 					return (int) Turn.left; 
@@ -215,8 +215,8 @@ public class Rotation : MonoBehaviour {
 				else {
 					//print ("turning right"); 
 					transform.localRotation = new Quaternion (transform.localRotation.x, transform.localRotation.y + rotInc*rotRate, transform.localRotation.z, transform.localRotation.w); 
-					if (rotRate >= 1){
-						rotRate = 1;
+					if (rotRate >= 0.8f){
+						rotRate = 0.8f;
 					}
 					else rotRate += 0.05f;
 					return (int) Turn.right;

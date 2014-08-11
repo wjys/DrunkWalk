@@ -302,7 +302,7 @@ public class DrunkMovement : InGame {
 	
 
 	/* --------------------------------------------------------------------------------------------------------------------------
-	 * NO RETURN. NO ARGS.
+	 * ANGLE BLUR
 	 * The closer angleBetween is to 30.0f, the blurrier things get!
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
@@ -316,7 +316,7 @@ public class DrunkMovement : InGame {
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
-	 * NO ARGS. RETURN: the integer (corresponding to the direction in the Dir enum)
+	 * GET LEAN DIRECTION. RETURN: the integer (corresponding to the direction in the Dir enum)
 	 * (1) MOUSE: depending on the position of the mouse on the screen
 	 * (2) MOVE: depending on how the player is leaning (move's az = forward/back, move's ax = right/left)
 	 * (3) XBOX: depending on the the tilt of the left stick on the controller	
@@ -389,7 +389,7 @@ public class DrunkMovement : InGame {
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
-	 * NO RETURN. ARG: speed at which to play the footsteps
+	 * PLAY FOOTSTEP. ARG: speed at which to play the footsteps
 	 * (1) increment the footstep timer by the amount of time between current and previous frames
 	 * (2) ????
 	 * -------------------------------------------------------------------------------------------------------------------------- */
@@ -406,7 +406,7 @@ public class DrunkMovement : InGame {
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
-	 * NO RETURN. NO ARGS.
+	 * IS LEANING TOO MUCH
 	 * (1) get the current radius between the feet and the head (hypotenuse given the differences in x and z of head and feet)
 	 * (2) if the radius is bigger than the max radius, the player falls (set fallen to true)
 	 * -------------------------------------------------------------------------------------------------------------------------- */
@@ -427,8 +427,8 @@ public class DrunkMovement : InGame {
 
 
 	/* --------------------------------------------------------------------------------------------------------------------------
-	 * DEPENDING ON THE LEAN DIRECTION, ADD A FORCE TO THE RIGIDBODY OF THE HEAD
-	 * NO RETURN. ARG: the direction the player is leaning 
+	 * MOVE HEAD: DEPENDING ON THE LEAN DIRECTION, ADD A FORCE TO THE RIGIDBODY OF THE HEAD
+	 * ARG: the direction the player is leaning 
 	 * (1) switch/case to check which direction we're leaning
 	 * (2) add the force in the appropriate direction
 	 * -------------------------------------------------------------------------------------------------------------------------- */
@@ -453,7 +453,7 @@ public class DrunkMovement : InGame {
 			break;
 			
 		case (int) Dir.back:
-			rhead.AddForce (-hinc*transform.forward); 
+			rhead.AddForce (-(hinc/2)*transform.forward); 
 			modelAnim.SetInteger("Direction", 4);
 			break; 
 			
@@ -463,8 +463,7 @@ public class DrunkMovement : InGame {
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
-	 * NO ARGS. NO RETURN.
-	 * after a certain delay, set the new target position to lerp the feet (under the head)
+	 * GET NEW FEET POS: after a certain delay, set the new target position to lerp the feet (under the head)
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
 	private void getNewFeetPos (){
