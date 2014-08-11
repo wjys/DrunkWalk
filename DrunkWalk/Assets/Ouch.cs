@@ -23,16 +23,16 @@ public class Ouch : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (gm.winnerIndex == 0){
+		if ((gm.winnerIndex == 0 && GameManager.ins.mode == GameState.GameMode.Party)|| GameManager.ins.mode == GameState.GameMode.Race){
 			reachingBed ();
 		}
-		else if (gm.winnerIndex == 1){
+		else if (gm.winnerIndex == 1 && GameManager.ins.mode == GameState.GameMode.Party){
 			reachingCouch ();
 		}
-		else if (gm.winnerIndex == 2){
+		else if (gm.winnerIndex == 2 && GameManager.ins.mode == GameState.GameMode.Party){
 			reachingTub ();
 		}
-		else if (gm.winnerIndex == 3){
+		else if (gm.winnerIndex == 3 && GameManager.ins.mode == GameState.GameMode.Party){
 			GameManager.ins.status = GameState.GameStatus.End;
 		}
 		if (!dm.fallen){
