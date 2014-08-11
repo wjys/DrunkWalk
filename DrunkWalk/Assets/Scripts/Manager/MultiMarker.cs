@@ -93,7 +93,7 @@ public class MultiMarker : MonoBehaviour {
 			StartCoroutine (beginCheck());
 		}
 		if (startMove){
-			if (main.menuNumPublic == 5 || main.menuNumPublic == 6) {
+			if (main.menuNumPublic == 5) {
 				if (!charSelected){
 					if (gameObject.GetComponent<SpriteRenderer>().color == Color.white){
 						SetMarkerColor ();

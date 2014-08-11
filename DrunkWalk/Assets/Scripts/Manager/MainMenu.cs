@@ -113,11 +113,10 @@ public class MainMenu : Menu {
 	
 	public Item[] mcitems = new Item[] {
 		new Item("ZACH", delegate () {MultiplayerLevel(); }),
-		new Item("ANNA", delegate () {Debug.Log ("ANNA"); }),
+		new Item("ANA", delegate () {Debug.Log ("ANNA"); }),
 		new Item("ANH CHI", delegate () {Debug.Log ("ANHCHI"); }),
 		new Item("WINNIE", delegate () {Debug.Log ("WINNIE"); }),
 		new Item("BACK TO MULTI CHAR", delegate () { MultiplayerChar (); }),
-		new Item("BACK TO MAIN", delegate () { Menu1 (); })
 	};
 	
 	//MultiMode (6)
@@ -138,6 +137,7 @@ public class MainMenu : Menu {
 	public bool flipped;
 
 	public bool stopMove;
+	public bool readyStart;
 	public float corDelay;
 
 	///////////////////////////////////////////////////////////////////
@@ -169,6 +169,8 @@ public class MainMenu : Menu {
 
 		//Set multiplayer to false
 		multi = false;
+
+		readyStart = false;
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////
@@ -404,10 +406,10 @@ public class MainMenu : Menu {
 					//DOWN IN SETTINGS
 					midx += 1;
 					midx %= mitems.Length;
-				} else if (menuNum == 5) {
+				//} else if (menuNum == 5) {
 					//DOWN IN SETTINGS
-					mcidx += 1;
-					mcidx %= mcitems.Length;
+					//mcidx += 1;
+					//mcidx %= mcitems.Length;
 				} else if (menuNum == 6) {
 					//DOWN IN SETTINGS
 					mlidx += 1;
@@ -460,9 +462,9 @@ public class MainMenu : Menu {
 				} else if (menuNum == 7){
 					midx += mitems.Length-1;
 					midx %= mitems.Length;
-				} else if (menuNum == 5){
-					mcidx += mcitems.Length-1;
-					mcidx %= mcitems.Length;
+				//} else if (menuNum == 5){
+				//	mcidx += mcitems.Length-1;
+				//	mcidx %= mcitems.Length;
 				} else if (menuNum == 6){
 					mlidx += mlitems.Length-1;
 					mlidx %= mlitems.Length;
@@ -569,12 +571,17 @@ public class MainMenu : Menu {
 				}
 				litems[lidx].command();
 			} else if (menuNum == 5){
+				stopMove = true;
+				corDelay = 0.3f;
+				StartCoroutine(resumeMove ());
 				mcitems[mcidx].command();
 			} else if (menuNum == 6){
-				UniMoveSplash splash = GameManager.ins.GetComponent<UniMoveSplash>();
-				splash.setNumPlayers();
-				splash.setGame ();
-				mlitems[mlidx].command();
+				if (!stopMove){
+					UniMoveSplash splash = GameManager.ins.GetComponent<UniMoveSplash>();
+					splash.setNumPlayers();
+					splash.setGame ();
+					mlitems[mlidx].command();
+				}
 			} else if (menuNum == 7){
 				UniMoveSplash splash = GameManager.ins.GetComponent<UniMoveSplash>();
 				splash.setNumPlayers();
@@ -583,6 +590,7 @@ public class MainMenu : Menu {
 			}
 
 			if (!lerping){
+				print ("LERP CONFIRM");
 				lerping = true;
 				StartCoroutine(LerpCam ());
 			}
@@ -608,6 +616,7 @@ public class MainMenu : Menu {
 			}
 
 			if (!lerping){
+				print ("LERP CANCEL");
 				lerping = true;
 				StartCoroutine(LerpCam());
 			}
@@ -646,9 +655,10 @@ public class MainMenu : Menu {
 
 		//MULTIPLAYER CHARACTERS
 		if (menuNum == 5){
-			Lev.transform.position = new Vector3(Lev.transform.position.x, -25, Lev.transform.position.z);
+			print ("LERP CAM NUM 5");
 			newPos = new Vector3(0, -25, 0);
-			newRot = new Quaternion(0,0,0,0);
+			newRot = new Quaternion(0,0,0,1);
+			Lev.transform.position = new Vector3(Lev.transform.position.x, -25, Lev.transform.position.z);
 		}
 
 		//LEVEL/MODE
