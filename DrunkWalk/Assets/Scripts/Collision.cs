@@ -185,6 +185,7 @@ public class Collision : MonoBehaviour {
 				if (col.tag == "Wall" || col.tag == "Furniture"){
 					print ("RECOIL");
 					setRecoilDir(col.ClosestPointOnBounds(transform.position), transform.position);
+					recoiled = true;
 				}
             }
 
@@ -289,8 +290,7 @@ public class Collision : MonoBehaviour {
 	}
 
 	//SET THE DIRECTION OF RECOIL
-	private void setRecoilDir(Vector3 colPos, Vector3 playerPos){
-		recoiled = true; 
+	private void setRecoilDir(Vector3 colPos, Vector3 playerPos){ 
 		//print ("collision pos " + colPos + ", player pos    " + playerPos); 
 		if (colPos.x > playerPos.x) {
 			//print ("higher x, recoil left"); 

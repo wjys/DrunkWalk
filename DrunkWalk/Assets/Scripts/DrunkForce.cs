@@ -156,22 +156,11 @@ public class DrunkForce : InGame {
 
 		switch (lean) {
 		case (int) Dir.forward:
-			/*if (!camHiCapped){
-				camInc += camAcc;
-			}
-			transform.rotation = new Quaternion (transform.rotation.x + camInc, transform.rotation.y, transform.rotation.z, transform.rotation.w); */
-			//print ("leaning forward"); 
 			transform.localRotation = Quaternion.Lerp (transform.localRotation, 
 			                                           Quaternion.Euler	(Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.position.y - feet.transform.position.y))/(Mathf.Abs(transform.position.z - feet.transform.position.z))*4)), transform.localEulerAngles.y, transform.localEulerAngles.z), 
 			                                           Time.deltaTime * (smooth));
 			break;
 		case (int) Dir.right:
-			/*if (!camLoCapped){
-				camInc -= camAcc;
-			}
-			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y + rotInc, transform.rotation.z + camInc, transform.rotation.w); */
-			//print ("leaning right"); 
-
 			if (transform.localRotation.z <= -0.13f){
 				transform.localRotation = new Quaternion (transform.localRotation.x, transform.localRotation.y, -0.11f, transform.localRotation.w);
 			}
@@ -181,12 +170,7 @@ public class DrunkForce : InGame {
 				                                           Time.deltaTime * smooth);
 			}
 			break;
-		case (int) Dir.left:
-			/*if (!camHiCapped){
-				camInc += camAcc;
-			}
-			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y - rotInc, transform.rotation.z + camInc, transform.rotation.w); */
-			//print ("leaning left"); 
+		case (int) Dir.left: 
 			if (transform.localRotation.z >= 0.13f){
 				transform.localRotation = new Quaternion (transform.localRotation.x, transform.localRotation.y, 0.11f, transform.localRotation.w);
 			}
@@ -195,15 +179,8 @@ public class DrunkForce : InGame {
 				                                           Quaternion.Euler (transform.localEulerAngles.x, transform.localEulerAngles.y, Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.position.y - feet.transform.position.y))/(Mathf.Abs(transform.position.x - feet.transform.position.x)))*1.5f)), 
 				                                           Time.deltaTime * smooth);
 			}
-			print ("lean right " + transform.localRotation.z);
-
 			break;
 		case (int) Dir.back:
-			/*if (!camLoCapped){
-				camInc -= camAcc;
-			}
-			transform.rotation = new Quaternion (transform.rotation.x + camInc, transform.rotation.y, transform.rotation.z, transform.rotation.w);*/
-			//print ("leaning back"); 
 			if (transform.localRotation.x <= -0.1f){
 				transform.localRotation = new Quaternion (-0.1f, transform.localRotation.y, transform.localRotation.z, transform.localRotation.w);
 			}
