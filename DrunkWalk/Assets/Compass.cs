@@ -3,48 +3,79 @@ using System.Collections;
 
 public class Compass : MonoBehaviour {
 
-	public GameObject bed;
+	public GameObject couch;
+	public GameObject[] tubs;
+	public GameObject target;
 	public GameObject me;
-	public Transform bedSpriteScale;
-
+	public Transform spriteScale;
+	
 	// COMPASS OBJECTS
 	public GameObject compassBed;
+	public GameObject compassCouch;
+	public GameObject compassTub;
 	public GameObject compassBar; 
 	public float compassBound = 4.4f;
 	public Quaternion rot;
 	public float angle; 
 	private float initX; 
-
+	
 	// BED SCALE VARS
 	public float maxScaleRad;
 	public float minBedScale;
 	public float smooth;
 
+	// 
+	
+	
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * START
+	 * -------------------------------------------------------------------------------------------------------------------------- */
 
-	// Use this for initialization
 	void Start () { 
-		GetScaleRate ();
-		GetBedSprite ();
+		//GetScaleRate ();
+		//GetBedSprite ();
+		GetCompassSprites();
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		scaleBed ();
-		compassCheck (); 
-		compassObjects ();
-	}
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * UPDATE
+	 * -------------------------------------------------------------------------------------------------------------------------- */
 
-	void FixedUpdate(){
-		if (bedSpriteScale.localScale.x >= 0.75f){
-			bedSpriteScale.localPosition = Vector3.Lerp (bedSpriteScale.localPosition, new Vector3 (bedSpriteScale.localPosition.x, 0.0f, bedSpriteScale.localPosition.z), smooth * Time.deltaTime);
+	void Update () {
+		//scaleBed ();
+		if (me.activeSelf){
+			if (GameManager.ins.mode == GameState.GameMode.Party){
+				switchTarget();
+			}
+			compassCheck (); 
+			compassObjects ();
 		}
 		else {
-			bedSpriteScale.localPosition = Vector3.Lerp (bedSpriteScale.localPosition, new Vector3 (bedSpriteScale.localPosition.x, 0.02f, bedSpriteScale.localPosition.z), smooth * Time.deltaTime);
+			compassCouch.SetActive (false);
+			compassBed.SetActive (false);
+			compassTub.SetActive (false);
 		}
 	}
+	
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * (NOT USED) FIXED UPDATE: for scaling the sprite
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+
+	void FixedUpdate(){
+		/*if (spriteScale.localScale.x >= 0.75f){
+			spriteScale.localPosition = Vector3.Lerp (spriteScale.localPosition, new Vector3 (spriteScale.localPosition.x, 0.0f, spriteScale.localPosition.z), smooth * Time.deltaTime);
+		}
+		else {
+			spriteScale.localPosition = Vector3.Lerp (spriteScale.localPosition, new Vector3 (spriteScale.localPosition.x, 0.02f, spriteScale.localPosition.z), smooth * Time.deltaTime);
+		}*/
+	}
+
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * COMPASS CHECK: get the rotation/angle to check for determining where to place compass sprites
+	 * -------------------------------------------------------------------------------------------------------------------------- */
 
 	private void compassCheck(){
-		Vector3 dirVector = bed.transform.position - me.transform.position;
+		Vector3 dirVector = target.transform.position - me.transform.position;
 		Vector3 dirFacing = me.transform.TransformDirection (Vector3.forward); 
 		dirVector.y = 0;
 		dirFacing.y = 0;
@@ -53,11 +84,15 @@ public class Compass : MonoBehaviour {
 		angle = Vector3.Angle (dirVector, dirFacing);
 	}
 
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * COMPASS OBJECTS: place the compass objects depending on angle/rotation gotten above
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+
 	private void compassObjects(){
 		if (angle >= 90) {
 			if (rot.y > 0){
 				compassBar.transform.localPosition = new Vector3 (-compassBound, compassBar.transform.localPosition.y, compassBar.transform.localPosition.z); 
-
+				
 			}
 			if (rot.y < 0){
 				compassBar.transform.localPosition = new Vector3 (compassBound, compassBar.transform.localPosition.y, compassBar.transform.localPosition.z); 
@@ -73,39 +108,135 @@ public class Compass : MonoBehaviour {
 		}
 	}
 
-	private void scaleBed(){
-		float headX = me.transform.position.x;
-		float headZ = me.transform.position.z;
-		float bedX = bed.transform.position.x;
-		float bedZ = bed.transform.position.z;
-		
-		float r = Mathf.Sqrt (((bedX - headX) * (bedX - headX)) + ((bedZ - headZ) * (bedZ - headZ)));
-		float ratio = maxScaleRad / r;
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * GET COMPASS SPRITES: get gameobjects with couch and tub sprite renderers
+	 * -------------------------------------------------------------------------------------------------------------------------- */
 
-		if (ratio >= 1) {
-			ratio = 1;
+	private void GetCompassSprites(){
+		SpriteRenderer[] renderers = gameObject.GetComponentsInChildren<SpriteRenderer>();
+		foreach (SpriteRenderer r in renderers){
+			if (compassCouch != null && compassTub != null){
+				break;
+			}
+			if (r.name.Equals ("BedSprite")){
+				compassBed = r.gameObject;
+			}
+
+			if (r.name.Equals ("CouchSprite")){
+				compassCouch = r.gameObject;
+				r.enabled = false;
+			}
+			else if (r.name.Equals("TubSprite")){
+				compassTub = r.gameObject;
+				r.enabled = false;;
+			}
 		}
-		bedSpriteScale.localScale = new Vector3 (ratio, ratio, ratio);
 	}
 
-	private void GetScaleRate(){
-		float headX = me.transform.position.x;
-		float headZ = me.transform.position.z;
-		float bedX = bed.transform.position.x;
-		float bedZ = bed.transform.position.z;
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * SWITCH TARGET
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+
+	private void switchTarget(){
+		GameManager gm = GameManager.ins.GetComponent<GameManager>();
+		if (gm.winnerIndex > 0){
+			if (gm.winnerIndex == 1){
+				SpriteRenderer rend = compassCouch.GetComponent<SpriteRenderer>();
+				if (!rend.enabled){
+					compassBed.SetActive (false);
+					rend.enabled = true;
+				}
+				target = couch;
+			}
+			else if (gm.winnerIndex == 2){
+				SpriteRenderer rend = compassTub.GetComponent<SpriteRenderer>();
+				if (!rend.enabled){
+					compassCouch.SetActive(false);
+					rend.enabled = true;
+				}
+				getClosestTub ();
+			}
+		}
+	}
+
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * GET CLOSEST TUB: go through the tub objects and find the one closest to the player and set that as the target
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+	
+	private void getClosestTub(){
+		float[] tubDist = new float[tubs.Length];
+		for (int i = 0; i < tubs.Length; i++){
+			float headX = me.transform.position.x;
+			float headZ = me.transform.position.z;
+			float tubX = tubs[i].transform.position.x;
+			float tubZ = tubs[i].transform.position.z;
+			
+			tubDist[i] = Mathf.Sqrt (((tubX - headX) * (tubX - headX)) + ((tubZ - headZ) * (tubZ - headZ)));
+		}
+		int minIndex = 0;
+		float min = 0;
+		for (int i = 0; i < tubDist.Length; i++){
+			if (i == 0){
+				min = tubDist[i];
+			}
+			else if (tubDist[i] < min){
+				min = tubDist[i];
+				minIndex = i;
+			}
+		}
 		
-		float r = Mathf.Sqrt (((bedX - headX) * (bedX - headX)) + ((bedZ - headZ) * (bedZ - headZ)));	
-		maxScaleRad = r * minBedScale;
+		target = tubs[minIndex];
 	}
 
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * (NOT USED) GET BED SPRITE: the object to scale the bed
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+	
 	private void GetBedSprite(){
 		Transform[] trans = gameObject.GetComponentsInChildren<Transform> ();
 		foreach (Transform t in trans) {
 			if (t.name.Equals ("BedScale")){
-				bedSpriteScale = t;
+				spriteScale = t;
 				break;
 			}
 		}
-		bedSpriteScale.localPosition = new Vector3(bedSpriteScale.localPosition.x, 0.02f, bedSpriteScale.localPosition.z);
+		spriteScale.localPosition = new Vector3(spriteScale.localPosition.x, 0.02f, spriteScale.localPosition.z);
+	}
+	
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * (NOT USED) SCALE BED: scale bed depending on distance between player and bed
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+	
+	private void scaleBed(){
+		float headX = me.transform.position.x;
+		float headZ = me.transform.position.z;
+		float bedX = target.transform.position.x;
+		float bedZ = target.transform.position.z;
+		
+		float r = Mathf.Sqrt (((bedX - headX) * (bedX - headX)) + ((bedZ - headZ) * (bedZ - headZ)));
+		float ratio = maxScaleRad / r;
+		
+		if (ratio >= 1) {
+			ratio = 1;
+		}
+		spriteScale.localScale = new Vector3 (ratio, ratio, ratio);
+	}
+	
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * (NOT USED) GET SCALE RATE: get max scale of bed sprite
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+	
+	private void GetScaleRate(){
+		float headX = me.transform.position.x;
+		float headZ = me.transform.position.z;
+		float bedX = target.transform.position.x;
+		float bedZ = target.transform.position.z;
+		
+		float r = Mathf.Sqrt (((bedX - headX) * (bedX - headX)) + ((bedZ - headZ) * (bedZ - headZ)));	
+		maxScaleRad = r * minBedScale;
 	}
 }
