@@ -24,6 +24,7 @@ public class DrunkMovement : InGame {
 	public Camera cam; 				// to force the camera to just fall over if leaning too much
 	public Camera fallCam;
 	public DepthOfFieldScatter dof; // depth of field component on cam
+	public float radDiff;
 	public Transform target;
 
 	// ENUM TO SWITCH BETWEEN CONTROLLERS
@@ -285,11 +286,18 @@ public class DrunkMovement : InGame {
 	
 	private void angleBlur (){
 
-		if (radius >= 0.5f && radius <= maxRad){
-			dof.aperture += 0.5f;
-		} else if (radius < 0.5f){
-			dof.aperture -= 0.7f;
+		radDiff = maxRad - radius;
+
+		if (radDiff <= (maxRad/2)){
+			if (dof.aperture < 10){
+				dof.aperture += 0.05f;
+			}
+		} else if (radDiff > (maxRad/2)){
+			if (dof.aperture > 0){
+				dof.aperture -= 0.1f;
+			}
 		}
+
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
