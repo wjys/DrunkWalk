@@ -44,6 +44,7 @@ public class MainMenu : Menu {
 
 	//Levels
 	public GameObject Lev;
+	public GameObject[] Markers;
 
 	//Main (1)
 	private int idx = 0;
@@ -51,18 +52,19 @@ public class MainMenu : Menu {
 	private Item[] items= new Item[] {
 		new Item("START", delegate () { ChooseCharacter (); }),
 		new Item("MULTIPLAYER", delegate () { MultiplayerChar (); }),
-		new Item("SET UP", delegate () { Settings (); }),
+		/*new Item("SET UP", delegate () { Settings (); }),*/
 		new Item("EXIT", delegate () { Application.Quit(); })
 	};
 
 	//Settings (set)
+	/*
 	private int sidx = 0;
 
 	private Item[] sitems = new Item[] {
 		new Item("SOUNDFX", delegate () { Debug.Log ("SOUNDFX"); }),
 		new Item("MUSIC", delegate () { Debug.Log ("MUSIC"); }),
 		new Item("CONTROLLER", delegate () { Debug.Log ("CONTROLLER"); })
-	};
+	};*/
 
 	//Characters (2)
 	private int cidx = 0;
@@ -170,6 +172,15 @@ public class MainMenu : Menu {
 		//Set multiplayer to false
 		multi = false;
 
+		//Get Level Markers
+		Markers = new GameObject[4];
+
+		Markers[0] = GameObject.Find ("MarkerT");
+		Markers[1] = GameObject.Find ("MarkerE");
+		Markers[2] = GameObject.Find ("MarkerM");
+		Markers[3] = GameObject.Find ("MarkerH");
+
+
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////
@@ -184,8 +195,8 @@ public class MainMenu : Menu {
 		GUI.color = Color.white;
 		if (menuNum == 1) {
 			GUIMenu(idx, 200, 80, items, timer);}
-		else if (menuSet == true) {
-			GUIMenu(sidx, 200, 80, sitems, timer);}
+		//else if (menuSet == true) {
+		//	GUIMenu(sidx, 200, 80, sitems, timer);}
 		//else if (menuNum == 2) {
 		//	GUIMenu (cidx, 200, 80, citems, timer);}
 		//else if (menuNum == 3) {
@@ -250,14 +261,14 @@ public class MainMenu : Menu {
 	//////////
 	//SETTINGS    set
 	//////////
-	
+	/*
 	public static void Settings(){
 		menuNum = 0;
 		menuSet = true;
 
 		newPos = new Vector3 (25,0,0);
 		newRot = new Quaternion(0,0,0,0);
-	}
+	}*/
 
 	///////////////////////
 	///CUSTOMIZE CHARACTER    2
@@ -293,7 +304,7 @@ public class MainMenu : Menu {
 		GameManager.ins.JncInt = 0;
 		GameManager.ins.BeerInt = 0;
 		GameManager.ins.WhiskeyInt = 0;
-		GameManager.ins.SangriaInt = 0;
+		GameManager.ins.GinInt = 0;
 
 		menuSet = false;
 		menuNum = 4;
@@ -308,7 +319,7 @@ public class MainMenu : Menu {
 		GameManager.ins.JncInt = 0;
 		GameManager.ins.BeerInt = 0;
 		GameManager.ins.WhiskeyInt = 0;
-		GameManager.ins.SangriaInt = 0;
+		GameManager.ins.GinInt = 0;
 
 		menuSet = false;
 		menuNum = 5;
@@ -349,7 +360,34 @@ public class MainMenu : Menu {
 		//Cam Lerp
 		camObj.transform.position = Vector3.Lerp(camObj.transform.position, newPos, smooth * Time.deltaTime);
 		camObj.transform.rotation = Quaternion.Lerp(camObj.transform.rotation, newRot, smooth * Time.deltaTime);
+
+
+		//LerpMarker
+		/*
+		for (int i = 0; i < Markers.Length; i++) {
+			Transform oldMarkerT;
+			Transform newMarkerT;
+
+			oldMarkerT = Markers[i].transform;
+			//newMarkerT = Markers[0].transform;
+
+			oldMarkerT.localPosition = Markers[i].transform.localPosition;
+			oldMarkerT.localScale = Markers[i].transform.localScale;
+
+			newMarkerT.localPosition = new Vector3(oldMarkerT.position.x, oldMarkerT.position.y - 0.2f, oldMarkerT.position.z);
+			newMarkerT.localScale = new Vector3(oldMarkerT.localScale.x+0.06f, oldMarkerT.localScale.y+0.06f, oldMarkerT.localScale.z+0.06f);
+			
+			if (i == lidx){
+				Markers[i].transform.localScale = Vector3.Lerp (oldMarkerT.localScale, newMarkerT.localScale, smooth * Time.deltaTime);
+				Markers[i].transform.localPosition = Vector3.Lerp(oldMarkerT.localPosition, newMarkerT.localPosition, smooth * Time.deltaTime);
+			} else {
+				Markers[i].transform.localScale = Vector3.Lerp (newMarkerT.localScale, oldMarkerT.localScale, smooth * Time.deltaTime);
+				Markers[i].transform.localPosition = Vector3.Lerp(newMarkerT.localPosition, oldMarkerT.localPosition, smooth * Time.deltaTime);
+			}
+		}
+		*/
 	}
+
 
 	void Update () {
 		menuNumPublic = menuNum;
@@ -382,11 +420,11 @@ public class MainMenu : Menu {
 						idx %= items.Length;
 					}
 
-				} else if (menuSet) {
+				} /*else if (menuSet) {
 					//DOWN IN SETTINGS
 					sidx += 1;
 					sidx %= sitems.Length;
-				} else if (menuNum == 3){
+				} */else if (menuNum == 3){
 					//DOWN IN DIFF
 					if (Diff.totalDrunk > 0){
 						if (Diff.drinkID[didx] > 0){
@@ -398,19 +436,19 @@ public class MainMenu : Menu {
 						Diff.totalDrunk = 0;
 					}
 				} else if (menuNum == 4) {
-					//DOWN IN SETTINGS
+					//DOWN IN LEVELS
 					lidx += 1;
 					lidx %= litems.Length;
 				} else if (menuNum == 7) {
-					//DOWN IN SETTINGS
+					//DOWN IN MODES
 					midx += 1;
 					midx %= mitems.Length;
 				//} else if (menuNum == 5) {
-					//DOWN IN SETTINGS
+					//DOWN IN MULTICHAR
 					//mcidx += 1;
 					//mcidx %= mcitems.Length;
 				} else if (menuNum == 6) {
-					//DOWN IN SETTINGS
+					//DOWN IN MULTIMODES
 					mlidx += 1;
 					mlidx %= mlitems.Length;
 				}
@@ -440,11 +478,11 @@ public class MainMenu : Menu {
 						idx += items.Length - 1;
 						idx %= items.Length;
 					}
-				} else if (menuSet) {
+				} /*else if (menuSet) {
 					//UP IN SETTINGS
 					sidx += sitems.Length - 1;
 					sidx %= sitems.Length;
-				} else if (menuNum == 3) {
+				} */else if (menuNum == 3) {
 					//UP IN DIFF
 					if (Diff.totalDrunk < 5){
 						if (Diff.drinkID[didx] < 5){
@@ -503,14 +541,14 @@ public class MainMenu : Menu {
 					Diff.currDrink = didx;
 				}
 
-				if (menuSet){
+				/*if (menuSet){
 					//IF IN SETTINGS, GO RIGHT TO RAISE VOLUME
 					if (sidx == 0){
 						AudioManager.ins.GetComponent<AudioSource>().volume += 0.1f;
 					} else if (sidx == 1){
 						AudioManager.ins.GetComponent<AudioSource>().volume += 0.1f;
 					}
-				}
+				}*/
 			}
 		}
 
@@ -535,14 +573,14 @@ public class MainMenu : Menu {
 					Diff.currDrink = didx;
 				}
 
-				if (menuSet){
+				/*if (menuSet){
 					//IF IN SETTINGS, GO LEFT TO LOWER VOLUME
 					if (sidx == 0){
 						AudioManager.ins.GetComponent<AudioSource>().volume -= 0.1f;
 					} else if (sidx == 1){
 						AudioManager.ins.GetComponent<AudioSource>().volume -= 0.1f;
 					}
-				}
+				}*/
 			}
 		}
 
@@ -550,9 +588,9 @@ public class MainMenu : Menu {
 			//CONFIRMED
 			if (menuNum == 1) {
 				items[idx].command();
-			} else if (menuSet){
+			} /*else if (menuSet){
 				sitems[sidx].command();
-			} else if (menuNum == 2){
+			}*/ else if (menuNum == 2){
 				citems[cidx].command();
 			} else if (menuNum == 3){
 				ditems[didx].command();
@@ -624,8 +662,11 @@ public class MainMenu : Menu {
 		wasRight = isRight;
 		wasLeft = isLeft;
 
+		//////////////////////////
+		/////HIGHLIGHTED OBJS/////
+		//////////////////////////
 
-		//HIGHLIGHTED OBJS
+		//Main Menu
 		if (idx == 0){
 			mMenuIns.GetComponentInChildren<MeshRenderer>().material.color = Color.white;
 		} else if (idx == 1){
@@ -635,12 +676,49 @@ public class MainMenu : Menu {
 		} else if (idx == 3){
 			mMenuIns.GetComponentInChildren<MeshRenderer>().material.color = Color.green;
 		}
+
+		/*********
+		 * SINGLE PLAYER
+		 * ********/
+
+		//Diff Menu
+		if (didx == 0){
+			//Drink1
+		} else if (didx == 1){
+			//Drink2
+		} else if (didx == 2){
+			//Drink3
+		} else if (didx == 3){
+			//Drink4
+		} else if (didx == 4){
+			//BATHROOM
+		} else if (didx == 5){
+			//GO HOME
+		}
+
+		//Level Menu
+		if (lidx == 0){
+			//Tutorial
+		} else if (lidx == 1){
+			//Easy house
+		} else if (lidx == 2){
+			//Medium house
+		} else if (lidx == 3){
+			//Hard house
+		}
+
+		//Mode Menu
+		if (midx == 0){
+			//Score attack
+		} else if (midx == 1){
+			//Stealth
+		}
 	}
 
 	public IEnumerator LerpCam() {
 		//MODES
 		if (menuNum == 7){
-			newPos = new Vector3 (0, 25, 0);
+			newPos = new Vector3 (0, 40, 0);
 			newRot = new Quaternion (0, 1, 0, 3.72529e-07f);
 		}
 
@@ -659,7 +737,7 @@ public class MainMenu : Menu {
 
 		//LEVEL/MODE
 		if (menuNum == 4){
-			newPos = new Vector3(0, 25, 0);
+			newPos = new Vector3(0, 40, 0);
 			newRot = new Quaternion(0, 1, 0, 3.72529e-07f);
 		}
 
@@ -671,7 +749,7 @@ public class MainMenu : Menu {
 
 		//CHARACTER
 		if (menuNum == 2){
-			Lev.transform.position = new Vector3(Lev.transform.position.x, 25, Lev.transform.position.z);
+			Lev.transform.position = new Vector3(Lev.transform.position.x, 40, Lev.transform.position.z);
 			newPos = new Vector3(0,25,0);
 			newRot = new Quaternion (0, 0, 0, 1);
 		}
@@ -687,10 +765,11 @@ public class MainMenu : Menu {
 		}
 
 		//SETTING
+		/*
 		if (menuSet){
 			newPos = new Vector3 (25,0,0);
 			newRot = new Quaternion(0,0,0,0);
-		}
+		}*/
 
 		yield return new WaitForSeconds(0.001f);
 		lerping = false;

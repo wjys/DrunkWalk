@@ -24,6 +24,7 @@ public class DrunkMovement : InGame {
 	public Camera cam; 				// to force the camera to just fall over if leaning too much
 	public Camera fallCam;
 	public DepthOfFieldScatter dof; // depth of field component on cam
+	public float radDiff;
 	public Transform target;
 
 	// ENUM TO SWITCH BETWEEN CONTROLLERS
@@ -217,7 +218,8 @@ public class DrunkMovement : InGame {
 
 			transform.LookAt(target, Vector3.up); 	// not used 
 
-			angleBlur ();
+			//BLUR
+			Blur ();
 
 			if (controller == (int) controlInput.mouse) 
 				mouse = Input.mousePosition;
@@ -283,13 +285,20 @@ public class DrunkMovement : InGame {
 	 * The closer angleBetween is to 30.0f, the blurrier things get!
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
-	private void angleBlur (){
+	private void Blur (){
 
-		if (radius >= 0.5f && radius <= maxRad){
-			dof.aperture += 0.5f;
-		} else if (radius < 0.5f){
-			dof.aperture -= 0.7f;
+		radDiff = maxRad - radius;
+
+		if (radDiff <= (maxRad/2)){
+			if (dof.aperture < 10){
+				dof.aperture += 0.05f;
+			}
+		} else if (radDiff > (maxRad/2)){
+			if (dof.aperture > 0){
+				dof.aperture -= 0.1f;
+			}
 		}
+
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -400,21 +409,25 @@ public class DrunkMovement : InGame {
 		case (int) Dir.forward:	
 			rhead.AddForce (hinc*transform.forward);
 			modelAnim.SetInteger("Direction", 1);
+			meAnim.SetInteger ("Dir", 1);
 			break;
 			
 		case (int) Dir.right:
 			rhead.AddForce (hinc*transform.right); 
 			modelAnim.SetInteger("Direction", 3);
+			meAnim.SetInteger ("Dir", 3);
 			break;
 			
 		case (int) Dir.left:
 			rhead.AddForce (-hinc*transform.right); 
 			modelAnim.SetInteger("Direction", 2);
+			meAnim.SetInteger ("Dir", 2);
 			break;
 			
 		case (int) Dir.back:
 			rhead.AddForce (-(hinc/2)*transform.forward); 
 			modelAnim.SetInteger("Direction", 4);
+			meAnim.SetInteger ("Dir", 4);
 			break; 
 			
 		default:
