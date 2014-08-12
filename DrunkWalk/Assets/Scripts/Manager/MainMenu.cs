@@ -303,7 +303,7 @@ public class MainMenu : Menu {
 		GameManager.ins.JncInt = 0;
 		GameManager.ins.BeerInt = 0;
 		GameManager.ins.WhiskeyInt = 0;
-		GameManager.ins.SangriaInt = 0;
+		GameManager.ins.GinInt = 0;
 
 		menuSet = false;
 		menuNum = 4;
@@ -318,7 +318,7 @@ public class MainMenu : Menu {
 		GameManager.ins.JncInt = 0;
 		GameManager.ins.BeerInt = 0;
 		GameManager.ins.WhiskeyInt = 0;
-		GameManager.ins.SangriaInt = 0;
+		GameManager.ins.GinInt = 0;
 
 		menuSet = false;
 		menuNum = 5;

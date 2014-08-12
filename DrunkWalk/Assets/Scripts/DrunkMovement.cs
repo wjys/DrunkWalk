@@ -218,7 +218,8 @@ public class DrunkMovement : InGame {
 
 			transform.LookAt(target, Vector3.up); 	// not used 
 
-			angleBlur ();
+			//BLUR
+			Blur ();
 
 			if (controller == (int) controlInput.mouse) 
 				mouse = Input.mousePosition;
@@ -284,7 +285,7 @@ public class DrunkMovement : InGame {
 	 * The closer angleBetween is to 30.0f, the blurrier things get!
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 	
-	private void angleBlur (){
+	private void Blur (){
 
 		radDiff = maxRad - radius;
 
