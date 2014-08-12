@@ -105,7 +105,7 @@ public class Sounds : MonoBehaviour {
 				gettingUp = false;
 			}
 			else if (col.colliding){
-				audio.Stop();
+				//audio.Stop();
 				if (objectCollision){
 					objectCollSounds();
 					objectCollision = false;
@@ -162,7 +162,7 @@ public class Sounds : MonoBehaviour {
 		audio.volume = Random.value * 0.3f + 0.7f;
 		audio.clip = clip;
 		audio.Play();
-		//audio.PlayOneShot(clip); 
+		//audio.Play(clip); 
 		
 	}
 
@@ -204,7 +204,8 @@ public class Sounds : MonoBehaviour {
 		
 		audio.pitch = Random.value * 0.1f + 0.95f;
 		audio.volume = Random.value * 0.3f + 0.7f;
-		audio.PlayOneShot(clips_objects[Random.Range (0, clips_objects.Length)]); 
+		audio.clip = clips_objects[Random.Range (0, clips_objects.Length)];
+		audio.Play(); 
 		
 	}
 
@@ -216,7 +217,8 @@ public class Sounds : MonoBehaviour {
 		
 		audio.pitch = Random.value * 0.1f + 0.95f;
 		audio.volume = Random.value * 0.3f + 0.7f;
-		audio.PlayOneShot(clips_furniture[Random.Range (0, clips_furniture.Length)]); 
+		audio.clip = clips_furniture[Random.Range (0, clips_furniture.Length)] ;
+		audio.Play(); 
 		
 	}
 
@@ -228,7 +230,8 @@ public class Sounds : MonoBehaviour {
 		
 		audio.pitch = Random.value * 0.1f + 0.95f;
 		audio.volume = Random.value * 0.3f + 0.7f;
-		audio.PlayOneShot(clips_wall[Random.Range (0, clips_wall.Length)]); 
+		audio.clip = clips_wall[Random.Range (0, clips_wall.Length)] ;
+		audio.Play(); 
 		
 	}
 
@@ -240,7 +243,8 @@ public class Sounds : MonoBehaviour {
 		
 		audio.pitch = Random.value * 0.1f + 0.95f;
 		audio.volume = Random.value * 0.3f + 0.7f;
-		audio.PlayOneShot(clips_drowsy[Random.Range (0, clips_drowsy.Length)]); 
+		audio.clip = clips_drowsy[Random.Range (0, clips_drowsy.Length)] ;
+		audio.Play(); 
 		
 	}
 
@@ -252,7 +256,8 @@ public class Sounds : MonoBehaviour {
 		
 		audio.pitch = Random.value * 0.1f + 0.95f;
 		audio.volume = Random.value * 0.3f + 0.7f;
-		audio.PlayOneShot(clips_fall[Random.Range (0, clips_fall.Length)]); 
+		audio.clip = clips_fall[Random.Range (0, clips_fall.Length)] ;
+		audio.Play(); 
 		
 	}
 
@@ -264,7 +269,8 @@ public class Sounds : MonoBehaviour {
 		
 		audio.pitch = Random.value * 0.1f + 0.95f;
 		audio.volume = Random.value * 0.3f + 0.7f;
-		audio.PlayOneShot(clips_struggle[Random.Range (0, clips_struggle.Length)]); 
+		audio.clip = clips_struggle[Random.Range (0, clips_struggle.Length)] ;
+		audio.Play(); 
 		
 	}
 
@@ -276,7 +282,8 @@ public class Sounds : MonoBehaviour {
 		
 		audio.pitch = Random.value * 0.1f + 0.95f;
 		audio.volume = Random.value * 0.3f + 0.7f;
-		audio.PlayOneShot(clips_getup[Random.Range (0, clips_getup.Length)]); 
+		audio.clip = clips_getup[Random.Range (0, clips_getup.Length)] ;
+		audio.Play(); 
 		
 	}
 
@@ -288,7 +295,8 @@ public class Sounds : MonoBehaviour {
 		
 		audio.pitch = Random.value * 0.1f + 0.95f;
 		audio.volume = Random.value * 0.3f + 0.7f;
-		audio.PlayOneShot(clips_giveup[Random.Range (0, clips_giveup.Length)]); 
+		audio.clip = clips_giveup[Random.Range (0, clips_giveup.Length)] ;
+		audio.Play(); 
 		
 	}
 
@@ -300,7 +308,8 @@ public class Sounds : MonoBehaviour {
 		
 		audio.pitch = Random.value * 0.1f + 0.95f;
 		audio.volume = Random.value * 0.3f + 0.7f;
-		audio.PlayOneShot(clips_bed[Random.Range (0, clips_bed.Length)]); 
+		audio.clip = clips_bed[Random.Range (0, clips_bed.Length)];
+		audio.Play(); 
 		
 	}
 }

@@ -293,7 +293,9 @@ public class UniMoveGame : MonoBehaviour {
 		yield return new WaitForSeconds(2.0f);
 		for (int i = 1; i <= numPlayers; i++){
 			GameObject introtext = GameObject.Find ("Intro " + i);
-			introtext.SetActive (false);
+			//if (introtext != null){
+				introtext.SetActive (false);
+			//}
 		}
 		ctdown = 3;
 	}
