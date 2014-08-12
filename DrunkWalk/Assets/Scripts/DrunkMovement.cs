@@ -400,21 +400,25 @@ public class DrunkMovement : InGame {
 		case (int) Dir.forward:	
 			rhead.AddForce (hinc*transform.forward);
 			modelAnim.SetInteger("Direction", 1);
+			meAnim.SetInteger ("Dir", 1);
 			break;
 			
 		case (int) Dir.right:
 			rhead.AddForce (hinc*transform.right); 
 			modelAnim.SetInteger("Direction", 3);
+			meAnim.SetInteger ("Dir", 3);
 			break;
 			
 		case (int) Dir.left:
 			rhead.AddForce (-hinc*transform.right); 
 			modelAnim.SetInteger("Direction", 2);
+			meAnim.SetInteger ("Dir", 2);
 			break;
 			
 		case (int) Dir.back:
 			rhead.AddForce (-(hinc/2)*transform.forward); 
 			modelAnim.SetInteger("Direction", 4);
+			meAnim.SetInteger ("Dir", 4);
 			break; 
 			
 		default:
