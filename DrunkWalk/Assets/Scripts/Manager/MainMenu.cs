@@ -640,7 +640,7 @@ public class MainMenu : Menu {
 	public IEnumerator LerpCam() {
 		//MODES
 		if (menuNum == 7){
-			newPos = new Vector3 (0, 25, 0);
+			newPos = new Vector3 (0, 40, 0);
 			newRot = new Quaternion (0, 1, 0, 3.72529e-07f);
 		}
 
@@ -659,7 +659,7 @@ public class MainMenu : Menu {
 
 		//LEVEL/MODE
 		if (menuNum == 4){
-			newPos = new Vector3(0, 25, 0);
+			newPos = new Vector3(0, 40, 0);
 			newRot = new Quaternion(0, 1, 0, 3.72529e-07f);
 		}
 
@@ -671,7 +671,7 @@ public class MainMenu : Menu {
 
 		//CHARACTER
 		if (menuNum == 2){
-			Lev.transform.position = new Vector3(Lev.transform.position.x, 25, Lev.transform.position.z);
+			Lev.transform.position = new Vector3(Lev.transform.position.x, 40, Lev.transform.position.z);
 			newPos = new Vector3(0,25,0);
 			newRot = new Quaternion (0, 0, 0, 1);
 		}
