@@ -228,6 +228,7 @@ public class Collision : MonoBehaviour {
 				if (col.tag == "Wall") {
 					score -= 100;
 					parents += 50;
+					//TAKE RECOIL DIR, FIND THE OPPOSITE, THEN PLAY ARM ANIMATION ACCORDINGLY
 					//Debug.Log("Wall Collision - " + score);
 				}
 				else if (col.tag == "Box"){
