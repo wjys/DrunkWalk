@@ -10,9 +10,6 @@ public class Sounds : MonoBehaviour {
 	public Eyelids eyelids;
 	public Ouch ouch;
 
-	public int charIndex;
-	public enum character {zach, ana, acb, winnie};
-
 	public int clipType;
 	public enum ctype { grunts, objects, furniture, wall, drowsy, fall, struggle, getup, giveup, bed };
 

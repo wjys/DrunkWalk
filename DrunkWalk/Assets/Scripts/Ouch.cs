@@ -72,6 +72,7 @@ public class Ouch : MonoBehaviour {
 			manager.winners[manager.winnerIndex] = dm.id;
 			if (manager.winnerIndex == 0){
 				manager.winner = dm.id;
+				manager.score = collision.score;
 			}
 			manager.winnerIndex++;
 			

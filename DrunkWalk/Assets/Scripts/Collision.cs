@@ -11,7 +11,7 @@ public class Collision : MonoBehaviour {
 	////////////////
 
 	// Overall Score
-	public static int score;
+	public int score;
 
 	// Score Delay
 	private float currentScoreTime = 0.0f;
