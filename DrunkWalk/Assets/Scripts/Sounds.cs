@@ -9,10 +9,7 @@ public class Sounds : MonoBehaviour {
 	public Collision col;
 	public Eyelids eyelids;
 	public Ouch ouch;
-
-	public int clipType;
-	public enum ctype { grunts, objects, furniture, wall, drowsy, fall, struggle, getup, giveup, bed };
-
+	
 	// 1st index: 0-grunts, 1-objects, 2-furniture, 3-drowsy, 4-fall, 5-struggle, 6-getup, 7-giveup, 8-bed
 	// 2nd index: the actual clips
 	public AudioClip[] clips_grunts;
@@ -136,8 +133,8 @@ public class Sounds : MonoBehaviour {
 					}
 				}
 				if (!stepped){
-					playSound (steps);
-					StartCoroutine (resumeSteps());
+					//playSound (steps);
+					//StartCoroutine (resumeSteps());
 				}
 			}
 		}
@@ -163,7 +160,9 @@ public class Sounds : MonoBehaviour {
 		
 		audio.pitch = Random.value * 0.1f + 0.95f;
 		audio.volume = Random.value * 0.3f + 0.7f;
-		audio.PlayOneShot(clip); 
+		audio.clip = clip;
+		audio.Play();
+		//audio.PlayOneShot(clip); 
 		
 	}
 
