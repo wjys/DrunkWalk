@@ -61,14 +61,6 @@ public class DrunkMovement : InGame {
 	public int currentSoundFrame; 
 	public int delaySoundFrame; 
 	
-	// SOUNDS
-	public AudioClip[] clips;
-	public AudioClip footstep;
-	private bool soundPlayed;
-	private float footstepTimer;
-
-	public float stepDiff;
-	
 	// GET RBs' Y COORDS SO THAT THE PLAYER DOESN'T FLOAT OVER BED
 	public float headY;
 	private Vector3 initHead; 
@@ -133,7 +125,6 @@ public class DrunkMovement : InGame {
 
 		// (3) setup all the variables
 		fallen = false;		
-		soundPlayed = false; 		
 		frozen = false; 
 		fallCt = 0;
 		colliding = false;
@@ -236,8 +227,6 @@ public class DrunkMovement : InGame {
 			isLeaningTooMuch (); 			
 			moveHead (direction); 
 
-			// (5e) play footstep sound
-			playFootstep(radius * 100);
 
 			// (5f) rumble when hit
 			UniMove.SetRumble (hitRumble);
@@ -278,19 +267,7 @@ public class DrunkMovement : InGame {
 			}
 		}
 		
-		// (4) play one of the random grunts at a delay	
-		if (!soundPlayed){
-			soundPlayed = true; 
-			playSound (clips [Random.Range (0, 5)]);
-		}
-		else {
-			currentSoundFrame++; 
-			
-			if (currentSoundFrame >= delaySoundFrame){
-				soundPlayed = false; 
-				currentSoundFrame = 0; 
-			}
-		}
+
 	}
 
 
@@ -386,23 +363,6 @@ public class DrunkMovement : InGame {
 			}
 		}
 		return (0);
-	}
-
-	/* --------------------------------------------------------------------------------------------------------------------------
-	 * PLAY FOOTSTEP. ARG: speed at which to play the footsteps
-	 * (1) increment the footstep timer by the amount of time between current and previous frames
-	 * (2) ????
-	 * -------------------------------------------------------------------------------------------------------------------------- */
-	
-	private void playFootstep (float speed) {
-		footstepTimer += Time.deltaTime;
-		if (direction > -1){
-				float nowSpeed = stepDiff * speed;
-				if (footstepTimer > nowSpeed) {
-					footstepTimer -= nowSpeed;
-					playSound(footstep);
-				}
-			}
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -614,18 +574,6 @@ public class DrunkMovement : InGame {
 		
 		newRot = transform.rotation;
 
-	}
-
-	/* --------------------------------------------------------------------------------------------------------------------------
-	 * PLAY SELECTED GRUNT SOUND
-	 * -------------------------------------------------------------------------------------------------------------------------- */
-	
-	private void playSound(AudioClip clip){
-		
-		audio.pitch = Random.value * 0.1f + 0.95f;
-		audio.volume = Random.value * 0.3f + 0.7f;
-		audio.PlayOneShot(clip); 
-		
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------

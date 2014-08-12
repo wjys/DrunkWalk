@@ -43,7 +43,6 @@ public class Collision : MonoBehaviour {
 	public UniMoveController move;
 
 	// Sounds
-	public AudioClip[] clips; 
 	public AudioClip[] hitclips; 
 	public AudioClip hitit;
 	public AudioSource source;
@@ -210,7 +209,7 @@ public class Collision : MonoBehaviour {
 					Debug.Log ("REACHING BED?");
 					reachedBed = true; 
 					soundPlayed = true; 
-					audio.PlayOneShot (clips[Random.Range(5, 8)]); 
+					//audio.PlayOneShot (clips[Random.Range(5, 8)]); 
                 }
 
 				if (col.tag == "Couch"){
@@ -261,7 +260,7 @@ public class Collision : MonoBehaviour {
 				}
 				
 				if (!soundPlayed && !reachedBed){
-					playGrunt (clips[Random.Range(0, 5)]); 
+					//playGrunt (clips[Random.Range(0, 5)]); 
 					soundPlayed = true; 
 				}
 				collided = true; 
