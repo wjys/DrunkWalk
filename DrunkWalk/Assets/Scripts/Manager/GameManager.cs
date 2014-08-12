@@ -148,10 +148,13 @@ public class GameManager : MonoBehaviour {
 				}
 				if (Application.loadedLevelName.Equals ("Won")){
 					GUIText winText = GameObject.Find ("Winner").GetComponent<GUIText>();
+					GUIText scoreText = GameObject.Find ("Score").GetComponent<GUIText>();
 					SpriteRenderer winSprite = GameObject.Find ("ZZZ").GetComponent<SpriteRenderer>();
 					if (SingleWin){
 						winText.enabled = false;
 						winSprite.enabled = true;
+						scoreText.text = "you scored : " + score;
+						scoreText.enabled = true;
 					}
 					else {
 						GameObject.Find ("Winner").GetComponent<GUIText>().text = "Player " + winner + " is the best";

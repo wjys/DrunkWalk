@@ -164,10 +164,10 @@ public class UniMoveGame : MonoBehaviour {
 	
 	private void createPlayers(){
 		print ("create players!");
+		if (characters.Length != numPlayers){
+			characters = new int[numPlayers];
+		}
 		while (playerCount < numPlayers){
-			if (characters == null){
-				characters = new int[numPlayers];
-			}
 			if (numPlayers > 1){
 				characters[playerCount] = GameManager.ins.GetComponent<GameManager>().multiChosenChar[playerCount];
 				switch (characters[playerCount]){
@@ -188,19 +188,20 @@ public class UniMoveGame : MonoBehaviour {
 				}
 			}
 			else {
-				characters[playerCount] = GameManager.ins.GetComponent<GameManager>().chosenChar;
+
+				characters[0] = GameManager.ins.GetComponent<GameManager>().chosenChar;
 				switch (characters[playerCount]){
 				case 0:
-					players [playerCount] = Instantiate (Zach, positions [playerCount], rotations) as GameObject;
+					players [0] = Instantiate (Zach, positions [playerCount], rotations) as GameObject;
 					break;
 				case 1:
-					players [playerCount] = Instantiate (Ana, positions [playerCount], rotations) as GameObject;
+					players [0] = Instantiate (Ana, positions [playerCount], rotations) as GameObject;
 					break;
 				case 2:
-					players [playerCount] = Instantiate (AnhChi, positions [playerCount], rotations) as GameObject;
+					players [0] = Instantiate (AnhChi, positions [playerCount], rotations) as GameObject;
 					break;
 				case 3:
-					players [playerCount] = Instantiate (Winnie, positions [playerCount], rotations) as GameObject;
+					players [0] = Instantiate (Winnie, positions [playerCount], rotations) as GameObject;
 					break;
 				default: 
 					break;
@@ -352,57 +353,53 @@ public class UniMoveGame : MonoBehaviour {
 			sounds.ouch = ouch;
 
 			switch (characters[0]){
-			case 0:
-				sounds.clips = new AudioClip[10][] {
-					sounds.zach_grunts, 
-					sounds.zach_objects, 
-					sounds.zach_furniture, 
-					sounds.zach_wall,
-					sounds.zach_drowsy, 
-					sounds.zach_fall, 
-					sounds.zach_struggle, 
-					sounds.zach_getup, 
-					sounds.zach_giveup, 
-					sounds.zach_bed };
-				break;
 			case 1:
-				sounds.clips = new AudioClip[10][] {
-					sounds.ana_grunts, 
-					sounds.ana_objects, 
-					sounds.ana_furniture,
-					sounds.ana_wall,
-					sounds.ana_drowsy, 
-					sounds.ana_fall, 
-					sounds.ana_struggle, 
-					sounds.ana_getup, 
-					sounds.ana_giveup, 
-					sounds.ana_bed };
+				sounds.clips_grunts = sounds.zach_grunts;
+				sounds.clips_objects = sounds.zach_objects; 
+				sounds.clips_furniture = sounds.zach_furniture;
+				sounds.clips_wall =	sounds.zach_wall;
+				sounds.clips_drowsy = sounds.zach_drowsy;
+				sounds.clips_fall = sounds.zach_fall;
+				sounds.clips_struggle = sounds.zach_struggle;
+				sounds.clips_getup = sounds.zach_getup;
+				sounds.clips_giveup = sounds.zach_giveup;
+				sounds.clips_bed = sounds.zach_bed;
 				break;
 			case 2:
-				sounds.clips = new AudioClip[10][] {
-					sounds.acb_grunts, 
-					sounds.acb_objects, 
-					sounds.acb_furniture,
-					sounds.acb_wall,
-					sounds.acb_drowsy, 
-					sounds.acb_fall, 
-					sounds.acb_struggle, 
-					sounds.acb_getup, 
-					sounds.acb_giveup, 
-					sounds.acb_bed };
+				sounds.clips_grunts = sounds.ana_grunts;
+				sounds.clips_objects = sounds.ana_objects; 
+				sounds.clips_furniture = sounds.ana_furniture;
+				sounds.clips_wall =	sounds.ana_wall;
+				sounds.clips_drowsy = sounds.ana_drowsy;
+				sounds.clips_fall = sounds.ana_fall;
+				sounds.clips_struggle = sounds.ana_struggle;
+				sounds.clips_getup = sounds.ana_getup;
+				sounds.clips_giveup = sounds.ana_giveup;
+				sounds.clips_bed = sounds.ana_bed;
 				break;
 			case 3:
-				sounds.clips = new AudioClip[10][] {
-					sounds.winnie_grunts, 
-					sounds.winnie_objects, 
-					sounds.winnie_furniture, 
-					sounds.winnie_wall,
-					sounds.winnie_drowsy, 
-					sounds.winnie_fall, 
-					sounds.winnie_struggle, 
-					sounds.winnie_getup, 
-					sounds.winnie_giveup, 
-					sounds.winnie_bed };
+				sounds.clips_grunts = sounds.acb_grunts;
+				sounds.clips_objects = sounds.acb_objects; 
+				sounds.clips_furniture = sounds.acb_furniture;
+				sounds.clips_wall =	sounds.acb_wall;
+				sounds.clips_drowsy = sounds.acb_drowsy;
+				sounds.clips_fall = sounds.acb_fall;
+				sounds.clips_struggle = sounds.acb_struggle;
+				sounds.clips_getup = sounds.acb_getup;
+				sounds.clips_giveup = sounds.acb_giveup;
+				sounds.clips_bed = sounds.acb_bed;
+				break;
+			case 4:
+				sounds.clips_grunts = sounds.winnie_grunts;
+				sounds.clips_objects = sounds.winnie_objects; 
+				sounds.clips_furniture = sounds.winnie_furniture;
+				sounds.clips_wall =	sounds.winnie_wall;
+				sounds.clips_drowsy = sounds.winnie_drowsy;
+				sounds.clips_fall = sounds.winnie_fall;
+				sounds.clips_struggle = sounds.winnie_struggle;
+				sounds.clips_getup = sounds.winnie_getup;
+				sounds.clips_giveup = sounds.winnie_giveup;
+				sounds.clips_bed = sounds.winnie_bed;
 				break;
 			}
 
@@ -440,57 +437,53 @@ public class UniMoveGame : MonoBehaviour {
 				sounds.ouch = ouch;
 				
 				switch (characters[i-1]){
-				case 0:
-					sounds.clips = new AudioClip[10][] {
-						sounds.zach_grunts, 
-						sounds.zach_objects, 
-						sounds.zach_furniture, 
-						sounds.zach_wall,
-						sounds.zach_drowsy, 
-						sounds.zach_fall, 
-						sounds.zach_struggle, 
-						sounds.zach_getup, 
-						sounds.zach_giveup, 
-						sounds.zach_bed };
-					break;
 				case 1:
-					sounds.clips = new AudioClip[10][] {
-						sounds.ana_grunts, 
-						sounds.ana_objects, 
-						sounds.ana_furniture,
-						sounds.ana_wall,
-						sounds.ana_drowsy, 
-						sounds.ana_fall, 
-						sounds.ana_struggle, 
-						sounds.ana_getup, 
-						sounds.ana_giveup, 
-						sounds.ana_bed };
+					sounds.clips_grunts = sounds.zach_grunts;
+					sounds.clips_objects = sounds.zach_objects; 
+					sounds.clips_furniture = sounds.zach_furniture;
+					sounds.clips_wall =	sounds.zach_wall;
+					sounds.clips_drowsy = sounds.zach_drowsy;
+					sounds.clips_fall = sounds.zach_fall;
+					sounds.clips_struggle = sounds.zach_struggle;
+					sounds.clips_getup = sounds.zach_getup;
+					sounds.clips_giveup = sounds.zach_giveup;
+					sounds.clips_bed = sounds.zach_bed;
 					break;
 				case 2:
-					sounds.clips = new AudioClip[10][] {
-						sounds.acb_grunts, 
-						sounds.acb_objects, 
-						sounds.acb_furniture,
-						sounds.acb_wall,
-						sounds.acb_drowsy, 
-						sounds.acb_fall, 
-						sounds.acb_struggle, 
-						sounds.acb_getup, 
-						sounds.acb_giveup, 
-						sounds.acb_bed };
+					sounds.clips_grunts = sounds.ana_grunts;
+					sounds.clips_objects = sounds.ana_objects; 
+					sounds.clips_furniture = sounds.ana_furniture;
+					sounds.clips_wall =	sounds.ana_wall;
+					sounds.clips_drowsy = sounds.ana_drowsy;
+					sounds.clips_fall = sounds.ana_fall;
+					sounds.clips_struggle = sounds.ana_struggle;
+					sounds.clips_getup = sounds.ana_getup;
+					sounds.clips_giveup = sounds.ana_giveup;
+					sounds.clips_bed = sounds.ana_bed;
 					break;
 				case 3:
-					sounds.clips = new AudioClip[10][] {
-						sounds.winnie_grunts, 
-						sounds.winnie_objects, 
-						sounds.winnie_furniture, 
-						sounds.winnie_wall,
-						sounds.winnie_drowsy, 
-						sounds.winnie_fall, 
-						sounds.winnie_struggle, 
-						sounds.winnie_getup, 
-						sounds.winnie_giveup, 
-						sounds.winnie_bed };
+					sounds.clips_grunts = sounds.acb_grunts;
+					sounds.clips_objects = sounds.acb_objects; 
+					sounds.clips_furniture = sounds.acb_furniture;
+					sounds.clips_wall =	sounds.acb_wall;
+					sounds.clips_drowsy = sounds.acb_drowsy;
+					sounds.clips_fall = sounds.acb_fall;
+					sounds.clips_struggle = sounds.acb_struggle;
+					sounds.clips_getup = sounds.acb_getup;
+					sounds.clips_giveup = sounds.acb_giveup;
+					sounds.clips_bed = sounds.acb_bed;
+					break;
+				case 4:
+					sounds.clips_grunts = sounds.winnie_grunts;
+					sounds.clips_objects = sounds.winnie_objects; 
+					sounds.clips_furniture = sounds.winnie_furniture;
+					sounds.clips_wall =	sounds.winnie_wall;
+					sounds.clips_drowsy = sounds.winnie_drowsy;
+					sounds.clips_fall = sounds.winnie_fall;
+					sounds.clips_struggle = sounds.winnie_struggle;
+					sounds.clips_getup = sounds.winnie_getup;
+					sounds.clips_giveup = sounds.winnie_giveup;
+					sounds.clips_bed = sounds.winnie_bed;
 					break;
 				}
 
@@ -537,57 +530,53 @@ public class UniMoveGame : MonoBehaviour {
 				sounds.ouch = ouch;
 				
 				switch (characters[i-1]){
-				case 0:
-					sounds.clips = new AudioClip[10][] {
-						sounds.zach_grunts, 
-						sounds.zach_objects, 
-						sounds.zach_furniture, 
-						sounds.zach_wall,
-						sounds.zach_drowsy, 
-						sounds.zach_fall, 
-						sounds.zach_struggle, 
-						sounds.zach_getup, 
-						sounds.zach_giveup, 
-						sounds.zach_bed };
-					break;
 				case 1:
-					sounds.clips = new AudioClip[10][] {
-						sounds.ana_grunts, 
-						sounds.ana_objects, 
-						sounds.ana_furniture,
-						sounds.ana_wall,
-						sounds.ana_drowsy, 
-						sounds.ana_fall, 
-						sounds.ana_struggle, 
-						sounds.ana_getup, 
-						sounds.ana_giveup, 
-						sounds.ana_bed };
+					sounds.clips_grunts = sounds.zach_grunts;
+					sounds.clips_objects = sounds.zach_objects; 
+					sounds.clips_furniture = sounds.zach_furniture;
+					sounds.clips_wall =	sounds.zach_wall;
+					sounds.clips_drowsy = sounds.zach_drowsy;
+					sounds.clips_fall = sounds.zach_fall;
+					sounds.clips_struggle = sounds.zach_struggle;
+					sounds.clips_getup = sounds.zach_getup;
+					sounds.clips_giveup = sounds.zach_giveup;
+					sounds.clips_bed = sounds.zach_bed;
 					break;
 				case 2:
-					sounds.clips = new AudioClip[10][] {
-						sounds.acb_grunts, 
-						sounds.acb_objects, 
-						sounds.acb_furniture,
-						sounds.acb_wall,
-						sounds.acb_drowsy, 
-						sounds.acb_fall, 
-						sounds.acb_struggle, 
-						sounds.acb_getup, 
-						sounds.acb_giveup, 
-						sounds.acb_bed };
+					sounds.clips_grunts = sounds.ana_grunts;
+					sounds.clips_objects = sounds.ana_objects; 
+					sounds.clips_furniture = sounds.ana_furniture;
+					sounds.clips_wall =	sounds.ana_wall;
+					sounds.clips_drowsy = sounds.ana_drowsy;
+					sounds.clips_fall = sounds.ana_fall;
+					sounds.clips_struggle = sounds.ana_struggle;
+					sounds.clips_getup = sounds.ana_getup;
+					sounds.clips_giveup = sounds.ana_giveup;
+					sounds.clips_bed = sounds.ana_bed;
 					break;
 				case 3:
-					sounds.clips = new AudioClip[10][] {
-						sounds.winnie_grunts, 
-						sounds.winnie_objects, 
-						sounds.winnie_furniture, 
-						sounds.winnie_wall,
-						sounds.winnie_drowsy, 
-						sounds.winnie_fall, 
-						sounds.winnie_struggle, 
-						sounds.winnie_getup, 
-						sounds.winnie_giveup, 
-						sounds.winnie_bed };
+					sounds.clips_grunts = sounds.acb_grunts;
+					sounds.clips_objects = sounds.acb_objects; 
+					sounds.clips_furniture = sounds.acb_furniture;
+					sounds.clips_wall =	sounds.acb_wall;
+					sounds.clips_drowsy = sounds.acb_drowsy;
+					sounds.clips_fall = sounds.acb_fall;
+					sounds.clips_struggle = sounds.acb_struggle;
+					sounds.clips_getup = sounds.acb_getup;
+					sounds.clips_giveup = sounds.acb_giveup;
+					sounds.clips_bed = sounds.acb_bed;
+					break;
+				case 4:
+					sounds.clips_grunts = sounds.winnie_grunts;
+					sounds.clips_objects = sounds.winnie_objects; 
+					sounds.clips_furniture = sounds.winnie_furniture;
+					sounds.clips_wall =	sounds.winnie_wall;
+					sounds.clips_drowsy = sounds.winnie_drowsy;
+					sounds.clips_fall = sounds.winnie_fall;
+					sounds.clips_struggle = sounds.winnie_struggle;
+					sounds.clips_getup = sounds.winnie_getup;
+					sounds.clips_giveup = sounds.winnie_giveup;
+					sounds.clips_bed = sounds.winnie_bed;
 					break;
 				}
 
