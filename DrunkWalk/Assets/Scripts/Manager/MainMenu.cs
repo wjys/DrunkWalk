@@ -45,6 +45,10 @@ public class MainMenu : Menu {
 	//Levels
 	public GameObject Lev;
 	public GameObject[] Markers;
+	public Vector3 unselectedMarkerScale;
+	public Vector3 selectedMarkerScale;
+	public float[] originalYs;
+	public float[] shiftedYs;
 
 	//Main (1)
 	private int idx = 0;
@@ -180,7 +184,16 @@ public class MainMenu : Menu {
 		Markers[2] = GameObject.Find ("MarkerM");
 		Markers[3] = GameObject.Find ("MarkerH");
 
+		selectedMarkerScale = new Vector3(0.08f, 0.08f, 0.08f);
+		unselectedMarkerScale = new Vector3(0.03f, 0.03f, 0.03f);
 
+		originalYs = new float[Markers.Length];
+		shiftedYs = new float[Markers.Length];
+
+		for (int i = 0; i < Markers.Length; i++){
+			originalYs[i] = Markers[i].transform.position.y;
+			shiftedYs[i] = originalYs[i]+0.2f;
+		}
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////
@@ -363,29 +376,16 @@ public class MainMenu : Menu {
 
 
 		//LerpMarker
-		/*
+
 		for (int i = 0; i < Markers.Length; i++) {
-			Transform oldMarkerT;
-			Transform newMarkerT;
-
-			oldMarkerT = Markers[i].transform;
-			//newMarkerT = Markers[0].transform;
-
-			oldMarkerT.localPosition = Markers[i].transform.localPosition;
-			oldMarkerT.localScale = Markers[i].transform.localScale;
-
-			newMarkerT.localPosition = new Vector3(oldMarkerT.position.x, oldMarkerT.position.y - 0.2f, oldMarkerT.position.z);
-			newMarkerT.localScale = new Vector3(oldMarkerT.localScale.x+0.06f, oldMarkerT.localScale.y+0.06f, oldMarkerT.localScale.z+0.06f);
-			
 			if (i == lidx){
-				Markers[i].transform.localScale = Vector3.Lerp (oldMarkerT.localScale, newMarkerT.localScale, smooth * Time.deltaTime);
-				Markers[i].transform.localPosition = Vector3.Lerp(oldMarkerT.localPosition, newMarkerT.localPosition, smooth * Time.deltaTime);
+				Markers[i].transform.localScale = Vector3.Lerp (Markers[i].transform.localScale, selectedMarkerScale, smooth * Time.deltaTime);
+				Markers[i].transform.position = Vector3.Lerp(Markers[i].transform.position, new Vector3(Markers[i].transform.position.x, shiftedYs[i], Markers[i].transform.position.z), smooth * Time.deltaTime);
 			} else {
-				Markers[i].transform.localScale = Vector3.Lerp (newMarkerT.localScale, oldMarkerT.localScale, smooth * Time.deltaTime);
-				Markers[i].transform.localPosition = Vector3.Lerp(newMarkerT.localPosition, oldMarkerT.localPosition, smooth * Time.deltaTime);
+				Markers[i].transform.localScale = Vector3.Lerp (Markers[i].transform.localScale, unselectedMarkerScale, smooth * Time.deltaTime);
+				Markers[i].transform.position = Vector3.Lerp(Markers[i].transform.position, new Vector3(Markers[i].transform.position.x, originalYs[i], Markers[i].transform.position.z), smooth * Time.deltaTime);
 			}
 		}
-		*/
 	}
 
 
