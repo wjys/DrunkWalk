@@ -5,7 +5,7 @@ public class GameState : MonoBehaviour {
 
 	//GAME STATES
 
-	public enum GameStatus { Splash, Paused, Game, Tutorial, End }
+	public enum GameStatus { Splash, Paused, Game, Tutorial, End, Scores }
 
 	//GAME MODES
 

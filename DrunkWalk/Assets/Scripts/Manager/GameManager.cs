@@ -127,12 +127,48 @@ public class GameManager : MonoBehaviour {
 		//print ("Scene: " + Application.loadedLevelName);
 
 		//Pause Menu in Game, Main menu in Splash
-		if (status == GameState.GameStatus.End){
+		if (status == GameState.GameStatus.Scores){
+
+
+
+			if (Application.loadedLevelName.Equals ("Scores")){
+				ScoreManager scoreManager = GameObject.Find ("HighScores").GetComponent<ScoreManager>();
+				scoreManager.score = score;
+				scoreManager.enabled = true;
+			}
+			else {
+				score = 0;
+				if (Application.loadedLevelName.Equals ("Splash")){
+					if (status != GameState.GameStatus.Splash){
+						status = GameState.GameStatus.Splash;
+					}
+				}
+
+				else if (Application.loadedLevelName.Equals ("Won") || Application.loadedLevelName.Equals("Lost")){
+					if (status != GameState.GameStatus.End){
+						status = GameState.GameStatus.End;
+					}
+				}
+
+				else {
+					if (status != GameState.GameStatus.Game){
+						status = GameState.GameStatus.Game;
+					}
+				}
+			}
+		}
+		else if (status == GameState.GameStatus.End){
 
 			// switch to SPLASH status
 			if (Application.loadedLevelName.Equals ("Splash")){
 				if (status != GameState.GameStatus.Splash){
 					status = GameState.GameStatus.Splash;
+				}
+			}
+
+			else if (Application.loadedLevelName.Equals ("Scores")){
+				if (status != GameState.GameStatus.Scores){
+					status = GameState.GameStatus.Scores;
 				}
 			}
 
@@ -163,7 +199,9 @@ public class GameManager : MonoBehaviour {
 			}
 
 			else {
-				status = GameState.GameStatus.Game;
+				if (status != GameState.GameStatus.Game){
+					status = GameState.GameStatus.Game;
+				}
 			}
 
 			if (playing) playing = false;
@@ -176,8 +214,16 @@ public class GameManager : MonoBehaviour {
 				}
 			}
 
+			else if (Application.loadedLevelName.Equals ("Scores")){
+				if (status != GameState.GameStatus.Scores){
+					status = GameState.GameStatus.Scores;
+				}
+			}
+
 			else if (Application.loadedLevelName.Equals ("Won") || Application.loadedLevelName.Equals("Lost")){
-				status = GameState.GameStatus.End;
+				if (status != GameState.GameStatus.End){
+					status = GameState.GameStatus.End;
+				}
 			}
 
 			else {
@@ -214,6 +260,7 @@ public class GameManager : MonoBehaviour {
 					endScript.enabled = false;
 					gameScript.enabled = false;
 				}
+
 				if (!splashScript.enabled){
 					splashScript.enabled = true;
 				}
@@ -266,6 +313,13 @@ public class GameManager : MonoBehaviour {
 				}
 
 			}
+
+			else if (Application.loadedLevelName.Equals ("Scores")){
+				if (status != GameState.GameStatus.Scores){
+					status = GameState.GameStatus.Scores;
+				}
+			}
+
 			else if (Application.loadedLevelName.Equals ("Won") || Application.loadedLevel.Equals ("Lost")){
 				status = GameState.GameStatus.End;
 			}

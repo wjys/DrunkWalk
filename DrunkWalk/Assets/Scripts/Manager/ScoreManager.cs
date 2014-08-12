@@ -52,6 +52,12 @@ public class ScoreManager : MonoBehaviour {
 				PlayerPrefs.DeleteAll();
 				getCurrentScores();
 			}
+			else if (Input.anyKeyDown){
+				Destroy (GameObject.Find ("GameState"));
+				Destroy (GameObject.Find ("GameManager"));
+				Application.LoadLevel ("Splash"); 
+				this.enabled = false;
+			}
 		}
 	}
 
