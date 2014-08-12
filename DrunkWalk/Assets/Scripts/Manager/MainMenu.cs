@@ -44,6 +44,7 @@ public class MainMenu : Menu {
 
 	//Levels
 	public GameObject Lev;
+	public GameObject[] Markers;
 
 	//Main (1)
 	private int idx = 0;
@@ -169,6 +170,15 @@ public class MainMenu : Menu {
 
 		//Set multiplayer to false
 		multi = false;
+
+		//Get Level Markers
+		Markers = new GameObject[4];
+
+		Markers[0] = GameObject.Find ("MarkerT");
+		Markers[1] = GameObject.Find ("MarkerE");
+		Markers[2] = GameObject.Find ("MarkerM");
+		Markers[3] = GameObject.Find ("MarkerH");
+
 
 	}
 
@@ -349,7 +359,34 @@ public class MainMenu : Menu {
 		//Cam Lerp
 		camObj.transform.position = Vector3.Lerp(camObj.transform.position, newPos, smooth * Time.deltaTime);
 		camObj.transform.rotation = Quaternion.Lerp(camObj.transform.rotation, newRot, smooth * Time.deltaTime);
+
+
+		//LerpMarker
+		/*
+		for (int i = 0; i < Markers.Length; i++) {
+			Transform oldMarkerT;
+			Transform newMarkerT;
+
+			oldMarkerT = Markers[i].transform;
+			//newMarkerT = Markers[0].transform;
+
+			oldMarkerT.localPosition = Markers[i].transform.localPosition;
+			oldMarkerT.localScale = Markers[i].transform.localScale;
+
+			newMarkerT.localPosition = new Vector3(oldMarkerT.position.x, oldMarkerT.position.y - 0.2f, oldMarkerT.position.z);
+			newMarkerT.localScale = new Vector3(oldMarkerT.localScale.x+0.06f, oldMarkerT.localScale.y+0.06f, oldMarkerT.localScale.z+0.06f);
+			
+			if (i == lidx){
+				Markers[i].transform.localScale = Vector3.Lerp (oldMarkerT.localScale, newMarkerT.localScale, smooth * Time.deltaTime);
+				Markers[i].transform.localPosition = Vector3.Lerp(oldMarkerT.localPosition, newMarkerT.localPosition, smooth * Time.deltaTime);
+			} else {
+				Markers[i].transform.localScale = Vector3.Lerp (newMarkerT.localScale, oldMarkerT.localScale, smooth * Time.deltaTime);
+				Markers[i].transform.localPosition = Vector3.Lerp(newMarkerT.localPosition, oldMarkerT.localPosition, smooth * Time.deltaTime);
+			}
+		}
+		*/
 	}
+
 
 	void Update () {
 		menuNumPublic = menuNum;
@@ -624,8 +661,11 @@ public class MainMenu : Menu {
 		wasRight = isRight;
 		wasLeft = isLeft;
 
+		//////////////////////////
+		/////HIGHLIGHTED OBJS/////
+		//////////////////////////
 
-		//HIGHLIGHTED OBJS
+		//Main Menu
 		if (idx == 0){
 			mMenuIns.GetComponentInChildren<MeshRenderer>().material.color = Color.white;
 		} else if (idx == 1){
@@ -634,6 +674,43 @@ public class MainMenu : Menu {
 			mMenuIns.GetComponentInChildren<MeshRenderer>().material.color = Color.blue;
 		} else if (idx == 3){
 			mMenuIns.GetComponentInChildren<MeshRenderer>().material.color = Color.green;
+		}
+
+		/*********
+		 * SINGLE PLAYER
+		 * ********/
+
+		//Diff Menu
+		if (didx == 0){
+			//Drink1
+		} else if (didx == 1){
+			//Drink2
+		} else if (didx == 2){
+			//Drink3
+		} else if (didx == 3){
+			//Drink4
+		} else if (didx == 4){
+			//BATHROOM
+		} else if (didx == 5){
+			//GO HOME
+		}
+
+		//Level Menu
+		if (lidx == 0){
+			//Tutorial
+		} else if (lidx == 1){
+			//Easy house
+		} else if (lidx == 2){
+			//Medium house
+		} else if (lidx == 3){
+			//Hard house
+		}
+
+		//Mode Menu
+		if (midx == 0){
+			//Score attack
+		} else if (midx == 1){
+			//Stealth
 		}
 	}
 
