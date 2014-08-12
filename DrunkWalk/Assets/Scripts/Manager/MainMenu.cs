@@ -52,18 +52,19 @@ public class MainMenu : Menu {
 	private Item[] items= new Item[] {
 		new Item("START", delegate () { ChooseCharacter (); }),
 		new Item("MULTIPLAYER", delegate () { MultiplayerChar (); }),
-		new Item("SET UP", delegate () { Settings (); }),
+		/*new Item("SET UP", delegate () { Settings (); }),*/
 		new Item("EXIT", delegate () { Application.Quit(); })
 	};
 
 	//Settings (set)
+	/*
 	private int sidx = 0;
 
 	private Item[] sitems = new Item[] {
 		new Item("SOUNDFX", delegate () { Debug.Log ("SOUNDFX"); }),
 		new Item("MUSIC", delegate () { Debug.Log ("MUSIC"); }),
 		new Item("CONTROLLER", delegate () { Debug.Log ("CONTROLLER"); })
-	};
+	};*/
 
 	//Characters (2)
 	private int cidx = 0;
@@ -194,8 +195,8 @@ public class MainMenu : Menu {
 		GUI.color = Color.white;
 		if (menuNum == 1) {
 			GUIMenu(idx, 200, 80, items, timer);}
-		else if (menuSet == true) {
-			GUIMenu(sidx, 200, 80, sitems, timer);}
+		//else if (menuSet == true) {
+		//	GUIMenu(sidx, 200, 80, sitems, timer);}
 		//else if (menuNum == 2) {
 		//	GUIMenu (cidx, 200, 80, citems, timer);}
 		//else if (menuNum == 3) {
@@ -260,14 +261,14 @@ public class MainMenu : Menu {
 	//////////
 	//SETTINGS    set
 	//////////
-	
+	/*
 	public static void Settings(){
 		menuNum = 0;
 		menuSet = true;
 
 		newPos = new Vector3 (25,0,0);
 		newRot = new Quaternion(0,0,0,0);
-	}
+	}*/
 
 	///////////////////////
 	///CUSTOMIZE CHARACTER    2
@@ -419,11 +420,11 @@ public class MainMenu : Menu {
 						idx %= items.Length;
 					}
 
-				} else if (menuSet) {
+				} /*else if (menuSet) {
 					//DOWN IN SETTINGS
 					sidx += 1;
 					sidx %= sitems.Length;
-				} else if (menuNum == 3){
+				} */else if (menuNum == 3){
 					//DOWN IN DIFF
 					if (Diff.totalDrunk > 0){
 						if (Diff.drinkID[didx] > 0){
@@ -435,19 +436,19 @@ public class MainMenu : Menu {
 						Diff.totalDrunk = 0;
 					}
 				} else if (menuNum == 4) {
-					//DOWN IN SETTINGS
+					//DOWN IN LEVELS
 					lidx += 1;
 					lidx %= litems.Length;
 				} else if (menuNum == 7) {
-					//DOWN IN SETTINGS
+					//DOWN IN MODES
 					midx += 1;
 					midx %= mitems.Length;
 				//} else if (menuNum == 5) {
-					//DOWN IN SETTINGS
+					//DOWN IN MULTICHAR
 					//mcidx += 1;
 					//mcidx %= mcitems.Length;
 				} else if (menuNum == 6) {
-					//DOWN IN SETTINGS
+					//DOWN IN MULTIMODES
 					mlidx += 1;
 					mlidx %= mlitems.Length;
 				}
@@ -477,11 +478,11 @@ public class MainMenu : Menu {
 						idx += items.Length - 1;
 						idx %= items.Length;
 					}
-				} else if (menuSet) {
+				} /*else if (menuSet) {
 					//UP IN SETTINGS
 					sidx += sitems.Length - 1;
 					sidx %= sitems.Length;
-				} else if (menuNum == 3) {
+				} */else if (menuNum == 3) {
 					//UP IN DIFF
 					if (Diff.totalDrunk < 5){
 						if (Diff.drinkID[didx] < 5){
@@ -540,14 +541,14 @@ public class MainMenu : Menu {
 					Diff.currDrink = didx;
 				}
 
-				if (menuSet){
+				/*if (menuSet){
 					//IF IN SETTINGS, GO RIGHT TO RAISE VOLUME
 					if (sidx == 0){
 						AudioManager.ins.GetComponent<AudioSource>().volume += 0.1f;
 					} else if (sidx == 1){
 						AudioManager.ins.GetComponent<AudioSource>().volume += 0.1f;
 					}
-				}
+				}*/
 			}
 		}
 
@@ -572,14 +573,14 @@ public class MainMenu : Menu {
 					Diff.currDrink = didx;
 				}
 
-				if (menuSet){
+				/*if (menuSet){
 					//IF IN SETTINGS, GO LEFT TO LOWER VOLUME
 					if (sidx == 0){
 						AudioManager.ins.GetComponent<AudioSource>().volume -= 0.1f;
 					} else if (sidx == 1){
 						AudioManager.ins.GetComponent<AudioSource>().volume -= 0.1f;
 					}
-				}
+				}*/
 			}
 		}
 
@@ -587,9 +588,9 @@ public class MainMenu : Menu {
 			//CONFIRMED
 			if (menuNum == 1) {
 				items[idx].command();
-			} else if (menuSet){
+			} /*else if (menuSet){
 				sitems[sidx].command();
-			} else if (menuNum == 2){
+			}*/ else if (menuNum == 2){
 				citems[cidx].command();
 			} else if (menuNum == 3){
 				ditems[didx].command();
@@ -764,10 +765,11 @@ public class MainMenu : Menu {
 		}
 
 		//SETTING
+		/*
 		if (menuSet){
 			newPos = new Vector3 (25,0,0);
 			newRot = new Quaternion(0,0,0,0);
-		}
+		}*/
 
 		yield return new WaitForSeconds(0.001f);
 		lerping = false;
