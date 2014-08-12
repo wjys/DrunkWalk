@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviour {
 	//Difficulty
 	public GameObject DiffObj;
 	public int diffInt;
-	public int JncInt, BeerInt, WhiskeyInt, SangriaInt;
+	public int JncInt, BeerInt, WhiskeyInt, GinInt;
 
 	//Level
 	public static int levelInt;
@@ -256,7 +256,7 @@ public class GameManager : MonoBehaviour {
 					JncInt = DiffObj.GetComponent<Difficulty>().drinkID[0];
 					BeerInt = DiffObj.GetComponent<Difficulty>().drinkID[1];
 					WhiskeyInt = DiffObj.GetComponent<Difficulty>().drinkID[2];
-					SangriaInt = DiffObj.GetComponent<Difficulty>().drinkID[3];
+					GinInt = DiffObj.GetComponent<Difficulty>().drinkID[3];
 					
 					diffInt = DiffObj.GetComponent<Difficulty>().totalDrunk;
 				}

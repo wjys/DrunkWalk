@@ -28,7 +28,9 @@ public class DrunkForce : InGame {
 	// -------- PUBLIC VARIABLES --------
 
 	// DRUNK FORCE PARAMS
-	public float drunkInc;	// amount by which we increment/multiply the toppling force
+
+	private float drunkInc;	// amount by which we increment/multiply the toppling force
+	private float dWobble;
 	
 	// CAMERA PARAMS
 	public float smooth; 
@@ -54,7 +56,31 @@ public class DrunkForce : InGame {
 	void Start () {
 		rhead = gameObject.GetComponent<Rigidbody> ();
 		dm = gameObject.GetComponent<DrunkMovement> ();
-		stopWobble = false; 
+		stopWobble = false;
+		drunkInc = 0;
+		dWobble = 0;
+
+		//Depending on total drinks, random drunk force
+		if (GameManager.ins.diffInt >= 1 && GameManager.ins.diffInt <= 2){
+			drunkInc = 0.1f;
+		} else if (GameManager.ins.diffInt <= 4){
+			drunkInc = 0.3f;
+		} else if (GameManager.ins.diffInt <= 5){
+			drunkInc = 0.5f;
+		} else {
+			drunkInc = 0;
+		}
+
+		//Depending on total amount of GIN, wobble becomes harsher
+		if (GameManager.ins.GinInt >= 1 && GameManager.ins.GinInt <= 2){
+			dWobble = 0.5f;
+		} else if (GameManager.ins.GinInt <= 4){
+			dWobble = 1.0f;
+		} else if (GameManager.ins.GinInt <= 5){
+			dWobble = 1.5f;
+		} else {
+			dWobble = 0;
+		}
 	}
 	
 	void Update () {
@@ -75,8 +101,10 @@ public class DrunkForce : InGame {
 		}
 		
 		// DRUNK FORCE
-		//StartCoroutine(newDrunkDirection ());
-		//drunkForce (drunkDir);
+		if (GameManager.ins.diffInt > 0){
+			StartCoroutine(newDrunkDirection ());
+			drunkForce (drunkDir);
+		}
 
 
 		// check camera rotation caps
@@ -103,10 +131,7 @@ public class DrunkForce : InGame {
 			transform.rotation = Quaternion.Lerp(transform.rotation, new Quaternion(transform.rotation.x, transform.rotation.y, 0, transform.rotation.w), 0.5f * Time.deltaTime);
 		}
 	}
-
-
-
-	// head rotation too far = fall over
+	
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * DRUNKFORCE 
 	 * Depending on the (random) inputted direction, add a drunk force in the corresponding direction
@@ -147,20 +172,11 @@ public class DrunkForce : InGame {
 	
 	// FOR NOW camera wobbles as lean changes 
 	private void camWobble(int lean){
-		//print ("leaning");
-
-
-		//DEPTH OF FIELD STUFF
-		/*if (player.radius >= 0.3f){
-			dof.aperture += (Mathf.Abs(camInc)*500);
-		} else if (player.radius < 0.3f){
-			dof.aperture -= (Mathf.Abs(camInc)*500);
-		}*/
 
 		switch (lean) {
 		case (int) Dir.forward:
 			transform.localRotation = Quaternion.Lerp (transform.localRotation, 
-			                                           Quaternion.Euler	(Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.position.y - feet.transform.position.y))/(Mathf.Abs(transform.position.z - feet.transform.position.z))*4)), transform.localEulerAngles.y, transform.localEulerAngles.z), 
+			                                           Quaternion.Euler	(Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.position.y - feet.transform.position.y))/(Mathf.Abs(transform.position.z - feet.transform.position.z))*(4+dWobble))), transform.localEulerAngles.y, transform.localEulerAngles.z), 
 			                                           Time.deltaTime * (smooth));
 			break;
 		case (int) Dir.right:
@@ -169,7 +185,7 @@ public class DrunkForce : InGame {
 			}
 			else {
 				transform.localRotation = Quaternion.Lerp (transform.localRotation, 
-				                                           Quaternion.Euler (transform.localEulerAngles.x, transform.localEulerAngles.y, -Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.position.y - feet.transform.position.y))/(Mathf.Abs(transform.position.x - feet.transform.position.x)))*1.5f)), 
+				                                           Quaternion.Euler (transform.localEulerAngles.x, transform.localEulerAngles.y, -Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.position.y - feet.transform.position.y))/(Mathf.Abs(transform.position.x - feet.transform.position.x)))*(1.5f+dWobble))), 
 				                                           Time.deltaTime * smooth);
 			}
 			break;
@@ -179,7 +195,7 @@ public class DrunkForce : InGame {
 			}
 			else {
 				transform.localRotation = Quaternion.Lerp (transform.localRotation, 
-				                                           Quaternion.Euler (transform.localEulerAngles.x, transform.localEulerAngles.y, Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.position.y - feet.transform.position.y))/(Mathf.Abs(transform.position.x - feet.transform.position.x)))*1.5f)), 
+				                                           Quaternion.Euler (transform.localEulerAngles.x, transform.localEulerAngles.y, Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.position.y - feet.transform.position.y))/(Mathf.Abs(transform.position.x - feet.transform.position.x)))*(1.5f+dWobble))), 
 				                                           Time.deltaTime * smooth);
 			}
 			break;
@@ -189,7 +205,7 @@ public class DrunkForce : InGame {
 			}
 			else {
 				transform.localRotation = Quaternion.Lerp (transform.localRotation, 
-			    	                                       Quaternion.Euler (-Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.localPosition.y - feet.transform.localPosition.y))/(Mathf.Abs(transform.localPosition.z - feet.transform.localPosition.z)))*0.5f),  transform.localEulerAngles.y, transform.localEulerAngles.z), 
+			    	                                       Quaternion.Euler (-Mathf.Rad2Deg*(Mathf.Atan((Mathf.Abs(transform.localPosition.y - feet.transform.localPosition.y))/(Mathf.Abs(transform.localPosition.z - feet.transform.localPosition.z)))*(0.5f+dWobble)),  transform.localEulerAngles.y, transform.localEulerAngles.z), 
 			        	                                   Time.deltaTime * (smooth));
 			}
 			break;
