@@ -54,6 +54,8 @@ public class GameManager : MonoBehaviour {
 	 */
 
 	//Winner
+	public int score;
+
 	public int winner;
 	public int numOfPlayers;
 
