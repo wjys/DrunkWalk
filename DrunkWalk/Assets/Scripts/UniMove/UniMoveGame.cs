@@ -6,6 +6,7 @@ using System.Collections;
 public class UniMoveGame : MonoBehaviour {
 
 	public GameObject[] players;
+	public int[] characters;
 	public GameObject Zach;
 	public GameObject Ana;
 	public GameObject AnhChi;
@@ -164,9 +165,12 @@ public class UniMoveGame : MonoBehaviour {
 	private void createPlayers(){
 		print ("create players!");
 		while (playerCount < numPlayers){
-
+			if (characters == null){
+				characters = new int[numPlayers];
+			}
 			if (numPlayers > 1){
-				switch (GameManager.ins.GetComponent<GameManager>().multiChosenChar[playerCount]){
+				characters[playerCount] = GameManager.ins.GetComponent<GameManager>().multiChosenChar[playerCount];
+				switch (characters[playerCount]){
 				case 0:
 					players [playerCount] = Instantiate (Zach, positions [playerCount], rotations) as GameObject;
 					break;
@@ -184,7 +188,8 @@ public class UniMoveGame : MonoBehaviour {
 				}
 			}
 			else {
-				switch (GameManager.ins.GetComponent<GameManager>().chosenChar){
+				characters[playerCount] = GameManager.ins.GetComponent<GameManager>().chosenChar;
+				switch (characters[playerCount]){
 				case 0:
 					players [playerCount] = Instantiate (Zach, positions [playerCount], rotations) as GameObject;
 					break;
@@ -333,6 +338,7 @@ public class UniMoveGame : MonoBehaviour {
 			Eyelids eyelids = ui.GetComponentInChildren <Eyelids>();
 			Compass comp = ui.GetComponentInChildren<Compass>();
 			Ouch ouch = ui.GetComponentInChildren<Ouch>();
+			Sounds sounds = ui.GetComponentInChildren<Sounds>();
 			
 			eyelids.me = GameObject.Find ("Head 1").GetComponent<DrunkMovement>();
 			comp.me =  GameObject.Find ("Head 1");
@@ -340,10 +346,71 @@ public class UniMoveGame : MonoBehaviour {
 			comp.spriteScale = comp.target.transform;
 			ouch.collision = GameObject.Find ("Head 1").GetComponent<Collision>();
 			ouch.dm = GameObject.Find ("Head 1").GetComponent<DrunkMovement>();
-			
+			sounds.dm = ouch.dm;
+			sounds.col = ouch.collision;
+			sounds.eyelids = eyelids;
+			sounds.ouch = ouch;
+
+			switch (characters[0]){
+			case 0:
+				sounds.clips = new AudioClip[10][] {
+					sounds.zach_grunts, 
+					sounds.zach_objects, 
+					sounds.zach_furniture, 
+					sounds.zach_wall,
+					sounds.zach_drowsy, 
+					sounds.zach_fall, 
+					sounds.zach_struggle, 
+					sounds.zach_getup, 
+					sounds.zach_giveup, 
+					sounds.zach_bed };
+				break;
+			case 1:
+				sounds.clips = new AudioClip[10][] {
+					sounds.ana_grunts, 
+					sounds.ana_objects, 
+					sounds.ana_furniture,
+					sounds.ana_wall,
+					sounds.ana_drowsy, 
+					sounds.ana_fall, 
+					sounds.ana_struggle, 
+					sounds.ana_getup, 
+					sounds.ana_giveup, 
+					sounds.ana_bed };
+				break;
+			case 2:
+				sounds.clips = new AudioClip[10][] {
+					sounds.acb_grunts, 
+					sounds.acb_objects, 
+					sounds.acb_furniture,
+					sounds.acb_wall,
+					sounds.acb_drowsy, 
+					sounds.acb_fall, 
+					sounds.acb_struggle, 
+					sounds.acb_getup, 
+					sounds.acb_giveup, 
+					sounds.acb_bed };
+				break;
+			case 3:
+				sounds.clips = new AudioClip[10][] {
+					sounds.winnie_grunts, 
+					sounds.winnie_objects, 
+					sounds.winnie_furniture, 
+					sounds.winnie_wall,
+					sounds.winnie_drowsy, 
+					sounds.winnie_fall, 
+					sounds.winnie_struggle, 
+					sounds.winnie_getup, 
+					sounds.winnie_giveup, 
+					sounds.winnie_bed };
+				break;
+			}
+
+
 			eyelids.enabled = true;
 			comp.enabled = true;
 			ouch.enabled = true;
+			sounds.enabled = true;
 			
 			foreach (SpriteRenderer sprite in ui.GetComponentsInChildren<SpriteRenderer>()){
 				sprite.enabled = true;
@@ -359,6 +426,7 @@ public class UniMoveGame : MonoBehaviour {
 				Eyelids eyelids = ui.GetComponentInChildren <Eyelids>();
 				Compass comp = ui.GetComponentInChildren<Compass>();
 				Ouch ouch = ui.GetComponentInChildren<Ouch>();
+				Sounds sounds = ui.GetComponentInChildren<Sounds>();
 				
 				eyelids.me = GameObject.Find ("Head " + i).GetComponent<DrunkMovement>();
 				comp.me =  GameObject.Find ("Head " + i);
@@ -366,6 +434,66 @@ public class UniMoveGame : MonoBehaviour {
 				comp.spriteScale = comp.target.transform;
 				ouch.collision = GameObject.Find ("Head " + i).GetComponent<Collision>();
 				ouch.dm = GameObject.Find ("Head " + i).GetComponent<DrunkMovement>();
+				sounds.dm = ouch.dm;
+				sounds.col = ouch.collision;
+				sounds.eyelids = eyelids;
+				sounds.ouch = ouch;
+				
+				switch (characters[i-1]){
+				case 0:
+					sounds.clips = new AudioClip[10][] {
+						sounds.zach_grunts, 
+						sounds.zach_objects, 
+						sounds.zach_furniture, 
+						sounds.zach_wall,
+						sounds.zach_drowsy, 
+						sounds.zach_fall, 
+						sounds.zach_struggle, 
+						sounds.zach_getup, 
+						sounds.zach_giveup, 
+						sounds.zach_bed };
+					break;
+				case 1:
+					sounds.clips = new AudioClip[10][] {
+						sounds.ana_grunts, 
+						sounds.ana_objects, 
+						sounds.ana_furniture,
+						sounds.ana_wall,
+						sounds.ana_drowsy, 
+						sounds.ana_fall, 
+						sounds.ana_struggle, 
+						sounds.ana_getup, 
+						sounds.ana_giveup, 
+						sounds.ana_bed };
+					break;
+				case 2:
+					sounds.clips = new AudioClip[10][] {
+						sounds.acb_grunts, 
+						sounds.acb_objects, 
+						sounds.acb_furniture,
+						sounds.acb_wall,
+						sounds.acb_drowsy, 
+						sounds.acb_fall, 
+						sounds.acb_struggle, 
+						sounds.acb_getup, 
+						sounds.acb_giveup, 
+						sounds.acb_bed };
+					break;
+				case 3:
+					sounds.clips = new AudioClip[10][] {
+						sounds.winnie_grunts, 
+						sounds.winnie_objects, 
+						sounds.winnie_furniture, 
+						sounds.winnie_wall,
+						sounds.winnie_drowsy, 
+						sounds.winnie_fall, 
+						sounds.winnie_struggle, 
+						sounds.winnie_getup, 
+						sounds.winnie_giveup, 
+						sounds.winnie_bed };
+					break;
+				}
+
 
 				if (GameManager.ins.mode == GameState.GameMode.Party){
 					comp.couch = GameObject.Find ("CouchObj");
@@ -378,6 +506,7 @@ public class UniMoveGame : MonoBehaviour {
 				eyelids.enabled = true;
 				comp.enabled = true;
 				ouch.enabled = true;
+				sounds.enabled = true;
 				
 				foreach (SpriteRenderer sprite in ui.GetComponentsInChildren<SpriteRenderer>()){
 					sprite.enabled = true;
@@ -394,6 +523,7 @@ public class UniMoveGame : MonoBehaviour {
 				Eyelids eyelids = ui.GetComponentInChildren <Eyelids>();
 				Compass comp = ui.GetComponentInChildren<Compass>();
 				Ouch ouch = ui.GetComponentInChildren<Ouch>();
+				Sounds sounds = ui.GetComponentInChildren<Sounds>();
 				
 				eyelids.me = GameObject.Find ("Head " + i).GetComponent<DrunkMovement>();
 				comp.me =  GameObject.Find ("Head " + i);
@@ -401,6 +531,66 @@ public class UniMoveGame : MonoBehaviour {
 				comp.spriteScale = comp.target.transform;
 				ouch.collision = GameObject.Find ("Head " + i).GetComponent<Collision>();
 				ouch.dm = GameObject.Find ("Head " + i).GetComponent<DrunkMovement>();
+				sounds.dm = ouch.dm;
+				sounds.col = ouch.collision;
+				sounds.eyelids = eyelids;
+				sounds.ouch = ouch;
+				
+				switch (characters[i-1]){
+				case 0:
+					sounds.clips = new AudioClip[10][] {
+						sounds.zach_grunts, 
+						sounds.zach_objects, 
+						sounds.zach_furniture, 
+						sounds.zach_wall,
+						sounds.zach_drowsy, 
+						sounds.zach_fall, 
+						sounds.zach_struggle, 
+						sounds.zach_getup, 
+						sounds.zach_giveup, 
+						sounds.zach_bed };
+					break;
+				case 1:
+					sounds.clips = new AudioClip[10][] {
+						sounds.ana_grunts, 
+						sounds.ana_objects, 
+						sounds.ana_furniture,
+						sounds.ana_wall,
+						sounds.ana_drowsy, 
+						sounds.ana_fall, 
+						sounds.ana_struggle, 
+						sounds.ana_getup, 
+						sounds.ana_giveup, 
+						sounds.ana_bed };
+					break;
+				case 2:
+					sounds.clips = new AudioClip[10][] {
+						sounds.acb_grunts, 
+						sounds.acb_objects, 
+						sounds.acb_furniture,
+						sounds.acb_wall,
+						sounds.acb_drowsy, 
+						sounds.acb_fall, 
+						sounds.acb_struggle, 
+						sounds.acb_getup, 
+						sounds.acb_giveup, 
+						sounds.acb_bed };
+					break;
+				case 3:
+					sounds.clips = new AudioClip[10][] {
+						sounds.winnie_grunts, 
+						sounds.winnie_objects, 
+						sounds.winnie_furniture, 
+						sounds.winnie_wall,
+						sounds.winnie_drowsy, 
+						sounds.winnie_fall, 
+						sounds.winnie_struggle, 
+						sounds.winnie_getup, 
+						sounds.winnie_giveup, 
+						sounds.winnie_bed };
+					break;
+				}
+
 
 				if (GameManager.ins.mode == GameState.GameMode.Party){
 					comp.couch = GameObject.Find ("CouchObj");
@@ -413,6 +603,7 @@ public class UniMoveGame : MonoBehaviour {
 				eyelids.enabled = true;
 				comp.enabled = true;
 				ouch.enabled = true;
+				sounds.enabled = true;
 				
 				foreach (SpriteRenderer sprite in ui.GetComponentsInChildren<SpriteRenderer>()){
 					sprite.enabled = true;
