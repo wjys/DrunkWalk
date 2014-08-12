@@ -72,14 +72,16 @@ public class DrunkForce : InGame {
 		}
 
 		//Depending on total amount of GIN, wobble becomes harsher
-		if (GameManager.ins.GinInt >= 1 && GameManager.ins.GinInt <= 2){
-			dWobble = 0.5f;
-		} else if (GameManager.ins.GinInt <= 4){
-			dWobble = 1.0f;
-		} else if (GameManager.ins.GinInt <= 5){
-			dWobble = 1.5f;
-		} else {
-			dWobble = 0;
+		if (GameManager.ins.diffInt > 0){
+			if (GameManager.ins.GinInt >= 1 && GameManager.ins.GinInt <= 2){
+				dWobble = 0.5f;
+			} else if (GameManager.ins.GinInt <= 4){
+				dWobble = 1.0f;
+			} else if (GameManager.ins.GinInt <= 5){
+				dWobble = 1.5f;
+			} else {
+				dWobble = 0;
+			}
 		}
 	}
 	
