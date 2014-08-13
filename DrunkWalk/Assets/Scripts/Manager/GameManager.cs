@@ -140,7 +140,6 @@ public class GameManager : MonoBehaviour {
 				scoreManager.enabled = true;
 			}
 			else {
-				score = 0;
 				if (Application.loadedLevelName.Equals ("Splash")){
 					if (status != GameState.GameStatus.Splash){
 						status = GameState.GameStatus.Splash;

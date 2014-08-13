@@ -13,12 +13,18 @@ public class EndScreen : MonoBehaviour {
 	public Sprite[] loseSprites;
 	public Sprite[] numSprites;
 
+	public bool getSpriteSets;
+	public GameObject race;
+	public GameObject party;
+
 	public bool spritesSet;
 	
 	// Use this for initialization
 	void Start () {
+
 		soundPlayed = false; 
 		spritesSet = false;
+		getSpriteSets = false;
 	}
 	
 	// Update is called once per frame
@@ -38,25 +44,40 @@ public class EndScreen : MonoBehaviour {
 			}
 			soundPlayed = true; 
 		}*/
-		if (GameManager.ins.mode == GameState.GameMode.ScoreAttack){
-			if (Input.anyKey){
-				Application.LoadLevel ("Scores");
-				this.enabled = false;
+		else {
+			if (Application.loadedLevelName.Equals ("Won")){
+				if (!getSpriteSets){
+					race = GameObject.Find("RaceEnd");
+					party = GameObject.Find ("PartyEnd");
+					getSpriteSets = true;
+				}
+				else {
+					if (GameManager.ins.mode == GameState.GameMode.ScoreAttack || GameManager.ins.mode == GameState.GameMode.Stealth){
+						Destroy(GameObject.Find ("RaceEnd"));
+						Destroy(GameObject.Find ("PartyEnd"));
+						
+						if (Input.anyKey){
+							Application.LoadLevel ("Scores");
+							this.enabled = false;
+						}
+					}
+					else if (GameManager.ins.mode == GameState.GameMode.Party || GameManager.ins.mode == GameState.GameMode.Race){
+						
+						//if (!spritesSet){
+						setSprites();
+						//}
+						
+						if (Input.anyKey){
+							Destroy(GameObject.Find("GameState"));
+							Application.LoadLevel ("Splash");
+							Destroy (this.gameObject);
+							this.enabled = false;
+						}
+					}
+				}
 			}
 		}
-		else if (GameManager.ins.mode == GameState.GameMode.Party || GameManager.ins.mode == GameState.GameMode.Race){
 
-			//if (!spritesSet){
-				setSprites();
-			//}
-
-			if (Input.anyKey){
-				Destroy(GameObject.Find("GameState"));
-				Application.LoadLevel ("Splash");
-				Destroy (this.gameObject);
-				this.enabled = false;
-			}
-		}
 	}
 
 	private void findMoves(){
@@ -65,38 +86,32 @@ public class EndScreen : MonoBehaviour {
 	}
 
 	private void setSprites(){
-		GameObject race, party;
-		race = GameObject.Find ("RaceEnd");
-		party = GameObject.Find ("PartyEnd");
 		
 		if (GameManager.ins.mode == GameState.GameMode.Race){
 			//IF RACE RESULTS
 			if (party != null){
 				Destroy (party);
 			}
+			if (!race.activeSelf){
+				race.SetActive(true);
+			}
 
 			getRaceWinSprites();
 			getRaceLoseSprites();
-
-			//if 1 player is in the winner index, enable spriterenderer of Win1 with its Player & Character ID
-			//	show Lose1, Lose2, Lose3 in the loser index with their IDs
-			
-			//if 2 players are in the winner index, show Win1, Win2 with their IDs
-			//	show Lose1, Lose2 in the loser index with their IDs
-			
-			//if 3 players are in the winner index, show Win1, Win2, Win3 with their IDs
-			// show Lose1 with its ID
 			
 		} else if (GameManager.ins.mode == GameState.GameMode.Party){
 			//IF PARTY RESULTS
 			if (race != null){
 				Destroy (race);
 			}
+	
+
+			if (!party.activeSelf){
+				party.SetActive (true);
+			}
 
 			getPartyWinSprites ();
 			getPartyLoseSprites();
-
-			//Send appropriate Player ID and character ID to 1st, 2nd, 3rd, 4th place sprite renderer
 		}
 		spritesSet = true;
 	}

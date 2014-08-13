@@ -12,6 +12,7 @@ public class Ouch : MonoBehaviour {
 	public SpriteRenderer win;
 
 	public DrunkMovement dm;
+	public Sounds sounds;
 
 	// Use this for initialization
 	void Start () {

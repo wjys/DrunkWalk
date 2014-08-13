@@ -102,6 +102,8 @@ public class DrunkMovement : InGame {
 	public GameObject model;
 	public Animator modelAnim;
 
+	public Sounds sounds;
+
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * START
 	 * (1) setup all the components of the head game object
@@ -201,6 +203,7 @@ public class DrunkMovement : InGame {
 		if (fallen) {
 			// (4) player has fallen
 			if (!frozen){
+				sounds.falling = true;
 				stopRead ();
 			}
 			else if (switchViews) {
@@ -578,6 +581,7 @@ public class DrunkMovement : InGame {
 		camLerp = true;
 		rhead.angularVelocity = new Vector3 (0, 0, 0);
 		yield return new WaitForSeconds (1.0f);
+		sounds.gettingUp = true;
 		camLerp = false;
 		rhead.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY;
 		tapCurrent = 0; 

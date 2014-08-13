@@ -368,15 +368,20 @@ public class UniMoveGame : MonoBehaviour {
 			Sounds sounds = ui.GetComponentInChildren<Sounds>();
 			
 			eyelids.me = GameObject.Find ("Head 1").GetComponent<DrunkMovement>();
+			eyelids.sounds = sounds;
 			comp.me =  GameObject.Find ("Head 1");
 			comp.target = GameObject.Find ("BedTarget");
 			comp.spriteScale = comp.target.transform;
 			ouch.collision = GameObject.Find ("Head 1").GetComponent<Collision>();
 			ouch.dm = GameObject.Find ("Head 1").GetComponent<DrunkMovement>();
+			ouch.sounds = sounds;
 			sounds.dm = ouch.dm;
 			sounds.col = ouch.collision;
 			sounds.eyelids = eyelids;
 			sounds.ouch = ouch;
+
+			sounds.dm.sounds = sounds;
+			sounds.col.sounds = sounds;
 
 			switch (characters[0]){
 			case 1:
@@ -452,15 +457,20 @@ public class UniMoveGame : MonoBehaviour {
 				Sounds sounds = ui.GetComponentInChildren<Sounds>();
 				
 				eyelids.me = GameObject.Find ("Head " + i).GetComponent<DrunkMovement>();
+				eyelids.sounds = sounds;
 				comp.me =  GameObject.Find ("Head " + i);
 				comp.target = GameObject.Find ("BedTarget");
 				comp.spriteScale = comp.target.transform;
 				ouch.collision = GameObject.Find ("Head " + i).GetComponent<Collision>();
 				ouch.dm = GameObject.Find ("Head " + i).GetComponent<DrunkMovement>();
+				ouch.sounds = sounds;
 				sounds.dm = ouch.dm;
 				sounds.col = ouch.collision;
 				sounds.eyelids = eyelids;
 				sounds.ouch = ouch;
+
+				sounds.dm.sounds = sounds;
+				sounds.col.sounds = sounds;
 				
 				switch (characters[i-1]){
 				case 1:
@@ -545,16 +555,21 @@ public class UniMoveGame : MonoBehaviour {
 				Sounds sounds = ui.GetComponentInChildren<Sounds>();
 				
 				eyelids.me = GameObject.Find ("Head " + i).GetComponent<DrunkMovement>();
+				eyelids.sounds = sounds;
 				comp.me =  GameObject.Find ("Head " + i);
 				comp.target = GameObject.Find ("BedTarget");
 				comp.spriteScale = comp.target.transform;
 				ouch.collision = GameObject.Find ("Head " + i).GetComponent<Collision>();
 				ouch.dm = GameObject.Find ("Head " + i).GetComponent<DrunkMovement>();
+				ouch.sounds = sounds;
 				sounds.dm = ouch.dm;
 				sounds.col = ouch.collision;
 				sounds.eyelids = eyelids;
 				sounds.ouch = ouch;
-				
+
+				sounds.dm.sounds = sounds;
+				sounds.col.sounds = sounds;
+
 				switch (characters[i-1]){
 				case 1:
 					sounds.clips_grunts = sounds.zach_grunts;
