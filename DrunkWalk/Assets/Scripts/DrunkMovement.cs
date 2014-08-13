@@ -581,6 +581,7 @@ public class DrunkMovement : InGame {
 		camLerp = true;
 		rhead.angularVelocity = new Vector3 (0, 0, 0);
 		yield return new WaitForSeconds (1.0f);
+		sounds.gettingUp = true;
 		camLerp = false;
 		rhead.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY;
 		tapCurrent = 0; 

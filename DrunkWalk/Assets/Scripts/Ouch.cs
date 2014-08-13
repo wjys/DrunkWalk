@@ -34,7 +34,9 @@ public class Ouch : MonoBehaviour {
 			reachingTub ();
 		}
 		else if (gm.winnerIndex == 3 && GameManager.ins.mode == GameState.GameMode.Party){
-			StartCoroutine (partylose());
+			GameManager.ins.losers[GameManager.ins.loserIndex] = dm.id;
+			GameManager.ins.loserIndex++;
+			GameManager.ins.status = GameState.GameStatus.End;
 		}
 		if (!dm.fallen){
 			if (collision.recoiled && !collision.reachedBed){
@@ -67,8 +69,17 @@ public class Ouch : MonoBehaviour {
 			gameObject.guiText.enabled = false;
 			win.enabled = true;
 			dm.gameObject.SetActive(false);
-
-			StartCoroutine (winning ());
+			
+			GameObject gm = GameObject.Find ("GameManager");
+			GameManager manager = gm.GetComponent<GameManager>();
+			manager.winners[manager.winnerIndex] = dm.id;
+			if (manager.winnerIndex == 0){
+				manager.winner = dm.id;
+				manager.score = collision.score;
+			}
+			manager.winnerIndex++;
+			
+			this.enabled = false;
 		}
 	}
 
@@ -84,8 +95,16 @@ public class Ouch : MonoBehaviour {
 				gameObject.guiText.enabled = false;
 				win.enabled = true;
 				dm.gameObject.SetActive(false);
-
-				StartCoroutine (winning ());
+				
+				GameObject gm = GameObject.Find ("GameManager");
+				GameManager manager = gm.GetComponent<GameManager>();
+				manager.winners[manager.winnerIndex] = dm.id;
+				if (manager.winnerIndex == 0){
+					manager.winner = dm.id;
+				}
+				manager.winnerIndex++;
+				
+				this.enabled = false;
 			}
 		}
 	}
@@ -101,35 +120,17 @@ public class Ouch : MonoBehaviour {
 				gameObject.guiText.enabled = false;
 				win.enabled = true;
 				dm.gameObject.SetActive(false);
-
-				StartCoroutine (winning ());
+				
+				GameObject gm = GameObject.Find ("GameManager");
+				GameManager manager = gm.GetComponent<GameManager>();
+				manager.winners[manager.winnerIndex] = dm.id;
+				if (manager.winnerIndex == 0){
+					manager.winner = dm.id;
+				}
+				manager.winnerIndex++;
+				
+				this.enabled = false;
 			}
 		}
-	}
-
-	IEnumerator winning(){
-		sounds.won = true;
-
-		yield return new WaitForSeconds (sounds.gameObject.audio.clip.length + 0.5f);
-
-		GameObject gm = GameObject.Find ("GameManager");
-		GameManager manager = gm.GetComponent<GameManager>();
-		manager.winners[manager.winnerIndex] = dm.id;
-		if (manager.winnerIndex == 0){
-			manager.winner = dm.id;
-		}
-		manager.winnerIndex++;
-		
-		this.enabled = false;
-	}
-
-	IEnumerator partylose(){
-		sounds.lost = true;
-
-		yield return new WaitForSeconds (sounds.gameObject.audio.clip.length + 0.5f);
-
-		GameManager.ins.losers[GameManager.ins.loserIndex] = dm.id;
-		GameManager.ins.loserIndex++;
-		GameManager.ins.status = GameState.GameStatus.End;
 	}
 }

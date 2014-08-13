@@ -13,12 +13,18 @@ public class EndScreen : MonoBehaviour {
 	public Sprite[] loseSprites;
 	public Sprite[] numSprites;
 
+	public bool getSpriteSets;
+	public GameObject race;
+	public GameObject party;
+
 	public bool spritesSet;
 	
 	// Use this for initialization
 	void Start () {
+
 		soundPlayed = false; 
 		spritesSet = false;
+		getSpriteSets = false;
 	}
 	
 	// Update is called once per frame
@@ -38,28 +44,40 @@ public class EndScreen : MonoBehaviour {
 			}
 			soundPlayed = true; 
 		}*/
-		if (GameManager.ins.mode == GameState.GameMode.ScoreAttack || GameManager.ins.mode == GameState.GameMode.Stealth){
-			Destroy(GameObject.Find ("RaceEnd"));
-			Destroy(GameObject.Find ("PartyEnd"));
-
-			if (Input.anyKey){
-				Application.LoadLevel ("Scores");
-				this.enabled = false;
+		else {
+			if (Application.loadedLevelName.Equals ("Won")){
+				if (!getSpriteSets){
+					race = GameObject.Find("RaceEnd");
+					party = GameObject.Find ("PartyEnd");
+					getSpriteSets = true;
+				}
+				else {
+					if (GameManager.ins.mode == GameState.GameMode.ScoreAttack || GameManager.ins.mode == GameState.GameMode.Stealth){
+						Destroy(GameObject.Find ("RaceEnd"));
+						Destroy(GameObject.Find ("PartyEnd"));
+						
+						if (Input.anyKey){
+							Application.LoadLevel ("Scores");
+							this.enabled = false;
+						}
+					}
+					else if (GameManager.ins.mode == GameState.GameMode.Party || GameManager.ins.mode == GameState.GameMode.Race){
+						
+						//if (!spritesSet){
+						setSprites();
+						//}
+						
+						if (Input.anyKey){
+							Destroy(GameObject.Find("GameState"));
+							Application.LoadLevel ("Splash");
+							Destroy (this.gameObject);
+							this.enabled = false;
+						}
+					}
+				}
 			}
 		}
-		else if (GameManager.ins.mode == GameState.GameMode.Party || GameManager.ins.mode == GameState.GameMode.Race){
 
-			//if (!spritesSet){
-				setSprites();
-			//}
-
-			if (Input.anyKey){
-				Destroy(GameObject.Find("GameState"));
-				Application.LoadLevel ("Splash");
-				Destroy (this.gameObject);
-				this.enabled = false;
-			}
-		}
 	}
 
 	private void findMoves(){
@@ -68,16 +86,15 @@ public class EndScreen : MonoBehaviour {
 	}
 
 	private void setSprites(){
-		GameObject race, party;
-		race = GameObject.Find ("RaceEnd");
-		party = GameObject.Find ("PartyEnd");
 		
 		if (GameManager.ins.mode == GameState.GameMode.Race){
 			//IF RACE RESULTS
 			if (party != null){
 				Destroy (party);
 			}
-			race.SetActive (true);
+			if (!race.activeSelf){
+				race.SetActive(true);
+			}
 
 			getRaceWinSprites();
 			getRaceLoseSprites();
@@ -87,7 +104,11 @@ public class EndScreen : MonoBehaviour {
 			if (race != null){
 				Destroy (race);
 			}
-			party.SetActive (true);
+	
+
+			if (!party.activeSelf){
+				party.SetActive (true);
+			}
 
 			getPartyWinSprites ();
 			getPartyLoseSprites();
