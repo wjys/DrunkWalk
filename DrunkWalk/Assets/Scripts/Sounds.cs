@@ -93,6 +93,9 @@ public class Sounds : MonoBehaviour {
 
 	void Update () {
 		// lose
+		if (GameManager.ins.mode == GameState.GameMode.Race || GameManager.ins.mode == GameState.GameMode.Party){
+			this.enabled = false;
+		}
 		if (lost){
 			giveupSounds();
 			StartCoroutine (endGame());
