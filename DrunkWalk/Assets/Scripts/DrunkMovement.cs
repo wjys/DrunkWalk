@@ -196,7 +196,6 @@ public class DrunkMovement : InGame {
 		if (!colliding){
 			setMoveColour (); 
 		}
-
 		// (3) keep head Y position constant
 		resetY ();
 

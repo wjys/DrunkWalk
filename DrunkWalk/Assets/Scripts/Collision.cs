@@ -107,6 +107,8 @@ public class Collision : MonoBehaviour {
 
 		//GET STEALTH BAR
 		stealthBar = GameObject.Find ("UICam " + dm.id).GetComponentInChildren<StealthBar>();
+
+		rhead.maxAngularVelocity = 10;
 	}
 	
 	// Update is called once per frame
@@ -292,6 +294,7 @@ public class Collision : MonoBehaviour {
 		reachedBed = false;
 		reachedCouch = false;
 		reachedTub = false;
+
 
 		if (GameManager.ins.mode == GameState.GameMode.Stealth){
 			stealthBar.noiseIcon.GetComponent<SpriteRenderer>().sprite = stealthBar.noiseIcons[0];
