@@ -126,7 +126,7 @@ public class Eyelids : InGame {
 					StartCoroutine(resetLids());
 				}
 				else if (blinked) {
-					StartCoroutine(LoseScreen());
+					LoseScreen();
 				}
 			}
 			else {
@@ -264,17 +264,12 @@ public class Eyelids : InGame {
 	 * (4) stop this script
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 
-	 IEnumerator LoseScreen(){
+	 private void LoseScreen(){
 		Tap.enabled = false;	
 		compass.SetActive(false);
 		po.enabled = true;
 		me.pfeet.SetActive(false);
 		me.gameObject.SetActive(false);
-
-		sounds.lost = true;
-
-		yield return new WaitForSeconds (sounds.gameObject.audio.clip.length + 0.5f);
-
 		GameObject gm = GameObject.Find ("GameManager");
 		GameManager manager = gm.GetComponent<GameManager> ();
 		manager.losers [manager.loserIndex] = me.id;
