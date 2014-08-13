@@ -289,6 +289,10 @@ public class Collision : MonoBehaviour {
 		recoiled = false; 
 		df.stopWobble = false; 
 
+		reachedBed = false;
+		reachedCouch = false;
+		reachedTub = false;
+
 		if (GameManager.ins.mode == GameState.GameMode.Stealth){
 			stealthBar.noiseIcon.GetComponent<SpriteRenderer>().sprite = stealthBar.noiseIcons[0];
         }
