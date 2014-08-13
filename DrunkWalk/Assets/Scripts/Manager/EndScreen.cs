@@ -38,7 +38,10 @@ public class EndScreen : MonoBehaviour {
 			}
 			soundPlayed = true; 
 		}*/
-		if (GameManager.ins.mode == GameState.GameMode.ScoreAttack){
+		if (GameManager.ins.mode == GameState.GameMode.ScoreAttack || GameManager.ins.mode == GameState.GameMode.Stealth){
+			Destroy(GameObject.Find ("RaceEnd"));
+			Destroy(GameObject.Find ("PartyEnd"));
+
 			if (Input.anyKey){
 				Application.LoadLevel ("Scores");
 				this.enabled = false;
@@ -74,29 +77,20 @@ public class EndScreen : MonoBehaviour {
 			if (party != null){
 				Destroy (party);
 			}
+			race.SetActive (true);
 
 			getRaceWinSprites();
 			getRaceLoseSprites();
-
-			//if 1 player is in the winner index, enable spriterenderer of Win1 with its Player & Character ID
-			//	show Lose1, Lose2, Lose3 in the loser index with their IDs
-			
-			//if 2 players are in the winner index, show Win1, Win2 with their IDs
-			//	show Lose1, Lose2 in the loser index with their IDs
-			
-			//if 3 players are in the winner index, show Win1, Win2, Win3 with their IDs
-			// show Lose1 with its ID
 			
 		} else if (GameManager.ins.mode == GameState.GameMode.Party){
 			//IF PARTY RESULTS
 			if (race != null){
 				Destroy (race);
 			}
+			party.SetActive (true);
 
 			getPartyWinSprites ();
 			getPartyLoseSprites();
-
-			//Send appropriate Player ID and character ID to 1st, 2nd, 3rd, 4th place sprite renderer
 		}
 		spritesSet = true;
 	}

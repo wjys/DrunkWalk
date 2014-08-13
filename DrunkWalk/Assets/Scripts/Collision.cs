@@ -43,6 +43,9 @@ public class Collision : MonoBehaviour {
 	public UniMoveController move;
 
 	// Sounds
+	public Sounds sounds;
+
+
 	public AudioClip[] hitclips; 
 	public AudioClip hitit;
 	public AudioSource source;
@@ -108,6 +111,7 @@ public class Collision : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		GameManager.ins.score = score;
 
 		if (score <= 0){
 			score = 0;
@@ -185,6 +189,14 @@ public class Collision : MonoBehaviour {
 					print ("RECOIL");
 					setRecoilDir(col.ClosestPointOnBounds(transform.position), transform.position);
 					recoiled = true;
+				}
+
+				if (col.tag == "Furniture"){
+					sounds.furnitureCollision = true;
+				}
+
+				if (col.tag == "Wall"){
+					sounds.wallCollision = true;
 				}
             }
 

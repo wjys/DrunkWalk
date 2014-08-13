@@ -42,6 +42,7 @@ public class Eyelids : InGame {
 	public bool resetValues;
 	private SpriteRenderer po;
 	private GameObject compass;
+	public Sounds sounds;
 
 	// Use this for initialization
 	void Start () {
@@ -125,7 +126,7 @@ public class Eyelids : InGame {
 					StartCoroutine(resetLids());
 				}
 				else if (blinked) {
-					LoseScreen();
+					StartCoroutine(LoseScreen());
 				}
 			}
 			else {
@@ -263,12 +264,16 @@ public class Eyelids : InGame {
 	 * (4) stop this script
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 
-	private void LoseScreen(){
+	 IEnumerator LoseScreen(){
 		Tap.enabled = false;	
 		compass.SetActive(false);
 		po.enabled = true;
 		me.pfeet.SetActive(false);
 		me.gameObject.SetActive(false);
+
+		sounds.lost = true;
+
+		yield return new WaitForSeconds (sounds.gameObject.audio.clip.length + 0.5f);
 
 		GameObject gm = GameObject.Find ("GameManager");
 		GameManager manager = gm.GetComponent<GameManager> ();

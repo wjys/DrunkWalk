@@ -102,6 +102,8 @@ public class DrunkMovement : InGame {
 	public GameObject model;
 	public Animator modelAnim;
 
+	public Sounds sounds;
+
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * START
 	 * (1) setup all the components of the head game object
@@ -201,6 +203,7 @@ public class DrunkMovement : InGame {
 		if (fallen) {
 			// (4) player has fallen
 			if (!frozen){
+				sounds.falling = true;
 				stopRead ();
 			}
 			else if (switchViews) {

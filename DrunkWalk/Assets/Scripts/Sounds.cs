@@ -79,44 +79,65 @@ public class Sounds : MonoBehaviour {
 	public bool falling;
 	public bool struggling; 
 	public bool gettingUp;
+	public bool lost;
+	public bool won;
 
 	public float soundDelay;
 	public float maxStepDelay;
 	
 	void Start () {
 		soundPlayed = false;
+		lost = false;
+		won = false;
 	}
 
 	void Update () {
 		// lose
-		if (!eyelids.enabled){
+		if (lost){
 			giveupSounds();
-			this.enabled = false;
+			StartCoroutine (endGame());
 		}
 		// win
-		if (!ouch.enabled){
+		else if (won){
 			bedSounds ();
-			this.enabled = false;
+			StartCoroutine (endGame());
 		}
 		// in game
-		if (!dm.fallen){
+		else if (dm.fallen) {
+			if (falling){
+				fallSounds();
+				StartCoroutine (resumeStruggle());
+			}
+			else if (struggling){
+				struggleSounds ();
+				StartCoroutine (resumeSound ());
+				struggling = false;
+			}
+			
+		}
+
+		else if (!dm.fallen){
 			if (gettingUp){
 				getupSounds();
 				gettingUp = false;
+				StartCoroutine (resumeSound ());
 			}
 			else if (col.colliding){
 				//audio.Stop();
 				if (objectCollision){
 					objectCollSounds();
 					objectCollision = false;
+					StartCoroutine (resumeSound ());
 				}
 				if (furnitureCollision){
 					furnitureCollSounds();
 					furnitureCollision = false;
+					StartCoroutine (resumeSound ());
 				}
 				if (wallCollision){
 					wallCollSounds();
 					wallCollision = false;
+					StartCoroutine (resumeSound ());
 				}
 			}
 			else {
@@ -138,18 +159,6 @@ public class Sounds : MonoBehaviour {
 				}
 			}
 		}
-		else {
-			if (falling){
-				audio.Stop();
-				fallSounds();
-				StartCoroutine (resumeStruggle());
-			}
-			else if (struggling){
-				struggleSounds ();
-				struggling = false;
-			}
-
-		}
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -161,9 +170,21 @@ public class Sounds : MonoBehaviour {
 		audio.pitch = Random.value * 0.1f + 0.95f;
 		audio.volume = Random.value * 0.3f + 0.7f;
 		audio.clip = clip;
-		audio.Play();
+		
 		//audio.Play(clip); 
 		
+	}
+
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * END GAME
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+	
+	IEnumerator endGame() {
+		audio.Play ();
+		lost = false;
+		won = false;
+		yield return new WaitForSeconds (soundDelay + audio.clip.length);
+		this.enabled = false;
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -172,7 +193,8 @@ public class Sounds : MonoBehaviour {
 	
 	IEnumerator resumeSound() {
 		soundPlayed = true;
-		yield return new WaitForSeconds (soundDelay);
+		audio.Play ();
+		yield return new WaitForSeconds (soundDelay + audio.clip.length);
 		soundPlayed = false;
 	}
 
@@ -182,7 +204,8 @@ public class Sounds : MonoBehaviour {
 	
 	IEnumerator resumeSteps() {
 		stepped = true;
-		yield return new WaitForSeconds (maxStepDelay*(dm.radius/dm.maxRad));
+		audio.Play ();
+		yield return new WaitForSeconds (audio.clip.length + maxStepDelay*(dm.radius/dm.maxRad));
 		stepped = false;
 	}
 
@@ -192,7 +215,8 @@ public class Sounds : MonoBehaviour {
 	
 	IEnumerator resumeStruggle() {
 		falling = false;
-		yield return new WaitForSeconds (soundDelay);
+		audio.Play ();
+		yield return new WaitForSeconds (soundDelay + audio.clip.length);
 		struggling = true;
 	}
 
@@ -205,7 +229,7 @@ public class Sounds : MonoBehaviour {
 		audio.pitch = Random.value * 0.1f + 0.95f;
 		audio.volume = Random.value * 0.3f + 0.7f;
 		audio.clip = clips_objects[Random.Range (0, clips_objects.Length)];
-		audio.Play(); 
+		 
 		
 	}
 
@@ -218,7 +242,7 @@ public class Sounds : MonoBehaviour {
 		audio.pitch = Random.value * 0.1f + 0.95f;
 		audio.volume = Random.value * 0.3f + 0.7f;
 		audio.clip = clips_furniture[Random.Range (0, clips_furniture.Length)] ;
-		audio.Play(); 
+		 
 		
 	}
 
@@ -231,7 +255,7 @@ public class Sounds : MonoBehaviour {
 		audio.pitch = Random.value * 0.1f + 0.95f;
 		audio.volume = Random.value * 0.3f + 0.7f;
 		audio.clip = clips_wall[Random.Range (0, clips_wall.Length)] ;
-		audio.Play(); 
+		 
 		
 	}
 
@@ -244,7 +268,7 @@ public class Sounds : MonoBehaviour {
 		audio.pitch = Random.value * 0.1f + 0.95f;
 		audio.volume = Random.value * 0.3f + 0.7f;
 		audio.clip = clips_drowsy[Random.Range (0, clips_drowsy.Length)] ;
-		audio.Play(); 
+		 
 		
 	}
 
@@ -257,7 +281,7 @@ public class Sounds : MonoBehaviour {
 		audio.pitch = Random.value * 0.1f + 0.95f;
 		audio.volume = Random.value * 0.3f + 0.7f;
 		audio.clip = clips_fall[Random.Range (0, clips_fall.Length)] ;
-		audio.Play(); 
+		 
 		
 	}
 
@@ -270,7 +294,7 @@ public class Sounds : MonoBehaviour {
 		audio.pitch = Random.value * 0.1f + 0.95f;
 		audio.volume = Random.value * 0.3f + 0.7f;
 		audio.clip = clips_struggle[Random.Range (0, clips_struggle.Length)] ;
-		audio.Play(); 
+		 
 		
 	}
 
@@ -283,7 +307,7 @@ public class Sounds : MonoBehaviour {
 		audio.pitch = Random.value * 0.1f + 0.95f;
 		audio.volume = Random.value * 0.3f + 0.7f;
 		audio.clip = clips_getup[Random.Range (0, clips_getup.Length)] ;
-		audio.Play(); 
+		 
 		
 	}
 
@@ -296,7 +320,7 @@ public class Sounds : MonoBehaviour {
 		audio.pitch = Random.value * 0.1f + 0.95f;
 		audio.volume = Random.value * 0.3f + 0.7f;
 		audio.clip = clips_giveup[Random.Range (0, clips_giveup.Length)] ;
-		audio.Play(); 
+		 
 		
 	}
 
@@ -309,7 +333,7 @@ public class Sounds : MonoBehaviour {
 		audio.pitch = Random.value * 0.1f + 0.95f;
 		audio.volume = Random.value * 0.3f + 0.7f;
 		audio.clip = clips_bed[Random.Range (0, clips_bed.Length)];
-		audio.Play(); 
+		 
 		
 	}
 }
