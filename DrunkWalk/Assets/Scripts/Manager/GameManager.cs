@@ -198,29 +198,7 @@ public class GameManager : MonoBehaviour {
 					else {
 						GameObject.Find ("Winner").GetComponent<GUIText>().text = "PLAYER " + winner + " WINS";
 
-						GameObject race, party;
-						race = GameObject.Find ("RaceEnd");
-						party = GameObject.Find ("PartyEnd");
 
-						if (mode == GameState.GameMode.Race){
-							//IF RACE RESULTS
-							Destroy (party);
-
-							//if 1 player is in the winner index, enable spriterenderer of Win1 with its Player & Character ID
-							//	show Lose1, Lose2, Lose3 in the loser index with their IDs
-
-							//if 2 players are in the winner index, show Win1, Win2 with their IDs
-							//	show Lose1, Lose2 in the loser index with their IDs
-
-							//if 3 players are in the winner index, show Win1, Win2, Win3 with their IDs
-							// show Lose1 with its ID
-
-						} else if (mode == GameState.GameMode.Party){
-							//IF PARTY RESULTS
-							Destroy (race);
-
-							//Send appropriate Player ID and character ID to 1st, 2nd, 3rd, 4th place sprite renderer
-						}
 					}
 				}
 			}

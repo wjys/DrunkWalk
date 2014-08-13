@@ -318,10 +318,10 @@ public class UniMoveSplash : MonoBehaviour
 	private void menuActions(){
 		if (main.menuNumPublic < 5){
 			if (p1 != null){
-				if (p1.ax > moveBoundRight)	main.tiltR = true;
+				if (p1.ax > moveBoundRight)	main.tiltL = true;
 				else main.tiltR = false;
 
-				if (p1.ax < moveBoundLeft) main.tiltL = true;
+				if (p1.ax < moveBoundLeft) main.tiltR = true;
 				else main.tiltL = false;
 
 				if (p1.az > moveBoundFront) main.tiltF = true;
