@@ -171,16 +171,16 @@ public class UniMoveGame : MonoBehaviour {
 			if (numPlayers > 1){
 				characters[playerCount] = GameManager.ins.GetComponent<GameManager>().multiChosenChar[playerCount];
 				switch (characters[playerCount]){
-				case 0:
+				case 1:
 					players [playerCount] = Instantiate (Zach, positions [playerCount], rotations) as GameObject;
 					break;
-				case 1:
+				case 2:
 					players [playerCount] = Instantiate (Ana, positions [playerCount], rotations) as GameObject;
 					break;
-				case 2:
+				case 3:
 					players [playerCount] = Instantiate (AnhChi, positions [playerCount], rotations) as GameObject;
 					break;
-				case 3:
+				case 4:
 					players [playerCount] = Instantiate (Winnie, positions [playerCount], rotations) as GameObject;
 					break;
 				default: 
@@ -191,16 +191,16 @@ public class UniMoveGame : MonoBehaviour {
 
 				characters[0] = GameManager.ins.GetComponent<GameManager>().chosenChar;
 				switch (characters[playerCount]){
-				case 0:
+				case 1:
 					players [0] = Instantiate (Zach, positions [playerCount], rotations) as GameObject;
 					break;
-				case 1:
+				case 2:
 					players [0] = Instantiate (Ana, positions [playerCount], rotations) as GameObject;
 					break;
-				case 2:
+				case 3:
 					players [0] = Instantiate (AnhChi, positions [playerCount], rotations) as GameObject;
 					break;
-				case 3:
+				case 4:
 					players [0] = Instantiate (Winnie, positions [playerCount], rotations) as GameObject;
 					break;
 				default: 

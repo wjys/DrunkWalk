@@ -33,6 +33,8 @@ public class Ouch : MonoBehaviour {
 			reachingTub ();
 		}
 		else if (gm.winnerIndex == 3 && GameManager.ins.mode == GameState.GameMode.Party){
+			GameManager.ins.losers[GameManager.ins.loserIndex] = dm.id;
+			GameManager.ins.loserIndex++;
 			GameManager.ins.status = GameState.GameStatus.End;
 		}
 		if (!dm.fallen){
