@@ -94,6 +94,7 @@ public class GameManager : MonoBehaviour {
 		//Setup Audio Manager
 		if (AudioManager.ins == null){
 			(Instantiate(audioManager) as GameObject).SendMessage("Initialize");
+
 		}
 
 		//Menu Instances
@@ -408,13 +409,13 @@ public class GameManager : MonoBehaviour {
 		if (mode == GameState.GameMode.Party || mode == GameState.GameMode.Race){
 			if (winnerIndex + loserIndex == numOfPlayers ){
 				status = GameState.GameStatus.End;
-				gameObject.GetComponent<EndScreen>().enabled = true;
 				if (winnerIndex != 0){
 					Application.LoadLevel ("Won");
 				}
 				else {
 					Application.LoadLevel ("Lost");
 				}
+				gameObject.GetComponent<EndScreen>().enabled = true;
 			}
 		}
 

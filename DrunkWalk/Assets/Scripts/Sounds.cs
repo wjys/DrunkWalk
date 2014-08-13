@@ -72,6 +72,9 @@ public class Sounds : MonoBehaviour {
 	public bool soundPlayed;
 	public bool stepped;
 
+	public bool lerpingIN;
+	public bool lerpingOUT;
+
 	public bool objectCollision;
 	public bool furnitureCollision;
 	public bool wallCollision;
@@ -89,21 +92,14 @@ public class Sounds : MonoBehaviour {
 		soundPlayed = false;
 		lost = false;
 		won = false;
+		lerpingIN = false;
+		lerpingOUT = false;
 	}
 
 	void Update () {
 		// lose
 		if (GameManager.ins.mode == GameState.GameMode.Race || GameManager.ins.mode == GameState.GameMode.Party){
 			this.enabled = false;
-		}
-		if (lost){
-			giveupSounds();
-			StartCoroutine (endGame());
-		}
-		// win
-		else if (won){
-			bedSounds ();
-			StartCoroutine (endGame());
 		}
 		// in game
 		else if (dm.fallen) {
@@ -164,6 +160,19 @@ public class Sounds : MonoBehaviour {
 		}
 	}
 
+	void FixedUpdate(){
+		if (lerpingIN){
+			soundLerpIn ();
+		}
+
+		if (lerpingOUT){
+			soundLerpOut ();
+			if (audio.volume <= 0.08f){
+				lerpingOUT = false;
+			}
+		}
+	}
+
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * PLAY SELECTED SOUND
 	 * -------------------------------------------------------------------------------------------------------------------------- */
@@ -173,21 +182,8 @@ public class Sounds : MonoBehaviour {
 		audio.pitch = Random.value * 0.1f + 0.95f;
 		audio.volume = Random.value * 0.3f + 0.7f;
 		audio.clip = clip;
-		
 		//audio.Play(clip); 
 		
-	}
-
-	/* --------------------------------------------------------------------------------------------------------------------------
-	 * END GAME
-	 * -------------------------------------------------------------------------------------------------------------------------- */
-	
-	IEnumerator endGame() {
-		audio.Play ();
-		lost = false;
-		won = false;
-		yield return new WaitForSeconds (soundDelay + audio.clip.length);
-		this.enabled = false;
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -197,6 +193,7 @@ public class Sounds : MonoBehaviour {
 	IEnumerator resumeSound() {
 		soundPlayed = true;
 		audio.Play ();
+		StartCoroutine (volLerp());
 		yield return new WaitForSeconds (soundDelay + audio.clip.length);
 		soundPlayed = false;
 	}
@@ -208,6 +205,8 @@ public class Sounds : MonoBehaviour {
 	IEnumerator resumeSteps() {
 		stepped = true;
 		audio.Play ();
+		StartCoroutine (volLerp());
+
 		yield return new WaitForSeconds (audio.clip.length + maxStepDelay*(dm.radius/dm.maxRad));
 		stepped = false;
 	}
@@ -219,6 +218,8 @@ public class Sounds : MonoBehaviour {
 	IEnumerator resumeStruggle() {
 		falling = false;
 		audio.Play ();
+		StartCoroutine (volLerp());
+
 		yield return new WaitForSeconds (soundDelay + audio.clip.length);
 		struggling = true;
 	}
@@ -336,7 +337,22 @@ public class Sounds : MonoBehaviour {
 		audio.pitch = Random.value * 0.1f + 0.95f;
 		audio.volume = Random.value * 0.3f + 0.7f;
 		audio.clip = clips_bed[Random.Range (0, clips_bed.Length)];
-		 
-		
+	}
+
+	private void soundLerpIn(){
+		audio.volume = Mathf.Lerp (audio.volume, Random.value * 0.3f + 0.7f, 0.5f * Time.deltaTime);
+	}
+
+	private void soundLerpOut(){
+		audio.volume = Mathf.Lerp (audio.volume, 0, 0.5f * Time.deltaTime);
+	}
+
+	IEnumerator volLerp(){
+		lerpingIN = true;
+
+		yield return new WaitForSeconds (audio.clip.length * (3/4));
+
+		lerpingIN = false;
+		lerpingOUT = true;
 	}
 }
