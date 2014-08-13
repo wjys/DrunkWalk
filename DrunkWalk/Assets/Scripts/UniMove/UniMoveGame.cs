@@ -213,10 +213,34 @@ public class UniMoveGame : MonoBehaviour {
 			players [playerCount].GetComponent<DrunkMovement> ().id = playerCount + 1;
 			players [playerCount].GetComponent<UniMoveDisplay> ().id = playerCount + 1; 
 
+			LayerMask meLayer = LayerMask.NameToLayer("Me" + (playerCount + 1));
+			players[playerCount].layer = meLayer;
+
+			Transform[] trans = players[playerCount].GetComponentsInChildren<Transform>();
+			foreach (Transform tran in trans){
+				if (tran.gameObject.name.Equals ("Model")){
+					GameObject model = tran.gameObject;
+					model.layer = meLayer;
+					foreach (Transform t in model.GetComponentsInChildren<Transform>()){
+						t.gameObject.layer = meLayer;
+					}
+					break;
+				}
+			}
+
+			Camera[] cams;
+
+			cams = players[playerCount].GetComponentsInChildren<Camera>();
+			foreach (Camera cam in cams){
+				cam.cullingMask &= ~(1 << meLayer);
+			}
+
+
+
 
 
 			// SET UP THE CAMERAS (ON HEAD'S CHILDREN)
-			Camera[] cams;
+
 			
 			switch (playerCount) {
 				
