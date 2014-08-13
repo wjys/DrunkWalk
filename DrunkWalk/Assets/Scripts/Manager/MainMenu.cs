@@ -585,6 +585,7 @@ public class MainMenu : Menu {
 			//WENT LEFT
 			if (!stopMove){
 				if (tiltL){
+					print ("TILTING LEFT");
 					stopMove = true;
 					corDelay = 1.0f;
 					StartCoroutine (resumeMove());

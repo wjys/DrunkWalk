@@ -318,11 +318,11 @@ public class UniMoveSplash : MonoBehaviour
 	private void menuActions(){
 		if (main.menuNumPublic < 5){
 			if (p1 != null){
-				if (p1.ax > moveBoundRight)	main.tiltL = true;
-				else main.tiltR = false;
-
-				if (p1.ax < moveBoundLeft) main.tiltR = true;
+				if (p1.ax > moveBoundLeft)	main.tiltL = true;
 				else main.tiltL = false;
+
+				if (p1.ax < moveBoundRight) main.tiltR = true;
+				else main.tiltR = false;
 
 				if (p1.az > moveBoundFront) main.tiltF = true;
 				else main.tiltF = false;
@@ -347,11 +347,11 @@ public class UniMoveSplash : MonoBehaviour
 		else {
 			switch (numPlayers){
 			case 1:
-				if (p1.ax > moveBoundRight)	main.tiltR = true;
-				else main.tiltR = false;
-				
-				if (p1.ax < moveBoundLeft) main.tiltL = true;
+				if (p1.ax > moveBoundLeft)	main.tiltL = true;
 				else main.tiltL = false;
+				
+				if (p1.ax < moveBoundRight) main.tiltR = true;
+				else main.tiltR = false;
 				
 				if (p1.az > moveBoundFront) main.tiltF = true;
 				else main.tiltF = false;
@@ -369,11 +369,11 @@ public class UniMoveSplash : MonoBehaviour
 				else main.cancelSelection = false;
 				break;
 			case 2:
-				if (p1.ax > moveBoundRight || p2.ax > moveBoundRight)	main.tiltR = true;
-				else main.tiltR = false;
-				
-				if (p1.ax < moveBoundLeft || p2.ax < moveBoundLeft) main.tiltL = true;
+				if (p1.ax > moveBoundLeft || p2.ax > moveBoundLeft)	main.tiltL = true;
 				else main.tiltL = false;
+				
+				if (p1.ax < moveBoundRight || p2.ax < moveBoundRight) main.tiltR = true;
+				else main.tiltR = false;
 				
 				if (p1.az > moveBoundFront || p2.az > moveBoundFront) main.tiltF = true;
 				else main.tiltF = false;
@@ -393,11 +393,11 @@ public class UniMoveSplash : MonoBehaviour
 				else main.cancelSelection = false;
 				break;
 			case 3:
-				if (p1.ax > moveBoundRight || p2.ax > moveBoundRight || p3.ax > moveBoundRight)	main.tiltR = true;
-				else main.tiltR = false;
-				
-				if (p1.ax < moveBoundLeft || p2.ax < moveBoundLeft || p3.ax < moveBoundLeft) main.tiltL = true;
+				if (p1.ax > moveBoundLeft || p2.ax > moveBoundLeft || p3.ax > moveBoundLeft)	main.tiltL = true;
 				else main.tiltL = false;
+				
+				if (p1.ax < moveBoundRight || p2.ax < moveBoundRight || p3.ax < moveBoundRight) main.tiltR = true;
+				else main.tiltR = false;
 				
 				if (p1.az > moveBoundFront || p2.az > moveBoundFront || p3.az > moveBoundFront) main.tiltF = true;
 				else main.tiltF = false;
@@ -419,11 +419,11 @@ public class UniMoveSplash : MonoBehaviour
 				break;
 
 			case 4:
-				if (p1.ax > moveBoundRight || p2.ax > moveBoundRight || p3.ax > moveBoundRight || p4.ax > moveBoundRight)	main.tiltR = true;
-				else main.tiltR = false;
-				
-				if (p1.ax < moveBoundLeft || p2.ax < moveBoundLeft || p3.ax < moveBoundLeft || p4.ax < moveBoundLeft) main.tiltL = true;
+				if (p1.ax > moveBoundRight || p2.ax > moveBoundLeft || p3.ax > moveBoundLeft || p4.ax > moveBoundLeft)	main.tiltL = true;
 				else main.tiltL = false;
+				
+				if (p1.ax < moveBoundRight || p2.ax < moveBoundRight || p3.ax < moveBoundRight || p4.ax < moveBoundRight) main.tiltR = true;
+				else main.tiltR = false;
 				
 				if (p1.az > moveBoundFront || p2.az > moveBoundFront || p3.az > moveBoundFront || p4.az > moveBoundFront) main.tiltF = true;
 				else main.tiltF = false;
