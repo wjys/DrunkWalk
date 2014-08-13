@@ -16,10 +16,7 @@ public class Difficulty : MonoBehaviour {
 
 	//Total drunk level
 	public int totalDrunk;
-	public GameObject tDBar;
-	private Vector3 tDBarScale;
-	public float tDBarfloat;
-	public float tDBarCap;
+	public GameObject[] drunkLv;
 	public float smooth;
 
 	//Winner
@@ -54,11 +51,22 @@ public class Difficulty : MonoBehaviour {
 			drinks[i].GetComponentInChildren<TextMesh>().text = drinkName[i] + ": " + drinkID[i];
 		}
 
-		tDBarScale = tDBar.transform.localScale;
-		tDBarScale.y = totalDrunk / tDBarfloat * tDBarCap;
+		for (int f = 0; f < totalDrunk; f++) {
+			if (f == (totalDrunk-1)){
+				drunkLv [totalDrunk-1].GetComponent<SpriteRenderer> ().enabled = true;
+			} else {
+				drunkLv [totalDrunk-1].GetComponent<SpriteRenderer> ().enabled = false;
+			}
+		}
+
+		if (totalDrunk == 0) {
+			for (int f = 0; f < 5; f++) {
+				drunkLv [f].GetComponent<SpriteRenderer> ().enabled = false;
+			}
+		}
 	}
 
 	void FixedUpdate () {
-		tDBar.transform.localScale = Vector3.Lerp(tDBar.transform.localScale, tDBarScale, smooth * Time.deltaTime);
+		//tDBar.transform.localScale = Vector3.Lerp(tDBar.transform.localScale, tDBarScale, smooth * Time.deltaTime);
 	}
 }

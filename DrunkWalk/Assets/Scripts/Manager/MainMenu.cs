@@ -44,11 +44,17 @@ public class MainMenu : Menu {
 
 	//Levels
 	public GameObject Lev;
+
 	public GameObject[] Markers;
 	public Vector3 unselectedMarkerScale;
 	public Vector3 selectedMarkerScale;
 	public float[] originalYs;
 	public float[] shiftedYs;
+
+	//Multiplayer Modes
+	private SpriteRenderer phoneScreen, reply;
+	private GameObject bubbles;
+	public Sprite[] screens, bubbleSpr, replySpr;
 
 	//Main (1)
 	private int idx = 0;
@@ -86,8 +92,8 @@ public class MainMenu : Menu {
 	private Item[] ditems = new Item[] {
 		new Item("JACK & COKE", delegate () { Debug.Log ("Jack & Coke"); }),
 		new Item("BEER", delegate () { Debug.Log ("Beer"); }),
-		new Item("WHISKEY", delegate () { Debug.Log ("Whiskey"); }),
-		new Item("SANGRIA", delegate () { Debug.Log ("Sangria"); }),
+		new Item("VODKA", delegate () { Debug.Log ("Vodka"); }),
+		new Item("GIN", delegate () { Debug.Log ("Gin"); }),
 		new Item("RESET", delegate () { Debug.Log ("Reset Drunk"); }),
 		new Item("LEAVE BAR", delegate () { ChooseLevel (); }),
 	};
@@ -96,7 +102,7 @@ public class MainMenu : Menu {
 	private int lidx = 0;
 
 	private Item[] litems = new Item[] {
-		new Item("TUTORIAL", delegate () { Modes (0); }),
+		new Item("TUTORIAL", delegate () { StartTutorial(); }),
 		new Item("EASY", delegate () { Modes (1); }),
 		new Item("MEDIUM", delegate () { Modes (2); }),
 		new Item("HARD", delegate () { Modes (3); })
@@ -194,6 +200,12 @@ public class MainMenu : Menu {
 			originalYs[i] = Markers[i].transform.position.y;
 			shiftedYs[i] = originalYs[i]+0.2f;
 		}
+
+		//Get Phone screen and set it to map
+		phoneScreen = GameObject.Find ("Screen").GetComponent<SpriteRenderer> ();
+		phoneScreen.sprite = screens [0];
+		bubbles = GameObject.Find ("Bubbles");
+		reply = GameObject.Find ("Reply").GetComponent<SpriteRenderer>();
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////
@@ -207,7 +219,13 @@ public class MainMenu : Menu {
 		//GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), backgroundTexture);
 		GUI.color = Color.white;
 		if (menuNum == 1) {
-			GUIMenu(idx, 200, 80, items, timer);}
+			GUIMenu(idx, 200, 80, items, timer);
+			for (int i = 0; i < Markers.Length; i++){
+				Markers[i].GetComponent<SpriteRenderer>().enabled = true;
+			}
+			bubbles.GetComponent<SpriteRenderer>().enabled = false;
+			reply.enabled = false;
+		}
 		//else if (menuSet == true) {
 		//	GUIMenu(sidx, 200, 80, sitems, timer);}
 		//else if (menuNum == 2) {
@@ -219,7 +237,13 @@ public class MainMenu : Menu {
 		else if (menuNum == 5){
 			GUIMenu (mcidx, 200, 80, mcitems, timer);}
 		else if (menuNum == 6){
-			GUIMenu (mlidx, 200, 80, mlitems, timer);}
+			GUIMenu (mlidx, 200, 80, mlitems, timer);
+			for (int i = 0; i < Markers.Length; i++){
+				Markers[i].GetComponent<SpriteRenderer>().enabled = false;
+			}
+			bubbles.GetComponent<SpriteRenderer>().enabled = true;
+			reply.enabled = true;
+		}
 		else if (menuNum == 7){
 			GUIMenu (midx, 200, 80, mitems, timer);}
 	}
@@ -264,6 +288,11 @@ public class MainMenu : Menu {
 			GameManager.ins.status = GameState.GameStatus.Game;
 			GameManager.ins.mode = GameState.GameMode.Party;
 		}
+	}
+
+	public static void StartTutorial(){
+		Application.LoadLevel ("WastedTut");
+		GameManager.ins.status = GameState.GameStatus.Tutorial;
 	}
 
 	public static void Menu1 (){
@@ -316,7 +345,7 @@ public class MainMenu : Menu {
 	public static void ChooseLevel(){
 		GameManager.ins.JncInt = 0;
 		GameManager.ins.BeerInt = 0;
-		GameManager.ins.WhiskeyInt = 0;
+		GameManager.ins.VodkaInt = 0;
 		GameManager.ins.GinInt = 0;
 
 		menuSet = false;
@@ -331,7 +360,7 @@ public class MainMenu : Menu {
 		//SET EACH PLAYER'S MULTIPLAYER
 		GameManager.ins.JncInt = 0;
 		GameManager.ins.BeerInt = 0;
-		GameManager.ins.WhiskeyInt = 0;
+		GameManager.ins.VodkaInt = 0;
 		GameManager.ins.GinInt = 0;
 
 		menuSet = false;
@@ -379,11 +408,11 @@ public class MainMenu : Menu {
 
 		for (int i = 0; i < Markers.Length; i++) {
 			if (i == lidx){
-				Markers[i].transform.localScale = Vector3.Lerp (Markers[i].transform.localScale, selectedMarkerScale, smooth * Time.deltaTime);
-				Markers[i].transform.position = Vector3.Lerp(Markers[i].transform.position, new Vector3(Markers[i].transform.position.x, shiftedYs[i], Markers[i].transform.position.z), smooth * Time.deltaTime);
+				Markers[i].transform.localScale = Vector3.Lerp (Markers[i].transform.localScale, selectedMarkerScale, (smooth*2) * Time.deltaTime);
+				Markers[i].transform.position = Vector3.Lerp(Markers[i].transform.position, new Vector3(Markers[i].transform.position.x, shiftedYs[i], Markers[i].transform.position.z), (smooth*2) * Time.deltaTime);
 			} else {
-				Markers[i].transform.localScale = Vector3.Lerp (Markers[i].transform.localScale, unselectedMarkerScale, smooth * Time.deltaTime);
-				Markers[i].transform.position = Vector3.Lerp(Markers[i].transform.position, new Vector3(Markers[i].transform.position.x, originalYs[i], Markers[i].transform.position.z), smooth * Time.deltaTime);
+				Markers[i].transform.localScale = Vector3.Lerp (Markers[i].transform.localScale, unselectedMarkerScale, (smooth*2) * Time.deltaTime);
+				Markers[i].transform.position = Vector3.Lerp(Markers[i].transform.position, new Vector3(Markers[i].transform.position.x, originalYs[i], Markers[i].transform.position.z), (smooth*2) * Time.deltaTime);
 			}
 		}
 	}
@@ -426,12 +455,12 @@ public class MainMenu : Menu {
 					sidx %= sitems.Length;
 				} */else if (menuNum == 3){
 					//DOWN IN DIFF
-					if (Diff.totalDrunk > 0){
+					/*if (Diff.totalDrunk > 0){
 						if (Diff.drinkID[didx] > 0){
 							Diff.drinkID[didx] -= 1;
 							Diff.totalDrunk -= 1;
 						}
-					}
+					}*/
 					if (Diff.totalDrunk <= 0){
 						Diff.totalDrunk = 0;
 					}
@@ -713,6 +742,18 @@ public class MainMenu : Menu {
 		} else if (midx == 1){
 			//Stealth
 		}
+
+		if(menuNum == 6){
+			if (mlidx == 0) {
+				phoneScreen.sprite = screens [1];
+				bubbles.GetComponent<SpriteRenderer>().sprite = bubbleSpr [0];
+				reply.sprite = replySpr [0];	
+			} else if (mlidx == 1) {
+				phoneScreen.sprite = screens [2];
+				bubbles.GetComponent<SpriteRenderer>().sprite = bubbleSpr [1];
+				reply.sprite = replySpr [1];
+			}
+		}
 	}
 
 	public IEnumerator LerpCam() {
@@ -739,6 +780,7 @@ public class MainMenu : Menu {
 		if (menuNum == 4){
 			newPos = new Vector3(0, 40, 0);
 			newRot = new Quaternion(0, 1, 0, 3.72529e-07f);
+			phoneScreen.sprite = screens [0];
 		}
 
 		//DIFFICULTY
@@ -750,6 +792,7 @@ public class MainMenu : Menu {
 		//CHARACTER
 		if (menuNum == 2){
 			Lev.transform.position = new Vector3(Lev.transform.position.x, 40, Lev.transform.position.z);
+			phoneScreen.sprite = screens [0];
 			newPos = new Vector3(0,25,0);
 			newRot = new Quaternion (0, 0, 0, 1);
 		}
