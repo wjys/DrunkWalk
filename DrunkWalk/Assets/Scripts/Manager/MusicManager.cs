@@ -8,12 +8,14 @@ public class MusicManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		gameObject.name = "AudioManager";
+		// audio.clip = songs[Random.Range(0, songs.Length)];
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		StartCoroutine (switchSongs ());
 		if (GameManager.ins.status == GameState.GameStatus.Splash){
-
+			// audio.volume = 
 		}
 		else if (GameManager.ins.status == GameState.GameStatus.End){
 
@@ -35,5 +37,11 @@ public class MusicManager : MonoBehaviour {
 		if (!audio.isPlaying){
 			audio.Play();
 		}
+	}
+
+	IEnumerator switchSongs(){
+		audio.Play();
+		yield return new WaitForSeconds(audio.clip.length + 0.5f);
+		audio.clip = songs[Random.Range (0, songs.Length)];
 	}
 }
