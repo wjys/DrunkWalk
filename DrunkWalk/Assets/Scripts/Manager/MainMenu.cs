@@ -24,9 +24,7 @@ public class MainMenu : Menu {
 	public int menuNumPublic;
 
 	//THE MENU ITEM VISUALIZATION
-	private GameObject mMenuIns;
 	public GameObject mMenu;
-	public GameObject cube;
 
 	//Camera
 	public GameObject camObj;
@@ -62,7 +60,7 @@ public class MainMenu : Menu {
 	private Item[] items= new Item[] {
 		new Item("START", delegate () { ChooseCharacter (); }),
 		new Item("MULTIPLAYER", delegate () { MultiplayerChar (); }),
-		/*new Item("SET UP", delegate () { Settings (); }),*/
+		//new Item("HOW TO PLAY", delegate () { HTP(); }),
 		new Item("EXIT", delegate () { Application.Quit(); })
 	};
 
@@ -157,10 +155,6 @@ public class MainMenu : Menu {
 
 	void Start() {
 		//If there's no instance of this, make one
-		if (mMenuIns == null){
-			mMenuIns = Instantiate(mMenu) as GameObject;
-			mMenuIns.SetActive(true);
-		}
 
 		//Find Camera
 		camObj = GameObject.Find("SplashCam");
@@ -219,7 +213,7 @@ public class MainMenu : Menu {
 		//GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), backgroundTexture);
 		GUI.color = Color.white;
 		if (menuNum == 1) {
-			GUIMenu(idx, 200, 80, items, timer);
+			//GUIMenu(idx, 200, 80, items, timer);
 			for (int i = 0; i < Markers.Length; i++){
 				Markers[i].GetComponent<SpriteRenderer>().enabled = true;
 			}
@@ -698,13 +692,25 @@ public class MainMenu : Menu {
 
 		//Main Menu
 		if (idx == 0){
-			mMenuIns.GetComponentInChildren<MeshRenderer>().material.color = Color.white;
+			GameObject.Find ("ButtonPlay").GetComponentInChildren<SpriteRenderer>().enabled = true;
+			GameObject.Find ("ButtonMulti").GetComponentInChildren<SpriteRenderer>().enabled = false;
+			GameObject.Find ("ButtonHTP").GetComponentInChildren<SpriteRenderer>().enabled = false;
+			GameObject.Find ("ButtonSounds").GetComponentInChildren<SpriteRenderer>().enabled = false;
 		} else if (idx == 1){
-			mMenuIns.GetComponentInChildren<MeshRenderer>().material.color = Color.red;
+			GameObject.Find ("ButtonPlay").GetComponentInChildren<SpriteRenderer>().enabled = false;
+			GameObject.Find ("ButtonMulti").GetComponentInChildren<SpriteRenderer>().enabled = true;
+			GameObject.Find ("ButtonHTP").GetComponentInChildren<SpriteRenderer>().enabled = false;
+			GameObject.Find ("ButtonSounds").GetComponentInChildren<SpriteRenderer>().enabled = false;
 		} else if (idx == 2){
-			mMenuIns.GetComponentInChildren<MeshRenderer>().material.color = Color.blue;
+			GameObject.Find ("ButtonPlay").GetComponentInChildren<SpriteRenderer>().enabled = false;
+			GameObject.Find ("ButtonMulti").GetComponentInChildren<SpriteRenderer>().enabled = false;
+			GameObject.Find ("ButtonHTP").GetComponentInChildren<SpriteRenderer>().enabled = true;
+			GameObject.Find ("ButtonSounds").GetComponentInChildren<SpriteRenderer>().enabled = false;
 		} else if (idx == 3){
-			mMenuIns.GetComponentInChildren<MeshRenderer>().material.color = Color.green;
+			GameObject.Find ("ButtonPlay").GetComponentInChildren<SpriteRenderer>().enabled = false;
+			GameObject.Find ("ButtonMulti").GetComponentInChildren<SpriteRenderer>().enabled = false;
+			GameObject.Find ("ButtonHTP").GetComponentInChildren<SpriteRenderer>().enabled = false;
+			GameObject.Find ("ButtonSounds").GetComponentInChildren<SpriteRenderer>().enabled = true;
 		}
 
 		/*********
@@ -786,7 +792,7 @@ public class MainMenu : Menu {
 
 		//DIFFICULTY
 		if (menuNum == 3){
-			newPos = new Vector3(0,25,0);
+			newPos = new Vector3(0,30,0);
 			newRot = new Quaternion (0, 0.7071071f, 0, 0.7071066f);
 		}
 
@@ -794,7 +800,7 @@ public class MainMenu : Menu {
 		if (menuNum == 2){
 			Lev.transform.position = new Vector3(Lev.transform.position.x, 40, Lev.transform.position.z);
 			phoneScreen.sprite = screens [0];
-			newPos = new Vector3(0,25,0);
+			newPos = new Vector3(0,30,0);
 			newRot = new Quaternion (0, 0, 0, 1);
 		}
 
