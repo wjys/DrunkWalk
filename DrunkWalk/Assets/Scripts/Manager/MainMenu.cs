@@ -56,6 +56,8 @@ public class MainMenu : Menu {
 	public float[] originalYs;
 	public float[] shiftedYs;
 
+	public Sprite[] levSprite;
+
 	//Multiplayer Modes
 	private SpriteRenderer phoneScreen, reply;
 	private GameObject bubbles;
@@ -768,6 +770,18 @@ public class MainMenu : Menu {
 			//Score attack
 		} else if (midx == 1){
 			//Stealth
+		}
+		if (menuNum == 4){
+			if (!GameObject.Find ("LevelSprites").GetComponent<SpriteRenderer>().enabled){
+				GameObject.Find ("LevelSprites").GetComponent<SpriteRenderer>().enabled = true;
+			}
+			GameObject.Find ("LevelSprites").GetComponent<SpriteRenderer>().sprite = levSprite[lidx];
+		}
+
+		else if (menuNum != 4){
+			if (GameObject.Find ("LevelSprites").GetComponent<SpriteRenderer>().enabled){
+				GameObject.Find ("LevelSprites").GetComponent<SpriteRenderer>().enabled = false;
+            }
 		}
 
 		if(menuNum == 6){
