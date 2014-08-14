@@ -42,6 +42,13 @@ public class MainMenu : Menu {
 
 	//Levels
 	public GameObject Lev;
+	public GameObject Mod;
+	public GameObject Choice;
+	public GameObject CellPhone;
+	public bool lerpPhone;
+	public Vector3 originalPhone;
+	public Vector3 newPhonePos;
+	public Vector3 phoneDownPos;
 
 	public GameObject[] Markers;
 	public Vector3 unselectedMarkerScale;
@@ -176,6 +183,14 @@ public class MainMenu : Menu {
 		//Set multiplayer to false
 		multi = false;
 
+		Mod = GameObject.Find ("ModeUI");
+		Choice = GameObject.Find("ChoiceBox");
+		Mod.SetActive (false);
+
+		CellPhone = GameObject.Find ("Phone");
+		originalPhone = CellPhone.transform.position;
+		phoneDownPos = new Vector3 (CellPhone.transform.position.x, -3.61f, CellPhone.transform.position.z);
+
 		//Get Level Markers
 		Markers = new GameObject[4];
 
@@ -226,20 +241,21 @@ public class MainMenu : Menu {
 		//	GUIMenu (cidx, 200, 80, citems, timer);}
 		//else if (menuNum == 3) {
 		//	GUIMenu (didx, 200, 80, ditems, timer);}
-		else if (menuNum == 4) {
-			GUIMenu (lidx, 200, 80, litems, timer);}
+		//else if (menuNum == 4) {
+		//	GUIMenu (lidx, 200, 80, litems, timer);}
 		//else if (menuNum == 5){
 		//	GUIMenu (mcidx, 200, 80, mcitems, timer);}
 		else if (menuNum == 6){
-			GUIMenu (mlidx, 200, 80, mlitems, timer);
+		//	GUIMenu (mlidx, 200, 80, mlitems, timer);
 			for (int i = 0; i < Markers.Length; i++){
 				Markers[i].GetComponent<SpriteRenderer>().enabled = false;
 			}
 			bubbles.GetComponent<SpriteRenderer>().enabled = true;
 			reply.enabled = true;
 		}
-		else if (menuNum == 7){
-			GUIMenu (midx, 200, 80, mitems, timer);}
+		//else if (menuNum == 7){
+
+		//	GUIMenu (midx, 200, 80, mitems, timer);}
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////
@@ -408,6 +424,10 @@ public class MainMenu : Menu {
 				Markers[i].transform.localScale = Vector3.Lerp (Markers[i].transform.localScale, unselectedMarkerScale, (smooth*2) * Time.deltaTime);
 				Markers[i].transform.position = Vector3.Lerp(Markers[i].transform.position, new Vector3(Markers[i].transform.position.x, originalYs[i], Markers[i].transform.position.z), (smooth*2) * Time.deltaTime);
 			}
+		}
+
+		if (lerpPhone){
+			CellPhone.transform.localPosition = Vector3.Lerp (CellPhone.transform.localPosition, newPhonePos, smooth * Time.deltaTime);
 		}
 	}
 
@@ -761,6 +781,30 @@ public class MainMenu : Menu {
 				reply.sprite = replySpr [1];
 			}
 		}
+
+		if (menuNum == 7){
+			if (!Mod.activeSelf){
+				Mod.SetActive (true);
+			}
+			if (CellPhone.activeSelf){
+				CellPhone.SetActive(false);
+			}
+			if (midx == 0){
+				Choice.transform.localPosition = new Vector3(Choice.transform.localPosition.x, -0.1795873f, Choice.transform.localPosition.z);
+			}
+			else if (midx == 1){
+				Choice.transform.localPosition = new Vector3(Choice.transform.localPosition.x, 0.22f, Choice.transform.localPosition.z);
+			}
+		}
+
+		if (menuNum != 7){
+			if (!CellPhone.activeSelf){
+				CellPhone.SetActive(true);
+			}
+			if (Mod.activeSelf){
+				Mod.SetActive (false);
+			}
+		}
 	}
 
 	public IEnumerator LerpCam() {
@@ -833,5 +877,11 @@ public class MainMenu : Menu {
 	IEnumerator resumeConfirm(){
 		yield return new WaitForSeconds (corDelay);
 		stopConfirm = false;
+	}
+
+	IEnumerator stopPhone(){
+		lerpPhone = true;
+		yield return new WaitForSeconds(0.5f);
+		lerpPhone = false;
 	}
 }
