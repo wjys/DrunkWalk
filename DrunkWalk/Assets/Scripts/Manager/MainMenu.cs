@@ -49,6 +49,11 @@ public class MainMenu : Menu {
 	public float[] originalYs;
 	public float[] shiftedYs;
 
+	public GameObject location;
+
+	public GameObject modeUI;
+	public GameObject ChoiceBox;
+
 	//Multiplayer Modes
 	private SpriteRenderer phoneScreen, reply;
 	private GameObject bubbles;
