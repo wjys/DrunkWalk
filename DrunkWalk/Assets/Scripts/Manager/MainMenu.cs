@@ -56,11 +56,6 @@ public class MainMenu : Menu {
 	public float[] originalYs;
 	public float[] shiftedYs;
 
-	public GameObject location;
-
-	public GameObject modeUI;
-	public GameObject ChoiceBox;
-
 	//Multiplayer Modes
 	private SpriteRenderer phoneScreen, reply;
 	private GameObject bubbles;
@@ -100,7 +95,7 @@ public class MainMenu : Menu {
 	private int didx = 0;
 
 	private Item[] ditems = new Item[] {
-		new Item("JACK & COKE", delegate () { Debug.Log ("Jack & Coke"); }),
+		new Item("JACK & COKE", delegate () { ChooseLevel (); }),
 		new Item("BEER", delegate () { Debug.Log ("Beer"); }),
 		new Item("VODKA", delegate () { Debug.Log ("Vodka"); }),
 		new Item("GIN", delegate () { Debug.Log ("Gin"); }),
