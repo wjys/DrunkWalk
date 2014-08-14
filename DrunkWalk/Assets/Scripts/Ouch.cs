@@ -26,6 +26,7 @@ public class Ouch : MonoBehaviour {
 	void Update () {
 		if ((gm.winnerIndex == 0 && GameManager.ins.mode == GameState.GameMode.Party)|| GameManager.ins.mode == GameState.GameMode.Race || GameManager.ins.mode == GameState.GameMode.ScoreAttack || GameManager.ins.mode == GameState.GameMode.Stealth){
 			reachingBed ();
+
 		}
 		else if (gm.winnerIndex == 1 && GameManager.ins.mode == GameState.GameMode.Party){
 			reachingCouch ();
@@ -77,6 +78,7 @@ public class Ouch : MonoBehaviour {
 				manager.winner = dm.id;
 				manager.score = collision.score;
 			}
+			GameObject.Find ("Inst " + dm.id).SetActive(false);
 			manager.winnerIndex++;
 			
 			this.enabled = false;
@@ -102,6 +104,7 @@ public class Ouch : MonoBehaviour {
 				if (manager.winnerIndex == 0){
 					manager.winner = dm.id;
 				}
+				GameObject.Find ("Inst " + dm.id).SetActive(false);
 				manager.winnerIndex++;
 				
 				this.enabled = false;
@@ -127,6 +130,7 @@ public class Ouch : MonoBehaviour {
 				if (manager.winnerIndex == 0){
 					manager.winner = dm.id;
 				}
+				GameObject.Find ("Inst " + dm.id).SetActive(false);
 				manager.winnerIndex++;
 				
 				this.enabled = false;

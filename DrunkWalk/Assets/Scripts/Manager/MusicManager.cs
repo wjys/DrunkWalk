@@ -8,7 +8,7 @@ public class MusicManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		gameObject.name = "AudioManager";
-		// audio.clip = songs[Random.Range(0, songs.Length)];
+		audio.clip = songs[Random.Range(0, songs.Length)];
 	}
 	
 	// Update is called once per frame
@@ -34,13 +34,12 @@ public class MusicManager : MonoBehaviour {
 				// HIGHER VOLUME BECAUSE MULTIPLAYER
 			}
 		}
-		if (!audio.isPlaying){
-			audio.Play();
-		}
 	}
 
 	IEnumerator switchSongs(){
-		audio.Play();
+		if (!audio.isPlaying){
+			audio.Play();
+		}
 		yield return new WaitForSeconds(audio.clip.length + 0.5f);
 		audio.clip = songs[Random.Range (0, songs.Length)];
 	}
