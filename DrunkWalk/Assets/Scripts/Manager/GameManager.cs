@@ -409,12 +409,7 @@ public class GameManager : MonoBehaviour {
 		if (mode == GameState.GameMode.Party || mode == GameState.GameMode.Race){
 			if (winnerIndex + loserIndex == numOfPlayers ){
 				status = GameState.GameStatus.End;
-				if (winnerIndex != 0){
-					Application.LoadLevel ("Won");
-				}
-				else {
-					Application.LoadLevel ("Lost");
-				}
+				Application.LoadLevel ("Won");
 				gameObject.GetComponent<EndScreen>().enabled = true;
 			}
 		}

@@ -8,4 +8,10 @@ public class AudioManager : MonoBehaviour {
 		ins = this;
 		DontDestroyOnLoad(this);
 	}
+
+	void Update(){
+		if (GameManager.ins.status == GameState.GameStatus.End){
+			Destroy (this.gameObject);
+		}
+	}
 }
