@@ -130,9 +130,10 @@ public class GameManager : MonoBehaviour {
 		SetStatus();
 		SwitchComponents();
 	}
-
-
-	//Pause Menu Initialize
+	
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * PAUSE MENU INITIALIZE
+	 * -------------------------------------------------------------------------------------------------------------------------- */
 	public void Pause () {
 		InGame[] objs = FindObjectsOfType(typeof(InGame)) as InGame[];
 		foreach (var obj in objs) {
@@ -156,7 +157,9 @@ public class GameManager : MonoBehaviour {
 	}
 
 
-	//Main Menu Initialize
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * MAIN MENU INITIALIZE
+	 * -------------------------------------------------------------------------------------------------------------------------- */
 	public void Menu() {
 		menu = true;
 		mainMenuIns.SetActive (menu);
@@ -167,6 +170,9 @@ public class GameManager : MonoBehaviour {
 		mainMenuIns.SetActive (menu);
 	}
 
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * CHECK WIN LOSE: in game, check if every player has finished the game (either won or lost), then go to end screen
+	 * -------------------------------------------------------------------------------------------------------------------------- */
 	private void CheckWinLose(){
 		if (mode == GameState.GameMode.ScoreAttack || mode == GameState.GameMode.Stealth){
 			if (winner == 1){
@@ -194,7 +200,10 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
-	private void UpdateNumPlayers(){
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * UPDATE NUM PLAYERS: when the game starts, set up the number of players
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+	public void UpdateNumPlayers(){
 		if (numOfPlayers == 0){
 			numOfPlayers = GetComponent<UniMoveSplash>().numPlayers;
 		}
