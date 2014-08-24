@@ -11,6 +11,10 @@ public class GameState : MonoBehaviour {
 
 	public enum GameMode {ScoreAttack, Stealth, Race, Party}
 
+	//CONTROLLERS
+
+	public enum GameController { mouse, move, xbox }; 
+
 	/*
 	 * ScoreAttack = Single Player score-based gameplay
 	 * Stealth = Single Player obstacle course

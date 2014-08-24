@@ -29,7 +29,7 @@ public class DrunkMovement : InGame {
 
 	// ENUM TO SWITCH BETWEEN CONTROLLERS
 	public int controller;
-	private enum controlInput { mouse, move, xbox }; 
+	public enum controlInput { mouse, move, xbox }; 
 
 	// FORCE INCREMENTS FOR HEAD AND FEET
 	public float hinc;
@@ -116,7 +116,9 @@ public class DrunkMovement : InGame {
 
 	void Start () {
 		// (1) setup all the components
-		UniMove = gameObject.GetComponent<UniMoveController> ();
+		if (gameObject.GetComponent<UniMoveController>() != null){
+			UniMove = gameObject.GetComponent<UniMoveController> ();
+		}
 		pfeet = Instantiate (feet) as GameObject;
 		pfeet.name = "Feet " + id;
 		rfeet = pfeet.GetComponent<Rigidbody> ();

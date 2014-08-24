@@ -457,7 +457,9 @@ public class MainMenu : Menu {
 			if (!stopMove){
 				if (menuNum == 1) {
 					//DOWN IN MAINMENU
-					if (idx == 0 && GameManager.ins.GetComponent<UniMoveSplash>().numPlayers < 2){
+					if (idx == 0 && 
+					    ((GameManager.ins.splashScript != null && GameManager.ins.splashScript.numPlayers < 2) ||
+					  	 (GameManager.ins.controller == GameState.GameController.mouse))){
 						idx += 2;
 					}
 					else {
@@ -516,7 +518,9 @@ public class MainMenu : Menu {
 			if (!stopMove){
 				if (menuNum == 1) {
 					//UP IN MAINMENU
-					if (GameManager.ins.GetComponent<UniMoveSplash>().numPlayers < 2 && idx == 2){
+					if (idx == 2 && 
+					    ((GameManager.ins.splashScript != null && GameManager.ins.splashScript.numPlayers < 2) ||
+						 (GameManager.ins.controller == GameState.GameController.mouse))){
 						idx -= 2;
 					}
 					else {
@@ -630,7 +634,7 @@ public class MainMenu : Menu {
 			}
 		}
 
-		if (Input.GetButtonDown("Confirm") || movePressed || GameManager.ins.GetComponent<UniMoveSplash>().UniMoveAllPlayersIn()) {
+		if (Input.GetButtonDown("Confirm") || movePressed){// || GameManager.ins.GetComponent<UniMoveSplash>().UniMoveAllPlayersIn()) {
 			//CONFIRMED
 			if (menuNum == 1) {
 				items[idx].command();
@@ -648,9 +652,11 @@ public class MainMenu : Menu {
 				}
 			} else if (menuNum == 4){
 				if (lidx == 0){
-					UniMoveSplash splash = GameManager.ins.GetComponent<UniMoveSplash>();
-					splash.setNumPlayers();
-					splash.setGame ();
+					if (GameManager.ins.controller == GameState.GameController.move){
+						UniMoveSplash splash = GameManager.ins.GetComponent<UniMoveSplash>();
+						splash.setNumPlayers();
+						splash.setGame ();
+					}
 				}
 				litems[lidx].command();
 			} else if (menuNum == 5){
@@ -660,15 +666,19 @@ public class MainMenu : Menu {
 				mcitems[mcidx].command();
 			} else if (menuNum == 6){
 				if (!stopConfirm){
-					UniMoveSplash splash = GameManager.ins.GetComponent<UniMoveSplash>();
-					splash.setNumPlayers();
-					splash.setGame ();
+					if (GameManager.ins.controller == GameState.GameController.move){
+						UniMoveSplash splash = GameManager.ins.GetComponent<UniMoveSplash>();
+						splash.setNumPlayers();
+						splash.setGame ();
+					}
 					mlitems[mlidx].command();
 				}
 			} else if (menuNum == 7){
-				UniMoveSplash splash = GameManager.ins.GetComponent<UniMoveSplash>();
-				splash.setNumPlayers();
-				splash.setGame ();
+				if (GameManager.ins.controller == GameState.GameController.move){
+					UniMoveSplash splash = GameManager.ins.GetComponent<UniMoveSplash>();
+					splash.setNumPlayers();
+					splash.setGame ();
+				}
 				mitems[midx].command();
 			}
 

@@ -196,7 +196,12 @@ public class UniMoveController : MonoBehaviour
     /// </summary>
 	public static int GetNumConnected()
 	{
-		return psmove_count_connected();
+		try {
+			return psmove_count_connected();
+		}
+		catch {
+			return 0;
+		}
 	}
 	
 	/// <summary>
@@ -216,48 +221,53 @@ public class UniMoveController : MonoBehaviour
 	
 	void Update() 
 	{	
-		if (disconnected) return;
-		
-		// we want to update the previous buttons outside the update restriction so,
-		// we only get one button event pr. unity update frame
-		prevButtons = currentButtons;
-		
-		timeElapsed += Time.deltaTime;
-		
-		
-		// Here we manually enforce updates only every updateRate amount of time
-		// The reason we don't just do this in FixedUpdate is so the main program's FixedUpdate rate 
-		// can be set independently of the controllers' update rate.
-		
-		if (timeElapsed < updateRate) return;	
-		else timeElapsed = 0.0f;
-		
-		uint buttons = 0;
-		
-		// NOTE! There is potentially data waiting in queue. 
-		// We need to poll *all* of it by calling psmove_poll() until the queue is empty. Otherwise, data might begin to build up.
-		while (psmove_poll(handle) > 0) 
-		{
-			// We are interested in every button press between the last update and this one:
-			buttons = buttons | psmove_get_buttons(handle);
+		try {
+			if (disconnected) return;
 			
-			// The events are not really working from the PS Move Api. So we do our own with the prevButtons
-			//psmove_get_button_events(handle, ref pressed, ref released);
-		}
-		currentButtons = buttons;
+			// we want to update the previous buttons outside the update restriction so,
+			// we only get one button event pr. unity update frame
+			prevButtons = currentButtons;
+			
+			timeElapsed += Time.deltaTime;
+			
+			
+			// Here we manually enforce updates only every updateRate amount of time
+			// The reason we don't just do this in FixedUpdate is so the main program's FixedUpdate rate 
+			// can be set independently of the controllers' update rate.
+			
+			if (timeElapsed < updateRate) return;	
+			else timeElapsed = 0.0f;
+			
+			uint buttons = 0;
+			
+			// NOTE! There is potentially data waiting in queue. 
+			// We need to poll *all* of it by calling psmove_poll() until the queue is empty. Otherwise, data might begin to build up.
+			while (psmove_poll(handle) > 0) 
+			{
+				// We are interested in every button press between the last update and this one:
+				buttons = buttons | psmove_get_buttons(handle);
+				
+				// The events are not really working from the PS Move Api. So we do our own with the prevButtons
+				//psmove_get_button_events(handle, ref pressed, ref released);
+			}
+			currentButtons = buttons;
 
-		
-		// For acceleration, gyroscope, and magnetometer values, we look at only the last value in the queue.
-		// We could in theory average all the acceleration (and other) values in the queue for a "smoothing" effect, but we've chosen not to.
-		ProcessData();
-		
-		// Send a report to the controller to update the LEDs and rumble.
-		if (psmove_update_leds(handle) == 0)
-		{
-			// If it returns zero, the controller must have disconnected (i.e. out of battery or out of range),
-			// so we should fire off any events and disconnect it.
-			OnControllerDisconnected(this, new EventArgs());
-			Disconnect();
+			
+			// For acceleration, gyroscope, and magnetometer values, we look at only the last value in the queue.
+			// We could in theory average all the acceleration (and other) values in the queue for a "smoothing" effect, but we've chosen not to.
+			ProcessData();
+			
+			// Send a report to the controller to update the LEDs and rumble.
+			if (psmove_update_leds(handle) == 0)
+			{
+				// If it returns zero, the controller must have disconnected (i.e. out of battery or out of range),
+				// so we should fire off any events and disconnect it.
+				OnControllerDisconnected(this, new EventArgs());
+				Disconnect();
+			}
+		}
+		catch (DllNotFoundException){
+			//GameManager.ins.GetComponent<UniMoveSplash>().controller = 0;
 		}
     }
 	

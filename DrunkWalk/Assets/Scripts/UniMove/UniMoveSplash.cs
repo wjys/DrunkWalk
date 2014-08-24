@@ -49,6 +49,25 @@ public class UniMoveSplash : MonoBehaviour
 
 			numPlayers = 0;
 			UniMoveInit ();
+
+			if (moves.Count == 0){
+				gameObject.GetComponent<MouseSetup>().enabled = true;
+				/*Destroy (this.gameObject.GetComponent<UniMoveGame>());
+				Destroy (this.gameObject.GetComponent<UniMoveTest>());
+				Destroy (this.gameObject.GetComponent<UniMoveManager>());
+				Destroy (this);*/
+				GameManager.ins.SendMessage ("NoMove");
+				Destroy (this.gameObject.GetComponent<UniMoveGame>());
+				Destroy (this.gameObject.GetComponent<UniMoveTest>());
+				Destroy (this.gameObject.GetComponent<UniMoveManager>());
+				Destroy (this);
+				
+				/*this.gameObject.GetComponent<UniMoveGame>().enabled = false;
+				this.gameObject.GetComponent<UniMoveTest>().enabled = false;
+				this.gameObject.GetComponent<UniMoveManager>().enabled = false;
+				this.enabled = false;*/
+			}
+
 			handle = new Transform[4];
 			newHandle = new Vector3[4];
 			markerColors = new Color[4];
@@ -316,7 +335,7 @@ public class UniMoveSplash : MonoBehaviour
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 
 	private void menuActions(){
-		if (main.menuNumPublic < 5){
+		//if (main.menuNumPublic < 5){
 			if (p1 != null){
 				if (p1.ax > moveBoundLeft)	main.tiltL = true;
 				else main.tiltL = false;
@@ -343,7 +362,7 @@ public class UniMoveSplash : MonoBehaviour
 				else main.cancelSelection = false;
 
 			}
-		}
+		/*}
 		else {
 			switch (numPlayers){
 			case 1:
@@ -445,7 +464,7 @@ public class UniMoveSplash : MonoBehaviour
 				else main.cancelSelection = false;
 				break;
 			}
-		}
+		}*/
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
