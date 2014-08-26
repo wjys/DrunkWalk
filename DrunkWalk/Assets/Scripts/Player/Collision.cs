@@ -83,7 +83,8 @@ public class Collision : MonoBehaviour {
 
 
 	void Start () {
-		move = dm.GetComponent<UniMoveController>();
+		if (GameManager.ins.controller == GameState.GameController.move)
+			move = dm.GetComponent<UniMoveController>();
 
 		//NOT COLLIDING
 		colliding = false;
@@ -178,7 +179,8 @@ public class Collision : MonoBehaviour {
 
 		colliding = true;
 		dm.colliding = true;
-		move.SetLED(Color.red);
+		if (GameManager.ins.controller == GameState.GameController.move)
+			move.SetLED(Color.red);
 
 		//IF THE THING IS SOLID
 		if (col.tag != "Trigger"){
