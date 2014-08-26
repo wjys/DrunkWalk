@@ -62,6 +62,8 @@ public class MouseSetup : MonoBehaviour {
 		if (GameManager.ins.status == GameState.GameStatus.Tutorial){
 			position = new Vector3 (0, 1.424898f, -6);
 		}
+		playerCount = 0; 
+		numPlayers = 1;
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -106,8 +108,11 @@ public class MouseSetup : MonoBehaviour {
 		}
 		else bedSpawned = true;
 
+		if (StopManager() == false){
+			createPlayers();
+		}
 		if (StopManager ()){
-			if (bedSpawned == true){
+			if (bedSpawned){
 				if (!startGame){
 					if (!countingDown){
 						setUI();
