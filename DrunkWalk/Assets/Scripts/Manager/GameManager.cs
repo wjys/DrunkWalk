@@ -494,6 +494,21 @@ public class GameManager : MonoBehaviour {
 			}
 		}
 	}
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * SWITCH CONTROLLER: takes controller as argument, and sets it as current controller. makes changes to manager
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+	public void SwitchController(GameState.GameController input){
+		controller = input; 
+		if (controller == GameState.GameController.mouse){
+			if (splashScript != null){
+				splashScript.DestroyUniMove();
+			}
+		}
+		else if (controller == GameState.GameController.move){
+		}
+		else {
+		}
+	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * NO MOVE: set gameScript and splashScript to null if there are no moves paired to the computer
