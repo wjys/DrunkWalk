@@ -51,20 +51,7 @@ public class UniMoveSplash : MonoBehaviour
 			UniMoveInit ();
 
 			if (moves.Count == 0){
-				/*Destroy (this.gameObject.GetComponent<UniMoveGame>());
-				Destroy (this.gameObject.GetComponent<UniMoveTest>());
-				Destroy (this.gameObject.GetComponent<UniMoveManager>());
-				Destroy (this);*/
-				GameManager.ins.SendMessage ("NoMove");
-				Destroy (this.gameObject.GetComponent<UniMoveGame>());
-				Destroy (this.gameObject.GetComponent<UniMoveTest>());
-				Destroy (this.gameObject.GetComponent<UniMoveManager>());
-				Destroy (this);
-				
-				/*this.gameObject.GetComponent<UniMoveGame>().enabled = false;
-				this.gameObject.GetComponent<UniMoveTest>().enabled = false;
-				this.gameObject.GetComponent<UniMoveManager>().enabled = false;
-				this.enabled = false;*/
+				DestroyUniMove();
 			}
 
 			handle = new Transform[4];
@@ -154,6 +141,25 @@ public class UniMoveSplash : MonoBehaviour
 	        }
 		}
     }
+
+	/* --------------------------------------------------------------------------------------------------------------------------
+	 * REMOVE UNIMOVE: destroy gamemanager move scripts (use in OPTIONS/switch to mouse)
+	 * -------------------------------------------------------------------------------------------------------------------------- */
+
+	public void DestroyUniMove(){
+		GameManager.ins.SendMessage ("NoMove");
+		Destroy (this.gameObject.GetComponent<UniMoveGame>());
+		Destroy (this.gameObject.GetComponent<UniMoveTest>());
+		Destroy (this.gameObject.GetComponent<UniMoveManager>());
+		Destroy (this);
+
+
+		// maybe instead of destroying disable, for SWITCHING controllers ??
+		/*this.gameObject.GetComponent<UniMoveGame>().enabled = false;
+		this.gameObject.GetComponent<UniMoveTest>().enabled = false;
+		this.gameObject.GetComponent<UniMoveManager>().enabled = false;
+		this.enabled = false;*/
+	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------
 	 * UNIMOVE INIT: API Code to initialize the move controllers within this manager 
