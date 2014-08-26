@@ -51,7 +51,6 @@ public class UniMoveSplash : MonoBehaviour
 			UniMoveInit ();
 
 			if (moves.Count == 0){
-				gameObject.GetComponent<MouseSetup>().enabled = true;
 				/*Destroy (this.gameObject.GetComponent<UniMoveGame>());
 				Destroy (this.gameObject.GetComponent<UniMoveTest>());
 				Destroy (this.gameObject.GetComponent<UniMoveManager>());

@@ -657,6 +657,13 @@ public class MainMenu : Menu {
 						splash.setNumPlayers();
 						splash.setGame ();
 					}
+					else if (GameManager.ins.controller == GameState.GameController.mouse){
+						GameManager.ins.numOfPlayers = 1;
+						GameManager.ins.winnerIndex = 0;
+						GameManager.ins.loserIndex = 0;
+						GameManager.ins.winners = new int[1];
+						GameManager.ins.losers = new int[1];
+					}
 				}
 				litems[lidx].command();
 			} else if (menuNum == 5){
@@ -671,6 +678,13 @@ public class MainMenu : Menu {
 						splash.setNumPlayers();
 						splash.setGame ();
 					}
+					else if (GameManager.ins.controller == GameState.GameController.mouse){
+						GameManager.ins.numOfPlayers = 1;
+						GameManager.ins.winnerIndex = 0;
+						GameManager.ins.loserIndex = 0;
+						GameManager.ins.winners = new int[1];
+						GameManager.ins.losers = new int[1];
+					}
 					mlitems[mlidx].command();
 				}
 			} else if (menuNum == 7){
@@ -678,6 +692,13 @@ public class MainMenu : Menu {
 					UniMoveSplash splash = GameManager.ins.GetComponent<UniMoveSplash>();
 					splash.setNumPlayers();
 					splash.setGame ();
+				}
+				else if (GameManager.ins.controller == GameState.GameController.mouse){
+					GameManager.ins.numOfPlayers = 1;
+					GameManager.ins.winnerIndex = 0;
+					GameManager.ins.loserIndex = 0;
+					GameManager.ins.winners = new int[1];
+					GameManager.ins.losers = new int[1];
 				}
 				mitems[midx].command();
 			}

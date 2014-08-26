@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour {
 	public UniMoveSplash splashScript;
 	public UniMoveGame gameScript;
 	public EndScreen endScript;
+	public MouseSetup mouseScript; 
 	public UniMoveController[] moves;
 
 	//Bools
@@ -112,6 +113,7 @@ public class GameManager : MonoBehaviour {
 		splashScript 	= gameObject.GetComponent <UniMoveSplash>();
 		gameScript 		= gameObject.GetComponent<UniMoveGame>();
 		endScript 		= gameObject.GetComponent<EndScreen>();
+		mouseScript		= gameObject.GetComponent<MouseSetup>();
 
 		controller = GameState.GameController.move;
 
@@ -234,6 +236,11 @@ public class GameManager : MonoBehaviour {
 						splashScript.enabled = false;
 					}
 				}
+				else if (controller == GameState.GameController.mouse){
+					if (mouseScript.enabled){
+						mouseScript.enabled = false;
+					}
+				}
 
 				if (!endScript.enabled){
 					endScript.enabled = true;
@@ -268,6 +275,11 @@ public class GameManager : MonoBehaviour {
 						splashScript.enabled = false;
 					}
 				}
+				else if (controller == GameState.GameController.mouse){
+					if (!mouseScript.enabled){
+						mouseScript.enabled = true;
+					}
+				}
 				if (!playing) playing = true;
 				if (endScript.enabled){
 					endScript.enabled = false;
@@ -297,6 +309,11 @@ public class GameManager : MonoBehaviour {
 					}
 					if (splashScript != null && !splashScript.enabled){
 						splashScript.enabled = true;
+					}
+				}
+				else if (controller == GameState.GameController.mouse){
+					if (mouseScript.enabled){
+						mouseScript.enabled = false;
 					}
 				}
 				if (endScript.enabled){
@@ -366,11 +383,16 @@ public class GameManager : MonoBehaviour {
 			
 			else {
 				if (controller == GameState.GameController.move){
-					if (!gameScript.enabled && !playing){
+					if (!gameScript.enabled){
 						gameScript.enabled = true;
 					}
 					if (splashScript.enabled){
 						splashScript.enabled = false;
+					}
+				}
+				else if (controller == GameState.GameController.mouse){
+					if (!mouseScript.enabled){
+						mouseScript.enabled = true;
 					}
 				}
 				if (!playing) playing = true;
