@@ -143,7 +143,7 @@ public class Rotation : MonoBehaviour {
 
 		float y = transform.eulerAngles.y;
 
-		if (dm.controller == (int) controlInput.mouse){
+		if (GameManager.ins.controller == GameState.GameController.mouse){
 			if (dm.direction == (int) Dir.left){
 				if (Input.GetMouseButton(0)){	// left mouse button
 					rotated = true; 
@@ -168,7 +168,7 @@ public class Rotation : MonoBehaviour {
 			}
 			return (int) Turn.idle; 
 		}
-		else if (dm.controller == (int) controlInput.move){
+		else if (GameManager.ins.controller == GameState.GameController.move){
 			if (current == (int) Turn.idle){
 				rotRate = 0;
 				//print ("idle"); 

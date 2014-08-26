@@ -116,8 +116,13 @@ public class DrunkMovement : InGame {
 
 	void Start () {
 		// (1) setup all the components
-		if (gameObject.GetComponent<UniMoveController>() != null){
-			UniMove = gameObject.GetComponent<UniMoveController> ();
+		if (GameManager.ins.controller == GameState.GameController.move){
+			if (gameObject.GetComponent<UniMoveController>() != null){
+				UniMove = gameObject.GetComponent<UniMoveController> ();
+			}
+			// (5) calibrate the move controller 
+			initX = UniMove.ax;	// calibrate ax
+			initZ = UniMove.az;	// calibrate az
 		}
 		pfeet = Instantiate (feet) as GameObject;
 		pfeet.name = "Feet " + id;
@@ -139,10 +144,6 @@ public class DrunkMovement : InGame {
 		// (4) get middle of the screen (for mouse)
 		halfWidth = Screen.width / 2; 
 		halfHeight = Screen.height / 2; 
-
-		// (5) calibrate the move controller 
-		initX = UniMove.ax;	// calibrate ax
-		initZ = UniMove.az;	// calibrate az
 
 		// (7) get animator of model
 		Transform[] trans = gameObject.GetComponentsInChildren<Transform>();
@@ -181,13 +182,13 @@ public class DrunkMovement : InGame {
 		if (GameManager.ins.status == GameState.GameStatus.Splash){
 			cam.enabled = false;
 		}
-
-
-		if (UniMove.GetButtonUp(PSMoveButton.Circle)){
-			transform.position = initHead;
-			transform.rotation = new Quaternion (0,0,0, transform.rotation.w);
-			rhead.angularVelocity = Vector3.zero;
-			pfeet.transform.position = new Vector3 (initHead.x, pfeet.transform.position.y, initHead.z);
+		if (GameManager.ins.controller == GameState.GameController.move){
+			if (UniMove.GetButtonUp(PSMoveButton.Circle)){
+				transform.position = initHead;
+				transform.rotation = new Quaternion (0,0,0, transform.rotation.w);
+				rhead.angularVelocity = Vector3.zero;
+				pfeet.transform.position = new Vector3 (initHead.x, pfeet.transform.position.y, initHead.z);
+			}
 		}
 
 		// restart level if press R
@@ -196,7 +197,8 @@ public class DrunkMovement : InGame {
 
 		// (1) each move keeps its coloured light on 
 		if (!colliding){
-			setMoveColour (); 
+			if (GameManager.ins.controller == GameState.GameController.move)
+				setMoveColour (); 
 		}
 		// (3) keep head Y position constant
 		resetY ();
@@ -225,7 +227,8 @@ public class DrunkMovement : InGame {
 			//BLUR
 			Blur ();
 
-			if (controller == (int) controlInput.mouse) 
+			//if (controller == (int) controlInput.mouse) 
+			if (GameManager.ins.controller == GameState.GameController.mouse)
 				mouse = Input.mousePosition;
 
 			// get player's move direction, move the player
@@ -235,7 +238,8 @@ public class DrunkMovement : InGame {
 
 
 			// (5f) rumble when hit
-			UniMove.SetRumble (hitRumble);
+			if (GameManager.ins.controller == GameState.GameController.move)
+				UniMove.SetRumble (hitRumble);
 		}
 		// (6)
 		newPos = transform.position;
@@ -315,7 +319,8 @@ public class DrunkMovement : InGame {
 	private int getLeanDirection(){
 
 		// (1) MOUSE 
-		if (controller == (int) controlInput.mouse) {
+		//if (controller == (int) controlInput.mouse) {
+		if (GameManager.ins.controller == GameState.GameController.mouse) {
 			if (mouse.y < halfHeight) {	
 				if (Mathf.Abs(mouse.x - halfWidth) < Mathf.Abs(mouse.y - halfHeight)){ 
 					return (int) Dir.back; 
@@ -515,20 +520,34 @@ public class DrunkMovement : InGame {
 	public void tapsToGetUp(){
 
 		// (5) check if tapping trigger
-		if (!buttonTapped) {
-			if (UniMove.Trigger == 1.0f){
-				tapCurrent++;
-				lidUp = true;
-				buttonTapped = true; 
+		if (GameManager.ins.controller == GameState.GameController.move){
+			if (!buttonTapped) {
+				if (UniMove.Trigger == 1.0f){
+					tapCurrent++;
+					lidUp = true;
+					buttonTapped = true; 
+				}
+			}
+			else {
+				lidUp = false;
+				if (UniMove.Trigger == 0.0f){
+					buttonTapped = false;
+				}
 			}
 		}
-		else {
-			lidUp = false;
-			if (UniMove.Trigger == 0.0f){
+		else if (GameManager.ins.controller == GameState.GameController.mouse){
+			if (!buttonTapped){
+				if (Input.GetKeyDown (KeyCode.Space)){
+					tapCurrent++;
+					lidUp = true;
+					buttonTapped = true; 
+				}
+			}
+			else {
+				lidUp = false;
 				buttonTapped = false;
 			}
 		}
-
 		// (6) get up if tapped enough or lose if not enough and waited too long
 		if (tapCurrent >= tapsGetUp) {
 			checkTaps = false; 

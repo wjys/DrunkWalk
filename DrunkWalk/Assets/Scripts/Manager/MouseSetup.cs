@@ -107,8 +107,7 @@ public class MouseSetup : MonoBehaviour {
 			}
 		}
 		else bedSpawned = true;
-
-		if (StopManager() == false){
+		if (GameObject.Find ("Head 1") == null){
 			createPlayers();
 		}
 		if (StopManager ()){
