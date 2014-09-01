@@ -537,7 +537,7 @@ public class DrunkMovement : InGame {
 		}
 		else if (GameManager.ins.controller == GameState.GameController.mouse){
 			if (!buttonTapped){
-				if (Input.GetKeyDown (KeyCode.Space)){
+				if (Input.GetMouseButtonDown (0)){
 					tapCurrent++;
 					lidUp = true;
 					buttonTapped = true; 
