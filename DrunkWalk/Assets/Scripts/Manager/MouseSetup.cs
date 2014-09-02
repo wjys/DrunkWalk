@@ -350,7 +350,7 @@ public class MouseSetup : MonoBehaviour {
 			break;
 		}
 		
-		
+		AudioManager.ins.gameObject.audio.volume = 0.3f;
 		eyelids.enabled = true;
 		comp.enabled = true;
 		ouch.enabled = true;
