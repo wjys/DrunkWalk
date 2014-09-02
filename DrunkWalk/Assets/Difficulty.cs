@@ -16,7 +16,7 @@ public class Difficulty : MonoBehaviour {
 
 	//Total drunk level
 	public int totalDrunk;
-	public GameObject[] drunkLv;
+	public SpriteRenderer[] drunkLv;
 	public float smooth;
 
 	//Winner
@@ -51,18 +51,14 @@ public class Difficulty : MonoBehaviour {
 			drinks[i].GetComponentInChildren<TextMesh>().text = drinkName[i] + ": " + drinkID[i];
 		}
 
-		for (int f = 0; f < totalDrunk; f++) {
-			if (f == (totalDrunk-1)){
-				drunkLv [totalDrunk-1].GetComponent<SpriteRenderer> ().enabled = true;
-			} else {
-				drunkLv [totalDrunk-1].GetComponent<SpriteRenderer> ().enabled = false;
-			}
-		}
+		for (int d = 0; d < totalDrunk; d++) {
+						drunkLv [d - 1].enabled = true;
+				}
 
 		if (totalDrunk == 0) {
-			for (int f = 0; f < 5; f++) {
-				drunkLv [f].GetComponent<SpriteRenderer> ().enabled = false;
-			}
+				for (int r = 0; r < drunkLv.Length; r++) {
+				drunkLv[r].color = Color.red;
+				}
 		}
 	}
 

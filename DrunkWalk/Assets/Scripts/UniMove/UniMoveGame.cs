@@ -79,6 +79,8 @@ public class UniMoveGame : MonoBehaviour {
 		if (GameManager.ins.status == GameState.GameStatus.Tutorial){
 			positions = new Vector3[1] { new Vector3 (0, 1.424898f, -6) };
 		}
+
+		GameObject.Find ("StealthBar").GetComponentInChildren<SpriteRenderer>().enabled = false;
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------

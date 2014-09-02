@@ -26,6 +26,9 @@ public class DrunkMovement : InGame {
 	public DepthOfFieldScatter dof; // depth of field component on cam
 	public float radDiff;
 	public Transform target;
+	public MotionBlur mob;
+	public int fov = 35;
+	public static bool hit40;
 
 	// ENUM TO SWITCH BETWEEN CONTROLLERS
 	public int controller;
@@ -112,6 +115,10 @@ public class DrunkMovement : InGame {
 	 * (4) get the head's initial Y (for constant resettting)
 	 * (5) get the middle position of the screen (for mouse input)
 	 * (6) calibrate the move controller 
+	 * (7) get animator of model
+	 * (8) get motion blur script
+	 * (9) depending on amount of drinks had, motion blur gets higher
+	 * (10) depending on amount of vodka had, move head faster
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 
 	void Start () {
@@ -158,6 +165,36 @@ public class DrunkMovement : InGame {
 
 		modelAnim.SetBool("Falling", false);
 		modelAnim.SetBool ("GetUp", false);
+
+		// (8) get motion blur script
+		mob = cam.GetComponent<MotionBlur> ();
+
+		if (GameManager.ins.numOfPlayers == 1) {
+
+				if (GameManager.ins.diffInt != 0){
+					mob.enabled = true;
+			}
+			// (9) depending on amount of drinks had, motion blur gets higher
+			if (GameManager.ins.diffInt >= 1 && GameManager.ins.diffInt <= 2){
+				mob.blurAmount = 0.4f;
+			} else if (GameManager.ins.diffInt <= 4){
+				mob.blurAmount = 0.6f;
+			} else if (GameManager.ins.diffInt == 5){
+				mob.blurAmount = 0.9f;
+				mob.extraBlur = true;
+			}
+
+			// (10) depending on amount of vodka had, move head faster
+				if (GameManager.ins.VodkaInt == 0) {
+						hinc = 1.5f;
+				} else if (GameManager.ins.VodkaInt > 0 && GameManager.ins.VodkaInt <= 2) {
+						hinc = 1.8f;
+				} else if (GameManager.ins.VodkaInt <= 4) {
+						hinc = 2.0f;
+				} else if (GameManager.ins.VodkaInt == 5) {
+						hinc = 2.4f;
+				}
+		}
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -174,6 +211,7 @@ public class DrunkMovement : InGame {
 	 * 		(5e) play the footstep sound depending on the radius of the player 
 	 * 		(5f) rumble when hit
 	 * (6) update newPos (head's current position)
+	 * (7) Depending on JnC had, feet lerp delay is more
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 
 	void Update () {
@@ -243,6 +281,21 @@ public class DrunkMovement : InGame {
 		}
 		// (6)
 		newPos = transform.position;
+
+		// (7)
+		cam.fieldOfView = fov;
+
+		if (GameManager.ins.numOfPlayers == 1) {
+						if (GameManager.ins.JncInt == 0) {
+								delayFrame = 20;
+						} else if (GameManager.ins.JncInt > 0 && GameManager.ins.JncInt <= 2) {
+								delayFrame = 30;
+						} else if (GameManager.ins.JncInt <= 4) {
+								delayFrame = 40;
+						} else if (GameManager.ins.JncInt == 5) {
+								delayFrame = 50;
+						}
+				}
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------
@@ -277,10 +330,30 @@ public class DrunkMovement : InGame {
 			}
 		}
 		
+		/*if (GameManager.ins.diffInt > 0) {
+			if (fov == 35){
+				hit40 = false;
+			} else if (fov == 40){
+				hit40 = true;
+			}
 
+			if ( hit40 == false){
+				StartCoroutine (delayFOV ());
+			} else if (hit40 == true && fov > 35) {
+				StartCoroutine (delayFOV ());
+			}
+		}*/
 	}
 
-
+	//FIX THIS WHEN IM NOT CRAZY
+	IEnumerator delayFOV(){
+				if (hit40 == false) {
+						fov ++;
+				} else if (hit40 == true && fov > 35) {
+						fov --;
+				}
+		yield return new WaitForSeconds (0.5f);
+		}
 
 	// PREVENT THE COLLIDER FROM FLOATING ABOVE OBJECTS
 	private void resetY(){
@@ -537,7 +610,7 @@ public class DrunkMovement : InGame {
 		}
 		else if (GameManager.ins.controller == GameState.GameController.mouse){
 			if (!buttonTapped){
-				if (Input.GetKeyDown (KeyCode.Space)){
+				if (Input.GetMouseButtonDown (0)){
 					tapCurrent++;
 					lidUp = true;
 					buttonTapped = true; 

@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour {
 	public GameState.GameStatus status;
 	public GameState.GameMode mode;
 	public GameState.GameController controller; 
+	public GameState.Level level;
 
 	//Menu Assets
 	public GUISkin skin;
@@ -47,13 +48,6 @@ public class GameManager : MonoBehaviour {
 	//Level
 	public static int levelInt;
 	public int track;
-
-	/*
-	 * STUFF TO DO ABOUT LEVELS:
-	 * Once we ENTER the game, WHICHEVER LEVEL IT IS depending on the MODE--
-	 * 		STEALTH : Instantiate a prefab of extra objects
-	 * 		PARTY : Instantiate bed in a random location
-	 */
 
 	//Winner
 	public int score;
@@ -156,20 +150,6 @@ public class GameManager : MonoBehaviour {
 		paused = false;
 		pauseMenuIns.SetActive(paused);
 
-	}
-
-
-	/* --------------------------------------------------------------------------------------------------------------------------
-	 * MAIN MENU INITIALIZE
-	 * -------------------------------------------------------------------------------------------------------------------------- */
-	public void Menu() {
-		menu = true;
-		mainMenuIns.SetActive (menu);
-	}
-
-	public void UnMenu() {
-		menu = false;
-		mainMenuIns.SetActive (menu);
 	}
 
 	/* --------------------------------------------------------------------------------------------------------------------------

@@ -11,6 +11,10 @@ public class GameState : MonoBehaviour {
 
 	public enum GameMode {ScoreAttack, Stealth, Race, Party}
 
+	//LEVELS
+
+	public enum Level {Easy, Medium, Hard}
+
 	//CONTROLLERS
 
 	public enum GameController { mouse, move, xbox }; 

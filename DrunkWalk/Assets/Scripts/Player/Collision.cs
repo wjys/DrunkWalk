@@ -107,7 +107,14 @@ public class Collision : MonoBehaviour {
 		reachedBed = false; 
 
 		//GET STEALTH BAR
-		stealthBar = GameObject.Find ("UICam " + dm.id).GetComponentInChildren<StealthBar>();
+		stealthBar = GameObject.Find ("UICam " + dm.id).GetComponentInChildren<StealthBar> ();
+
+
+		if (GameManager.ins.mode == GameState.GameMode.Stealth) {
+			GameObject.Find ("StealthBar").GetComponentInChildren<SpriteRenderer>().enabled = true;
+				} else {
+			GameObject.Find ("StealthBar").GetComponentInChildren<SpriteRenderer>().enabled = false;
+				}
 
 		rhead.maxAngularVelocity = 10;
 	}
@@ -159,10 +166,10 @@ public class Collision : MonoBehaviour {
 		score --;
 
 		if (GameManager.ins.mode == GameState.GameMode.Stealth){
-			stealthBar.noiseLevel.transform.position = Vector3.Lerp (stealthBar.noiseLevel.transform.position, 
-			                                                         new Vector3 (stealthBar.noiseLevel.transform.position.x, (parents * 0.0625f)-3.05f, stealthBar.noiseLevel.transform.position.z), smooth * Time.deltaTime);
-			if (stealthBar.noiseLevel.transform.position.y >= 2.72f){
-				stealthBar.noiseLevel.transform.position = new Vector3(stealthBar.noiseLevel.transform.position.x, 2.72f, stealthBar.noiseLevel.transform.position.z);
+			stealthBar.StealthIcons[2].transform.position = Vector3.Lerp (stealthBar.StealthIcons[2].transform.position, 
+			                                                              new Vector3 (stealthBar.StealthIcons[2].transform.position.x, (parents * 0.0625f)-3.05f, stealthBar.StealthIcons[2].transform.position.z), smooth * Time.deltaTime);
+			if (stealthBar.StealthIcons[2].transform.position.y >= 2.72f){
+				stealthBar.StealthIcons[2].transform.position = new Vector3(stealthBar.StealthIcons[2].transform.position.x, 2.72f, stealthBar.StealthIcons[2].transform.position.z);
 			}
 		}
 
@@ -237,7 +244,7 @@ public class Collision : MonoBehaviour {
 				}
 
 				if (GameManager.ins.mode == GameState.GameMode.Stealth){
-					stealthBar.noiseIcon.GetComponent<SpriteRenderer>().sprite = stealthBar.noiseIcons[1];
+					stealthBar.StealthIcons[1].GetComponent<SpriteRenderer>().sprite = stealthBar.noiseIcons[1];
 				}
 
 				//If collision is against a wall:
@@ -299,7 +306,7 @@ public class Collision : MonoBehaviour {
 
 
 		if (GameManager.ins.mode == GameState.GameMode.Stealth){
-			stealthBar.noiseIcon.GetComponent<SpriteRenderer>().sprite = stealthBar.noiseIcons[0];
+			stealthBar.StealthIcons[1].GetComponent<SpriteRenderer>().sprite = stealthBar.noiseIcons[0];
         }
     }
     

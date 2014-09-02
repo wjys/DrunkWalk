@@ -11,7 +11,7 @@ public class AudioManager : MonoBehaviour {
 
 	void Update(){
 		if (GameManager.ins.status == GameState.GameStatus.End){
-			Destroy (this.gameObject);
+			//Destroy (this.gameObject);
 		}
 	}
 }

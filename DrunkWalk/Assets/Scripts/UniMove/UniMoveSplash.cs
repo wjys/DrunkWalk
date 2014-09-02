@@ -148,17 +148,17 @@ public class UniMoveSplash : MonoBehaviour
 
 	public void DestroyUniMove(){
 		GameManager.ins.SendMessage ("NoMove");
-		Destroy (this.gameObject.GetComponent<UniMoveGame>());
+		/*Destroy (this.gameObject.GetComponent<UniMoveGame>());
 		Destroy (this.gameObject.GetComponent<UniMoveTest>());
 		Destroy (this.gameObject.GetComponent<UniMoveManager>());
-		Destroy (this);
+		Destroy (this);*/
 
 
 		// maybe instead of destroying disable, for SWITCHING controllers ??
-		/*this.gameObject.GetComponent<UniMoveGame>().enabled = false;
+		this.gameObject.GetComponent<UniMoveGame>().enabled = false;
 		this.gameObject.GetComponent<UniMoveTest>().enabled = false;
 		this.gameObject.GetComponent<UniMoveManager>().enabled = false;
-		this.enabled = false;*/
+		this.enabled = false;
 	}
 	
 	/* --------------------------------------------------------------------------------------------------------------------------

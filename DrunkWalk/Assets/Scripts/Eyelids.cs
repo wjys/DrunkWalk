@@ -44,8 +44,31 @@ public class Eyelids : InGame {
 	private GameObject compass;
 	public Sounds sounds;
 
+	public int totalBlinksAllowed;
+
 	// Use this for initialization
 	void Start () {
+		speed = 0.0005f;
+		wakeUp = 0.8f;
+		accel = 0.0005f;
+
+		//Depending on beer amount, you'll pass out on lesser blink counts.
+		if (GameManager.ins.numOfPlayers == 1) {
+				if (GameManager.ins.BeerInt == 0) {
+						totalBlinksAllowed = 3;
+				accel = 0.0005f;
+				} else if (GameManager.ins.BeerInt > 0 && GameManager.ins.BeerInt <= 2) {
+						totalBlinksAllowed = 2;
+				accel = 0.001f;
+				} else if (GameManager.ins.BeerInt <= 4) {
+						totalBlinksAllowed = 1;
+				accel = 0.002f;
+				} else if (GameManager.ins.BeerInt == 5) {
+						totalBlinksAllowed = 0;
+				accel = 0.002f;
+				}
+			}
+
 		setSprites ();
 		startPosUp = topLids.transform.position;
 		startPosDown = bottomLids.transform.position;
@@ -232,7 +255,7 @@ public class Eyelids : InGame {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 
 	private void blinkCheck(){
-		if (topLids.transform.position.y <= (startPosUp.y-(7+blinkCnt)) && blinkCnt < 3){
+		if (topLids.transform.position.y <= (startPosUp.y-(7+blinkCnt)) && blinkCnt < totalBlinksAllowed){
 			blinkCnt += 1;
 			speed 	= sSpeed*(me.fallCt) + (0.0005f * blinkCnt);
 			accel 	= sAccel*(me.fallCt) + (0.0005f * blinkCnt);
@@ -240,7 +263,7 @@ public class Eyelids : InGame {
 			curled = true;
 		}
 		
-		if (blinkCnt >= 3){
+		if (blinkCnt >= totalBlinksAllowed){
 			curled = false;
 			//GameManager.ins.playerStatus = GameState.PlayerStatus.Lost;
 			blinked = true;
@@ -265,16 +288,20 @@ public class Eyelids : InGame {
 	 * -------------------------------------------------------------------------------------------------------------------------- */
 
 	 private void LoseScreen(){
-		Tap.enabled = false;	
-		compass.SetActive(false);
-		po.enabled = true;
-		me.pfeet.SetActive(false);
-		me.gameObject.SetActive(false);
-		GameObject gm = GameObject.Find ("GameManager");
-		GameManager manager = gm.GetComponent<GameManager> ();
-		manager.losers [manager.loserIndex] = me.id;
-		manager.loserIndex++;
+		if (GameManager.ins.numOfPlayers == 1) {
+						Application.LoadLevel ("Lost");
+				} else {
+						Tap.enabled = false;	
+						compass.SetActive (false);
+						po.enabled = true;
+						me.pfeet.SetActive (false);
+						me.gameObject.SetActive (false);
+						GameObject gm = GameObject.Find ("GameManager");
+						GameManager manager = gm.GetComponent<GameManager> ();
+						manager.losers [manager.loserIndex] = me.id;
+						manager.loserIndex++;
 
-		this.enabled = false;
+						this.enabled = false;
+				}
 	}
 }

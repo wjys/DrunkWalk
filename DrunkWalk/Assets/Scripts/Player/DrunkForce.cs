@@ -9,10 +9,7 @@ public class DrunkForce : InGame {
 	// -------- COMPONENTS TO GET IN START() -------- 
 	public Rigidbody rhead; 	// object's head rigidbody
 	public DrunkMovement dm; 	// script from the player
-	public GameObject feet; 
-
-	// -------- OBJECTS TO DRAG INTO COMPONENT -------- 
-	public DepthOfFieldScatter dof;
+	public GameObject feet;
 
 	// -------- PRIVATE GAME OBJECT TO INSTANTIATE FROM PREFAB --------
 	private GameObject pfeet; 	// stands for "player" feet
@@ -61,28 +58,28 @@ public class DrunkForce : InGame {
 		dWobble = 0;
 
 		//Depending on total drinks, random drunk force
-		if (GameManager.ins.diffInt >= 1 && GameManager.ins.diffInt <= 2){
-			drunkInc = 0.1f;
-		} else if (GameManager.ins.diffInt <= 4){
-			drunkInc = 0.3f;
-		} else if (GameManager.ins.diffInt <= 5){
-			drunkInc = 0.5f;
-		} else {
-			drunkInc = 0;
-		}
+		if (GameManager.ins.numOfPlayers == 1) {
+			if (GameManager.ins.diffInt == 0){
+				drunkInc = 0;
+			} else if (GameManager.ins.diffInt >= 1 && GameManager.ins.diffInt <= 2) {
+								drunkInc = 0.02f;
+						} else if (GameManager.ins.diffInt <= 4) {
+								drunkInc = 0.05f;
+						} else if (GameManager.ins.diffInt <= 5) {
+								drunkInc = 0.08f;
+						}
 
-		//Depending on total amount of GIN, wobble becomes harsher
-		if (GameManager.ins.diffInt > 0){
-			if (GameManager.ins.GinInt >= 1 && GameManager.ins.GinInt <= 2){
-				dWobble = 0.5f;
-			} else if (GameManager.ins.GinInt <= 4){
-				dWobble = 1.0f;
-			} else if (GameManager.ins.GinInt <= 5){
-				dWobble = 1.5f;
-			} else {
-				dWobble = 0;
-			}
-		}
+						//Depending on total amount of GIN, wobble becomes harsher
+								if (GameManager.ins.GinInt >= 1 && GameManager.ins.GinInt <= 2) {
+										dWobble = 0.3f;
+								} else if (GameManager.ins.GinInt <= 4) {
+										dWobble = 0.8f;
+								} else if (GameManager.ins.GinInt <= 5) {
+										dWobble = 1.1f;
+								} else {
+										dWobble = 0;
+								}
+				}
 	}
 	
 	void Update () {
@@ -103,10 +100,10 @@ public class DrunkForce : InGame {
 		}
 		
 		// DRUNK FORCE
-		if (GameManager.ins.diffInt > 0){
-			StartCoroutine(newDrunkDirection ());
-			drunkForce (drunkDir);
-		}
+		//if (GameManager.ins.diffInt > 0){
+		//	StartCoroutine(newDrunkDirection ());
+		//	drunkForce (drunkDir);
+		//}
 
 
 		// check camera rotation caps
@@ -183,7 +180,7 @@ public class DrunkForce : InGame {
 			break;
 		case (int) Dir.right:
 			if (transform.localRotation.z <= -0.13f){
-				transform.localRotation = new Quaternion (transform.localRotation.x, transform.localRotation.y, -0.11f, transform.localRotation.w);
+				transform.localRotation = new Quaternion (transform.localRotation.x, transform.localRotation.y, -0.13f, transform.localRotation.w);
 			}
 			else {
 				transform.localRotation = Quaternion.Lerp (transform.localRotation, 
@@ -193,7 +190,7 @@ public class DrunkForce : InGame {
 			break;
 		case (int) Dir.left: 
 			if (transform.localRotation.z >= 0.13f){
-				transform.localRotation = new Quaternion (transform.localRotation.x, transform.localRotation.y, 0.11f, transform.localRotation.w);
+				transform.localRotation = new Quaternion (transform.localRotation.x, transform.localRotation.y, 0.13f, transform.localRotation.w);
 			}
 			else {
 				transform.localRotation = Quaternion.Lerp (transform.localRotation, 

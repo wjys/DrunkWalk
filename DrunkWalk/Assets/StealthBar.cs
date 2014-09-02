@@ -2,19 +2,20 @@
 using System.Collections;
 
 public class StealthBar : MonoBehaviour {
-	public GameObject alarm, noiseIcon, noiseLevel;
+	public GameObject[] StealthIcons;
 	public Sprite[] noiseIcons;
 
 	void Start () {
+		StealthIcons = new GameObject[3];
 		Transform[] trans = gameObject.GetComponentsInChildren<Transform>();
 		
 		foreach (Transform t in trans){
 			if (t.gameObject.name.Equals ("Alarm")){
-				alarm = t.gameObject;
+				StealthIcons[0] = t.gameObject;
 			} else if (t.gameObject.name.Equals ("NoiseIcon")){
-				noiseIcon = t.gameObject;
+				StealthIcons[1] = t.gameObject;
 			} else if (t.gameObject.name.Equals ("NoiseLevel")){
-				noiseLevel = t.gameObject;
+				StealthIcons[2] = t.gameObject;
 			}
 		}
 	}

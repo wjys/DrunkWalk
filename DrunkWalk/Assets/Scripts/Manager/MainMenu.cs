@@ -58,10 +58,15 @@ public class MainMenu : Menu {
 
 	public Sprite[] levSprite;
 
+	private static string chosenLevel;
+
 	//Multiplayer Modes
 	private SpriteRenderer phoneScreen, reply;
 	private GameObject bubbles;
 	public Sprite[] screens, bubbleSpr, replySpr;
+
+	//Settings
+	private GameObject musicTab, soundTab, controlTab;
 
 	//Main (1)
 	private int idx = 0;
@@ -69,19 +74,20 @@ public class MainMenu : Menu {
 	private Item[] items= new Item[] {
 		new Item("START", delegate () { ChooseCharacter (); }),
 		new Item("MULTIPLAYER", delegate () { MultiplayerChar (); }),
+		new Item("SETTINGS", delegate () { Settings (); }),
 		//new Item("HOW TO PLAY", delegate () { HTP(); }),
 		new Item("EXIT", delegate () { Application.Quit(); })
 	};
 
 	//Settings (set)
-	/*
+
 	private int sidx = 0;
 
 	private Item[] sitems = new Item[] {
-		new Item("SOUNDFX", delegate () { Debug.Log ("SOUNDFX"); }),
+		new Item("CONTROLLER", delegate () { Debug.Log ("CONTROLLER"); }),
 		new Item("MUSIC", delegate () { Debug.Log ("MUSIC"); }),
-		new Item("CONTROLLER", delegate () { Debug.Log ("CONTROLLER"); })
-	};*/
+		new Item("SOUNDFX", delegate () { Debug.Log ("SOUNDFX"); })
+	};
 
 	//Characters (2)
 	private int cidx = 0;
@@ -97,7 +103,7 @@ public class MainMenu : Menu {
 	private int didx = 0;
 
 	private Item[] ditems = new Item[] {
-		new Item("JACK & COKE", delegate () { ChooseLevel (); }),
+		new Item("JACK & COKE", delegate () { Debug.Log ("Jack & Coke"); }),
 		new Item("BEER", delegate () { Debug.Log ("Beer"); }),
 		new Item("VODKA", delegate () { Debug.Log ("Vodka"); }),
 		new Item("GIN", delegate () { Debug.Log ("Gin"); }),
@@ -217,6 +223,11 @@ public class MainMenu : Menu {
 		phoneScreen.sprite = screens [0];
 		bubbles = GameObject.Find ("Bubbles");
 		reply = GameObject.Find ("Reply").GetComponent<SpriteRenderer>();
+
+
+		musicTab = GameObject.Find ("MUSIC");
+		soundTab = GameObject.Find ("SOUNDFX");
+		controlTab = GameObject.Find ("CONTROLLER");
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////
@@ -237,8 +248,6 @@ public class MainMenu : Menu {
 			bubbles.GetComponent<SpriteRenderer>().enabled = false;
 			reply.enabled = false;
 		}
-		//else if (menuSet == true) {
-		//	GUIMenu(sidx, 200, 80, sitems, timer);}
 		//else if (menuNum == 2) {
 		//	GUIMenu (cidx, 200, 80, citems, timer);}
 		//else if (menuNum == 3) {
@@ -256,8 +265,10 @@ public class MainMenu : Menu {
 			reply.enabled = true;
 		}
 		//else if (menuNum == 7){
-
 		//	GUIMenu (midx, 200, 80, mitems, timer);}
+
+		//if (menuSet == true) {
+		//	GUIMenu(sidx, 200, 80, sitems, timer);}
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////
@@ -268,6 +279,14 @@ public class MainMenu : Menu {
 	public static void StartGame(int mode){
 		GameManager.ins.game = true;
 
+		if (GameManager.ins.level == GameState.Level.Easy) {
+			chosenLevel = "WastedEasy";
+		} else if (GameManager.ins.level == GameState.Level.Medium) {
+			chosenLevel = "WastedMedium";
+		} else if (GameManager.ins.level == GameState.Level.Hard) {
+			chosenLevel = "WastedHard";
+		}
+
 		//TUTORIAL PORTAL
 		if (mode == 4){
 			Application.LoadLevel ("WastedTut");
@@ -275,16 +294,15 @@ public class MainMenu : Menu {
 		}
 		//SCORE PORTAL
 		else if (mode == 0){
-			Application.LoadLevel ("WastedEasy");
+			Application.LoadLevel (chosenLevel);
 			GameManager.ins.status = GameState.GameStatus.Game;
 			GameManager.ins.mode = GameState.GameMode.ScoreAttack;
 		}
 		//STEALTH PORTAL
 		else if (mode == 1){
-			//Application.LoadLevel (GameManager.chosenLevel);
-			Application.LoadLevel ("WastedEasy");
+			Application.LoadLevel (chosenLevel);
 			GameManager.ins.status = GameState.GameStatus.Game;
-			GameManager.ins.mode = GameState.GameMode.ScoreAttack;
+			GameManager.ins.mode = GameState.GameMode.Stealth;
 		}
 		//RACE PORTAL
 		else if (mode == 2){
@@ -315,14 +333,14 @@ public class MainMenu : Menu {
 	//////////
 	//SETTINGS    set
 	//////////
-	/*
+
 	public static void Settings(){
 		menuNum = 0;
 		menuSet = true;
 
 		newPos = new Vector3 (25,0,0);
-		newRot = new Quaternion(0,0,0,0);
-	}*/
+		newRot = new Quaternion(0,0,0,1);
+	}
 
 	///////////////////////
 	///CUSTOMIZE CHARACTER    2
@@ -399,11 +417,16 @@ public class MainMenu : Menu {
 
 	public static void Modes(int level) {
 		multi = false;
-		//GameManager.ins.levelNum = level;
 
-		if (level == 0){
-			StartGame(4);
-		}
+		if (level == 0) {
+						StartGame (4);
+				} else if (level == 1) {
+			GameManager.ins.level = GameState.Level.Easy;
+				} else if (level == 2) {
+			GameManager.ins.level = GameState.Level.Medium;
+				} else if (level == 3) {
+			GameManager.ins.level = GameState.Level.Hard;
+				}
 
 		menuSet = false;
 		menuNum = 7;
@@ -467,11 +490,7 @@ public class MainMenu : Menu {
 						idx %= items.Length;
 					}
 
-				} /*else if (menuSet) {
-					//DOWN IN SETTINGS
-					sidx += 1;
-					sidx %= sitems.Length;
-				} */else if (menuNum == 3){
+				} else if (menuNum == 3){
 					//DOWN IN DIFF
 					/*if (Diff.totalDrunk > 0){
 						if (Diff.drinkID[didx] > 0){
@@ -509,6 +528,13 @@ public class MainMenu : Menu {
 					}
 					StartCoroutine (resumeMove());
 				}
+
+				if (menuSet) {
+					//DOWN IN SETTINGS
+					sidx += 1;
+					sidx %= sitems.Length;
+				}
+
 				timer = 0;
 			}
 		}
@@ -527,11 +553,7 @@ public class MainMenu : Menu {
 						idx += items.Length - 1;
 						idx %= items.Length;
 					}
-				} /*else if (menuSet) {
-					//UP IN SETTINGS
-					sidx += sitems.Length - 1;
-					sidx %= sitems.Length;
-				} */else if (menuNum == 3) {
+				} else if (menuNum == 3) {
 					//UP IN DIFF
 					if (Diff.totalDrunk < 5){
 						if (Diff.drinkID[didx] < 5){
@@ -565,6 +587,13 @@ public class MainMenu : Menu {
 					}
 					StartCoroutine (resumeMove());
 				}
+
+				if (menuSet) {
+					//UP IN SETTINGS
+					sidx += sitems.Length - 1;
+					sidx %= sitems.Length;
+				}
+
 				timer = 0;
 			}
 		}
@@ -590,14 +619,27 @@ public class MainMenu : Menu {
 					Diff.currDrink = didx;
 				}
 
-				/*if (menuSet){
+				if (menuSet){
 					//IF IN SETTINGS, GO RIGHT TO RAISE VOLUME
 					if (sidx == 0){
-						AudioManager.ins.GetComponent<AudioSource>().volume += 0.1f;
+						if (GameManager.ins.controller == GameState.GameController.mouse){
+							GameManager.ins.controller = GameState.GameController.move;
+							controlTab.transform.localPosition = new Vector3(68.7f, controlTab.transform.localPosition.y, controlTab.transform.localPosition.z);
+						} else {
+							GameManager.ins.controller = GameState.GameController.mouse;
+							controlTab.transform.localPosition = new Vector3(71.7f, controlTab.transform.localPosition.y, controlTab.transform.localPosition.z);
+						}
 					} else if (sidx == 1){
+						if (AudioManager.ins.GetComponent<AudioSource>().volume < 1.0f){
+							AudioManager.ins.GetComponent<AudioSource>().volume += 0.1f;
+							musicTab.transform.localPosition = new Vector3(musicTab.transform.localPosition.x + 0.4f, musicTab.transform.localPosition.y, musicTab.transform.localPosition.z);
+
+						}
+					} else if (sidx == 2){
 						AudioManager.ins.GetComponent<AudioSource>().volume += 0.1f;
+						soundTab.transform.localPosition = new Vector3(soundTab.transform.localPosition.x + 0.4f, soundTab.transform.localPosition.y, musicTab.transform.localPosition.z);
 					}
-				}*/
+				}
 			}
 		}
 
@@ -623,14 +665,27 @@ public class MainMenu : Menu {
 					Diff.currDrink = didx;
 				}
 
-				/*if (menuSet){
+				if (menuSet){
 					//IF IN SETTINGS, GO LEFT TO LOWER VOLUME
 					if (sidx == 0){
-						AudioManager.ins.GetComponent<AudioSource>().volume -= 0.1f;
+						if (GameManager.ins.controller == GameState.GameController.mouse){
+							GameManager.ins.controller = GameState.GameController.move;
+							controlTab.transform.localPosition = new Vector3(68.7f, controlTab.transform.localPosition.y, controlTab.transform.localPosition.z);
+						} else {
+							GameManager.ins.controller = GameState.GameController.mouse;
+							controlTab.transform.localPosition = new Vector3(71.7f, controlTab.transform.localPosition.y, controlTab.transform.localPosition.z);
+						}
+
 					} else if (sidx == 1){
+						if (AudioManager.ins.GetComponent<AudioSource>().volume > 0.0f){
+							AudioManager.ins.GetComponent<AudioSource>().volume -= 0.1f;
+							musicTab.transform.localPosition = new Vector3(musicTab.transform.localPosition.x - 0.4f, musicTab.transform.localPosition.y, musicTab.transform.localPosition.z);
+						}
+					} else if (sidx == 2){
 						AudioManager.ins.GetComponent<AudioSource>().volume -= 0.1f;
+						soundTab.transform.localPosition = new Vector3(soundTab.transform.localPosition.x - 0.4f, soundTab.transform.localPosition.y, soundTab.transform.localPosition.z);
 					}
-				}*/
+				}
 			}
 		}
 
@@ -638,9 +693,9 @@ public class MainMenu : Menu {
 			//CONFIRMED
 			if (menuNum == 1) {
 				items[idx].command();
-			} /*else if (menuSet){
+			} else if (menuSet){
 				sitems[sidx].command();
-			}*/ else if (menuNum == 2){
+			} else if (menuNum == 2){
 				citems[cidx].command();
 			} else if (menuNum == 3){
 				ditems[didx].command();
@@ -725,7 +780,14 @@ public class MainMenu : Menu {
 				menuNum = 1;
 				menuSet = false;
 				newPos = new Vector3 (0,0,0);
-				newRot = new Quaternion (0,0,0,0);
+				newRot = new Quaternion (0,0,0,1);
+			}
+
+			if (menuSet == true){
+				menuNum = 1;
+				menuSet = false;
+				newPos = new Vector3 (0,0,0);
+				newRot = new Quaternion (0,0,0,1);
 			}
 
 			if (!lerping){
@@ -785,23 +847,6 @@ public class MainMenu : Menu {
 			//GO HOME
 		}
 
-		//Level Menu
-		if (lidx == 0){
-			//Tutorial
-		} else if (lidx == 1){
-			//Easy house
-		} else if (lidx == 2){
-			//Medium house
-		} else if (lidx == 3){
-			//Hard house
-		}
-
-		//Mode Menu
-		if (midx == 0){
-			//Score attack
-		} else if (midx == 1){
-			//Stealth
-		}
 		if (menuNum == 4){
 			if (!GameObject.Find ("LevelSprites").GetComponent<SpriteRenderer>().enabled){
 				GameObject.Find ("LevelSprites").GetComponent<SpriteRenderer>().enabled = true;
@@ -904,11 +949,11 @@ public class MainMenu : Menu {
 		}
 
 		//SETTING
-		/*
+
 		if (menuSet){
-			newPos = new Vector3 (25,0,0);
-			newRot = new Quaternion(0,0,0,0);
-		}*/
+			newPos = new Vector3 (70,0,0);
+			newRot = new Quaternion(0,0,0,1);
+		}
 
 		yield return new WaitForSeconds(0.001f);
 		lerping = false;
