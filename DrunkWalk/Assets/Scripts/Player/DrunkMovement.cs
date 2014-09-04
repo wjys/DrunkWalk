@@ -27,7 +27,7 @@ public class DrunkMovement : InGame {
 	public float radDiff;
 	public Transform target;
 	public MotionBlur mob;
-	public int fov = 35;
+	//public int fov = 35;
 	public static bool hit40;
 
 	// ENUM TO SWITCH BETWEEN CONTROLLERS
@@ -283,7 +283,7 @@ public class DrunkMovement : InGame {
 		newPos = transform.position;
 
 		// (7)
-		cam.fieldOfView = fov;
+		//cam.fieldOfView = fov;
 
 		if (GameManager.ins.numOfPlayers == 1) {
 						if (GameManager.ins.JncInt == 0) {
@@ -344,16 +344,6 @@ public class DrunkMovement : InGame {
 			}
 		}*/
 	}
-
-	//FIX THIS WHEN IM NOT CRAZY
-	IEnumerator delayFOV(){
-				if (hit40 == false) {
-						fov ++;
-				} else if (hit40 == true && fov > 35) {
-						fov --;
-				}
-		yield return new WaitForSeconds (0.5f);
-		}
 
 	// PREVENT THE COLLIDER FROM FLOATING ABOVE OBJECTS
 	private void resetY(){

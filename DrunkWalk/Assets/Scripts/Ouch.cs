@@ -60,28 +60,46 @@ public class Ouch : MonoBehaviour {
 
 	private void reachingBed(){
 		if (collision.reachedBed) {
+			if (GameManager.ins.mode == GameState.GameMode.Party || GameManager.ins.mode == GameState.GameMode.Race){
+				GameObject.Find ("UICam " + dm.id).GetComponentInChildren<CameraBG>().enabled = true;
+				SpriteRenderer[] sprites = GameObject.Find ("UICam " + dm.id).GetComponentsInChildren<SpriteRenderer>();
+				foreach (SpriteRenderer sprite in sprites){
+					sprite.enabled = false;
+				}
+
+				GameObject.Find ("UICam " + dm.id).camera.clearFlags = CameraClearFlags.Skybox;
+				gameObject.guiText.enabled = false;
+				win.enabled = true;
+				dm.gameObject.SetActive(false);
 			
-			GameObject.Find ("UICam " + dm.id).GetComponentInChildren<CameraBG>().enabled = true;
-			SpriteRenderer[] sprites = GameObject.Find ("UICam " + dm.id).GetComponentsInChildren<SpriteRenderer>();
-			foreach (SpriteRenderer sprite in sprites){
-				sprite.enabled = false;
+				GameObject gm = GameObject.Find ("GameManager");
+				GameManager manager = gm.GetComponent<GameManager>();
+				manager.winners[manager.winnerIndex] = dm.id;
+				if (manager.winnerIndex == 0){
+					manager.winner = dm.id;
+					manager.score = collision.score;
+				}
+				GameObject.Find ("Inst " + dm.id).SetActive(false);
+				manager.winnerIndex++;
+			
+				this.enabled = false;
 			}
-			GameObject.Find ("UICam " + dm.id).camera.clearFlags = CameraClearFlags.Skybox;
-			gameObject.guiText.enabled = false;
-			win.enabled = true;
-			dm.gameObject.SetActive(false);
-			
-			GameObject gm = GameObject.Find ("GameManager");
-			GameManager manager = gm.GetComponent<GameManager>();
-			manager.winners[manager.winnerIndex] = dm.id;
-			if (manager.winnerIndex == 0){
-				manager.winner = dm.id;
-				manager.score = collision.score;
+			else if (GameManager.ins.mode == GameState.GameMode.ScoreAttack || GameManager.ins.mode == GameState.GameMode.Stealth){
+				win.enabled = true;
+				dm.gameObject.SetActive(false);
+				GameObject gm = GameObject.Find ("GameManager");
+				GameManager manager = gm.GetComponent<GameManager>();
+				manager.winners[manager.winnerIndex] = dm.id;
+				if (manager.winnerIndex == 0){
+					manager.winner = dm.id;
+					manager.score = collision.score;
+				}
+				GameObject.Find ("Inst " + dm.id).SetActive(false);
+				manager.winnerIndex++;
+				
+				this.enabled = false;
 			}
-			GameObject.Find ("Inst " + dm.id).SetActive(false);
-			manager.winnerIndex++;
-			
-			this.enabled = false;
+
 		}
 	}
 
