@@ -87,7 +87,7 @@ public class UniMoveSplash : MonoBehaviour
 				}
 				foreach (UniMoveController move in moves){
 					if (move.id > 0){
-						GameState.GameController = GameState.GameController.move;
+						GameManager.ins.controller = GameState.GameController.move;
 						print ("making marker " + move.id + " after looping back to menu");
 						createMarker (move);
 					}
