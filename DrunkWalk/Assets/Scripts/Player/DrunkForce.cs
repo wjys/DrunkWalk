@@ -100,10 +100,10 @@ public class DrunkForce : InGame {
 		}
 		
 		// DRUNK FORCE
-		//if (GameManager.ins.diffInt > 0){
-		//	StartCoroutine(newDrunkDirection ());
-		//	drunkForce (drunkDir);
-		//}
+		if (GameManager.ins.diffInt > 0){
+			StartCoroutine(newDrunkDirection ());
+			drunkForce (drunkDir);
+		}
 
 
 		// check camera rotation caps
