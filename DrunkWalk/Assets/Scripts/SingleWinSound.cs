@@ -50,12 +50,12 @@ public class SingleWinSound : MonoBehaviour {
 	IEnumerator playWin(){
 		if (!soundPlayed){
 
-			audio.clip = char_wins[Random.Range (0, char_wins.Length)];
-			audio.Play ();
+			GetComponent<AudioSource>().clip = char_wins[Random.Range (0, char_wins.Length)];
+			GetComponent<AudioSource>().Play ();
 			soundPlayed = true;
 		}
 
-		yield return new WaitForSeconds (audio.clip.length);
+		yield return new WaitForSeconds (GetComponent<AudioSource>().clip.length);
 		this.enabled = false;
 	}
 }

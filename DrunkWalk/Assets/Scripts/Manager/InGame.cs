@@ -7,7 +7,7 @@ public class InGame : MonoBehaviour {
 		set {
 			DrunkForce df = GetComponent<DrunkForce>();
 			df.enabled = false;
-			rigidbody.isKinematic = true;
+			GetComponent<Rigidbody>().isKinematic = true;
 
 			_paused = value;
 		}
@@ -28,14 +28,14 @@ public class InGame : MonoBehaviour {
 	public virtual void GameUpdate () {
 		DrunkForce df = GetComponent<DrunkForce>();
 		df.enabled = true;
-		rigidbody.isKinematic = false;
+		GetComponent<Rigidbody>().isKinematic = false;
 	}
 	
 	public virtual void GameLateUpdate () {
 		DrunkForce df = GetComponent<DrunkForce>();
 		df.enabled = true;
 
-		rigidbody.isKinematic = false;
+		GetComponent<Rigidbody>().isKinematic = false;
 	}
 
 	private void UpdateComponentStatus<T> (bool paused, ref bool status) {

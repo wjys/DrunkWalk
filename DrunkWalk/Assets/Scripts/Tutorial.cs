@@ -30,12 +30,12 @@ public class Tutorial : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (GameManager.ins.status == GameState.GameStatus.Tutorial){
-			if (!gameObject.guiText.enabled){
-				gameObject.guiText.enabled = true;
+			if (!gameObject.GetComponent<GUIText>().enabled){
+				gameObject.GetComponent<GUIText>().enabled = true;
 			}
 			if (instIndex != 5){
 				if (dm.fallen){
-					gameObject.guiText.text = inst[_zero];
+					gameObject.GetComponent<GUIText>().text = inst[_zero];
 					alreadyFallen = true;
 					readingInstruction = false;
 				}
@@ -51,7 +51,7 @@ public class Tutorial : MonoBehaviour {
 	}
 
 	IEnumerator switchInstructions(){
-		gameObject.guiText.text = inst[instIndex];
+		gameObject.GetComponent<GUIText>().text = inst[instIndex];
 		readingInstruction = true;
 		yield return new WaitForSeconds (instDelay);
 		switch (instIndex){

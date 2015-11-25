@@ -42,18 +42,18 @@ public class Ouch : MonoBehaviour {
 		if (!dm.fallen){
 			if (collision.recoiled && !collision.reachedBed){
 				if (!displayed){
-					gameObject.guiText.enabled = true;
+					gameObject.GetComponent<GUIText>().enabled = true;
 					ouchIndex = Random.Range (0,ouches.Length);
 					ouchGui.text = ouches[ouchIndex];
 					displayed = true; 
 				}
 			} else {
-				gameObject.guiText.enabled = false;
+				gameObject.GetComponent<GUIText>().enabled = false;
 				displayed = false; 
 			}
 		}
 		else {
-			gameObject.guiText.enabled = false;
+			gameObject.GetComponent<GUIText>().enabled = false;
 			displayed = false;
 		}
 	}
@@ -67,8 +67,8 @@ public class Ouch : MonoBehaviour {
 					sprite.enabled = false;
 				}
 
-				GameObject.Find ("UICam " + dm.id).camera.clearFlags = CameraClearFlags.Skybox;
-				gameObject.guiText.enabled = false;
+				GameObject.Find ("UICam " + dm.id).GetComponent<Camera>().clearFlags = CameraClearFlags.Skybox;
+				gameObject.GetComponent<GUIText>().enabled = false;
 				win.enabled = true;
 				dm.gameObject.SetActive(false);
 			
@@ -111,8 +111,8 @@ public class Ouch : MonoBehaviour {
 				foreach (SpriteRenderer sprite in sprites){
 					sprite.enabled = false;
 				}
-				GameObject.Find ("UICam " + dm.id).camera.clearFlags = CameraClearFlags.Skybox;
-				gameObject.guiText.enabled = false;
+				GameObject.Find ("UICam " + dm.id).GetComponent<Camera>().clearFlags = CameraClearFlags.Skybox;
+				gameObject.GetComponent<GUIText>().enabled = false;
 				win.enabled = true;
 				dm.gameObject.SetActive(false);
 				
@@ -137,8 +137,8 @@ public class Ouch : MonoBehaviour {
 				foreach (SpriteRenderer sprite in sprites){
 					sprite.enabled = false;
 				}
-				GameObject.Find ("UICam " + dm.id).camera.clearFlags = CameraClearFlags.Skybox;
-				gameObject.guiText.enabled = false;
+				GameObject.Find ("UICam " + dm.id).GetComponent<Camera>().clearFlags = CameraClearFlags.Skybox;
+				gameObject.GetComponent<GUIText>().enabled = false;
 				win.enabled = true;
 				dm.gameObject.SetActive(false);
 				

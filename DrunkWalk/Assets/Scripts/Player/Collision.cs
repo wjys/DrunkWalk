@@ -218,7 +218,7 @@ public class Collision : MonoBehaviour {
 			if (!collided){
 
 				//PLAY HITTING SOUND
-				audio.PlayOneShot (hitit);
+				GetComponent<AudioSource>().PlayOneShot (hitit);
 
 				//RUMBLE
 				dm.hitRumble = rumbleAmt;
@@ -311,9 +311,9 @@ public class Collision : MonoBehaviour {
     
 	//PLAY GRUNT
 	private void playGrunt(AudioClip clip){
-		audio.pitch = Random.value * 0.1f + 0.95f;
-		audio.volume = Random.value * 0.3f + 0.7f;
-		audio.PlayOneShot(clip); 
+		GetComponent<AudioSource>().pitch = Random.value * 0.1f + 0.95f;
+		GetComponent<AudioSource>().volume = Random.value * 0.3f + 0.7f;
+		GetComponent<AudioSource>().PlayOneShot(clip); 
 	}
 
 	//SET THE DIRECTION OF RECOIL

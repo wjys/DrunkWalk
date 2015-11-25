@@ -7,6 +7,6 @@ public class LightColor : MonoBehaviour {
     public Color color1 = Color.blue;
     void Update() {
         float t = Mathf.PingPong(Time.time, duration) / duration;
-        light.color = Color.Lerp(color0, color1, t);
+        GetComponent<Light>().color = Color.Lerp(color0, color1, t);
     }
 }

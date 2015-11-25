@@ -273,7 +273,7 @@ public class UniMoveManager : MonoBehaviour
 		
 		// SINGLE PLAYER MODE
 		if (numPlayers == 1) {
-			ui = GameObject.Find ("UICam 1").camera;
+			ui = GameObject.Find ("UICam 1").GetComponent<Camera>();
 			ui.rect = rects[6];
 
 			Eyelids eyelids = ui.GetComponentInChildren <Eyelids>();
@@ -297,7 +297,7 @@ public class UniMoveManager : MonoBehaviour
 		// 2 PLAYER MODE
 		else if (numPlayers == 2) {
 			for (int i = 1; i < numPlayers+1; i++){
-				ui = GameObject.Find ("UICam " + i).camera;
+				ui = GameObject.Find ("UICam " + i).GetComponent<Camera>();
 				ui.rect = rects[i+3];
 
 				Eyelids eyelids = ui.GetComponentInChildren <Eyelids>();
@@ -322,7 +322,7 @@ public class UniMoveManager : MonoBehaviour
 		// MULTIPLAYER (3+) MODE
 		else if (numPlayers >= 3){
 			for (int i = 1; i < numPlayers+1; i++){
-				ui = GameObject.Find ("UICam " + i).camera;
+				ui = GameObject.Find ("UICam " + i).GetComponent<Camera>();
 				ui.rect = rects[i-1];
 				
 				Eyelids eyelids = ui.GetComponentInChildren <Eyelids>();

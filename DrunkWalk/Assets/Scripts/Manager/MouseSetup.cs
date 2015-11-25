@@ -37,7 +37,7 @@ public class MouseSetup : MonoBehaviour {
 	
 	void Start() 
 	{
-		countdown = GameObject.Find ("Countdown").guiText;
+		countdown = GameObject.Find ("Countdown").GetComponent<GUIText>();
 		ctdown = 4;
 		
 		// CAMERA VIEWPORT
@@ -275,7 +275,7 @@ public class MouseSetup : MonoBehaviour {
 	
 	private void setUI(){
 		Camera ui;
-		ui = GameObject.Find ("UICam 1").camera;
+		ui = GameObject.Find ("UICam 1").GetComponent<Camera>();
 		ui.rect = rect;
 		
 		Eyelids eyelids = ui.GetComponentInChildren <Eyelids>();
@@ -350,7 +350,7 @@ public class MouseSetup : MonoBehaviour {
 			break;
 		}
 		
-		AudioManager.ins.gameObject.audio.volume = 0.3f;
+		AudioManager.ins.gameObject.GetComponent<AudioSource>().volume = 0.3f;
 		eyelids.enabled = true;
 		comp.enabled = true;
 		ouch.enabled = true;

@@ -7,9 +7,9 @@ public class CameraBG : MonoBehaviour {
     public float duration = 15.0F;
     void Update() {
         float t = Mathf.PingPong(Time.time/5, duration) / duration;
-        camera.backgroundColor = Color.Lerp(color1, color2, t);
+        GetComponent<Camera>().backgroundColor = Color.Lerp(color1, color2, t);
     }
     void Example() {
-        camera.clearFlags = CameraClearFlags.SolidColor;
+        GetComponent<Camera>().clearFlags = CameraClearFlags.SolidColor;
     }
 }

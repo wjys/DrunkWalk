@@ -24,8 +24,8 @@ public class BreakObject : MonoBehaviour {
 			
 			foreach (Rigidbody piece in pieces){
 				piece.AddExplosionForce (shatterForce, shatterPos, shatterRadius);
-				piece.velocity = rigidbody.velocity;
-				piece.angularVelocity = rigidbody.angularVelocity; 
+				piece.velocity = GetComponent<Rigidbody>().velocity;
+				piece.angularVelocity = GetComponent<Rigidbody>().angularVelocity; 
 			}
 		}
 	}

@@ -8,7 +8,7 @@ public class MusicManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		gameObject.name = "AudioManager";
-		audio.clip = songs[Random.Range(0, songs.Length)];
+		GetComponent<AudioSource>().clip = songs[Random.Range(0, songs.Length)];
 	}
 	
 	// Update is called once per frame
@@ -37,10 +37,10 @@ public class MusicManager : MonoBehaviour {
 	}
 
 	IEnumerator switchSongs(){
-		if (!audio.isPlaying){
-			audio.Play();
+		if (!GetComponent<AudioSource>().isPlaying){
+			GetComponent<AudioSource>().Play();
 		}
-		yield return new WaitForSeconds(audio.clip.length + 0.5f);
-		audio.clip = songs[Random.Range (0, songs.Length)];
+		yield return new WaitForSeconds(GetComponent<AudioSource>().clip.length + 0.5f);
+		GetComponent<AudioSource>().clip = songs[Random.Range (0, songs.Length)];
 	}
 }

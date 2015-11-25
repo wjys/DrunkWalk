@@ -167,7 +167,7 @@ public class Sounds : MonoBehaviour {
 
 		if (lerpingOUT){
 			soundLerpOut ();
-			if (audio.volume <= 0.08f){
+			if (GetComponent<AudioSource>().volume <= 0.08f){
 				lerpingOUT = false;
 			}
 		}
@@ -179,9 +179,9 @@ public class Sounds : MonoBehaviour {
 	
 	public void playSound(AudioClip clip){
 		
-		audio.pitch = Random.value * 0.1f + 0.95f;
-		audio.volume = Random.value * 0.3f + 0.7f;
-		audio.clip = clip;
+		GetComponent<AudioSource>().pitch = Random.value * 0.1f + 0.95f;
+		GetComponent<AudioSource>().volume = Random.value * 0.3f + 0.7f;
+		GetComponent<AudioSource>().clip = clip;
 		//audio.Play(clip); 
 		
 	}
@@ -192,9 +192,9 @@ public class Sounds : MonoBehaviour {
 	
 	IEnumerator resumeSound() {
 		soundPlayed = true;
-		audio.Play ();
+		GetComponent<AudioSource>().Play ();
 		StartCoroutine (volLerp());
-		yield return new WaitForSeconds (soundDelay + audio.clip.length);
+		yield return new WaitForSeconds (soundDelay + GetComponent<AudioSource>().clip.length);
 		soundPlayed = false;
 	}
 
@@ -204,10 +204,10 @@ public class Sounds : MonoBehaviour {
 	
 	IEnumerator resumeSteps() {
 		stepped = true;
-		audio.Play ();
+		GetComponent<AudioSource>().Play ();
 		StartCoroutine (volLerp());
 
-		yield return new WaitForSeconds (audio.clip.length + maxStepDelay*(dm.radius/dm.maxRad));
+		yield return new WaitForSeconds (GetComponent<AudioSource>().clip.length + maxStepDelay*(dm.radius/dm.maxRad));
 		stepped = false;
 	}
 
@@ -217,10 +217,10 @@ public class Sounds : MonoBehaviour {
 	
 	IEnumerator resumeStruggle() {
 		falling = false;
-		audio.Play ();
+		GetComponent<AudioSource>().Play ();
 		StartCoroutine (volLerp());
 
-		yield return new WaitForSeconds (soundDelay + audio.clip.length);
+		yield return new WaitForSeconds (soundDelay + GetComponent<AudioSource>().clip.length);
 		struggling = true;
 	}
 
@@ -230,9 +230,9 @@ public class Sounds : MonoBehaviour {
 	
 	public void objectCollSounds(){
 		
-		audio.pitch = Random.value * 0.1f + 0.95f;
-		audio.volume = Random.value * 0.3f + 0.7f;
-		audio.clip = clips_objects[Random.Range (0, clips_objects.Length)];
+		GetComponent<AudioSource>().pitch = Random.value * 0.1f + 0.95f;
+		GetComponent<AudioSource>().volume = Random.value * 0.3f + 0.7f;
+		GetComponent<AudioSource>().clip = clips_objects[Random.Range (0, clips_objects.Length)];
 		 
 		
 	}
@@ -243,9 +243,9 @@ public class Sounds : MonoBehaviour {
 	
 	public void furnitureCollSounds(){
 		
-		audio.pitch = Random.value * 0.1f + 0.95f;
-		audio.volume = Random.value * 0.3f + 0.7f;
-		audio.clip = clips_furniture[Random.Range (0, clips_furniture.Length)] ;
+		GetComponent<AudioSource>().pitch = Random.value * 0.1f + 0.95f;
+		GetComponent<AudioSource>().volume = Random.value * 0.3f + 0.7f;
+		GetComponent<AudioSource>().clip = clips_furniture[Random.Range (0, clips_furniture.Length)] ;
 		 
 		
 	}
@@ -256,9 +256,9 @@ public class Sounds : MonoBehaviour {
 	
 	public void wallCollSounds(){
 		
-		audio.pitch = Random.value * 0.1f + 0.95f;
-		audio.volume = Random.value * 0.3f + 0.7f;
-		audio.clip = clips_wall[Random.Range (0, clips_wall.Length)] ;
+		GetComponent<AudioSource>().pitch = Random.value * 0.1f + 0.95f;
+		GetComponent<AudioSource>().volume = Random.value * 0.3f + 0.7f;
+		GetComponent<AudioSource>().clip = clips_wall[Random.Range (0, clips_wall.Length)] ;
 		 
 		
 	}
@@ -269,9 +269,9 @@ public class Sounds : MonoBehaviour {
 	
 	public void drowsySounds(){
 		
-		audio.pitch = Random.value * 0.1f + 0.95f;
-		audio.volume = Random.value * 0.3f + 0.7f;
-		audio.clip = clips_drowsy[Random.Range (0, clips_drowsy.Length)] ;
+		GetComponent<AudioSource>().pitch = Random.value * 0.1f + 0.95f;
+		GetComponent<AudioSource>().volume = Random.value * 0.3f + 0.7f;
+		GetComponent<AudioSource>().clip = clips_drowsy[Random.Range (0, clips_drowsy.Length)] ;
 		 
 		
 	}
@@ -282,9 +282,9 @@ public class Sounds : MonoBehaviour {
 	
 	public void fallSounds(){
 		
-		audio.pitch = Random.value * 0.1f + 0.95f;
-		audio.volume = Random.value * 0.3f + 0.7f;
-		audio.clip = clips_fall[Random.Range (0, clips_fall.Length)] ;
+		GetComponent<AudioSource>().pitch = Random.value * 0.1f + 0.95f;
+		GetComponent<AudioSource>().volume = Random.value * 0.3f + 0.7f;
+		GetComponent<AudioSource>().clip = clips_fall[Random.Range (0, clips_fall.Length)] ;
 		 
 		
 	}
@@ -295,9 +295,9 @@ public class Sounds : MonoBehaviour {
 	
 	public void struggleSounds(){
 		
-		audio.pitch = Random.value * 0.1f + 0.95f;
-		audio.volume = Random.value * 0.3f + 0.7f;
-		audio.clip = clips_struggle[Random.Range (0, clips_struggle.Length)] ;
+		GetComponent<AudioSource>().pitch = Random.value * 0.1f + 0.95f;
+		GetComponent<AudioSource>().volume = Random.value * 0.3f + 0.7f;
+		GetComponent<AudioSource>().clip = clips_struggle[Random.Range (0, clips_struggle.Length)] ;
 		 
 		
 	}
@@ -308,9 +308,9 @@ public class Sounds : MonoBehaviour {
 	
 	public void getupSounds(){
 		
-		audio.pitch = Random.value * 0.1f + 0.95f;
-		audio.volume = Random.value * 0.3f + 0.7f;
-		audio.clip = clips_getup[Random.Range (0, clips_getup.Length)] ;
+		GetComponent<AudioSource>().pitch = Random.value * 0.1f + 0.95f;
+		GetComponent<AudioSource>().volume = Random.value * 0.3f + 0.7f;
+		GetComponent<AudioSource>().clip = clips_getup[Random.Range (0, clips_getup.Length)] ;
 		 
 		
 	}
@@ -321,9 +321,9 @@ public class Sounds : MonoBehaviour {
 	
 	public void giveupSounds(){
 		
-		audio.pitch = Random.value * 0.1f + 0.95f;
-		audio.volume = Random.value * 0.3f + 0.7f;
-		audio.clip = clips_giveup[Random.Range (0, clips_giveup.Length)] ;
+		GetComponent<AudioSource>().pitch = Random.value * 0.1f + 0.95f;
+		GetComponent<AudioSource>().volume = Random.value * 0.3f + 0.7f;
+		GetComponent<AudioSource>().clip = clips_giveup[Random.Range (0, clips_giveup.Length)] ;
 		 
 		
 	}
@@ -334,23 +334,23 @@ public class Sounds : MonoBehaviour {
 	
 	public void bedSounds(){
 		
-		audio.pitch = Random.value * 0.1f + 0.95f;
-		audio.volume = Random.value * 0.3f + 0.7f;
-		audio.clip = clips_bed[Random.Range (0, clips_bed.Length)];
+		GetComponent<AudioSource>().pitch = Random.value * 0.1f + 0.95f;
+		GetComponent<AudioSource>().volume = Random.value * 0.3f + 0.7f;
+		GetComponent<AudioSource>().clip = clips_bed[Random.Range (0, clips_bed.Length)];
 	}
 
 	private void soundLerpIn(){
-		audio.volume = Mathf.Lerp (audio.volume, Random.value * 0.3f + 0.7f, 0.5f * Time.deltaTime);
+		GetComponent<AudioSource>().volume = Mathf.Lerp (GetComponent<AudioSource>().volume, Random.value * 0.3f + 0.7f, 0.5f * Time.deltaTime);
 	}
 
 	private void soundLerpOut(){
-		audio.volume = Mathf.Lerp (audio.volume, 0, 0.5f * Time.deltaTime);
+		GetComponent<AudioSource>().volume = Mathf.Lerp (GetComponent<AudioSource>().volume, 0, 0.5f * Time.deltaTime);
 	}
 
 	IEnumerator volLerp(){
 		lerpingIN = true;
 
-		yield return new WaitForSeconds (audio.clip.length * (3/4));
+		yield return new WaitForSeconds (GetComponent<AudioSource>().clip.length * (3/4));
 
 		lerpingIN = false;
 		lerpingOUT = true;

@@ -341,9 +341,9 @@ public class PlayerMovement : InGame {
 	
 	private void playGrunt(AudioClip clip){
 		
-		audio.pitch = Random.value * 0.1f + 0.95f;
-		audio.volume = Random.value * 0.3f + 0.7f;
-		audio.PlayOneShot(clip); 
+		GetComponent<AudioSource>().pitch = Random.value * 0.1f + 0.95f;
+		GetComponent<AudioSource>().volume = Random.value * 0.3f + 0.7f;
+		GetComponent<AudioSource>().PlayOneShot(clip); 
 		
 	}
 }
